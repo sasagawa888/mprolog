@@ -31,42 +31,47 @@ infer_clause([C|Cs],[S1,S2],[E1,E2]) :-
     infer_clause(Cs,S2,E2).
 
 
-infer_a_clause((Head :- Body), State1, Env1) :- 
+infer_a_clause((Head :- Body), State2, Env2) :- 
     term_variables(Head,Env0),
-    infer_body(Body,[],Env0,State1,Env1).
+    Head =.. [_|Args],
+    infer_head(Args,[],Env0,State1,Env1),
+    infer_body(Body,State1,Env1,State2,Env2).
 
 infer_a_clause(Head, State1, Env1) :-
     term_variables(Head,Env0),
     infer_head(Head,[],Env0,State1,Env1).
 
 
-
-infer_head(Args,State,Env,State,Env) :-
+%infer_head(Args,State,Env,State,Env).
+infer_head(Args,State,Env,State2,Env2) :-
     connect_head(Args,State,Env,State1,Env1),
     exclusive_head(Args,State1,Env1,State2,Env2,1).
 
 connect_head(Args,State,Env,State1,Env1) :-
-    connect_head1(Args,State,Env,State1,Env,1).
+    connect_head1(Args,State,Env,State1,Env1,1).
 
 connect_head1([],State,Env,State,Env,N).
-connect_head1([A|As],State,Env,State,Env,N) :-
-    n_compiler_variable(A),
-    State1 = [c(A,N)|State],
-    Env1 = [A|Env],
-    connect_head1(As,State1,Env1,State1,Env1).
+connect_head1([A|As],State,Env,State1,Env1,N) :-
+    State2 = [c(N,A)|State],
+    N1 is N+1,
+    connect_head1(As,State2,Env,State1,Env1,N1).
 
 exclusive_head([A],State,Env,State,Env,N).
-exclusive_head([A|As],State,Env,State,Env,N) :-
+exclusive_head([A|As],State,Env,State2,Env2,N) :-
     N1 is N+1,
     exclusive_head1(A,As,State,Env,State1,Env1,N,N1),
-    exclusive_head(As,State1,Env1,State1,Env1,N1).
+    exclusive_head(As,State1,Env1,State2,Env2,N1).
 
 exclusive_head1(A,[],State,Env,State,Env,N,M).
-exclusive_head1(A,[B|Bs],State,Env,State,Env,N,M) :-
-    same_struct(A,B),
-    State1 = [e(N,M)|State],
+exclusive_head1(A,[B|Bs],State,Env,State1,Env,N,M) :-
+    same_struct(A,B),!,
+    State2 = [e(N,M)|State],
     M1 is M+1,
-    exclusive_head1(A,Bs,State1,Env,State1,Env,N,M1).
+    exclusive_head1(A,Bs,State2,Env,State1,Env,N,M1).
+exclusive_head1(A,[B|Bs],State,Env,State1,Env,N,M) :-
+    M1 is M+1,
+    exclusive_head1(A,Bs,State,Env,State1,Env,N,M1).
+
 
 
 infer_body(end,State,Env,State,Env).
