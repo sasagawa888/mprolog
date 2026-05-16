@@ -32,26 +32,41 @@ infer_clause([C|Cs],[S1,S2],[E1,E2]) :-
 
 
 infer_a_clause((Head :- Body), State1, Env1) :- 
-    head_args(Head,Args),
-    head_env(Args,Env0),
+    term_variables(Head,Env0),
     infer_body(Body,[],Env0,State1,Env1).
 
 infer_a_clause(Head, State1, Env1) :-
-    head_args(Head,Args),
-    head_env(Args,Env0),
+    term_variables(Head,Env0),
     infer_head(Head,[],Env0,State1,Env1).
 
 
-head_args(H,Args) :-
-    H =.. [_|Args].
 
+infer_head(Args,State,Env,State,Env) :-
+    connect_head(Args,State,Env,State1,Env1),
+    exclusive_head(Args,State1,Env1,State2,Env2,1).
 
-head_env([],[]).
-head_env([X|Xs],[X|Es]) :-
-    n_compiler_variable(X),
-    head_env(Xs,Es).
-head_env([_|Xs],Es) :-
-    head_env(Xs,Es).
+connect_head(Args,State,Env,State1,Env1) :-
+    connect_head1(Args,State,Env,State1,Env,1).
+
+connect_head1([],State,Env,State,Env,N).
+connect_head1([A|As],State,Env,State,Env,N) :-
+    n_compiler_variable(A),
+    State1 = [c(A,N)|State],
+    Env1 = [A|Env],
+    connect_head1(As,State1,Env1,State1,Env1).
+
+exclusive_head([A],State,Env,State,Env,N).
+exclusive_head([A|As],State,Env,State,Env,N) :-
+    N1 is N+1,
+    exclusive_head1(A,As,State,Env,State1,Env1,N,N1),
+    exclusive_head(As,State1,Env1,State1,Env1,N1).
+
+exclusive_head1(A,[],State,Env,State,Env,N,M).
+exclusive_head1(A,[B|Bs],State,Env,State,Env,N,M) :-
+    same_struct(A,B),
+    State1 = [e(N,M)|State],
+    M1 is M+1,
+    exclusive_head1(A,Bs,State1,Env,State1,Env,N,M1).
 
 
 infer_body(end,State,Env,State,Env).
@@ -63,9 +78,9 @@ infer_body(A,State,Env,State1,Env1) :-
     infer_body(end,State1,Env1,State1,Env1).
 
 
-infer_a_body((X is Y),State,Env,[s(X,out),s(Y,in)|State],Env).
-infer_a_body((X > Y),State,Env,[s(X,in),s(Y,in)|State],Env).
-infer_a_body((X < Y),State,Env,[s(X,in),s(Y,in)|State],Env).
+infer_a_body((X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
+infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'-')|State],Env).
+infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'-')|State],Env).
 infer_a_body(A,State,Env,State,Env).
 
 same_struct(X,Y) :-
@@ -103,14 +118,30 @@ term_variables(X, Vars, [X|Vars]) :-
     n_compiler_variable(X), !.
 
 term_variables(Term, Vars0, Vars) :-
+    list(Term),
+    term_variables_list(Term, Vars0, Vars).
+
+term_variables(Term, Vars0, Vars) :-
     Term =.. [_|Args],
     term_variables_list(Args, Vars0, Vars).
 
 term_variables_list([], Vars, Vars).
 
+
+term_variables_list([X|Xs], Vars0, Vars) :-
+    list(X),
+    term_variables_list(X, Vars0, Vars1),
+    term_variables_list(Xs, Vars1, Vars).
+
+term_variables_list([X|Y], Vars0, Vars) :-
+    atom(Y),
+    term_variables(X, Vars0, Vars1),
+    term_variables(Y, Vars1, Vars).
+
 term_variables_list([X|Xs], Vars0, Vars) :-
     term_variables(X, Vars0, Vars1),
     term_variables_list(Xs, Vars1, Vars).
+
 
 member_eq(X,[Y|_]) :-
     X == Y, !.
