@@ -154,7 +154,6 @@ infer_body(A,State,Env,State1,Env1) :-
 infer_a_body((X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
 infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-/*
 infer_a_body(X,State,Env,State4,[Free|Env]) :-
     n_property(X,predicate),
     term_variables(X,Vars),
@@ -162,11 +161,11 @@ infer_a_body(X,State,Env,State4,[Free|Env]) :-
     gen_free_state(Free,State1),
     append(State1,State,State2),
     gen_match(Vars,State2,Match),
-    functor(X,P,_),
+    functor(X,P,_),!,
     mode(P,Mode),
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
-    */
+    
 infer_a_body(X,State,Env,State2,Env1) :-
     n_property(X,builtin),
     term_variables(X,Vars),
