@@ -1,7 +1,7 @@
 % mode-inferencer
 :- use_module(list).
 % test case
-foo(X,Y) :- true,Z is Y,X > Z.
+foo(X,Y) :- true,X is Y.
 % Partition list for quicksort
 partition([X|L], Y, [X|L1], L2) :-
     X < Y, !, partition(L, Y, L1, L2).
@@ -22,8 +22,37 @@ test1(P,[N|Ls]) :-
     write('clause = '), write(C1), nl,
     infer_clause(C1,State,Env),
     write('State = '),write(State),nl,
-    write('Env = '),write(Env),nl,
+    infer_mode(State,Mode),
+    write('Mode = '),write(Mode),nl,
     test1(P,Ls).
+
+infer_mode([],[]).
+infer_mode([S|Ss], [M1|M2]) :-
+    infer_mode1(1, S, M1),!,
+    infer_mode(Ss,M2).
+
+infer_mode1(N, State, [M|Ms]) :-
+    connect_arg(N, State, Arg),!,
+    infer_arg_mode(N, Arg, State, M),
+    N1 is N + 1,
+    infer_mode1(N1, State, Ms).
+infer_mode1(_, _, []).
+
+connect_arg(N, [c(N,Arg)|_], Arg) :- !.
+connect_arg(N, [_|Xs], Arg) :-
+    connect_arg(N, Xs, Arg).
+
+infer_arg_mode(_, Arg, State, '+') :-
+    member(s(Arg,'+'), State),!.
+
+infer_arg_mode(_, Arg, State, '-') :-
+    member(s(Arg,'-'), State),!.
+
+infer_arg_mode(_, _, _, ?).
+
+has_input_var(Term, State) :-
+    n_compiler_variable(Term),!,
+    member(s(Term,+), State).
 
 infer_clause([],[],[]).
 infer_clause([C|Cs],[S1,S2],[E1,E2]) :-
