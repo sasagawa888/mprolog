@@ -85,7 +85,7 @@ infer_arg_mode(_, Arg, State, ['+','+']) :-
     member(s(Arg,'+'), State),!.
 infer_arg_mode(_, Arg, State, ['-','-']) :-
     member(s(Arg,'-'), State),!.
-infer_arg_mode(_, _, _, ?).
+infer_arg_mode(_, _, _, ['?','?']).
 
 has_input_var(Term, State) :-
     n_compiler_variable(Term),!,
@@ -145,7 +145,6 @@ infer_body((A,B),State,Env,States,Envs) :-
     infer_a_body(A,State,Env,State1,Env1),
     infer_body(B,State1,Env1,States,Envs).
 infer_body(A,State,Env,State1,Env1) :- 
-    %write(adf),
     infer_a_body(A,State,Env,State1,Env1),
     infer_body(end,State1,Env1,State1,Env1).
 
@@ -164,7 +163,7 @@ infer_a_body(X,State,Env,[State1|State],[Free|Env]) :-
     free_variables(Vars,Env,Free),
     gen_free_state(Free,State1).    
 
-free_variables([],[]).
+free_variables([],Env,[]).
 free_variables([V|Vs],Env,Fs) :-
     member(V,Env),
     free_variables(Vs,Env,Fs).
