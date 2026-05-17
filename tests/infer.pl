@@ -15,7 +15,7 @@ qsort([X|L], R, R0) :-
     qsort(L1, R, [X|R1]).
 qsort([], R, R) :- !.
 
-
+mode(_,[]).
 %-----------------------------
 
 test(P) :-
@@ -27,14 +27,12 @@ test1(_,[]).
 test1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
-    write('clause = '), write(C1), nl,
     infer_clause(C1,State,Env),
-    write('State = '),write(State),nl,
     gen_mode(P,State).
     test1(P,Ls).
 
 gen_mode(P,State) :-
-    infer_mode(State,Mode),
+    infer_mode(State,Mode),write(Mode),
     mode_pick(Mode,A,B),
     assert(mode(P,A)),
     ifthenelse(
@@ -87,7 +85,7 @@ infer_arg_mode(_, Arg, State, ['+','+']) :-
     member(s(Arg,'+'), State),!.
 infer_arg_mode(_, Arg, State, ['-','-']) :-
     member(s(Arg,'-'), State),!.
-infer_arg_mode(_, _, _, ['?','?']).
+infer_arg_mode(_, _, _, '?').
 
 has_input_var(Term, State) :-
     n_compiler_variable(Term),!,
@@ -154,16 +152,27 @@ infer_body(A,State,Env,State1,Env1) :-
 infer_a_body((X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
 infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(X,State,Env,[State1|State],[Free|Env]) :-
+/*
+infer_a_body(X,State,Env,State4,[Free|Env]) :-
     n_property(X,predicate),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,State1).
-infer_a_body(X,State,Env,[State1|State],[Free|Env]) :-
+    gen_free_state(Free,State1),
+    append(State1,State,State2),
+    gen_match(Vars,State2,Match),
+    functor(X,P,_),
+    mode(P,Mode),
+    apply_match(Match,Mode,State3),
+    append(State3,State2,State4).
+infer_a_body(X,State,Env,State2,[Free|Env]) :-
     n_property(X,builtin),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,State1).    
+    gen_free_state(Free,State1),
+    append(State1,State,State2).
+*/
+infer_a_body(A,State,Env,State,Env).
+
 
 free_variables([],Env,[]).
 free_variables([V|Vs],Env,Fs) :-
@@ -176,7 +185,19 @@ gen_free_state([],[]).
 gen_free_state([V|Vs],[s(V,'-')|Fs]) :-
     gen_free_state(Vs,Fs).
 
-infer_a_body(A,State,Env,State,Env).
+gen_match([],State,[]).
+gen_match([V|Vs],State,[X|Rs]) :-
+    member(s(V,X),State),
+    gen_match(Vs,State,Rs).
+gen_match([V|Vs],State,[V|Rs]) :-
+    gen_match(Vs,State,Rs).
+
+apply_match([],[],State).
+apply_match([V|Vs],[M|Ms],[s(V,M)|Ss]) :-
+    n_compiler_variable(V),
+    apply_match(Vs,Ms,Ss).
+apply_match([X|Vs],[X|Ms],Ss) :-
+    apply_match(Vs,Ms,Ss).
 
 same_struct(X,Y) :-
     same_struct1(X,Y,0).
