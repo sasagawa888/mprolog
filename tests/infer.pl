@@ -19,9 +19,7 @@ test1(_,[]).
 test1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
-    write('clause = '), write(C1), nl,
     infer_clause(C1,State,Env),
-    write('State = '),write(State),nl,
     gen_mode(P,State).
     test1(P,Ls).
 
