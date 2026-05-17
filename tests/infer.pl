@@ -58,6 +58,8 @@ pick_pair(?, P, P) :- !.
 pick_pair(X, _, X).
 
 split_pairs([], [], []).
+split_pairs(['?'|Xs], ['?'|As], ['?'|Bs]) :-
+    split_pairs(Xs, As, Bs).
 split_pairs([[A,B]|Xs], [A|As], [B|Bs]) :-
     split_pairs(Xs, As, Bs).
 
