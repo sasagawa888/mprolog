@@ -42,12 +42,14 @@ connect_arg(N, [c(N,Arg)|_], Arg) :- !.
 connect_arg(N, [_|Xs], Arg) :-
     connect_arg(N, Xs, Arg).
 
-infer_arg_mode(_, Arg, State, '+') :-
+infer_arg_mode(N,Arg,State,['+','-']) :-
+    member(e(N,M),State),!.
+infer_arg_mode(N,Arg,State,['-','+']) :-
+    member(e(M,N),State),!.    
+infer_arg_mode(_, Arg, State, ['+','+']) :-
     member(s(Arg,'+'), State),!.
-
-infer_arg_mode(_, Arg, State, '-') :-
+infer_arg_mode(_, Arg, State, ['-','-']) :-
     member(s(Arg,'-'), State),!.
-
 infer_arg_mode(_, _, _, ?).
 
 has_input_var(Term, State) :-
@@ -55,7 +57,7 @@ has_input_var(Term, State) :-
     member(s(Term,+), State).
 
 infer_clause([],[],[]).
-infer_clause([C|Cs],[S1,S2],[E1,E2]) :-
+infer_clause([C|Cs],[S1|S2],[E1|E2]) :-
     infer_a_clause(C,S1,E1),
     infer_clause(Cs,S2,E2).
 
