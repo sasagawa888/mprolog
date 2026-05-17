@@ -22,9 +22,38 @@ test1(P,[N|Ls]) :-
     write('clause = '), write(C1), nl,
     infer_clause(C1,State,Env),
     write('State = '),write(State),nl,
-    infer_mode(State,Mode),
-    write('Mode = '),write(Mode),nl,
+    gen_mode(P,State).
     test1(P,Ls).
+
+gen_mode(P,State) :-
+    infer_mode(State,Mode),
+    mode_pick(Mode,A,B),
+    assert(mode(P,A)),
+    ifthenelse(
+        A == B,
+        true,
+        assert(mode(P,B))).
+
+mode_pick(S, M1, M2) :-
+    pick_cols(S, Pairs),
+    split_pairs(Pairs, M1, M2).
+
+pick_cols([[]|_], []) :- !.
+pick_cols(S, [P|Ps]) :-
+    pick_col(S, P, Rest),
+    pick_cols(Rest, Ps).
+
+pick_col([], ?, []).
+pick_col([[X|Xs]|Rows], P, [Xs|Rest]) :-
+    pick_col(Rows, P0, Rest),
+    pick_pair(X, P0, P).
+
+pick_pair(?, P, P) :- !.
+pick_pair(X, _, X).
+
+split_pairs([], [], []).
+split_pairs([[A,B]|Xs], [A|As], [B|Bs]) :-
+    split_pairs(Xs, As, Bs).
 
 infer_mode([],[]).
 infer_mode([S|Ss], [M1|M2]) :-
@@ -115,8 +144,8 @@ infer_body(A,State,Env,State1,Env1) :-
 
 
 infer_a_body((X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
-infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'-')|State],Env).
-infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'-')|State],Env).
+infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(A,State,Env,State,Env).
 
 same_struct(X,Y) :-
