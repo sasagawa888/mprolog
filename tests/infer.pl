@@ -164,13 +164,14 @@ infer_a_body(X,State,Env,State4,[Free|Env]) :-
     mode(P,Mode),
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
-infer_a_body(X,State,Env,State2,[Free|Env]) :-
+    */
+infer_a_body(X,State,Env,State2,Env1) :-
     n_property(X,builtin),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
     gen_free_state(Free,State1),
-    append(State1,State,State2).
-*/
+    append(State1,State,State2),
+    append(Free,Env,Env1).
 infer_a_body(A,State,Env,State,Env).
 
 
