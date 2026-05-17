@@ -84,10 +84,20 @@ infer_arg_mode(N,Arg,State,['+','-']) :-
 infer_arg_mode(N,Arg,State,['-','+']) :-
     member(e(M,N),State),!.    
 infer_arg_mode(_, Arg, State, ['+','+']) :-
+    n_compiler_variable(Arg),
     member(s(Arg,'+'), State),!.
 infer_arg_mode(_, Arg, State, ['-','-']) :-
+    n_compiler_variable(Arg),
     member(s(Arg,'-'), State),!.
+infer_arg_mode(N,[X|Xs], State, M) :- !,
+    infer_arg_mode(N,X, State, M1),
+    infer_arg_mode(N,Xs, State, M2),
+    same_mode(M1, M2, M).
 infer_arg_mode(_, _, _, '?').
+
+same_mode(['+','+'], ['+','+'], ['+','+']).
+same_mode(['-','-'], ['-','-'], ['-','-']).
+same_mode(_, _, ?).
 
 has_input_var(Term, State) :-
     n_compiler_variable(Term),!,
