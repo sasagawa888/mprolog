@@ -8,6 +8,14 @@ partition([X|L], Y, [X|L1], L2) :-
 partition([X|L], Y, L1, [X|L2]) :-
     !,partition(L, Y, L1, L2).
 partition([], _ , [], []) :- !.
+
+qsort([X|L], R, R0) :-
+    partition(L, X, L1, L2),
+    qsort(L2, R1, R0),
+    qsort(L1, R, [X|R1]).
+qsort([], R, R) :- !.
+
+
 %-----------------------------
 
 test(P) :-
@@ -137,6 +145,7 @@ infer_body((A,B),State,Env,States,Envs) :-
     infer_a_body(A,State,Env,State1,Env1),
     infer_body(B,State1,Env1,States,Envs).
 infer_body(A,State,Env,State1,Env1) :- 
+    %write(adf),
     infer_a_body(A,State,Env,State1,Env1),
     infer_body(end,State1,Env1,State1,Env1).
 
@@ -144,6 +153,28 @@ infer_body(A,State,Env,State1,Env1) :-
 infer_a_body((X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
 infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(X,State,Env,[State1|State],[Free|Env]) :-
+    n_property(X,predicate),
+    term_variables(X,Vars),
+    free_variables(Vars,Env,Free),
+    gen_free_state(Free,State1).
+infer_a_body(X,State,Env,[State1|State],[Free|Env]) :-
+    n_property(X,builtin),
+    term_variables(X,Vars),
+    free_variables(Vars,Env,Free),
+    gen_free_state(Free,State1).    
+
+free_variables([],[]).
+free_variables([V|Vs],Env,Fs) :-
+    member(V,Env),
+    free_variables(Vs,Env,Fs).
+free_variables([V|Vs],Env,[V|Fs]) :-
+    free_variables(Vs,Env,Fs).
+
+gen_free_state([],[]).
+gen_free_state([V|Vs],[s(V,'-')|Fs]) :-
+    gen_free_state(Vs,Fs).
+
 infer_a_body(A,State,Env,State,Env).
 
 same_struct(X,Y) :-
