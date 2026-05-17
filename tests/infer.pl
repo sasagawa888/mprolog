@@ -32,7 +32,7 @@ test1(P,[N|Ls]) :-
     test1(P,Ls).
 
 gen_mode(P,State) :-
-    infer_mode(State,Mode),write(Mode),
+    infer_mode(State,Mode),
     mode_pick(Mode,A,B),
     assert(mode(P,A)),
     ifthenelse(
