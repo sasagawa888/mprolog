@@ -22,6 +22,12 @@ test(P) :-
     n_arity_count(P,L),
     test1(P,L).
 
+testc(P) :-
+    abolish(mode/2),
+    assert(mode(_,[])),
+    n_arity_count(P,L),
+    test1(P,L).
+
 test1(_,[]).
 
 test1(P,[N|Ls]) :-
@@ -170,7 +176,7 @@ infer_a_body(X,State,Env,State4,[Free|Env]) :-
     mode(P,Mode),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,State1),
+    gen_free_state(Free,Vars,State1),
     append(State1,State,State2),
     gen_match(Vars,State2,Match),
     apply_match(Match,Mode,State3),
@@ -179,13 +185,13 @@ infer_a_body(X,State,Env,State2,[Free|Env]) :-
     n_property(X,predicate),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,State1),
+    gen_free_state(Free,Vars,State1),
     append(State1,State,State2).   
 infer_a_body(X,State,Env,State2,Env1) :-
     n_property(X,builtin),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,State1),
+    gen_free_state(Free,Vars,State1),
     append(State1,State,State2),
     append(Free,Env,Env1).
 infer_a_body(A,State,Env,State,Env).
@@ -198,9 +204,15 @@ free_variables([V|Vs],Env,Fs) :-
 free_variables([V|Vs],Env,[V|Fs]) :-
     free_variables(Vs,Env,Fs).
 
-gen_free_state([],[]).
-gen_free_state([V|Vs],[s(V,'-')|Fs]) :-
-    gen_free_state(Vs,Fs).
+gen_free_state([],_,[]).
+gen_free_state([V|Vs],Vars,[a(N,'-')|Fs]) :-
+    nth_var(V,Vars,N),
+    gen_free_state(Vs,Vars,Fs).
+
+nth_var(F,[F|_],1).
+nth_var(F,[_|Vs],N) :-
+    nth_var(F,Vs,N1),
+    N is N1+1.
 
 gen_match([],State,[]).
 gen_match([V|Vs],State,[X|Rs]) :-
