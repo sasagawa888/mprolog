@@ -33,7 +33,7 @@ test1(_,[]).
 test1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
-    infer_clause(C1,State,Env),
+    infer_clause(P,C1,State,Env),
     gen_mode(P,State).
     test1(P,Ls).
 
@@ -109,25 +109,25 @@ has_input_var(Term, State) :-
     n_compiler_variable(Term),!,
     member(s(Term,+), State).
 
-infer_clause([],[],[]).
-infer_clause([C|Cs],[S1|S2],[E1|E2]) :-
-    infer_a_clause(C,S1,E1),
-    infer_clause(Cs,S2,E2).
+infer_clause(P,[],[],[]).
+infer_clause(P,[C|Cs],[S1|S2],[E1|E2]) :-
+    infer_a_clause(P,C,S1,E1),
+    infer_clause(P,Cs,S2,E2).
 
 
-infer_a_clause((Head :- Body), State2, Env2) :- 
+infer_a_clause(P,(Head :- Body), State2, Env2) :- 
     term_variables(Head,Env0),
     Head =.. [_|Args],
-    infer_head(Args,[],Env0,State1,Env1),
-    infer_body(Body,State1,Env1,State2,Env2).
+    infer_head(P,Args,[],Env0,State1,Env1),
+    infer_body(P,Body,State1,Env1,State2,Env2).
 
-infer_a_clause(Head, State1, Env1) :-
+infer_a_clause(P,Head, State1, Env1) :-
     term_variables(Head,Env0),
     infer_head(Head,[],Env0,State1,Env1).
 
 
 %infer_head(Args,State,Env,State,Env).
-infer_head(Args,State,Env,State2,Env2) :-
+infer_head(P,Args,State,Env,State2,Env2) :-
     connect_head(Args,State,Env,State1,Env1),
     exclusive_head(Args,State1,Env1,State2,Env2,1).
 
@@ -158,19 +158,19 @@ exclusive_head1(A,[B|Bs],State,Env,State1,Env,N,M) :-
 
 
 
-infer_body(end,State,Env,State,Env).
-infer_body((A,B),State,Env,States,Envs) :-
-    infer_a_body(A,State,Env,State1,Env1),
-    infer_body(B,State1,Env1,States,Envs).
-infer_body(A,State,Env,State1,Env1) :- 
-    infer_a_body(A,State,Env,State1,Env1),
-    infer_body(end,State1,Env1,State1,Env1).
+infer_body(P,end,State,Env,State,Env).
+infer_body(P,(A,B),State,Env,States,Envs) :-
+    infer_a_body(P,A,State,Env,State1,Env1),
+    infer_body(P,B,State1,Env1,States,Envs).
+infer_body(P,A,State,Env,State1,Env1) :- 
+    infer_a_body(P,A,State,Env,State1,Env1),
+    infer_body(P,end,State1,Env1,State1,Env1).
 
 
-infer_a_body((X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
-infer_a_body((X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body((X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(X,State,Env,State4,[Free|Env]) :-
+infer_a_body(P,(X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
+infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(P,X,State,Env,State4,[Free|Env]) :-
     n_property(X,predicate),
     functor(X,P,_),
     mode(P,Mode),
@@ -181,20 +181,20 @@ infer_a_body(X,State,Env,State4,[Free|Env]) :-
     gen_match(Vars,State2,Match),
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
-infer_a_body(X,State,Env,State2,[Free|Env]) :-
+infer_a_body(P,X,State,Env,State2,[Free|Env]) :-
     n_property(X,predicate),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
     gen_free_state(Free,Vars,State1),
     append(State1,State,State2).   
-infer_a_body(X,State,Env,State2,Env1) :-
+infer_a_body(P,X,State,Env,State2,Env1) :-
     n_property(X,builtin),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
     gen_free_state(Free,Vars,State1),
     append(State1,State,State2),
     append(Free,Env,Env1).
-infer_a_body(A,State,Env,State,Env).
+infer_a_body(P,A,State,Env,State,Env).
 
 
 free_variables([],Env,[]).
