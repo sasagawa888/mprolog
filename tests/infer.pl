@@ -61,6 +61,8 @@ pick_col([[X|Xs]|Rows], P, [Xs|Rest]) :-
     pick_pair(X, P0, P).
 
 pick_pair(?, P, P) :- !.
+pick_pair(['-','-'],['+','-']).
+pick_pair(['-','-'],['-','+']).
 pick_pair(X, _, X).
 
 split_pairs([], [], []).
@@ -85,6 +87,8 @@ connect_arg(N, [c(N,Arg)|_], Arg) :- !.
 connect_arg(N, [_|Xs], Arg) :-
     connect_arg(N, Xs, Arg).
 
+infer_arg_mode(N,Arg,State,['-','-']) :-
+    member(a(N,'-'),State),!.
 infer_arg_mode(N,Arg,State,['+','-']) :-
     member(e(N,M),State),!.
 infer_arg_mode(N,Arg,State,['-','+']) :-
