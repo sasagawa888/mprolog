@@ -172,7 +172,8 @@ infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,X,State,Env,State4,[Free|Env]) :-
     n_property(X,predicate),
-    functor(X,P,_),
+    functor(X,P1,_),
+    P1 \= P,
     mode(P,Mode),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
