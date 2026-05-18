@@ -1,7 +1,7 @@
 % mode-inferencer
 :- use_module(list).
 % test case
-foo(X,Y) :- true,X is Y.
+foo(X,Y) :- true,N is Y.
 % Partition list for quicksort
 partition([X|L], Y, [X|L1], L2) :-
     X < Y, !, partition(L, Y, L1, L2).
@@ -181,7 +181,7 @@ infer_a_body(P,X,State,Env,State4,[Free|Env]) :-
     mode(P,Mode),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,Vars,State1),
+    gen_free_state_other(Free,State1),
     append(State1,State,State2),
     gen_match(Vars,State2,Match),
     apply_match(Match,Mode,State3),
@@ -190,13 +190,13 @@ infer_a_body(P,X,State,Env,State2,[Free|Env]) :-
     n_property(X,predicate),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,Vars,State1),
+    gen_free_state_self(Free,Vars,State1),
     append(State1,State,State2).   
 infer_a_body(P,X,State,Env,State2,Env1) :-
     n_property(X,builtin),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
-    gen_free_state(Free,Vars,State1),
+    gen_free_state_other(Free,State1),
     append(State1,State,State2),
     append(Free,Env,Env1).
 infer_a_body(P,A,State,Env,State,Env).
@@ -209,10 +209,17 @@ free_variables([V|Vs],Env,Fs) :-
 free_variables([V|Vs],Env,[V|Fs]) :-
     free_variables(Vs,Env,Fs).
 
-gen_free_state([],_,[]).
-gen_free_state([V|Vs],Vars,[a(N,'-')|Fs]) :-
+%analize self predicate
+gen_free_state_self([],_,[]).
+gen_free_state_self([V|Vs],Vars,[a(N,'-')|Fs]) :-
     nth_var(V,Vars,N),
-    gen_free_state(Vs,Vars,Fs).
+    gen_free_state_self(Vs,Vars,Fs).
+
+%analize other predicate
+gen_free_state_other([],[]).
+gen_free_state_other([V|Vs],[s(V,'-')|Fs]) :-
+    gen_free_state_other(Vs,Fs).
+
 
 nth_var(F,[F|_],1).
 nth_var(F,[_|Vs],N) :-
