@@ -12,3 +12,10 @@ qsort([X|L], R, R0) :-
     qsort(L2, R1, R0),
     qsort(L1, R, [X|R1]).
 qsort([], R, R) :- !.
+
+fact(0,1).
+fact(N,M) :-
+    N1 is N-1,
+    fact(N1,M1),
+    M is N*M1.
+    

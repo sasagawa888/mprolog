@@ -16,6 +16,7 @@ mode_inference :-
     fail.
 mode_inference.
 
+test(P) :- predicate_inference(P).
 predicate_inference(P) :-
     n_arity_count(P,L),
     predicate_inference1(P,L).
@@ -120,7 +121,7 @@ infer_a_clause(P,(Head :- Body), State2, Env2) :-
 
 infer_a_clause(P,Head, State1, Env1) :-
     term_variables(Head,Env0),
-    infer_head(Head,[],Env0,State1,Env1).
+    infer_head(P,Head,[],Env0,State1,Env1).
 
 
 %infer_head(Args,State,Env,State,Env).
