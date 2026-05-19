@@ -15,7 +15,9 @@ qsort([X|L], R, R0) :-
     qsort(L1, R, [X|R1]).
 qsort([], R, R) :- !.
 
-mode(_,[]).
+mode(dummy,[]).
+mode(partition,['+','+','-','-']).
+mode(partition,['-','+','+','+']).
 %-----------------------------
 
 test(P) :-
