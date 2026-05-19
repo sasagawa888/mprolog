@@ -1,41 +1,32 @@
 % mode-inferencer
 :- use_module(list).
-% test case
-foo(X,Y) :- true,X is Y.
-% Partition list for quicksort
-partition([X|L], Y, [X|L1], L2) :-
-    X < Y, !, partition(L, Y, L1, L2).
-partition([X|L], Y, L1, [X|L2]) :-
-    !,partition(L, Y, L1, L2).
-partition([], _ , [], []) :- !.
 
-qsort([X|L], R, R0) :-
-    partition(L, X, L1, L2),
-    qsort(L2, R1, R0),
-    qsort(L1, R, [X|R1]).
-qsort([], R, R) :- !.
-
-mode(dummy,[]).
+mode(dummy,0,[]).
 %-----------------------------
+infer(File) :-
+    write('mode inference'),nl,
+    abolish(mode/3),
+    assert(mode(dummy,0,[])),
+    reconsult(File),
+    mode_inference.
 
-test(P) :-
+mode_inference :-
+    n_reconsult_predicate(P),
+    predicate_inference(P),
+    fail.
+mode_inference.
+
+predicate_inference(P) :-
     n_arity_count(P,L),
-    test1(P,L).
+    predicate_inference1(P,L).
 
-testc(P) :-
-    abolish(mode/2),
-    assert(mode(dummy,[])),
-    n_arity_count(P,L),
-    test1(P,L).
-
-test1(_,[]).
-
-test1(P,[N|Ls]) :-
+predicate_inference1(_,[]) :- !.
+predicate_inference1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
     infer_clause(P,C1,State,Env),
-    gen_mode(P,N,State),
-    test1(P,Ls).
+    gen_mode(P,N,State),!,
+    predicate_inference1(P,Ls).
 
 gen_mode(P,N,State) :-
     infer_mode(State,Mode),
