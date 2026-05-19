@@ -30,7 +30,7 @@ predicate_inference1(P,[N|Ls]) :-
     predicate_inference1(P,Ls).
 
 gen_mode(P,N,State) :-
-    infer_mode(State,Mode),
+    infer_mode(State,Mode),write(State),
     mode_pick(Mode,A,B),
     assert(mode(P,N,A)),
     ifthenelse(
@@ -167,8 +167,14 @@ infer_body(P,A,State,Env,State1,Env1) :-
     infer_a_body(P,A,State,Env,State1,Env1),
     infer_body(P,end,State1,Env1,State1,Env1).
 
+gen_isright([],[]).
+gen_isright([V|Vs],[s(V,'+')|Ss]) :-
+    gen_isright(Vs,Ss).
 
-infer_a_body(P,(X is Y),State,Env,[s(X,'-'),s(Y,'+')|State],Env).
+infer_a_body(P,(X is Y),State,Env,State2,Env) :-
+    term_variables(Y,Vars),
+    gen_isright(Vars,State1),
+    append(State1,[s(X,'-')|State],State2).
 infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,X,State,Env,State4,Env1) :-
