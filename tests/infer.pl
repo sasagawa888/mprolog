@@ -121,7 +121,8 @@ infer_a_clause(P,(Head :- Body), State2, Env2) :-
 
 infer_a_clause(P,Head, State1, Env1) :-
     term_variables(Head,Env0),
-    infer_head(P,Head,[],Env0,State1,Env1).
+    Head =.. [_|Args],
+    infer_head(P,Args,[],Env0,State1,Env1).
 
 
 %infer_head(Args,State,Env,State,Env).
