@@ -16,7 +16,12 @@ mode_inference :-
     fail.
 mode_inference.
 
-test(P) :- predicate_inference(P).
+test(P) :- 
+    abolish(mode/3),
+    assert(mode(dummy,0,[])),
+    predicate_inference(P).
+
+
 predicate_inference(P) :-
     n_arity_count(P,L),
     predicate_inference1(P,L).
@@ -30,7 +35,7 @@ predicate_inference1(P,[N|Ls]) :-
     predicate_inference1(P,Ls).
 
 gen_mode(P,N,State) :-
-    infer_mode(State,Mode),write(State),
+    infer_mode(State,Mode),
     mode_pick(Mode,A,B),
     assert(mode(P,N,A)),
     ifthenelse(
@@ -117,7 +122,7 @@ infer_a_clause(P,(Head :- Body), State2, Env2) :-
     term_variables(Head,Env0),
     Head =.. [_|Args],
     infer_head(P,Args,[],Env0,State1,Env1),
-    infer_body(P,Body,State1,Env1,State2,Env2).
+    infer_body(P,Body,State1,Env1,State2,Env2),!.
 
 infer_a_clause(P,Head, State1, Env1) :-
     term_variables(Head,Env0),
@@ -171,10 +176,11 @@ gen_isright([],[]).
 gen_isright([V|Vs],[s(V,'+')|Ss]) :-
     gen_isright(Vs,Ss).
 
-infer_a_body(P,(X is Y),State,Env,State2,Env) :-
+infer_a_body(P,(X is Y),State,Env,State2,Env1) :-
     term_variables(Y,Vars),
     gen_isright(Vars,State1),
-    append(State1,[s(X,'-')|State],State2).
+    append(State1,[s(X,'-')|State],State2),
+    append(Vars,[X|Env],Env1).
 infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,X,State,Env,State4,Env1) :-
