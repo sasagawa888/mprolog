@@ -34,17 +34,17 @@ test1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
     infer_clause(P,C1,State,Env),
-    gen_mode(P,State),
+    gen_mode(P,N,State),
     test1(P,Ls).
 
-gen_mode(P,State) :-
+gen_mode(P,N,State) :-
     infer_mode(State,Mode),
     mode_pick(Mode,A,B),
-    assert(mode(P,A)),
+    assert(mode(P,N,A)),
     ifthenelse(
         A == B,
         true,
-        assert(mode(P,B))).
+        assert(mode(P,N,B))).
 
 mode_pick(S, M1, M2) :-
     pick_cols(S, Pairs),
@@ -180,9 +180,9 @@ infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,X,State,Env,State4,Env1) :-
     n_property(X,predicate),
-    functor(X,P1,_),
+    functor(X,P1,N),
     P1 \= P,
-    mode(P1,Mode),
+    mode(P1,N,Mode),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
     append(Free,Env,Env1),
@@ -215,12 +215,10 @@ infer_a_body(P,X,State,Env,State2,Env1) :-
     
 infer_a_body(P,A,State,Env,State,Env).
 
-% 引数全体が「構造」のときだけ判定する
+% only X is structure 
 output_arg(X, _) :-
     n_compiler_variable(X), !, fail.
-
 output_arg([], _) :- !, fail.
-
 output_arg([X|Xs], State) :-
     contains_output_var(X, State), ! ;
     contains_output_var(Xs, State), !.
