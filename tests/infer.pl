@@ -34,7 +34,7 @@ test1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
     infer_clause(P,C1,State,Env),
-    gen_mode(P,State).
+    gen_mode(P,State),
     test1(P,Ls).
 
 gen_mode(P,State) :-
@@ -180,18 +180,20 @@ infer_a_body(P,X,State,Env,State4,Env1) :-
     n_property(X,predicate),
     functor(X,P1,_),
     P1 \= P,
-    mode(P,Mode),
+    mode(P1,Mode),
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
     append(Free,Env,Env1),
     gen_free_state_other(Free,State1),
     append(State1,State,State2),
-    gen_match(Vars,State2,Match),
+    gen_match(Vars,State2,Match),!,
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
-    
+
 infer_a_body(P,X,State,Env,State2,Env1) :-
     n_property(X,predicate),
+    functor(X,P1,_),
+    P1 = P,
     term_variables(X,Vars),
     free_variables(Vars,Env,Free),
     append(Free,Env,Env1),
