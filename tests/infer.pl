@@ -1,7 +1,7 @@
 % mode-inferencer
 :- use_module(list).
 % test case
-foo(X,Y) :- true,N is Y.
+foo(X,Y) :- true,X is Y.
 % Partition list for quicksort
 partition([X|L], Y, [X|L1], L2) :-
     X < Y, !, partition(L, Y, L1, L2).
@@ -16,8 +16,6 @@ qsort([X|L], R, R0) :-
 qsort([], R, R) :- !.
 
 mode(dummy,[]).
-mode(partition,['+','+','-','-']).
-mode(partition,['-','+','+','+']).
 %-----------------------------
 
 test(P) :-
@@ -89,6 +87,8 @@ connect_arg(N, [c(N,Arg)|_], Arg) :- !.
 connect_arg(N, [_|Xs], Arg) :-
     connect_arg(N, Xs, Arg).
 
+infer_arg_mode(N,Arg,State,['+','+']) :-
+    member(a(N,'+'),State),!.
 infer_arg_mode(N,Arg,State,['-','-']) :-
     member(a(N,'-'),State),!.
 infer_arg_mode(N,Arg,State,['+','-']) :-
@@ -192,7 +192,7 @@ infer_a_body(P,X,State,Env,State4,Env1) :-
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
 
-infer_a_body(P,X,State,Env,State2,Env1) :-
+infer_a_body(P,X,State,Env,State4,Env1) :-
     n_property(X,predicate),
     functor(X,P1,_),
     P1 = P,
@@ -200,7 +200,10 @@ infer_a_body(P,X,State,Env,State2,Env1) :-
     free_variables(Vars,Env,Free),
     append(Free,Env,Env1),
     gen_free_state_self(Free,Vars,State1),
-    append(State1,State,State2).   
+    append(State1,State,State2),   
+    X =.. [_|Args],
+    gen_output_arg(Args,State2,State3,1),
+    append(State3,State2,State4).   
 
 infer_a_body(P,X,State,Env,State2,Env1) :-
     n_property(X,builtin),
@@ -212,6 +215,35 @@ infer_a_body(P,X,State,Env,State2,Env1) :-
     
 infer_a_body(P,A,State,Env,State,Env).
 
+% 引数全体が「構造」のときだけ判定する
+output_arg(X, _) :-
+    n_compiler_variable(X), !, fail.
+
+output_arg([], _) :- !, fail.
+
+output_arg([X|Xs], State) :-
+    contains_output_var(X, State), ! ;
+    contains_output_var(Xs, State), !.
+
+contains_output_var(X, State) :-
+    n_compiler_variable(X),
+    member(s(X,'-'), State), !.
+contains_output_var([], _) :- !, fail.
+contains_output_var([X|Xs], State) :-
+    contains_output_var(X, State), ! ;
+    contains_output_var(Xs, State), !.
+
+
+gen_output_arg([],State,State,_).
+gen_output_arg([A|As],State,State1,N) :-
+    output_arg(A,State),
+    State2 = [a(N,'+')|State],
+    N1 is N+1,
+    gen_output_arg(As,State2,State1,N1).
+gen_output_arg([A|As],State,State1,N) :-
+    N1 is N+1,
+    gen_output_arg(As,State,State1,N1).
+
 
 free_variables([],Env,[]).
 free_variables([V|Vs],Env,Fs) :-
@@ -222,7 +254,7 @@ free_variables([V|Vs],Env,[V|Fs]) :-
 
 %analize self predicate
 gen_free_state_self([],_,[]).
-gen_free_state_self([V|Vs],Vars,[a(N,'-')|Fs]) :-
+gen_free_state_self([V|Vs],Vars,[a(N,'-'),s(V,'-')|Fs]) :-
     nth_var(V,Vars,N),
     gen_free_state_self(Vs,Vars,Fs).
 
