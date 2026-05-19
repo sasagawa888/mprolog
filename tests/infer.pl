@@ -24,7 +24,7 @@ test(P) :-
 
 testc(P) :-
     abolish(mode/2),
-    assert(mode(_,[])),
+    assert(mode(dummy,[])),
     n_arity_count(P,L),
     test1(P,L).
 
