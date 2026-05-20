@@ -2,12 +2,21 @@
 :- use_module(list).
 
 mode(dummy,0,[]).
+flag(dummy).
 %-----------------------------
 infer(File) :-
-    write('mode inference'),nl,
+    infer1(File),
+    infer2.
+
+infer1(File) :-
+    write('inference1'),nl,
     abolish(mode/3),
     assert(mode(dummy,0,[])),
     reconsult(File),
+    mode_inference.
+
+infer2 :-
+    write('inference2'),nl,
     mode_inference.
 
 mode_inference :-
@@ -17,11 +26,9 @@ mode_inference :-
 mode_inference.
 
 test(P) :- 
-    abolish(mode/3),
-    assert(mode(dummy,0,[])),
     predicate_inference(P).
 
-
+predicate_inference(P) :- mode(P,_,_),!.
 predicate_inference(P) :-
     n_arity_count(P,L),
     predicate_inference1(P,L).
@@ -30,10 +37,13 @@ predicate_inference1(_,[]) :- !.
 predicate_inference1(P,[N|Ls]) :-
     n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
+    abolish(flag/1),
+    assert(flag(dummy)),
     infer_clause(P,C1,State,Env),
     gen_mode(P,N,State),!,
     predicate_inference1(P,Ls).
 
+gen_mode(P,_,_) :- flag(incomplete).
 gen_mode(P,N,State) :-
     infer_mode(State,Mode),
     mode_pick(Mode,A,B),
@@ -191,6 +201,12 @@ infer_a_body(P,(X is Y),State,Env,State2,Env1) :-
     append(Vars,[X|Env],Env1).
 infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(P,X,State,Env,State,Env) :-
+    n_property(X,predicate),
+    functor(X,P1,N),
+    P1 \= P,
+    not(mode(P1,N,Mode)),
+    assert(flag(incomplete)).
 infer_a_body(P,X,State,Env,State4,Env1) :-
     n_property(X,predicate),
     functor(X,P1,N),
