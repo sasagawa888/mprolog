@@ -313,7 +313,7 @@ gen_match([V|Vs],State,[X|Rs]) :-
 gen_match([V|Vs],State,[V|Rs]) :-
     gen_match(Vs,State,Rs).
 
-apply_match([],[],State).
+apply_match([],[],[]).
 apply_match([V|Vs],[M|Ms],[s(V,M)|Ss]) :-
     n_compiler_variable(V),
     apply_match(Vs,Ms,Ss).
