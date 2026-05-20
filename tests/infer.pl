@@ -37,11 +37,19 @@ predicate_inference1(P,[N|Ls]) :-
 gen_mode(P,N,State) :-
     infer_mode(State,Mode),
     mode_pick(Mode,A,B),
+    complete_mode(A),
+    complete_mode(B),
     assert(mode(P,N,A)),
     ifthenelse(
         A == B,
         true,
         assert(mode(P,N,B))).
+
+complete_mode([]).
+complete_mode([+|Ls]) :-
+    complete_mode(Ls).
+complete_mode([-|Ls]) :-
+    complete_mode(Ls).
 
 mode_pick(S, M1, M2) :-
     pick_cols(S, Pairs),
