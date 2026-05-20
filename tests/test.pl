@@ -1,5 +1,9 @@
+
 % test case
 foo(X,Y) :- true,X is Y.
+
+
+
 % Partition list for quicksort
 partition([X|L], Y, [X|L1], L2) :-
     X < Y, !, partition(L, Y, L1, L2).
@@ -18,4 +22,4 @@ fact(N,M) :-
     N1 is N-1,
     fact(N1,M1),
     M is N*M1.
-    
+

@@ -122,7 +122,7 @@ infer_a_clause(P,(Head :- Body), State2, Env2) :-
     term_variables(Head,Env0),
     Head =.. [_|Args],
     infer_head(P,Args,[],Env0,State1,Env1),
-    infer_body(P,Body,State1,Env1,State2,Env2),!.
+    infer_body(P,Body,State1,Env1,State2,Env2).
 
 infer_a_clause(P,Head, State1, Env1) :-
     term_variables(Head,Env0),
@@ -164,11 +164,11 @@ exclusive_head1(A,[B|Bs],State,Env,State1,Env,N,M) :-
 
 
 
-infer_body(P,end,State,Env,State,Env).
+infer_body(P,end,State,Env,State,Env) :- !.
 infer_body(P,(A,B),State,Env,States,Envs) :-
     infer_a_body(P,A,State,Env,State1,Env1),
     infer_body(P,B,State1,Env1,States,Envs).
-infer_body(P,A,State,Env,State1,Env1) :- 
+infer_body(P,A,State,Env,State1,Env1) :-  
     infer_a_body(P,A,State,Env,State1,Env1),
     infer_body(P,end,State1,Env1,State1,Env1).
 
@@ -197,7 +197,7 @@ infer_a_body(P,X,State,Env,State4,Env1) :-
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
 
-infer_a_body(P,X,State,Env,State4,Env1) :-
+infer_a_body(P,X,State,Env,State3,Env1) :-
     n_property(X,predicate),
     functor(X,P1,_),
     P1 = P,
@@ -207,8 +207,7 @@ infer_a_body(P,X,State,Env,State4,Env1) :-
     gen_free_state_self(Free,Vars,State1),
     append(State1,State,State2),   
     X =.. [_|Args],
-    gen_output_arg(Args,State2,State3,1),
-    append(State3,State2,State4).   
+    gen_output_arg(Args,State2,State3,1).
 
 infer_a_body(P,X,State,Env,State2,Env1) :-
     n_property(X,builtin),
