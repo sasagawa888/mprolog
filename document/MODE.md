@@ -1,4 +1,5 @@
 # Mode Inference Prototype
+The mode library is planned to eventually be integrated into and absorbed by the compiler.
 
 # Example Execution
 N-Prolog Ver 5.19 [30M cells]
