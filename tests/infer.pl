@@ -201,17 +201,17 @@ infer_a_body(P,(X is Y),State,Env,State2,Env1) :-
     gen_isright(Vars,State1),
     append(State1,[s(X,'-')|State],State2),
     append(Vars,[X|Env],Env1).
-infer_a_body(P,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(P,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(P,(X >= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(P,(X =< Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(P,(X =:= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(P,(X =\= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(P,X,State,Env,State,Env) :-
+infer_a_body(_,(X > Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(_,(X < Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(_,(X >= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(_,(X =< Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(_,(X =:= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(_,(X =\= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
+infer_a_body(_,X,State,Env,State,Env) :-
     n_property(X,predicate),
     functor(X,P1,N),
     P1 \= P,
-    not(mode(P1,N,Mode)),
+    not(mode(P1,N,_)),
     assert(flag(incomplete)).
 infer_a_body(P,X,State,Env,State4,Env1) :-
     n_property(X,predicate),
@@ -239,7 +239,7 @@ infer_a_body(P,X,State,Env,State3,Env1) :-
     X =.. [_|Args],
     gen_output_arg(Args,State2,State3,1).
 
-infer_a_body(P,X,State,Env,State4,Env1) :-
+infer_a_body(_,X,State,Env,State4,Env1) :-
     n_property(X,builtin),
     functor(X,P1,N),
     mode_system(P1,N,Mode),
@@ -252,7 +252,7 @@ infer_a_body(P,X,State,Env,State4,Env1) :-
     apply_match(Match,Mode,State3),
     append(State3,State2,State4).
 
-infer_a_body(P,A,State,Env,State,Env).
+infer_a_body(_,_,State,Env,State,Env).
 
 % only X is structure 
 output_arg(X, _) :-
