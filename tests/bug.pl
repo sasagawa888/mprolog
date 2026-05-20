@@ -24,3 +24,5 @@ fact(N,M) :-
     M is N*M1.
 
 bar(X) :- write(X).
+
+boo(1,2).
