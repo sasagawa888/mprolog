@@ -64,7 +64,8 @@ Result is list [+,+,-,-]
 Env = [e(1,2),c(varY,+),c(varX,+),c(2,varY),c(1,varX)]
 c/2　connect c(1,[X|L])
 e/2 exclusive e(2,3)
-s/3 state (1,R,+)
+s/3 state s(R,+)
+a/1 argument  a(1,+)   
 
 </2 >/2 =:=/2 /==/2 -> left and rigth must be +
 right is left   -> right is -, left is +.
