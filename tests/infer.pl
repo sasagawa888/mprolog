@@ -41,11 +41,11 @@ predicate_inference1(P,[N|Ls]) :-
     n_variable_convert(C,C1),
     abolish(flag/1),
     assert(flag(dummy)),
-    infer_clause(P,C1,State,Env),
+    infer_clause(P,C1,State,_),
     gen_mode(P,N,State),!,
     predicate_inference1(P,Ls).
 
-gen_mode(P,_,_) :- flag(incomplete).
+gen_mode(_,_,_) :- flag(incomplete).
 gen_mode(P,N,State) :-
     infer_mode(State,Mode),
     mode_pick(Mode,A,B),
@@ -104,14 +104,14 @@ connect_arg(N, [c(N,Arg)|_], Arg) :- !.
 connect_arg(N, [_|Xs], Arg) :-
     connect_arg(N, Xs, Arg).
 
-infer_arg_mode(N,Arg,State,['+','+']) :-
+infer_arg_mode(N,_,State,['+','+']) :-
     member(a(N,'+'),State),!.
-infer_arg_mode(N,Arg,State,['-','-']) :-
+infer_arg_mode(N,_,State,['-','-']) :-
     member(a(N,'-'),State),!.
-infer_arg_mode(N,Arg,State,['+','-']) :-
-    member(e(N,M),State),!.
-infer_arg_mode(N,Arg,State,['-','+']) :-
-    member(e(M,N),State),!.    
+infer_arg_mode(N,_,State,['+','-']) :-
+    member(e(N,_),State),!.
+infer_arg_mode(N,_,State,['-','+']) :-
+    member(e(_,N),State),!.    
 infer_arg_mode(_, Arg, State, ['+','+']) :-
     n_compiler_variable(Arg),
     member(s(Arg,'+'), State),!.
@@ -132,7 +132,7 @@ has_input_var(Term, State) :-
     n_compiler_variable(Term),!,
     member(s(Term,+), State).
 
-infer_clause(P,[],[],[]).
+infer_clause(_,[],[],[]).
 infer_clause(P,[C|Cs],[S1|S2],[E1|E2]) :-
     infer_a_clause(P,C,S1,E1),
     infer_clause(P,Cs,S2,E2).
@@ -150,8 +150,8 @@ infer_a_clause(P,Head, State1, Env1) :-
     infer_head(P,Args,[],Env0,State1,Env1).
 
 
-%infer_head(Args,State,Env,State,Env).
-infer_head(P,Args,State,Env,State2,Env3) :-
+%infer_head(Pred,Args,State,Env,State,Env).
+infer_head(_,Args,State,Env,State2,Env3) :-
     connect_head(Args,State,Env,State1,Env1),
     exclusive_head(Args,State1,Env1,State2,Env2,1),
     term_variables(Args,Argvars),
@@ -160,31 +160,31 @@ infer_head(P,Args,State,Env,State2,Env3) :-
 connect_head(Args,State,Env,State1,Env1) :-
     connect_head1(Args,State,Env,State1,Env1,1).
 
-connect_head1([],State,Env,State,Env,N).
+connect_head1([],State,Env,State,Env,_).
 connect_head1([A|As],State,Env,State1,Env1,N) :-
     State2 = [c(N,A)|State],
     N1 is N+1,
     connect_head1(As,State2,Env,State1,Env1,N1).
 
-exclusive_head([A],State,Env,State,Env,N).
+exclusive_head([_],State,Env,State,Env,_).
 exclusive_head([A|As],State,Env,State2,Env2,N) :-
     N1 is N+1,
     exclusive_head1(A,As,State,Env,State1,Env1,N,N1),
     exclusive_head(As,State1,Env1,State2,Env2,N1).
 
-exclusive_head1(A,[],State,Env,State,Env,N,M).
+exclusive_head1(_,[],State,Env,State,Env,_,_).
 exclusive_head1(A,[B|Bs],State,Env,State1,Env,N,M) :-
     same_struct(A,B),!,
     State2 = [e(N,M)|State],
     M1 is M+1,
     exclusive_head1(A,Bs,State2,Env,State1,Env,N,M1).
-exclusive_head1(A,[B|Bs],State,Env,State1,Env,N,M) :-
+exclusive_head1(A,[_|Bs],State,Env,State1,Env,N,M) :-
     M1 is M+1,
     exclusive_head1(A,Bs,State,Env,State1,Env,N,M1).
 
 
 
-infer_body(P,end,State,Env,State,Env) :- !.
+infer_body(_,end,State,Env,State,Env) :- !.
 infer_body(P,(A,B),State,Env,States,Envs) :-
     infer_a_body(P,A,State,Env,State1,Env1),
     infer_body(P,B,State1,Env1,States,Envs).
@@ -196,7 +196,7 @@ gen_isright([],[]).
 gen_isright([V|Vs],[s(V,'+')|Ss]) :-
     gen_isright(Vs,Ss).
 
-infer_a_body(P,(X is Y),State,Env,State2,Env1) :-
+infer_a_body(_,(X is Y),State,Env,State2,Env1) :-
     term_variables(Y,Vars),
     gen_isright(Vars,State1),
     append(State1,[s(X,'-')|State],State2),
@@ -207,7 +207,7 @@ infer_a_body(_,(X >= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(_,(X =< Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(_,(X =:= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
 infer_a_body(_,(X =\= Y),State,Env,[s(X,'+'),s(Y,'+')|State],Env).
-infer_a_body(_,X,State,Env,State,Env) :-
+infer_a_body(P,X,State,Env,State,Env) :-
     n_property(X,predicate),
     functor(X,P1,N),
     P1 \= P,
