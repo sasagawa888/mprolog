@@ -277,12 +277,12 @@ gen_output_arg([A|As],State,State1,N) :-
     State2 = [a(N,'+')|State],
     N1 is N+1,
     gen_output_arg(As,State2,State1,N1).
-gen_output_arg([A|As],State,State1,N) :-
+gen_output_arg([_|As],State,State1,N) :-
     N1 is N+1,
     gen_output_arg(As,State,State1,N1).
 
 
-free_variables([],Env,[]).
+free_variables([],_,[]).
 free_variables([V|Vs],Env,Fs) :-
     member(V,Env),
     free_variables(Vs,Env,Fs).
@@ -306,7 +306,7 @@ nth_var(F,[_|Vs],N) :-
     nth_var(F,Vs,N1),
     N is N1+1.
 
-gen_match([],State,[]).
+gen_match([],_,[]).
 gen_match([V|Vs],State,[X|Rs]) :-
     member(s(V,X),State),
     gen_match(Vs,State,Rs).
