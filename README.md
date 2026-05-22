@@ -1,4 +1,8 @@
 # M-Prolog　A small Prolog implementation
+M-Prolog is under active development for the time being.
+In particular, the compiler is not expected to function correctly yet.
+
+
 M-Prolog(NPL) is an interpreter and compiler to be superset of ARITY/PROLOG(MS-DOS)
 M-Prolog is an advanced successor to N-Prolog.
 It is being developed as an experimental project to dramatically improve execution performance through a complete redesign of the compiler.
