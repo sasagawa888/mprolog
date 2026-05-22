@@ -1,12 +1,13 @@
-# N-Prolog　A small Prolog implementation
-N-Prolog(NPL) is an interpreter and compiler to be superset of ARITY/PROLOG(MS-DOS)
-
-**N-Prolog is NOT ISO-Prolog.** Compatible with ARITY/PROLOG(MS-DOS) see document/NAMUAL.md　N-Prolog is not strictly ISO compliant, but it covers almost all ISO-Prolog core features required for educational use.
+# M-Prolog　A small Prolog implementation
+M-Prolog(NPL) is an interpreter and compiler to be superset of ARITY/PROLOG(MS-DOS)
+M-Prolog is an advanced successor to N-Prolog.
+It is being developed as an experimental project to dramatically improve execution performance through a complete redesign of the compiler.
+Its goal is to achieve practical high-speed execution using approaches different from the traditional WAM architecture.
 
 license is modified BSD.
 Note: We later became aware that another system with the same name, N-Prolog, already existed. This project is unrelated.
 
-![npl](npl.png)
+![mpl](mpl.png)
 
 ## Relation to ISO-Prolog
 Although N-Prolog is a superset of ARITY/Prolog, it also implements most ISO-Prolog predicates. In addition, by adding the -d option at startup, strings are represented using double quotes, just as in ISO. For study and educational purposes, ISO-Prolog code can be sufficiently reproduced. Please refer to SUPER.md for details.
