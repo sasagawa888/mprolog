@@ -58,7 +58,8 @@ Junify_var(head,arg,th)    for variable term
 Junify_nil(arg,th)    for [] check.
 */
 
-:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
+:- module(jump,[compile_file/1,compile_file/2,
+                option/2,pred_data/3,optimize/1]).
 
 option(_,_).
 pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn

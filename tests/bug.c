@@ -10,13 +10,17 @@ arg1 = Jnth(arglist,1);
 loop1:
 save1 = Jget_wp(th);
 if(Junify_int(arg1,Jmakeint(1),th) == YES && 1)
-if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);
+if(rest != NIL){
+if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
+} else return(YES);
 Jset_ac(save3,th);
 Junbind(save2,th);
 Jset_wp(save1,th);
 save1 = Jget_wp(th);
 if(Junify_int(arg1,Jmakeint(2),th) == YES && 1)
-if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);
+if(rest != NIL){
+if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
+} else return(YES);
 Jset_ac(save3,th);
 Junbind(save2,th);
 Jset_wp(save1,th);
