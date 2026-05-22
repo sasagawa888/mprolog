@@ -1,28 +1,8 @@
 
-% mode test data
+p(1).
+p(2).
 
-qsort([X|L], R, R0) :-
-    partition(L, X, L1, L2),
-    qsort(L2, R1, R0),
-    qsort(L1, R, [X|R1]).
-qsort([], R, R) :- !.
-
-partition([X|L], Y, [X|L1], L2) :-
-    X < Y, !, partition(L, Y, L1, L2).
-partition([X|L], Y, L1, [X|L2]) :-
-    !,partition(L, Y, L1, L2).
-partition([], _ , [], []) :- !.
-
-
-% test case
-foo(X,Y) :- true,X is Y.
-
-fact(0,1).
-fact(N,M) :-
-    N1 is N-1,
-    fact(N1,M1),
-    M is N*M1.
-
-bar(X) :- write(X).
-
-boo(1,2).
+foo :-
+    p(X),
+    write(X),
+    fail.
