@@ -66,12 +66,12 @@ On Linux type "sudo make uninstall" on terminal.
 To invoke npl, enter command from terminal
 
 ```
-npl
+mpl
 
 -c option is for start up file.
 
 e.g.
-npl -c init.pl
+mpl -c init.pl
 
 -r option is for Not editable REPL mode.
 Default, REPL is editable.
@@ -80,7 +80,7 @@ Default, REPL is editable.
 other option
 
 ```
-$ npl -h
+$ mpl -h
 List of options:
 -c filename -- NPL starts after reading the file.
 -d          -- string is double quote.
@@ -95,14 +95,14 @@ List of options:
 ```
 
 ## Goal
-N-Prolog aims to enjoy the experience of DEC10-Prolog from the 1980s.
+M-Prolog aims to enjoy the experience of DEC10-Prolog from the 1980s.
 
 ## Video 
 [N-Prolog in 1 minute Tutorials](https://www.youtube.com/watch?v=w51nbR98cA8&list=PLZJFIgVbFOoJoQR0JjDsMcqpR_qiQ7cIU)
 
 ## example
 ```prolog
-N-Prolog Ver 4.20
+M-Prolog Ver 0.10
 ?- length([1,2,3],X).
 X = 3
 yes
