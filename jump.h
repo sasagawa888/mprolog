@@ -188,6 +188,24 @@ static inline int Jbigx_to_parmanent(int x) {
     return f1[BIGX_TO_PARMANENT_IDX](x);
 }
 
+static inline int Jpop_back(int x) {
+    return f1[POP_BACK_IDX](x);
+}
+
+static inline int Jinc_back_choice(int x) {
+    return f1[INC_BACK_CHOICE_IDX](x);
+}
+
+
+static inline int Jget_back_local(int x) {
+    return f1[GET_BACK_LOCAL_IDX](x);
+}
+
+static inline int Jget_back_choice(int x) {
+    return f1[GET_BACK_CHOICE_IDX](x);
+}
+
+
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
 }
@@ -346,6 +364,13 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
+static inline int Jset_back_local(int x, int th) {
+    return f2[SET_BACK_LOCAL_IDX](x, th);
+}
+
+static inline int Jset_back_choice(int x, int th) {
+    return f2[SET_BACK_CHOICE_IDX](x, th);
+}
 
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
@@ -482,6 +507,9 @@ static inline int Jcall(int x, int y, int th) {
     return f3[CALL_IDX](x, y, th);
 }
 
+static inline int Jpush_back(int x, int y, int th) {
+    return f3[PUSH_BACK_IDX](x, y, th);
+}
 
 
 static inline int Jmakeconst(char* x) {
