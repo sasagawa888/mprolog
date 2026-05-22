@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "term.h"
-#include "npl.h"
+#include "mpl.h"
 
 #define NELEM(X) (sizeof(X) / sizeof((X)[0]))
 

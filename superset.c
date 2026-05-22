@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <ctype.h>
-#include "npl.h"
+#include "mpl.h"
 
 int b_atom_concat(int arglist, int rest, int th)
 {

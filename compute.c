@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
-#include "npl.h"
+#include "mpl.h"
 
 //immediate small integer
 int get_tag(int addr)

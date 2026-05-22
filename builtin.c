@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <pthread.h>
-#include "npl.h"
+#include "mpl.h"
 
 void init_builtin(void)
 {

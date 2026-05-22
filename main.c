@@ -17,7 +17,7 @@ written by kenichi sasagawa 2016/8~
 #include <netdb.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "npl.h"
+#include "mpl.h"
 
 //global vers
 int proof[THREADSIZE];
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
 	    repl_flag = 0;
 	    break;
 	case 'v':
-	    printf("N-Prolog Ver %1.2f\n", VERSION);
+	    printf("M-Prolog Ver %1.2f\n", VERSION);
 	    exit(EXIT_SUCCESS);
 	case 'h':
 	    usage();

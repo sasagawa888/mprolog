@@ -21,10 +21,10 @@ CURSES_LIBS   := $(shell command -v ncursesw6-config >/dev/null 2>&1 && ncursesw
 NPROLOG ?= $(CURDIR)
 export NPROLOG
 
-SHAREDIR ?= $(PREFIX)/share/nprolog
+SHAREDIR ?= $(PREFIX)/share/mprolog
 export SHAREDIR
 
-NPL   := npl
+MPL   := mpl
 EDLOG := edlog
 
 
@@ -55,7 +55,7 @@ ifeq ($(USE_GDB),1)
 CFLAGS += -O0 -g
 endif
 
-NPL_OBJS := main.o \
+MPL_OBJS := main.o \
 	parser.o \
 	function.o \
 	builtin.o \
@@ -85,16 +85,16 @@ SRC_PROLOG := library/opengl.pl \
 OBJ_PROLOG := $(SRC_PROLOG:.pl=.o)
 
 
-./library/%.o: ./library/%.pl $(NPL)
-	echo "use_module(compiler),compile_file('./$<')." | ./$(NPL) -r
+./library/%.o: ./library/%.pl $(MPL)
+	echo "use_module(compiler),compile_file('./$<')." | ./$(MPL) -r
 	touch $@
 
-TARGETS := $(NPL) $(EDLOG)
+TARGETS := $(MPL) $(EDLOG)
 
 all: $(TARGETS)
 
 
-$(NPL): $(NPL_OBJS)
+$(MPL): $(MPL_OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 
@@ -105,14 +105,14 @@ edlog.o: edlog.c edlog.h term.h
 	$(CC) $(CFLAGS) -c $< $(CURSES_CFLAGS)
 
 
-%.o: %.c npl.h
+%.o: %.c MPL.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
 .PHONY: install
-install: $(NPL) $(EDLOG)
+install: $(MPL) $(EDLOG)
 	mkdir -p $(DEST)
-	install -s $(NPL) $(DEST)
+	install -s $(MPL) $(DEST)
 	install -s $(EDLOG) $(DEST)
 	mkdir -p $(DESTDIR)$(SHAREDIR)
 	install -m 644 library/* $(DESTDIR)$(SHAREDIR)
@@ -123,12 +123,12 @@ prolog: $(OBJ_PROLOG)
 
 .PHONY: uninstall
 uninstall:
-	rm -f $(DEST)/$(NPL) $(DEST)/$(EDLOG)
+	rm -f $(DEST)/$(MPL) $(DEST)/$(EDLOG)
 
 # clean
 .PHONY: clean all
 clean:
-	rm -f *.o $(NPL) $(EDLOG) $(OBJ_PROLOG)
+	rm -f *.o $(MPL) $(EDLOG) $(OBJ_PROLOG)
 
 
 .PHONY: check

@@ -1,6 +1,6 @@
 #include <setjmp.h>
 #include <stdio.h>
-#include "npl.h"
+#include "mpl.h"
 
 typedef int (*fn0)();
 typedef int (*fn1)(int);

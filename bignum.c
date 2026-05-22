@@ -34,7 +34,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
-#include "npl.h"
+#include "mpl.h"
 
 
 #define CHECKBIG0 if(big_pt0<0 || big_pt0>=BIGNUM_PARMA){exception(RESOURCE_ERR,makestr("bigcell pt0"),big_pt0,0);}
