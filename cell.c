@@ -428,6 +428,50 @@ int pop_stack(int th)
     return (stack[--sp[th]][th]);
 }
 
+void push_back(int x, int y, int th)
+{
+    backstack[bp[th]][0][th] = x; //local sp
+    backstack[bp[th]][1][th] = y; //clause choice 
+    bp[th]++;
+    if (bp[th] >= STACKSIZE)
+	exception(RESOURCE_ERR, NIL, makestr("backstacksize"), th);
+}
+
+void pop_back(int th)
+{
+    bp[th]--;
+}
+
+int get_back_local(int th)
+{
+    return(backstack[bp[th]][0][th]);
+}
+
+void set_back_local(int x,int th)
+{
+    backstack[bp[th]][0][th] = x;
+}
+
+
+int get_back_choice(int th)
+{
+    return(backstack[bp[th]][1][th]);
+}
+
+
+void set_back_choice(int x,int th)
+{
+    backstack[bp[th]][1][th] = x;
+}
+
+void inc_back_choice(int th)
+{
+    backstack[bp[th]][1][th]++;
+}
+
+
+
+
 
 
 //------for JUMP compiler-----

@@ -220,6 +220,7 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int stack[STACKSIZE][THREADSIZE];
+extern int backstack[STACKSIZE][2][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
@@ -392,11 +393,8 @@ extern int fd_deque_idx;
 extern int fd_enque_idx;
 extern int fd_trace;
 
-#ifdef __APPLE__
-#define FLUSH               fpurge(stdin);
-#else
+
 #define FLUSH               __fpurge(stdin); 
-#endif
 #define DEBUG               printf("debug\n"); longjmp(buf,2);
 #define GET_FLT(addr)       heap[addr].val.fltnum
 #define GET_CAR(addr)       heap[addr].val.car.intnum
@@ -582,6 +580,8 @@ extern int wp_min[THREADSIZE];
 extern int wp_max[THREADSIZE];
 extern int cp[THREADSIZE];
 extern int unique_num;
+extern int bp[THREADSIZE];
+
 
 /* module */
 extern int module_name;

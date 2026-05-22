@@ -26,6 +26,7 @@ int cell_hash_table[HASHTBSIZE];
 int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int stack[STACKSIZE][THREADSIZE];
+int backstack[STACKSIZE][2][THREADSIZE]; //[0]env sp [1]clause choice
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
 int record_pt = 1;		// current index of record database
 int counter[31];		// counter str_set,str_dec ... 
@@ -96,7 +97,8 @@ int gc;				//invoked GC count
 int wp_min[THREADSIZE];		// start wp point in each thread
 int wp_max[THREADSIZE];		// end wp point in each thread
 int cp[THREADSIZE];		// catch pointer
-int unique_num = 0;		// for copy_term/2        
+int unique_num = 0;		// for copy_term/2    
+int bp[THREADSIZE]; // backtrack pointer    
 
 // bignum pointer
 int big_pt0 = 0;		// pointer of temporaly bignum
