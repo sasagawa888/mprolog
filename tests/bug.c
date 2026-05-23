@@ -78,12 +78,16 @@ push_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);
 retry_p:
 res = Jcall(Jmakecomp("p"),Jwcons(varX,NIL,th),th);
 if(res == YES){
-      if(Jcall(Jsystem("write"),Jwcons(varX,NIL,th),th) == YES){
-         if(Jcall(Jsystem("fail"),NIL,th) == YES)
-             return(YES);
-      }else 
+    if(Jcall(Jsystem("write"),Jwcons(varX,NIL,th),th) == YES){
+        if(Jcall(Jsystem("fail"),NIL,th) == YES)
+            return(YES);
+        else
+            goto retry_p;
+    } else {
         goto retry_p;
+    }
 }
+
 allfail:
 Jpop_back(th);
 Jset_ac(save3,th);
