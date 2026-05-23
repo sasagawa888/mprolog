@@ -1,15 +1,26 @@
 #include "jump.h"
 static int b_p(int arglist, int rest, int th);
 static int b_p(int arglist, int rest, int th){
-int arg1,n,body,save1,save2,save3,goal,cont,res;
+int arg1,n,body,save1,save2,save3,goal,cont,clause,res;
+if(rest == NIL){
+save1 = Jget_wp(th);
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
+} else {
+save1 = Jget_back_wp(th);
+save2 = Jget_back_sp(th);
+clause = Jget_back_clause(th);
+}
+
 n = Jlength(arglist);
 if(n == 1){
 arg1 = Jnth(arglist,1);
-Jget_back_local(th);
+if(rest == NIL){
+switch(clause){
+    case 1: goto clause1;
+    default: goto allfail;
+}}
 loop1:
-save1 = Jget_wp(th);
 if(Junify_int(arg1,Jmakeint(1),th) == YES && 1)
 if(rest != NIL){
 if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
@@ -18,10 +29,13 @@ Jset_ac(save3,th);
 Junbind(save2,th);
 Jset_wp(save1,th);
 save1 = Jget_wp(th);
+inc_back_choice(th);
+clause1:
 if(Junify_int(arg1,Jmakeint(2),th) == YES && 1)
 if(rest != NIL){
 if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
 } else return(YES);
+allfail:
 Jset_ac(save3,th);
 Junbind(save2,th);
 Jset_wp(save1,th);

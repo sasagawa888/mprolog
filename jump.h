@@ -10,6 +10,7 @@ typedef int (*fn4)(char*);
 typedef int (*fn5)(int , int , int, int);
 typedef char* (*fn6)(int);
 typedef double (*fn7)(int);
+typedef int (*fn8)(int , int , int, int, int);
 typedef void (*tpred)(char*, int(*pred)(int , int));
 typedef void (*tuser)(char*, int(*user)(int , int), int weight, int spec);
 
@@ -21,6 +22,7 @@ static fn4 f4[NUM_FN4S];
 static fn5 f5[NUM_FN5S];
 static fn6 f6[NUM_FN6S];
 static fn7 f7[NUM_FN7S];
+static fn7 f8[NUM_FN8S];
 tpred deftpred;
 tuser deftinfix;
 tpred deftsys;
@@ -59,6 +61,11 @@ void init6(int n, tpred x){
 void init7(int n, tpred x){
     f7[n] = (fn7)x;
 }
+
+void init8(int n, tpred x){
+    f8[n] = (fn8)x;
+}
+
 
 //for define compiled builtin predicate
 void init_deftpred(tpred x){
@@ -197,9 +204,18 @@ static inline int Jinc_back_choice(int x) {
 }
 
 
-static inline int Jget_back_local(int x) {
-    return f1[GET_BACK_LOCAL_IDX](x);
+static inline int Jget_back_sp(int x) {
+    return f1[GET_BACK_SP_IDX](x);
 }
+
+static inline int Jget_back_wp(int x) {
+    return f1[GET_BACK_WP_IDX](x);
+}
+
+static inline int Jget_back_ac(int x) {
+    return f1[GET_BACK_AC_IDX](x);
+}
+
 
 static inline int Jget_back_choice(int x) {
     return f1[GET_BACK_CHOICE_IDX](x);
@@ -507,10 +523,6 @@ static inline int Jcall(int x, int y, int th) {
     return f3[CALL_IDX](x, y, th);
 }
 
-static inline int Jpush_back(int x, int y, int th) {
-    return f3[PUSH_BACK_IDX](x, y, th);
-}
-
 
 static inline int Jmakeconst(char* x) {
     return f4[MAKECONST_IDX](x);
@@ -584,6 +596,12 @@ static inline double Jget_flt(int x)
 {
     return f7[GET_FLT_IDX] (x);
 }
+
+
+static inline int Jpush_back(int x, int y, int z, int a, int th) {
+    return f8[PUSH_BACK_IDX](x, y, z, a, th);
+}
+
 
 //------------ opengl ---------------
 static int displayfunc;

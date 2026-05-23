@@ -463,6 +463,13 @@ int get_back_wp(int th)
 }
 
 
+int get_back_ac(int th)
+{
+    return(backstack[bp[th]][3][th]);
+}
+
+
+
 int inc_back_choice(int th)
 {
     backstack[bp[th]][1][th]++;

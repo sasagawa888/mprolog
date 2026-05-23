@@ -200,7 +200,7 @@ enum { MAKECONST_IDX, MAKEPRED_IDX, MAKEVAR_IDX, MAKEANONY_IDX, MAKESTRFLT_IDX, 
        NUM_FN4S
 };
 
-enum { CALLSUBR_IDX, WLIST3_IDX, PUSH_BACK_IDX,
+enum { CALLSUBR_IDX, WLIST3_IDX, 
        NUM_FN5S,
 };
 
@@ -212,6 +212,9 @@ enum { GET_FLT_IDX,
        NUM_FN7S,
 };
 
+enum { PUSH_BACK_IDX,
+       NUM_FN8S,
+};
 
 
 extern cell *heap;
@@ -220,7 +223,7 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int stack[STACKSIZE][THREADSIZE];
-extern int backstack[STACKSIZE][3][THREADSIZE];
+extern int backstack[STACKSIZE][4][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
@@ -1204,6 +1207,7 @@ int get_nonfree(int x, int y, int z);
 int get_predicate(int x);
 int get_back_sp(int th);
 int get_back_wp(int th);
+int get_back_ac(int th);
 int get_back_choice(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);

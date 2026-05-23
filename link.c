@@ -27,6 +27,7 @@ void dynamic_link(int x)
     int (*init_f5)(int x, tpred y);
     int (*init_f6)(int x, tpred y);
     int (*init_f7)(int x, tpred y);
+    int (*init_f8)(int x, tpred y);
     void (*init_deftpred)(tpred x);
     void (*init_deftinfix)(tuser x);
     void (*init_tpredicate)();
@@ -50,6 +51,7 @@ void dynamic_link(int x)
     init_f5 = dlsym(hmod, "init5");
     init_f6 = dlsym(hmod, "init6");
     init_f7 = dlsym(hmod, "init7");
+    init_f8 = dlsym(hmod, "init8");
     init_deftpred = dlsym(hmod, "init_deftpred");
     init_deftinfix = dlsym(hmod, "init_deftinfix");
     init_tpredicate = dlsym(hmod, "init_tpredicate");
@@ -185,13 +187,15 @@ void dynamic_link(int x)
     /* argument 4 */
     init_f5(CALLSUBR_IDX, (tpred) callsubr);
     init_f5(WLIST3_IDX, (tpred) wlist3);
-    init_f5(PUSH_BACK_IDX, (tpred) push_back);
-
+    
     /* argument-1 return char* */
     init_f6(GETNAME_IDX, (tpred) get_name);
 
     /* argument-1 return double */
     init_f7(GET_FLT_IDX, (tpred) get_flt);
+
+    /* argument 5*/
+    init_f8(PUSH_BACK_IDX, (tpred) push_back);
 
     init_deftpred((tpred) defcompiled);
     init_deftinfix((tuser) definfixcomp);
