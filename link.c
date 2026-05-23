@@ -85,7 +85,8 @@ void dynamic_link(int x)
     init_f1(ADD_DYNAMIC_IDX, (tpred) add_dynamic);
     init_f1(BIGX_TO_PARMANENT_IDX, (tpred) bigx_to_parmanent);
     init_f1(POP_BACK_IDX, (tpred) pop_back);
-    init_f1(GET_BACK_LOCAL_IDX, (tpred) get_back_local);
+    init_f1(GET_BACK_SP_IDX, (tpred) get_back_sp);
+    init_f1(GET_BACK_WP_IDX, (tpred) get_back_wp);
     init_f1(GET_BACK_CHOICE_IDX, (tpred) get_back_choice);
     init_f1(INC_BACK_CHOICE_IDX, (tpred) inc_back_choice);
 
@@ -129,8 +130,6 @@ void dynamic_link(int x)
     init_f2(COMPLEMENT_IDX, (tpred) f_complement);
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
-    init_f2(SET_BACK_LOCAL_IDX, (tpred) set_back_local);
-    init_f2(SET_BACK_CHOICE_IDX, (tpred) set_back_choice);
     
 
     //argument-3
@@ -166,7 +165,7 @@ void dynamic_link(int x)
     init_f3(ROUND_IDX, (tpred) f_round);
     init_f3(DIV_IDX, (tpred) f_div);
     init_f3(CALL_IDX, (tpred) call);
-    init_f3(PUSH_BACK_IDX, (tpred) push_back);
+    
 
     //argument-1 string type
     init_f4(MAKECONST_IDX, (tpred) makeconst);
@@ -186,6 +185,7 @@ void dynamic_link(int x)
     /* argument 4 */
     init_f5(CALLSUBR_IDX, (tpred) callsubr);
     init_f5(WLIST3_IDX, (tpred) wlist3);
+    init_f5(PUSH_BACK_IDX, (tpred) push_back);
 
     /* argument-1 return char* */
     init_f6(GETNAME_IDX, (tpred) get_name);

@@ -428,10 +428,11 @@ int pop_stack(int th)
     return (stack[--sp[th]][th]);
 }
 
-int push_back(int x, int y, int th)
+int push_back(int x, int y, int z, int th)
 {
     backstack[bp[th]][0][th] = x; //local sp
     backstack[bp[th]][1][th] = y; //clause choice 
+    backstack[bp[th]][2][th] = z; //working  wp
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("backstacksize"), th);
@@ -444,15 +445,9 @@ int pop_back(int th)
     return(NIL);
 }
 
-int get_back_local(int th)
+int get_back_sp(int th)
 {
     return(backstack[bp[th]][0][th]);
-}
-
-int set_back_local(int x,int th)
-{
-    backstack[bp[th]][0][th] = x;
-    return(NIL);
 }
 
 
@@ -462,11 +457,11 @@ int get_back_choice(int th)
 }
 
 
-int set_back_choice(int x,int th)
+int get_back_wp(int th)
 {
-    backstack[bp[th]][1][th] = x;
-    return(NIL);
+    return(backstack[bp[th]][2][th]);
 }
+
 
 int inc_back_choice(int th)
 {

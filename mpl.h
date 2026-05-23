@@ -169,7 +169,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX, MA
        LENGTH_IDX,  GET_INT_IDX, INTEGER_IDX, ABS_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
-       INC_BACK_CHOICE_IDX, GET_BACK_LOCAL_IDX, GET_BACK_CHOICE_IDX, 
+       INC_BACK_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        NUM_FN1S
 };
 
@@ -180,7 +180,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, SET_BACK_LOCAL_IDX, SET_BACK_CHOICE_IDX,
+       COPY_WORK_IDX, 
        NUM_FN2S
 };
 
@@ -190,7 +190,7 @@ enum { LIST3_IDX, ERRORCOMP_IDX, WLISTCONS_IDX,UNIFY_IDX, UNIFY_PAIR_IDX,
        WLIST2_IDX, ADDTAIL_BODY_IDX, PLUS_IDX, MINUS_IDX, MULT_IDX, DIVIDE_IDX, REMAINDER_IDX,
        QUOTIENT_IDX,  MOD_IDX, EXPT_IDX, DIV_IDX, XOR_IDX,
        LEFTSHIFT_IDX, RIGHTSHIFT_IDX, LOGICALAND_IDX, LOGICALOR_IDX, ROUND_IDX,
-       CALL_IDX, PUSH_BACK_IDX,
+       CALL_IDX, 
        NUM_FN3S,
 };
 
@@ -200,8 +200,7 @@ enum { MAKECONST_IDX, MAKEPRED_IDX, MAKEVAR_IDX, MAKEANONY_IDX, MAKESTRFLT_IDX, 
        NUM_FN4S
 };
 
-enum { CALLSUBR_IDX,
-       WLIST3_IDX,
+enum { CALLSUBR_IDX, WLIST3_IDX, PUSH_BACK_IDX,
        NUM_FN5S,
 };
 
@@ -221,7 +220,7 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int stack[STACKSIZE][THREADSIZE];
-extern int backstack[STACKSIZE][2][THREADSIZE];
+extern int backstack[STACKSIZE][3][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
@@ -1203,7 +1202,8 @@ int get_free(int x);
 int get_goal(int x);
 int get_nonfree(int x, int y, int z);
 int get_predicate(int x);
-int get_back_local(int th);
+int get_back_sp(int th);
+int get_back_wp(int th);
 int get_back_choice(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
@@ -1345,7 +1345,7 @@ int propagate_all(int sets);
 int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
-int push_back(int x, int y, int th);
+int push_back(int x, int y, int z, int th);
 int pop_back(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);
@@ -1375,8 +1375,6 @@ int set_wp(int x, int th);
 int set_up(int x);
 int set_aux(int x, int y);
 int set_var(int x, int y);
-int set_back_local(int x,int th);
-int set_back_choice(int x,int th);
 int s_remainder(int x, int y, int th);
 int see_trail(void);
 int singletonp(int x);
