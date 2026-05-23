@@ -40,7 +40,7 @@ if(rest != NIL){
 if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
 } else return(YES);
 allfail:
-pop_back(th);
+Jpop_back(th);
 Jset_ac(save3,th);
 Junbind(save2,th);
 Jset_wp(save1,th);
@@ -76,12 +76,14 @@ clause0:
 varX = Jmakevariant(th);
 push_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);
 retry_p:
-if(Jcall(Jmakecomp("p"),Jwcons(varX,NIL,th),th) == YES)
-      if(Jcall(Jsystem("write"),Jwcons(varX,NIL,th),th) == YES)
+res = Jcall(Jmakecomp("p"),Jwcons(varX,NIL,th),th);
+if(res == YES){
+      if(Jcall(Jsystem("write"),Jwcons(varX,NIL,th),th) == YES){
          if(Jcall(Jsystem("fail"),NIL,th) == YES)
              return(YES);
-
-goto retry_p;
+      }else 
+        goto retry_p;
+}
 allfail:
 Jpop_back(th);
 Jset_ac(save3,th);
