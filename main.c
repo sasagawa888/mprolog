@@ -1,4 +1,4 @@
-/* N-Prolog
+/* M-Prolog
 written by kenichi sasagawa 2016/8~
 */
 
@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
 		cell_size = DEFAULT_CELL_SIZE;
 	    break;
 	case 'n':
-	    printf("N-Prolog runs with network mode.\n");
+	    printf("M-Prolog runs with network mode.\n");
 	    child_flag = 1;
 	    init_parent();
 	    init_creceiver();
@@ -386,7 +386,7 @@ int main(int argc, char *argv[])
     }
 
     if (init_flag) {
-	printf("N-Prolog Ver %1.2f [%dM cells]\n", VERSION,
+	printf("M-Prolog Ver %1.2f [%dM cells]\n", VERSION,
 	       cell_size / 1000000);
 	init_flag = 0;
     }
@@ -469,6 +469,7 @@ void init_repl(void)
 	proof[i] = 0;
 	ac[i] = cell_size + 1;
 	cp[i] = 0;
+	bp[i] = 0;
     }
     for (i = 0; i <= thread_num; i++) {
 	wp[i] = wp_min[i];

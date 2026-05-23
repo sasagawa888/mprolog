@@ -6,7 +6,6 @@ if(rest != NIL){
 save1 = Jget_wp(th);
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
-Jpop_back(th);
 } else {
 save1 = Jget_back_wp(th);
 save2 = Jget_back_sp(th);
@@ -33,7 +32,7 @@ Jset_ac(save3,th);
 Junbind(save2,th);
 Jset_wp(save1,th);
 save1 = Jget_wp(th);
-inc_back_choice(th);
+Jinc_back_choice(th);
 clause1:
 if(Junify_int(arg1,Jmakeint(2),th) == YES && 1)
 if(rest != NIL){
@@ -57,7 +56,6 @@ if(rest != NIL){
 save1 = Jget_wp(th);
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
-Jpop_back(th);
 } else {
 save1 = Jget_back_wp(th);
 save2 = Jget_back_sp(th);
@@ -74,7 +72,7 @@ switch(clause){
 loop0:
 clause0:
 varX = Jmakevariant(th);
-push_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);
+Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);
 retry_p:
 res = Jcall(Jmakecomp("p"),Jwcons(varX,NIL,th),th);
 if(res == YES){
