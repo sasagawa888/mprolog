@@ -22,7 +22,7 @@ static fn4 f4[NUM_FN4S];
 static fn5 f5[NUM_FN5S];
 static fn6 f6[NUM_FN6S];
 static fn7 f7[NUM_FN7S];
-static fn7 f8[NUM_FN8S];
+static fn8 f8[NUM_FN8S];
 tpred deftpred;
 tuser deftinfix;
 tpred deftsys;
@@ -380,13 +380,6 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
-static inline int Jset_back_local(int x, int th) {
-    return f2[SET_BACK_LOCAL_IDX](x, th);
-}
-
-static inline int Jset_back_choice(int x, int th) {
-    return f2[SET_BACK_CHOICE_IDX](x, th);
-}
 
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
