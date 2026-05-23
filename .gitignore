@@ -1,6 +1,6 @@
 *.o
 edlog
-npl
+mpl
 *.c~
 *.h~
 dp.pl

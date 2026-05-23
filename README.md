@@ -3,7 +3,7 @@ M-Prolog is under active development for the time being.
 In particular, the compiler is not expected to function correctly yet.
 
 
-M-Prolog(NPL) is an interpreter and compiler to be superset of ARITY/PROLOG(MS-DOS)
+M-Prolog(MPL) is an interpreter and compiler to be superset of ARITY/PROLOG(MS-DOS)
 M-Prolog is an advanced successor to N-Prolog.
 It is being developed as an experimental project to dramatically improve execution performance through a complete redesign of the compiler.
 Its goal is to achieve practical high-speed execution using approaches different from the traditional WAM architecture.
@@ -19,11 +19,11 @@ Although N-Prolog is a superset of ARITY/Prolog, it also implements most ISO-Pro
 
 ## Installation
 In home directory ,make clone or download zip file from github.
-Change to the git cloned or downloaded N-Prolog directory.
+Change to the git cloned or downloaded M-Prolog directory.
 
 - Type "sudo make install".
 
-Update N-Prolog
+Update M-Prolog
 - Type "sudo make clean".
 - Type "sudo make install".
 
@@ -48,11 +48,11 @@ If your modifications are successful, we encourage you to publish a branch so th
 
 ## File Path Resolution in N-Prolog
 
-When loading files, N-Prolog automatically resolves file paths based on the following rules:
+When loading files, M-Prolog automatically resolves file paths based on the following rules:
 
 1. **Relative paths** (starting with `./` or `../`) are used directly. If no extension is present, `.pl` is appended.
-2. If the environment variable `NPROLOG_HOME` is set, files are loaded from that directory.
-3. If `NPROLOG_HOME` is not set but `HOME` is, files are loaded from `$HOME/nprolog/`.
+2. If the environment variable `MPROLOG_HOME` is set, files are loaded from that directory.
+3. If `MPROLOG_HOME` is not set but `HOME` is, files are loaded from `$HOME/mprolog/`.
 4. Otherwise, the given name is used as-is. If it lacks an extension, `.pl` is appended.
 
 In all cases, if the file name already contains a dot (`.`), it is assumed to include an extension and `.pl` will not be added.

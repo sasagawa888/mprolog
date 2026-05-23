@@ -130,7 +130,7 @@ void dynamic_link(int x)
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
     init_f2(SET_BACK_LOCAL_IDX, (tpred) set_back_local);
-    init_f2(SET_BACK_CHIOCE_IDX, (tpred) set_back_choice);
+    init_f2(SET_BACK_CHOICE_IDX, (tpred) set_back_choice);
     
 
     //argument-3

@@ -7,6 +7,7 @@ save3 = Jget_ac(th);
 n = Jlength(arglist);
 if(n == 1){
 arg1 = Jnth(arglist,1);
+Jget_back_local(th);
 loop1:
 save1 = Jget_wp(th);
 if(Junify_int(arg1,Jmakeint(1),th) == YES && 1)

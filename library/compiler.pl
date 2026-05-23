@@ -166,7 +166,7 @@ invoke_gcc(X) :-
     atom_concat(F,'.c ',Cfile),
     atom_concat(F,'.o ',Ofile),
     atom_concat(Ofile,Cfile,Files),
-    atom_concat('gcc -O3 -flto -w -shared -fPIC -I$HOME/nprolog -o ',Files,Gen1),
+    atom_concat('gcc -O3 -flto -w -shared -fPIC -I$HOME/mprolog -o ',Files,Gen1),
     (option(library,Opt1),atom_string(Opt,Opt1),atom_concat(Gen1,Opt,Gen) ; Gen = Gen1),
     shell(Gen),
     atom_concat('rm ',Cfile,Del),
@@ -179,7 +179,7 @@ invoke_gcc_not_remove(X) :-
     atom_concat(F,'.c ',Cfile),
     atom_concat(F,'.o ',Ofile),
     atom_concat(Ofile,Cfile,Files),
-    atom_concat('gcc -O3 -flto -w -shared -fPIC -I$HOME/nprolog -o ',Files,Gen),
+    atom_concat('gcc -O3 -flto -w -shared -fPIC -I$HOME/mprolog -o ',Files,Gen),
     shell(Gen).
 
 
