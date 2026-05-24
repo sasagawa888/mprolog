@@ -742,6 +742,7 @@ int b_n_imported_predicate(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -760,6 +761,7 @@ int b_n_imported_userop(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -779,6 +781,7 @@ int b_n_bignum(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -795,6 +798,7 @@ int b_n_longnum(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -811,6 +815,7 @@ int b_n_findatom(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("findatom", n, th);
     if (n == 3) {
@@ -846,6 +851,7 @@ int b_n_defined_predicate(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = deref(car(arglist), th);
@@ -867,6 +873,7 @@ int b_n_defined_userop(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = deref(car(arglist), th);
@@ -888,6 +895,7 @@ int b_n_get_execute(int arglist, int rest, int th)
 {
     int n, arg1, pos, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -910,6 +918,7 @@ int b_n_get_dynamic(int arglist, int rest, int th)
 {
     int n, arg1, pos, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -946,6 +955,7 @@ int b_heapdump(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("heapdump", n, th);
     if (n == 2) {
