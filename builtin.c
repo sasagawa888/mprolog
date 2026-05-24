@@ -4874,6 +4874,7 @@ int b_reset_op(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("reset_op", n, th);
     if (n == 0) {
@@ -4936,6 +4937,7 @@ int b_gbc(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gc", n, th);
     if (n == 1) {
@@ -4971,6 +4973,7 @@ int b_mkdir(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("mkdir", n, th);
     if (n == 1) {
@@ -4992,6 +4995,7 @@ int b_rmdir(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("rmdir", n, th);
     if (n == 1) {
@@ -5013,6 +5017,7 @@ int b_chdir(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("chdir", n, th);
     if (n == 1) {
@@ -5035,6 +5040,7 @@ int b_delete(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("delete", n, th);
     if (n == 1) {
@@ -5056,6 +5062,7 @@ int b_rename(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("rename", n, th);
     if (n == 2) {
@@ -5150,6 +5157,7 @@ int b_edit(int arglist, int rest, int th)
     char str[STRSIZE];
     char *editor;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("edit", n, th);
     if (n == 1) {
