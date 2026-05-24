@@ -5206,6 +5206,7 @@ int b_shell(int arglist, int rest, int th)
     int n, ind, arg1, res;
     char str1[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("shell", n, th);
     if (n == 1) {
@@ -5228,6 +5229,7 @@ int b_syntaxerrors(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("syntaxerrors", n, th);
     if (n == 2) {
@@ -5253,6 +5255,7 @@ int b_fileerrors(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("fileerrors", n, th);
     if (n == 2) {
@@ -5278,6 +5281,7 @@ int b_statistics(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("statistics", n, th);
     if (n == 2) {
@@ -5311,6 +5315,7 @@ int b_sort(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("sort", n, th);
     if (n == 2) {
@@ -5335,6 +5340,7 @@ int b_keysort(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("keysort", n, th);
     if (n == 2) {
@@ -5361,6 +5367,7 @@ int b_inc(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("inc", n, th);
     if (n == 2) {
@@ -5408,6 +5415,7 @@ int b_dec(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("dec", n, th);
     if (n == 2) {
