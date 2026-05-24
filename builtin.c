@@ -3536,6 +3536,7 @@ int b_string_term(int arglist, int rest, int th)
     int n, ind, arg1, arg2, l, i, res;
     char str[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string_term", n, th);
     if (n == 2) {
@@ -3602,6 +3603,7 @@ int b_substring(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, arg4, i, j, k, start, len, str;
     char str1[STRSIZE], str2[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("substring", n, th);
     if (n == 4) {
@@ -3658,6 +3660,7 @@ int b_float_text(int arglist, int rest, int th)
     char str[STRSIZE], format[STRSIZE];
     double flt;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("float_text", n, th);
     if (n == 3) {
@@ -3732,6 +3735,7 @@ int b_int_text(int arglist, int rest, int th)
     int n, ind, arg1, arg2, i;
     char str[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("int_text", n, th);
     if (n == 2) {
@@ -3768,6 +3772,7 @@ int b_n_cut(int arglist, int rest, int th)
 {
     int n, ind;
 
+	
     n = length(arglist);
     ind = makeind("!", n, th);
     if (n == 0) {
