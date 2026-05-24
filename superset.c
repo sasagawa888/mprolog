@@ -18,6 +18,7 @@ int b_atom_concat(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, atom;
     char str1[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_concat", n, th);
     if (n == 3) {
@@ -54,6 +55,7 @@ int b_select(int arglist, int rest, int th)
     int arg1, arg2, arg3, varYs, varY, varZs, varX, varXs, n, ind, body,
 	save1, save2;
     save2 = sp[th];
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("select", n, th);
     if (n == 3) {
@@ -99,6 +101,7 @@ int b_succ(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("succ", n, th);
     if (n == 2) {
@@ -142,6 +145,7 @@ int b_maplist(int arglist, int rest, int th)
 {
     int arg1, arg2, arg3, n, ind, save1, pred, varR, result;
     
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("maplist", n, th);
 	pred = NIL;
@@ -202,6 +206,7 @@ int b_once(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("once", n, th);
     if (n == 1) {
@@ -230,6 +235,7 @@ int b_compound(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("compound", n, th);
     if (n == 1) {
@@ -247,6 +253,7 @@ int b_ground(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ground", n, th);
     if (n == 1) {
