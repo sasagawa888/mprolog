@@ -413,6 +413,7 @@ int b_n_compiler_anonymous(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -446,6 +447,7 @@ int b_n_compiler_variable(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = deref(car(arglist), th);
@@ -477,6 +479,7 @@ int b_n_variable_convert(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = car(arglist);
@@ -588,6 +591,7 @@ int b_n_clause_with_arity(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, l, clause, clauses, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("n_clause_with_arity", n, th);
     if (n == 3) {
@@ -630,6 +634,7 @@ int b_n_error(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = car(arglist);
@@ -667,6 +672,7 @@ int b_n_property(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = car(arglist);
