@@ -418,6 +418,7 @@ int b_between(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, save3, low, high,
 	betweenval;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("between", n, th);
     if (n == 3) {
@@ -476,6 +477,7 @@ int b_bagof(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, free, vars, nonfree, goal,
 	lis;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("bagof", n, th);
     if (n == 3) {
@@ -518,6 +520,7 @@ int b_setof(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, free, vars, nonfree, goal,
 	lis;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("setof", n, th);
     if (n == 3) {
@@ -558,6 +561,7 @@ int b_findall(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, save2, goal;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("findall", n, th);
     if (n == 3) {
