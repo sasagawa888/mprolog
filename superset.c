@@ -1722,6 +1722,7 @@ int b_current_input(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_input", n, th);
     if (n == 1) {
@@ -1743,6 +1744,7 @@ int b_current_output(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_output", n, th);
     if (n == 1) {
@@ -1765,6 +1767,7 @@ int b_set_input(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("set_input", n, th);
     if (n == 1) {
@@ -1785,6 +1788,7 @@ int b_set_output(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("set_output", n, th);
     if (n == 1) {
@@ -1806,6 +1810,7 @@ int b_use_module(int arglist, int rest, int th)
     char str[STRSIZE];
     FILE *fp;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("use_module", n, th);
     if (n == 1) {
@@ -1844,6 +1849,7 @@ int b_module(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("module", n, th);
     if (n == 2) {
@@ -1876,6 +1882,7 @@ int b_copy_term(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("copy_term", n, th);
     if (n == 2) {
@@ -1897,6 +1904,7 @@ int b_at_end_of_stream(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("at_end_of_stream", n, th);
     if (n == 1) {
