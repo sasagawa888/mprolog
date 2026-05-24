@@ -2234,6 +2234,7 @@ int b_n_format(int arglist, int rest, int th)
     int n, arg1, arg2, arg3, ind, i, j, k, save;
     char c, format[STRSIZE], output[STRSIZE], substr[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("format", n, th);
     if (n == 3) {
@@ -2390,6 +2391,7 @@ int b_string_atom(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string_atom", n, th);
 
@@ -2423,6 +2425,7 @@ int b_initialization(int arglist, int rest, int th)
 {
     int n, arg1, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("initialization", n, th);
     if (n == 1) {
@@ -2439,6 +2442,7 @@ int b_version(int arglist, int rest, int th)
 {
     int n, arg1, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("version", n, th);
     if (n == 1) {
