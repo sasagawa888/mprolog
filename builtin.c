@@ -3003,6 +3003,7 @@ int b_clause(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, clause, clauses, save1, save2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("clause", n, th);
     if (n == 2) {
@@ -3054,6 +3055,7 @@ int b_nth_char(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, pos, code;
     char str1[STRSIZE], str2[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nth_char", n, th);
     if (n == 3) {
@@ -3127,6 +3129,7 @@ int b_name(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, code, res;
     char str1[STRSIZE], str2[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("name", n, th);
     if (n == 2) {
@@ -3223,6 +3226,8 @@ int b_list_text(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, code, index, res;
     char str1[STRSIZE], str2[10];
 
+	
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("list_text", n, th);
     if (n == 2) {
