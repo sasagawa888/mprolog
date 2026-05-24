@@ -4212,6 +4212,7 @@ int b_system(int arglist, int rest, int th)
 {
     int n, ind, arg1, save1, save2, syslist, pred;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("system", n, th);
     if (n == 1) {
@@ -4246,6 +4247,7 @@ int b_var(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("var", n, th);
     if (n == 1) {
@@ -4265,6 +4267,7 @@ int b_nonvar(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nonvar", n, th);
     if (n == 1) {
@@ -4285,6 +4288,7 @@ int b_atomic(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atomic", n, th);
     if (n == 1) {
@@ -4303,6 +4307,7 @@ int b_list(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("list", n, th);
     if (n == 1) {
