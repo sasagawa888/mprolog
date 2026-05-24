@@ -3906,6 +3906,7 @@ int b_measure(int arglist, int rest, int th)
     int n, ind, arg1;
     double start_time, end_time, time, lips;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("measure", n, th);
     if (n == 1) {
@@ -3958,6 +3959,7 @@ int b_spy(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("spy", n, th);
     if (n == 0) {
@@ -3979,6 +3981,7 @@ int b_nospy(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nospy", n, th);
     if (n == 0) {
@@ -4000,6 +4003,7 @@ int b_leash(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("leash", n, th);
     if (n == 1) {
@@ -4045,6 +4049,7 @@ int b_break(int arglist, int rest, int th)
 {
     int n, ind, ret, save1, save2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("break", n, th);
     if (n == 0) {
