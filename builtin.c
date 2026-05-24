@@ -5463,6 +5463,7 @@ int b_ansi_cup(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, r, c;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cup", n, th);
     if (n == 2) {
@@ -5551,6 +5552,7 @@ int b_ansi_cpr(int arglist, int rest, int th)
     int n, ind, arg1, arg2, r, c, res1, res2;
     cursor position;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cpr", n, th);
     if (n == 2) {
@@ -5581,6 +5583,7 @@ int b_ansi_scp(int arglist, int rest, int th)
     int n, ind;
     cursor position;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_scp", n, th);
     if (n == 0) {
@@ -5600,6 +5603,7 @@ int b_ansi_rcp(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_rcp", n, th);
     if (n == 0) {
@@ -5616,6 +5620,7 @@ int b_ansi_ed(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_ed", n, th);
     if (n == 0) {
@@ -5631,6 +5636,7 @@ int b_ansi_el(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_el", n, th);
     if (n == 0) {
@@ -5646,6 +5652,7 @@ int b_ansi_cuu(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cuu", n, th);
     if (n == 1) {
@@ -5671,6 +5678,7 @@ int b_ansi_cud(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cud", n, th);
     if (n == 1) {
@@ -5696,6 +5704,7 @@ int b_ansi_cuf(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cuf", n, th);
     if (n == 1) {
@@ -5721,6 +5730,7 @@ int b_ansi_cub(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cub", n, th);
     if (n == 1) {
@@ -5746,6 +5756,7 @@ int b_ansi_sgr(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_sgr", n, th);
     if (n == 1) {
@@ -5779,6 +5790,7 @@ int b_date(int arglist, int rest, int th)
     struct tm *jst;
     time_t t;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("data", n, th);
     if (n == 1) {
@@ -5804,6 +5816,7 @@ int b_date_day(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, y, m, d, w;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("data_day", n, th);
     if (n == 2) {
@@ -5837,6 +5850,7 @@ int b_time(int arglist, int rest, int th)
     struct tm *jst;
     time_t t;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("time", n, th);
     if (n == 1) {
@@ -5860,6 +5874,7 @@ int b_errcode(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("errcode", n, th);
     if (n == 1) {
@@ -5898,6 +5913,7 @@ int b_recordh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, data, record_id, index;
 
+	
     n = length(arglist);
     ind = makeind("recordh", n, th);
     if (n == 3) {
