@@ -4082,6 +4082,7 @@ int b_end_of_file(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("end_of_file", n, th);
     if (n == 0) {
@@ -4102,6 +4103,7 @@ int b_halt(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("halt", n, th);
     if (n == 0) {
@@ -4120,6 +4122,7 @@ int b_abort(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("abort", n, th);
     if (n == 0) {
