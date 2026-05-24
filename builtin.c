@@ -4325,6 +4325,7 @@ int b_string(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string", n, th);
     if (n == 1) {
@@ -4346,6 +4347,7 @@ int b_functor(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, res, i;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("functor", n, th);
     if (n == 3) {
@@ -4435,6 +4437,7 @@ int b_arg(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, elt, i;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("arg", n, th);
     if (n == 3) {
@@ -4472,6 +4475,7 @@ int b_arg0(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, elt, i;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("arg0", n, th);
     if (n == 3) {
@@ -4511,6 +4515,7 @@ int b_listing(int arglist, int rest, int th)
 {
     int n, ind, arg1, clauses, pred, list, temp;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("listing", n, th);
     if (n == 0) {
