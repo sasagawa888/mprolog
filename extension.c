@@ -1071,6 +1071,7 @@ int b_wiringpi_setup_gpio(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("wiringpi_setup_gpio", n, th);
     if (n == th) {
@@ -1085,6 +1086,7 @@ int b_wiringpi_spi_setup_ch_speed(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, x, y;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("wiringpi_spi_setup_ch_spee", n, th);
     if (n == 2) {
@@ -1110,6 +1112,7 @@ int b_pwm_set_mode(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pwm_mode_ms", n, th);
     if (n == 1) {
@@ -1132,6 +1135,7 @@ int b_pwm_set_range(int arglist, int rest, int th)
 {
     int n, ind, arg1, x;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pwm_set_range", n, th);
     if (n == 1) {
@@ -1151,6 +1155,7 @@ int b_pwm_set_clock(int arglist, int rest, int th)
 {
     int n, ind, arg1, x;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pwm_set_clock", n, th);
     if (n == 1) {
@@ -1171,6 +1176,7 @@ int b_pin_mode(int arglist, int rest, int th)
     int n, ind, arg1, arg2, x;
 
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pin_mode", n, th);
     if (n == 2) {
@@ -1199,6 +1205,7 @@ int b_digital_write(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, x, y;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("digital_wri", n, th);
     if (n == 2) {
@@ -1222,6 +1229,7 @@ int b_digital_write_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, x;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("digital_write_byte", n, th);
     if (n == 1) {
@@ -1241,7 +1249,7 @@ int b_pull_up_dn_control(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, x, y;
 
-
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pull_up_dn_contr", n, th);
     if (n == 2) {
@@ -1265,6 +1273,7 @@ int b_digital_read(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, x, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("digital_read", n, th);
     if (n == 2) {
@@ -1288,6 +1297,7 @@ int b_delay(int arglist, int rest, int th)
 {
     int n, ind, arg1, x;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("delay", n, th);
     if (n == 1) {
@@ -1307,6 +1317,7 @@ int b_delay_microseconds(int arglist, int rest, int th)
 {
     int n, ind, arg1, x;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("delay_microseconds", n, th);
     if (n == 1) {
@@ -1326,6 +1337,7 @@ int b_timer_microseconds(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("timer_microseconds", n, th);
     if (n == 1) {
@@ -1357,6 +1369,7 @@ int b_gpio_init(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_init", n, th);
     if (n == 0) {
@@ -1375,6 +1388,7 @@ int b_gpio_set_mode(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_set_mode", n, th);
     if (n == 2) {
@@ -1410,6 +1424,7 @@ int b_gpio_write(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_write", n, th);
     if (n == 2) {
@@ -1444,6 +1459,7 @@ int b_gpio_read(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_read", n, th);
     if (n == 2) {
@@ -1472,6 +1488,7 @@ int b_gpio_event_request(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_event_request", n, th);
     if (n == 2) {
@@ -1511,6 +1528,7 @@ int b_gpio_event_wait(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_event_wait", n, th);
     if (n == 2) {
@@ -1548,6 +1566,7 @@ int b_gpio_event_read(int arglist, int rest, int th)
 {
     int n, arg1, ind, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_event_read", n, th);
     if (n == 1) {
@@ -1583,6 +1602,7 @@ int b_gpio_close(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gpio_close", n, th);
     if (n == 0) {
@@ -1598,6 +1618,7 @@ int b_sleep(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("sleep", n, th);
     if (n == 1) {
@@ -1613,6 +1634,7 @@ int b_usleep(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("usleep", n, th);
     if (n == 1) {
@@ -1826,6 +1848,7 @@ int b_gr_open(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_open", n, th);
     if (n == 0) {
@@ -1840,6 +1863,7 @@ int b_gr_close(int arglist, int rest, int th)
 {
     int n, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_close", n, th);
     if (n == 0) {
@@ -1854,6 +1878,7 @@ int b_gr_cls(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_cls", n, th);
     if (n == 1) {
@@ -1871,6 +1896,7 @@ int b_gr_pset(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_pset", n, th);
     if (n == 3) {
@@ -1896,6 +1922,7 @@ int b_gr_circle(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, arg4, arg5;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_circle", n, th);
     if (n == 4) {
@@ -1934,6 +1961,7 @@ int b_gr_rect(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, arg4, arg5, arg6;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_rect", n, th);
     if (n == 5) {
@@ -1975,6 +2003,7 @@ int b_gr_line(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, arg4, arg5;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gr_line", n, th);
     if (n == 5) {
@@ -2068,6 +2097,7 @@ int b_subsumes_term(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("subsumes_term", n, th);
     if (n == 2) {
