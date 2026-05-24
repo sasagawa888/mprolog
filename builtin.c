@@ -2944,6 +2944,7 @@ int b_abolish(int arglist, int rest, int th)
     int n, ind, arg1, pred, clause, arity, clauses, new_clauses;
 
     clause = clauses = NIL;
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("abolish", n, th);
     if (n == 1) {
