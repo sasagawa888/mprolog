@@ -5913,7 +5913,7 @@ int b_recordh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, data, record_id, index;
 
-	
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recordh", n, th);
     if (n == 3) {
@@ -5955,6 +5955,7 @@ int b_retrieveh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, record_id, index, lis, term;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("retrieveh", n, th);
     if (n == 3) {
@@ -6003,6 +6004,7 @@ int b_instance(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("instance", n, th);
     if (n == 2) {
@@ -6028,6 +6030,7 @@ int b_recordz(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, temp, chain, next;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recordz", n, th);
     if (n == 3) {
@@ -6080,6 +6083,7 @@ int b_record_after(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain, chain1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("record_after", n, th);
     if (n == 3) {
@@ -6117,6 +6121,7 @@ int b_recorda(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recorda", n, th);
     if (n == 3) {
@@ -6157,6 +6162,7 @@ int b_recorded(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain, save1, save2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recorded", n, th);
     if (n == 3) {
@@ -6190,6 +6196,7 @@ int b_nref(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, chain;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nref", n, th);
     if (n == 2) {
@@ -6218,6 +6225,7 @@ int b_pref(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, chain;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pref", n, th);
     if (n == 2) {
@@ -6247,6 +6255,7 @@ int b_nth_ref(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain, i;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nth_ref", n, th);
     if (n == 3) {
@@ -6286,6 +6295,7 @@ int b_replace(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, chain;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("replace", n, th);
     if (n == 2) {
@@ -6313,6 +6323,7 @@ int b_erase(int arglist, int rest, int th)
 {
     int n, ind, arg1, addr;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("erase", th, n);
     if (n == 1) {
@@ -6333,6 +6344,7 @@ int b_eraseall(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("eraseall", n, th);
     if (n == 1) {
@@ -6358,6 +6370,7 @@ int b_removeh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, record_id, index, lis, prev, term;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("removeh", n, th);
     if (n == 3) {
@@ -6415,6 +6428,7 @@ int b_removeallh(int arglist, int rest, int th)
 {
     int n, ind, arg1, record_id, i;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("removeallh", n, th);
     if (n == 1) {
@@ -6434,6 +6448,7 @@ int b_ref(int arglist, int rest, int th)
 {
     int n, ind, arg1, list, key, num, chain;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ref", n, th);
     if (n == 1) {
@@ -6472,6 +6487,7 @@ int b_key(int arglist, int rest, int th)
     int n, ind, arg1, arg2, save1, save2, list, key, chain, arity,
 	keyarity;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("key", n, th);
     if (n == 1) {
