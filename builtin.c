@@ -2641,6 +2641,7 @@ int b_call(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	deref(arglist,th);
     n = length(arglist);
     ind = makeind("call", n, th);
     if (n == 1) {
@@ -2668,6 +2669,7 @@ int b_not(int arglist, int rest, int th)
 {
     int n, ind, arg1, res;
 
+	deref(arglist,th);
     n = length(arglist);
     ind = makeind("not", n, th);
     if (n == 1) {
@@ -2706,6 +2708,7 @@ int b_assert(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	deref(arglist,th);
     n = length(arglist);
     ind = makeind("assertz", n, th);
     if (n == 1) {
@@ -2757,6 +2760,7 @@ int b_asserta(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	deref(arglist,th);
     n = length(arglist);
     ind = makeind("asserta", n, th);
     if (n == 1) {
@@ -2810,6 +2814,7 @@ int b_retract(int arglist, int rest, int th)
 
     save2 = sp[th];
     clause = clauses = head = NIL;
+	deref(arglist,th);
     n = length(arglist);
     ind = makeind("retract", n, th);
     if (n == 1) {
@@ -2882,6 +2887,7 @@ int b_retractall(int arglist, int rest, int th)
 
     save2 = sp[th];
     clause = clauses = head = NIL;
+	deref(arglist,th);
     n = length(arglist);
     ind = makeind("retractall", n, th);
     if (n == 1) {
