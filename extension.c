@@ -86,6 +86,7 @@ int b_n_filename(int arglist, int rest, int th)
     int n, arg1, arg2, pos, len;
     char str1[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = deref(car(arglist), th);
@@ -118,6 +119,7 @@ int b_n_atom_convert(int arglist, int rest, int th)
     int n, arg1, arg2, pos1;
     char str1[ATOMSIZE], str2[ATOMSIZE], str3[ATOMSIZE], str4[ATOMSIZE];
     //   str1=input   str2=unicode-buffer str3=usc4-buffer str4 = output-string 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = deref(car(arglist), th);
@@ -288,6 +290,7 @@ int b_n_arity_count(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = car(arglist);
@@ -306,6 +309,7 @@ int b_n_generate_all_variable(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = deref(car(arglist), th);
@@ -322,6 +326,7 @@ int b_n_generate_variable(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = deref(car(arglist), th);
