@@ -1,7 +1,23 @@
+/*
+M-Prolog Ver 0.01 [30M cells]
+?- ['./tests/idea.o'].
+yes
+?- foo.
+12no
+?- 
+
+p(1).
+p(2).
+
+foo :- p(X),write(X),fail.
+*/
+
+
 #include "jump.h"
 static int b_p(int arglist, int rest, int th);
 static int b_p(int arglist, int rest, int th){
 int arg1,n,body,save1,save2,save3,goal,cont,clause,res;
+
 if(rest != NIL){
 save1 = Jget_wp(th);
 save2 = Jget_sp(th);
@@ -10,9 +26,8 @@ save3 = Jget_ac(th);
 save1 = Jget_back_wp(th);
 save2 = Jget_back_sp(th);
 save3 = Jget_back_ac(th);
-clause = Jget_back_clause(th);
+clause = Jget_back_choice(th);
 }
-
 n = Jlength(arglist);
 if(n == 1){
 arg1 = Jnth(arglist,1);
@@ -24,20 +39,25 @@ switch(clause){
 }}
 loop1:
 clause0:
+Jinc_back_choice(th);
 if(Junify_int(arg1,Jmakeint(1),th) == YES && 1)
 if(rest != NIL){
 if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
 } else return(YES);
+
+clause1:
 Jset_ac(save3,th);
 Junbind(save2,th);
-Jset_wp(save1,th);
-save1 = Jget_wp(th);
+//wpはそのままにしないといけない
+if(rest == NIL){
 Jinc_back_choice(th);
-clause1:
-if(Junify_int(arg1,Jmakeint(2),th) == YES && 1)
+arg1 = Jnth(arglist,1);
+}
+if(Junify_int(arg1,Jmakeint(2),th) == YES && 1){
 if(rest != NIL){
 if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
-} else return(YES);
+} else {return(YES);}
+}
 allfail:
 Jpop_back(th);
 Jset_ac(save3,th);
@@ -76,8 +96,8 @@ Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);
 retry_p:
 res = Jcall(Jmakecomp("p"),Jwcons(varX,NIL,th),th);
 if(res == YES){
-    if(Jcall(Jsystem("write"),Jwcons(varX,NIL,th),th) == YES){
-        if(Jcall(Jsystem("fail"),NIL,th) == YES)
+    if(Jcall(Jmakesys("write"),Jwcons(varX,NIL,th),th) == YES){
+        if(Jcall(Jmakesys("fail"),NIL,th) == YES)
             return(YES);
         else
             goto retry_p;

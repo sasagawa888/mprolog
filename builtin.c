@@ -765,7 +765,7 @@ int b_write(int arglist, int rest, int th)
     ind = makeind("write", n, th);
     if (n == 1) {
 	arg1 = output_stream;
-	arg2 = car(arglist);
+	arg2 = deref(car(arglist),th);
 	goto write;
 
     } else if (n == 2) {

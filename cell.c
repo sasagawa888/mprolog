@@ -428,11 +428,12 @@ int pop_stack(int th)
     return (stack[--sp[th]][th]);
 }
 
-int push_back(int x, int y, int z, int th)
+int push_back(int x, int y, int z, int a, int th)
 {
     backstack[bp[th]][0][th] = x; //local sp
     backstack[bp[th]][1][th] = y; //clause choice 
     backstack[bp[th]][2][th] = z; //working  wp
+    backstack[bp[th]][3][th] = z; //alpha counter ac
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("backstacksize"), th);
@@ -639,6 +640,16 @@ int makestrlong(char *str)
 
 void debug(void)
 {
+printf("sp=%d wp=%d ac=%d\n",sp[0],wp[0],ac[0]);
+int i;
+printf("variant\n");
+for(i=0;i<15;i++){
+    printf("%d\n",variant[i][0]);
+}
+printf("stack\n");
+for(i=0;i<5;i++){
+    printf("%d\n",stack[i][0]);
+}
 DEBUG}
 
 

@@ -1,8 +1,6 @@
-
-p(1).
-p(2).
-
-foo :-
-    p(X),
-    write(X),
-    fail.
+M-Prolog Ver 0.01 [30M cells]
+?- ['./tests/bug.o'].
+yes
+?- foo.
+12no
+?- 
