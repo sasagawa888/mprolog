@@ -3772,7 +3772,7 @@ int b_n_cut(int arglist, int rest, int th)
 {
     int n, ind;
 
-	
+
     n = length(arglist);
     ind = makeind("!", n, th);
     if (n == 0) {
@@ -3786,6 +3786,7 @@ int b_ifthen(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ifthen", n, th);
     if (n == 2) {
@@ -3815,6 +3816,7 @@ int b_ifthenelse(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ifthenelse", n, th);
     if (n == 3) {
@@ -3862,6 +3864,7 @@ int b_case(int arglist, int rest, int th)
 {
     int n, ind, arg1, save1, ifthen;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("case", n, th);
     if (n == 1) {
