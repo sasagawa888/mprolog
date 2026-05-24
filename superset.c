@@ -646,6 +646,7 @@ int b_bagofhelper(int arglist, int rest, int th)
 {
     int n, arg1, nonfree, key;
 
+
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);	//target var  
@@ -703,6 +704,7 @@ int b_atom_length(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_length", n, th);
     if (n == 2) {
@@ -728,6 +730,7 @@ int b_get_code(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, i, res;
     char str[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get_code", n, th);
     if (n == 1) {
@@ -808,6 +811,7 @@ int b_get_char(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, res;
     char str[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get_char", n, th);
     if (n == 1) {
@@ -885,6 +889,7 @@ int b_get_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, c, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get_byte", n, th);
     if (n == 1) {
@@ -925,6 +930,7 @@ int b_put_char(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put_char", n, th);
     if (n == 1) {
@@ -957,6 +963,7 @@ int b_put_code(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put_code", n, th);
     if (n == 1) {
@@ -988,6 +995,7 @@ int b_put_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put_byte", n, th);
     if (n == 1) {
@@ -1021,6 +1029,7 @@ int b_peek_code(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, i, res;
     char str[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("peek_code", n, th);
     if (n == 1) {
@@ -1115,6 +1124,7 @@ int b_peek_char(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, res;
     char str[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("peek_char", n, th);
     if (n == 1) {
@@ -1203,6 +1213,7 @@ int b_peek_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, c, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("peek_byte", n, th);
     if (n == 1) {
@@ -1242,6 +1253,7 @@ int b_flush_output(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("flush_output", n, th);
     if (n == 0) {
@@ -1268,6 +1280,7 @@ int b_atom_codes(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, code, res;
     char str1[STRSIZE], str2[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_codes", n, th);
     if (n == 2) {
@@ -1364,6 +1377,7 @@ int b_atom_chars(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, c, res;
     char str1[STRSIZE], str2[10];
 
+	
     n = length(arglist);
     ind = makeind("atom_chars", n, th);
     if (n == 2) {
