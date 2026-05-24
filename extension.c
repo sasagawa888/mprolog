@@ -21,6 +21,7 @@ int b_n_reconsult_predicate(int arglist, int rest, int th)
 {
     int n, ind, arg1, lis, save1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("n_reconsult_predicate", n, th);
     if (n == 1) {
@@ -49,6 +50,7 @@ int b_n_reconsult_abolish(int arglist, int rest, int th)
 {
     int n, lis, pred;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 0) {
 	lis = reconsult_list;
@@ -67,6 +69,7 @@ int b_n_dynamic_predicate(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
