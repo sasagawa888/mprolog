@@ -979,6 +979,7 @@ int b_n_has_cut(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
@@ -994,6 +995,7 @@ int b_n_before_cut(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = car(arglist);
@@ -1011,6 +1013,7 @@ int b_n_after_cut(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 2) {
 	arg1 = car(arglist);
@@ -1029,6 +1032,7 @@ int b_n_pair_list(int arglist, int rest, int th)
 {
     int n, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     if (n == 1) {
 	arg1 = car(arglist);
