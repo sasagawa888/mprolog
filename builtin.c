@@ -4138,6 +4138,7 @@ int b_atom(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom", n, th);
     if (n == 1) {
@@ -4156,6 +4157,7 @@ int b_integer(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("integer", n, th);
     if (n == 1) {
@@ -4173,6 +4175,7 @@ int b_real(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("real", n, th);
     if (n == 1) {
@@ -4190,6 +4193,7 @@ int b_number(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("number", n, th);
     if (n == 1) {
