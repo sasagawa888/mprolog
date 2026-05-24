@@ -30,7 +30,7 @@ retryするときのラベル名について
 retryNM
 Nは節の番号０からスタート
 Mは本体部での番号、０からスタート
-e.g. retry_0_1
+e.g. retry01
 
 本体部を生成するアルゴリズム
 
@@ -42,7 +42,7 @@ gen_body((X,Y),N,M,Back) :-
     write('retryMN')
     write('res = Jcall(...)'),
     write('if(res == YES){'),
-    M1 is M+1,
+    M1 is N+1,
     gen_body(Y,N,M1),
     write('}').
 
@@ -53,7 +53,7 @@ gen_body((X,Y),N,M,Back) :-
     write('retryMN')
     write('res = Jcall(...)'),
     write('if(res == YES){'),
-    M1 is M+1,
+    M1 is N+1,
     gen_body(Y,N,M1),
     write('} else goto retrycNbM;').
 
@@ -64,7 +64,7 @@ gen_body((X,Y),N,M,Back) :-
     Xは決定性述語だ、
     Backはない[]
     write('if(Jcall() == YES){'),
-    M1 is M+1,
+    M1 is N+1,
     gen_body(Y,N,M1),
     write('}').
 
@@ -73,14 +73,9 @@ gen_body((X,Y),N,M,Back) :-
     Xは決定性述語だ、
     Backはある [cN,bM]
     write('if(Jcall() == YES){'),
-    M1 is M+1,
+    M1 is N+1,
     gen_body(Y,N,M1),
     write('} else goto retrycNbM').
-
-2025/5/25
-カットがある場合。カットが始まる以前のコードにはバックトラックしない。
-gen_body((X,Y),N,M,Back) :-　のBackを[]すればいい。それ以前のretryラベル
-にはgotoを生じない。
-
+    
 
 
