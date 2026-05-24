@@ -1377,7 +1377,7 @@ int b_atom_chars(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, c, res;
     char str1[STRSIZE], str2[10];
 
-	
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_chars", n, th);
     if (n == 2) {
@@ -1471,6 +1471,7 @@ int b_number_codes(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, num, pos, code, res;
     char str1[STRSIZE] = { 0 }, str2[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("number_codes", n, th);
     if (n == 2) {
@@ -1537,6 +1538,7 @@ int b_number_chars(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, num, pos, c, res;
     char str1[STRSIZE] = { 0 }, str2[10];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("number_chars", n, th);
     if (n == 2) {
@@ -1602,6 +1604,7 @@ int b_catch(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, pt, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("catch", n, th);
     if (n == 3) {
@@ -1658,6 +1661,7 @@ int b_throw(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("throw", n, th);
     if (n == 1) {
@@ -1695,6 +1699,7 @@ int b_unify_with_occurs_check(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("unify_with_occurs_check", n, th);
     if (n == 2) {
