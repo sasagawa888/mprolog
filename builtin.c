@@ -4603,6 +4603,7 @@ int b_n_univ(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=..", n, th);
     if (n == 2) {
@@ -4701,6 +4702,7 @@ int b_current_predicate(int arglist, int rest, int th)
 {
     int n, ind, arg1, save1, save2, predlist, pred, aritylist, arity;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_predicate", n, th);
     if (n == 1) {
@@ -4761,6 +4763,7 @@ int b_current_op(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, lis, weight, spec, op, w,
 	s, o;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_op", n, th);
     if (n == 3) {
@@ -4816,6 +4819,7 @@ int b_predicate_property(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("predicate_property", n, th);
     if (n == 2) {
