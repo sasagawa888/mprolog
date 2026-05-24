@@ -276,6 +276,7 @@ int b_member(int arglist, int rest, int th)
 
     save2 = sp[th];
     res = NIL;
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("member", n, th);
     if (n == 2) {
@@ -359,6 +360,7 @@ int b_append(int arglist, int rest, int th)
 
     save2 = sp[th];
     body = NIL;
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("append", n, th);
     if (n == 3) {
