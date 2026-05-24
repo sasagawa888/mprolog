@@ -1928,6 +1928,7 @@ int b_stream_property(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, prop;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("stream_property", n, th);
     if (n == 2) {
@@ -1964,6 +1965,7 @@ int b_create_client_socket(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, res, sock;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("create_client_socket", n, th);
     if (n == 3) {
@@ -2012,6 +2014,7 @@ int b_create_server_socket(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, sock0, sock1, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("create_server_socket", n, th);
     if (n == 2) {
@@ -2065,6 +2068,7 @@ int b_send_socket(int arglist, int rest, int th)
     int n, ind, arg1, arg2, m;
     char buf[256];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("send_socket", n, th);
     if (n == 2) {
@@ -2092,6 +2096,7 @@ int b_recv_socket(int arglist, int rest, int th)
     int n, ind, arg1, arg2, sock, m;
     char buf[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recv_socket", n, th);
     if (n == 2) {
@@ -2122,6 +2127,7 @@ int b_close_socket(int arglist, int rest, int th)
 {
     int n, ind, arg1, sock0, sock1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("close_socket", n, th);
     if (n == 1) {
@@ -2146,6 +2152,7 @@ int b_dynamic(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("dynamic", n, th);
     if (n == 1) {
@@ -2165,6 +2172,7 @@ int b_cinline(int arglist, int rest, int th)
 {
     int n, arg1, ind;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("cinline", n, th);
     if (n == 1) {
