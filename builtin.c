@@ -3341,6 +3341,7 @@ int b_atom_string(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, temp;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_string", n, th);
     if (n == 2) {
@@ -3375,6 +3376,7 @@ int b_char_code(int arglist, int rest, int th)
     int n, ind, arg1, arg2, code, res;
     char str[16];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("char_code", n, th);
     if (n == 2) {
@@ -3441,6 +3443,7 @@ int b_concat(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, str;
     char str1[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("concat", n, th);
     if (n == 2) {
@@ -3503,6 +3506,7 @@ int b_string_length(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, val;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string_length", n, th);
     if (n == 2) {
