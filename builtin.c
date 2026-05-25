@@ -435,6 +435,7 @@ int b_length(int arglist, int rest, int th)
     int n, ind, arg1, arg2, i, ls, res, save1, save2;
     int list_length, properp, improper_last_not_var, improper_last_var;
     save2 = sp[th];
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("length", n, th);
     if (n == 2) {
@@ -537,6 +538,7 @@ int b_op(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, weight, type;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("op", n, th);
     if (n == 3) {
@@ -715,6 +717,7 @@ int b_n_unify(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=", n, th);
     if (n == 2) {
@@ -734,6 +737,7 @@ int b_n_notunify(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("\\=", n, th);
     if (n == 2) {
@@ -761,6 +765,7 @@ int b_write(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("write", n, th);
     if (n == 1) {
@@ -799,6 +804,7 @@ int b_display(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("display", n, th);
     if (n == 1) {
@@ -837,6 +843,7 @@ int b_writeq(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("writeq", n, th);
     if (n == 1) {
@@ -873,6 +880,7 @@ int b_nl(int arglist, int rest, int th)
 {
     int n, ind, arg1, save;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nl", n, th);
     if (n == 0) {
@@ -902,6 +910,7 @@ int b_put(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put", n, th);
     if (n == 1) {
@@ -931,6 +940,7 @@ int b_get0(int arglist, int rest, int th)
 {
     int n, ind, c, arg1, arg2, i, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get0", n, th);
     if (n == 1) {
@@ -975,6 +985,7 @@ int b_get(int arglist, int rest, int th)
 {
     int n, ind, c, arg1, arg2, i, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get", n, th);
     if (n == 1) {
@@ -1025,6 +1036,7 @@ int b_get0_noecho(int arglist, int rest, int th)
 {
     int n, ind, c, arg1, i, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get0_noecho", n, th);
     if (n == 1) {
@@ -1046,6 +1058,7 @@ int b_tab(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, count;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("tab", n, th);
     if (n == 1) {
@@ -1106,6 +1119,7 @@ int b_read(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1, save2, temp, res;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("read", n, th);
     if (n == 1) {
@@ -1150,6 +1164,7 @@ int b_read_line(int arglist, int rest, int th)
     int n, ind, arg1, arg2, save1, save2, res, pos;
     char str[STRSIZE], c;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("read_line", n, th);
     if (n == 2) {
@@ -1202,6 +1217,7 @@ int b_read_string(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, res, pos, maxlen;
     char str[STRSIZE], c;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("read_string", n, th);
     if (n == 2) {
@@ -1262,6 +1278,7 @@ int b_skip(int arglist, int rest, int th)
     int n, ind, arg1, arg2, save;
     char c, str[STRSIZE];
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("skip", n, th);
     if (n == 1) {
@@ -1299,6 +1316,7 @@ int b_stdin(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1, save2;
 
+	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("stdin", n, th);
     if (n == 2) {
