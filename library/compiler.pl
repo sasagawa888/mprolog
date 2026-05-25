@@ -20,7 +20,8 @@ if(n == 2){
             return(YES);
     }
     Jset_ac(save3,th);
-    Junbind(save2,th);}
+    Junbind(save2,th);
+    Jset_wp(save1,th);}
 
     % second clause
     varX1 = Jmakevariant(th);
@@ -35,6 +36,7 @@ if(n == 2){
     }
     Jset_ac(save3,th);
     Junbind(save2,th);
+    Jset_wp(save1,th);
 
     Jerrorcomp(makeint(AIRTY_ERR),Jmakecomp(<name>),arglist);
     return(NO);
@@ -56,8 +58,7 @@ Junify_var(head,arg,th)    for variable term
 Junify_nil(arg,th)    for [] check.
 */
 
-:- module(jump,[compile_file/1,compile_file/2,
-                option/2,pred_data/3,optimize/1]).
+:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
 
 option(_,_).
 pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn
@@ -492,7 +493,8 @@ gen_a_pred5(P,_) :-
 	gen_head(P),
     write('if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);'),nl.
 
 gen_a_pred5(P,_) :-
     n_property(P,predicate),
@@ -513,7 +515,8 @@ gen_a_pred5(P,_) :-
 	gen_head(P),
     write('if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);'),nl.
 
 
 
@@ -544,8 +547,8 @@ if(unify(....)){
     if(Jexec_all(body,Jget_sp(th),th) == YES)
         return(YES)};
 
-Jset_ac(save3,th);
 Junbind(save2,th);
+Jset_wp(save1,th);
 
 
 */
@@ -568,7 +571,8 @@ gen_body((X->Y;Z),N) :-
     write('if((res=Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
     write('return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);}'),nl.
 
 % disjunction
 gen_body(((X;_);Y),N) :-
@@ -626,7 +630,8 @@ gen_body(X,N) :-
     gen_after_body(X2,N),
     write('}'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);'),nl.
 
 % nested has cut
 gen_body(X,N) :-
@@ -641,7 +646,8 @@ gen_body(X,N) :-
     gen_body(X2,N),
     write('}'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);'),nl.
     
     
 % conjunction 
@@ -652,7 +658,8 @@ gen_body(X,N) :-
     write('if((res=Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
     write('return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);}'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);}'),nl.
     
 gen_after_body(X,N) :-
     write('{body = '),
@@ -2428,7 +2435,8 @@ gen_det_body(X) :-
     nl,
     write('return(Jexec_all(rest,Jget_sp(th),th));'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);'),nl.
 
 gen_tail_body((X,Y),N) :-
     gen_a_det_body(X),
@@ -2437,6 +2445,7 @@ gen_tail_body(X,N) :-
     X =.. [_|A],
     write('{'),nl,
     gen_tail_args(A,1),
+    %write('Jset_wp(save1,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('goto loop'),write(N),write(';'),nl,
@@ -2533,7 +2542,4 @@ gen_a_det_body(X) :-
     write(','),
     gen_a_argument(A),
     write(',th) == YES)').
-
-
-
 
