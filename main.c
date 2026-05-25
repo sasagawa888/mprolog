@@ -708,8 +708,6 @@ int prove(int goal, int bindings, int rest, int th)
 	exception(RESOURCE_ERR, NIL, makestr("prove recursion over max"),
 		  th);
 
-    goal = deref(goal, th);
-
     if (nullp(goal)) {
 	return (prove_all(rest, bindings, th));
     } else if (builtinp(goal)) {
@@ -737,6 +735,7 @@ int prove(int goal, int bindings, int rest, int th)
 	    return (NO);
 	}
     } else if (predicatep(goal) || user_operation_p(goal)) {
+	goal = deref(goal, th);
 	//trace
 	if (debug_flag == ON)
 	    prove_trace(DBCALL, goal, bindings, rest, th);
