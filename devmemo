@@ -131,6 +131,8 @@ pred_data(nreverse,2,det).
 pred_data(dummy,-1,-1).
 
 nondetは記録されないようになっている。
-デフォルトをnondetとしておいて上書きする仕組みの方がいいかもしれない。
+コンパイラを改良してnondetもpred_dataに記録されるようにした。
+この改良後にqueensとbenchをコンパイル実行した。問題ない。
+
 
 
