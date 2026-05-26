@@ -115,3 +115,21 @@ gen_body に代えて gen_nondet_body を新設する。
 新しい nondet 生成コードが安定動作した段階で、旧来方式を除去する。
 
 new.plに書き始めた。まずは連言をコンパイルできるようにすることを目標とする。
+
+2026/5/27
+コンパイラの仕様確認。解析した述語のことは次のように記録されている。
+例
+pred_data(test,2,det).
+pred_data(repeat_for,1,tail).
+pred_data(partition1,4,halt).
+pred_data(qsort1,2,halt).
+pred_data(partition,4,det).
+pred_data(qsort,3,det).
+pred_data(concatenate,3,det).
+pred_data(nreverse,2,det).
+pred_data(nreverse,2,det).
+pred_data(dummy,-1,-1).
+
+nondetは記録されないようになっている。これは改良してnondetをassertして
+おいた方が扱いが楽になる。
+

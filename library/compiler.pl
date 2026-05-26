@@ -148,8 +148,8 @@ pass4(X) :-
 	write('#include "jump.h"'),nl,
     gen_c_pred,
     gen_c_exec,
-    abolish(pred_data/3),
-    abolish(optimize/1),
+    %abolish(pred_data/3),
+    %abolish(optimize/1),
     n_reconsult_abolish,
     told.
 
