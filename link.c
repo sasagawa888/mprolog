@@ -147,7 +147,6 @@ void dynamic_link(int x)
     init_f3(UNIFY_BIG_IDX, (tpred) unify_big);
     init_f3(UNIFY_STR_IDX, (tpred) unify_str);
     init_f3(UNIFY_ATOM_IDX, (tpred) unify_atom);
-    init_f3(EXEC_ALL_IDX, (tpred) exec_all);
     init_f3(PROVE_ALL_IDX, (tpred) prove_all);
     init_f3(WCONS_IDX, (tpred) wcons);
     init_f3(WLIST2_IDX, (tpred) wlist2);
