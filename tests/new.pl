@@ -85,21 +85,6 @@ gen_var([L|Ls]) :-
     gen_var(Ls).
 
 
-
-/*
-body for compiler
-foo(X),bar(X),boo(X).
-
-if(unify(....)){
-    body = ...;
-    if(Jprove_all(body,Jget_sp(th),th) == YES)
-        return(YES)};
-
-Junbind(save2,th);
-Jset_wp(save1,th);
-
-
-*/
 % inline C language
 gen_body(cinline(X),_) :-
     write('{'),
@@ -129,29 +114,6 @@ gen_nondet_body((X;Y),N,M,B) :-
     gen_nondet_body(Y,N,M,B).
 gen_nondet_body(X,N,M,B) :-
     gen_a_nondet_body(X,N,M,B).
-
-%----------------------------------------------
-
-
-
-
-
-% nested has cut
-gen_body(X,N) :-
-    n_has_cut(X),
-    n_before_cut(X,X1),
-    n_after_cut(X,X2),
-    n_has_cut(X2),
-    write('{body = '),
-    gen_body1(X1,N),
-    write(';'),nl,
-    write('if(Jprove_all(body,Jget_sp(th),th) == YES)'),nl,
-    gen_body(X2,N),
-    write('}'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl.
-    
 
 % case
 % transform if-then-else / if-then 
@@ -191,33 +153,33 @@ gen_a_nondet_body(X) :-
     n_defined_predicate(X),
     functor(X,P,0),
     n_dynamic_predicate(P),
-    write('Jmakepred("'),
+    write('Jcall_det(Jmakepred("'),
     write(P),
-    write('")').
+    write('"),th)').
 
 
 % atom compiled predicate in module 
 gen_a_nondet_body(X) :-
     functor(X,P,0),
     n_property(P,compiled),
-    write('Jmakecomp("'),
+    write('Jcall_det(Jmakecomp("'),
     write(P),
-    write('")').
+    write('"),th)').
 
 % atom predicate in module
 gen_a_nondet_body(X) :-
     functor(X,P,0),
     n_property(P,predicate),
     n_imported_predicate(P),
-    write('Jmakepred("'),
+    write('Jcall_det(Jmakepred("'),
     write(P),
-    write('")').
+    write('"),th)').
 
 % compound compiled predicate in module
 gen_a_nondet_body(X) :-
     X =.. [P|L],
     n_property(P,compiled),
-    write('Jwcons(Jmakecomp("'),
+    write('Jcall_det(Jmakecomp("'),
     write(P),
     write('"),'),
     gen_argument(L),
@@ -228,7 +190,7 @@ gen_a_nondet_body(X) :-
     X =.. [P|L],
     n_property(P,predicate),
     n_imported_predicate(P),
-    write('Jwcons(Jmakepred("'),
+    write('Jcall_det(Jmakepred("'),
     write(P),
     write('"),'),
     gen_argument(L),
@@ -249,7 +211,7 @@ gen_a_nondet_body(X) :-
     n_defined_predicate(X),
     X =.. [P|L],
     not(n_dynamic_predicate(P)),
-    write('Jwcons(Jmakecomp("'),
+    write('Jcall(Jmakecomp("'),
     write(P),
     write('"),'),
     gen_argument(L),
@@ -258,7 +220,7 @@ gen_a_nondet_body(X) :-
 gen_a_nondet_body(X) :-
     n_property(X,predicate),
     X =.. [P|L],
-    write('Jwcons(Jmakepred("'),
+    write('Jcall(Jmakepred("'),
     write(P),
     write('"),'),
     gen_argument(L),
