@@ -704,16 +704,16 @@ int prove(int goal, int bindings, int rest, int th)
     }
 
 
-    if (nest > 40000)
+    if (nest > 40000){
 	exception(RESOURCE_ERR, NIL, makestr("prove recursion over max"),
-		  th);
+		  th);}
 
-	
+	goal = deref(goal, th);
 
     if (nullp(goal)) {
 	return (prove_all(rest, bindings, th));
     } else if (builtinp(goal)) {
-	goal = deref(goal, th);
+	
 	if (atomp(goal)) {
 	    if ((res = (GET_SUBR(goal)) (NIL, rest, th)) == YES)
 		return (YES);
@@ -738,7 +738,6 @@ int prove(int goal, int bindings, int rest, int th)
 	    return (NO);
 	}
     } else if (predicatep(goal) || user_operation_p(goal)) {
-	goal = deref(goal, th);
 	//trace
 	if (debug_flag == ON)
 	    prove_trace(DBCALL, goal, bindings, rest, th);
