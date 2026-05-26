@@ -410,6 +410,7 @@ gen_a_pred2(P,N) :-
     write(N),
     write('){\n'),
     gen_a_pred3(P,N),
+    write('Jset_wp(save1,th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 
@@ -492,8 +493,7 @@ gen_a_pred5(P,_) :-
 	gen_head(P),
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl.
+    write('Junbind(save2,th);'),nl.
 
 gen_a_pred5(P,_) :-
     n_property(P,predicate),
@@ -513,8 +513,7 @@ gen_a_pred5(P,_) :-
 	gen_head(P),
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl.
+    write('Junbind(save2,th);'),nl.
 
 
 
