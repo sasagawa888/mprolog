@@ -61,8 +61,8 @@ Junify_nil(arg,th)    for [] check.
 %:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
 
 option(_,_).
-pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn
-optimize(_).
+pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn nondett
+optimize(_).  % when det or tail  optmiize(det) or optimize(tail)
 
 % main
 compile_file(X) :-
@@ -385,12 +385,13 @@ gen_a_pred1(P,[]) :-
     write('"),arglist);'),nl,
 	write('return(NO);').
 
-% when tail recursive or deterministic
+% when tail recursive or deterministic or halt
 gen_a_pred1(P,[L|Ls]) :-
     pred_data(P,L,O),
+    (O = det;O=tail;O=halt),
     write(user_output,$/$),write(user_output,L),
     write(user_output,' '),write(user_output,O),
-    assert(optimize(O)), % det or tail
+    assert(optimize(O)), % det or tail or halt
 	gen_a_pred2(P,L),
     retract(optimize(O)), % delete optimize data
     gen_a_pred1(P,Ls).
@@ -398,7 +399,9 @@ gen_a_pred1(P,[L|Ls]) :-
 
 %when normal predicate
 gen_a_pred1(P,[L|Ls]) :-
-    write(user_output,$/$),write(user_output,L),write(user_output,' nondet'),
+    pred_data(P,L,nondet),
+    write(user_output,$/$),write(user_output,L),
+    write(user_output,' nondet'),
     gen_a_pred2(P,L),
     gen_a_pred1(P,Ls).
 
@@ -2120,7 +2123,11 @@ analize1(P,N,C) :-
     P1 =.. [pred_data,P,_,_],
     (retract(P1);true),
     asserta(pred_data(P,N,halt)),!.
-
+analize1(P,N,C) :-
+    not(n_dynamic_predicate(P)),
+    P1 =.. [pred_data,P,_,_],
+    (retract(P1);true),
+    asserta(pred_data(P,N,nondet)),!.
 
 % arguments = [clauses],det_count,pred_count,halt_count,all_count
 deterministic([],D,P,H,A) :-

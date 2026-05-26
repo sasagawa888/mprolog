@@ -130,6 +130,7 @@ pred_data(nreverse,2,det).
 pred_data(nreverse,2,det).
 pred_data(dummy,-1,-1).
 
-nondetは記録されないようになっている。これは改良してnondetをassertして
-おいた方が扱いが楽になる。
+nondetは記録されないようになっている。
+デフォルトをnondetとしておいて上書きする仕組みの方がいいかもしれない。
+
 
