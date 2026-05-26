@@ -13,7 +13,6 @@ if(n == 2){
     varX = Jmakevariant(th);
     varZ = Jmakevariant(th);
     varY = Jmakevariant(th);
-    save1 = Jget_wp(th);
     if(Junify(term1,arg1,th) == YES && Junify_var(term2,arg2,th) == YES){
         body =Jwcons(119,Jwcons(varX,Jwcons(varY,NIL),th),th);
         if(Jprove_all(Jaddtail_body(rest,body,th),save2,th) == YES)
@@ -28,7 +27,6 @@ if(n == 2){
     varY1 = Jmakevariant(th);
     varZ1 = Jmakevariant(th);
     ...
-    save1 = Jget_wp(th);
     if(Junify(term1,arg1,th) == YES && Junify_const(term1,arg2,th) == YES){
         body = Jwlist3(Jmakeope(","),Jwcons(173,Jwc ...., th)),th);
         if(Jprove_all(Jaddtail_body(rest,body,th),save2,th) == YES)
@@ -370,6 +368,7 @@ gen_a_pred(P) :-
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
+    write('save1 = Jget_wp(th);'),nl,
     write('save2 = Jget_sp(th);'),nl,
     write('save3 = Jget_ac(th);'),nl,
     write('n = Jlength(arglist);'),nl,
@@ -461,14 +460,12 @@ gen_a_pred5((Head :- Body),N) :-
     Head =.. [P|Args],
     length(Args,L),
     pred_data(P,L,tail),
-    write('save1 = Jget_wp(th);'),nl,
 	gen_head(Head),
     gen_tail_body(Body,N).
 
 
 % clause
 gen_a_pred5((Head :- Body),N) :-
-    write('save1 = Jget_wp(th);'),nl,
 	gen_head(Head),
     gen_body(Body,N).
 
@@ -492,7 +489,6 @@ gen_a_pred5(P,_) :-
 	n_property(P,predicate),
     P =.. [P1|_],
     not(n_dynamic_predicate(P1)),
-    write('save1 = Jget_wp(th);'),nl,
 	gen_head(P),
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
@@ -514,7 +510,6 @@ gen_a_pred5(P,_) :-
 % user ope
 gen_a_pred5(P,_) :-
 	n_property(P,userop),
-    write('save1 = Jget_wp(th);'),nl,
 	gen_head(P),
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
