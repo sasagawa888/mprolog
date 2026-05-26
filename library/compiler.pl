@@ -16,7 +16,7 @@ if(n == 2){
     save1 = Jget_wp(th);
     if(Junify(term1,arg1,th) == YES && Junify_var(term2,arg2,th) == YES){
         body =Jwcons(119,Jwcons(varX,Jwcons(varY,NIL),th),th);
-        if(Jexec_all(Jaddtail_body(rest,body,th),save2,th) == YES)
+        if(Jprove_all(Jaddtail_body(rest,body,th),save2,th) == YES)
             return(YES);
     }
     Jset_ac(save3,th);
@@ -31,7 +31,7 @@ if(n == 2){
     save1 = Jget_wp(th);
     if(Junify(term1,arg1,th) == YES && Junify_const(term1,arg2,th) == YES){
         body = Jwlist3(Jmakeope(","),Jwcons(173,Jwc ...., th)),th);
-        if(Jexec_all(Jaddtail_body(rest,body,th),save2,th) == YES)
+        if(Jprove_all(Jaddtail_body(rest,body,th),save2,th) == YES)
             return(YES);
     }
     Jset_ac(save3,th);
@@ -474,7 +474,7 @@ gen_a_pred5(P,_) :-
 	n_property(P,predicate),
     functor(P,_,0),
     not(n_dynamic_predicate(P)),
-    write('return(Jexec_all(rest,Jget_sp(th),th));'),nl.
+    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl.
 
 gen_a_pred5(P,_) :-
     n_property(P,predicate),
@@ -491,7 +491,7 @@ gen_a_pred5(P,_) :-
     not(n_dynamic_predicate(P1)),
     write('save1 = Jget_wp(th);'),nl,
 	gen_head(P),
-    write('if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
+    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_wp(save1,th);'),nl.
@@ -513,7 +513,7 @@ gen_a_pred5(P,_) :-
 	n_property(P,userop),
     write('save1 = Jget_wp(th);'),nl,
 	gen_head(P),
-    write('if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
+    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_wp(save1,th);'),nl.
@@ -544,7 +544,7 @@ foo(X),bar(X),boo(X).
 
 if(unify(....)){
     body = ...;
-    if(Jexec_all(body,Jget_sp(th),th) == YES)
+    if(Jprove_all(body,Jget_sp(th),th) == YES)
         return(YES)};
 
 Junbind(save2,th);
@@ -568,7 +568,7 @@ gen_body((X->Y;Z),N) :-
     write('{body = '),
     gen_a_body((X->Y;Z)),
     write(';'),nl,
-    write('if((res=Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
+    write('if((res=Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
     write('return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
@@ -583,7 +583,7 @@ gen_body(((X;_);Y),N) :-
     write('body = '),nl,
     gen_body1(Y,N),
     write(';'),nl,
-    write('if(Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
+    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
     write('return(YES);'),nl,
     write('Junbind(dp['),write(N),write('],th);}'),nl.
 
@@ -593,7 +593,7 @@ gen_body((X;(Y1;Y2)),N) :-
     write('body = '),nl,
     gen_body1(X,N),
     write(';'),nl,
-    write('if(Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
+    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
     write('return(YES);'),nl,
     write('Junbind(dp['),write(N),write('],th);'),nl,
     N1 is N+1,
@@ -606,13 +606,13 @@ gen_body((X;Y),N) :-
     write('body = '),nl,
     gen_body1(X,N),
     write(';'),nl,
-    write('if(Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
+    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
     write('return(YES);'),nl,
     write('Junbind(dp['),write(N),write('],th);'),nl,
     write('body = '),nl,
     gen_body1(Y,N),
     write(';'),nl,
-    write('if(Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
+    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
     write('return(YES);'),nl,
     write('Junbind(dp['),write(N),write('],th);}'),nl.
 
@@ -626,7 +626,7 @@ gen_body(X,N) :-
     write('{body = '),
     gen_body1(X1,N),
     write(';'),nl,
-    write('if((res=Jexec_all(body,Jget_sp(th),th)) == YES)'),nl,
+    write('if((res=Jprove_all(body,Jget_sp(th),th)) == YES)'),nl,
     gen_after_body(X2,N),
     write('}'),nl,
     write('Jset_ac(save3,th);'),nl,
@@ -642,7 +642,7 @@ gen_body(X,N) :-
     write('{body = '),
     gen_body1(X1,N),
     write(';'),nl,
-    write('if(Jexec_all(body,Jget_sp(th),th) == YES)'),nl,
+    write('if(Jprove_all(body,Jget_sp(th),th) == YES)'),nl,
     gen_body(X2,N),
     write('}'),nl,
     write('Jset_ac(save3,th);'),nl,
@@ -655,7 +655,7 @@ gen_body(X,N) :-
     write('{body = '),
     gen_body1(X,N),
     write(';'),nl,
-    write('if((res=Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
+    write('if((res=Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
     write('return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
@@ -665,7 +665,7 @@ gen_after_body(X,N) :-
     write('{body = '),
     gen_body1(X,N),
     write(';'),nl,
-    write('if((Jexec_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
+    write('if((Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
     write('return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
@@ -2424,7 +2424,7 @@ butlast_body((Body,Bs),(Body,Butlast)) :-
 
 
 /*
- a,b,c ->  if(a==YES) if(b==YES) if(c==YES) return(Jexec_all(rest,Jget_sp(th),th));
+ a,b,c ->  if(a==YES) if(b==YES) if(c==YES) return(Jprove_all(rest,Jget_sp(th),th));
 */
 gen_det_body((X,Y)) :-
     gen_a_det_body(X),
@@ -2433,7 +2433,7 @@ gen_det_body((X,Y)) :-
 gen_det_body(X) :-
     gen_a_det_body(X),
     nl,
-    write('return(Jexec_all(rest,Jget_sp(th),th));'),nl,
+    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_wp(save1,th);'),nl.
