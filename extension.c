@@ -1022,12 +1022,26 @@ int b_n_exec_no_operation(int arglist, int rest, int th)
     return (prove_all(rest, sp[th], th));
 }
 
-int call(int pred, int arglist, int th)
+int call_nondet(int pred, int arglist, int th)
 {
     proof[th]++;
     
     if (predicatep(pred)){
-		
+		return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
+	}
+    else
+	return ((GET_SUBR(pred)) (arglist, NIL, th));
+
+    return (NO);
+}
+
+
+int call_det(int pred, int arglist, int th)
+{
+    proof[th]++;
+    
+	pred = deref(pred,th);
+    if (predicatep(pred)){
 		return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
 	}
     else

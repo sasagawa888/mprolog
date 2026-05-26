@@ -191,7 +191,7 @@ enum { LIST3_IDX, ERRORCOMP_IDX, WLISTCONS_IDX,UNIFY_IDX, UNIFY_PAIR_IDX,
        WLIST2_IDX, ADDTAIL_BODY_IDX, PLUS_IDX, MINUS_IDX, MULT_IDX, DIVIDE_IDX, REMAINDER_IDX,
        QUOTIENT_IDX,  MOD_IDX, EXPT_IDX, DIV_IDX, XOR_IDX,
        LEFTSHIFT_IDX, RIGHTSHIFT_IDX, LOGICALAND_IDX, LOGICALOR_IDX, ROUND_IDX,
-       CALL_IDX, 
+       CALL_NONDET_IDX, CALL_DET_IDX, 
        NUM_FN3S,
 };
 
@@ -1092,7 +1092,8 @@ int builtin_zero_p(int addr);
 int builtinp(int addr);
 int butlast(int addr);
 int callsubr(int x,int arglist,int rest,int th);
-int call(int pred, int arglist, int th);
+int call_nondet(int pred, int arglist, int th);
+int call_det(int pred, int arglist, int th);
 int caar(int addr);
 int cadar(int addr);
 int caddr(int addr);

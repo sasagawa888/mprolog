@@ -512,10 +512,14 @@ static inline int Jdiv(int x, int y, int th) {
     return f3[DIV_IDX](x, y, th);
 }
 
-static inline int Jcall(int x, int y, int th) {
-    return f3[CALL_IDX](x, y, th);
+static inline int Jcall_nondet(int x, int y, int th) {
+    return f3[CALL_NONDET_IDX](x, y, th);
 }
 
+
+static inline int Jcall_det(int x, int y, int th) {
+    return f3[CALL_DET_IDX](x, y, th);
+}
 
 static inline int Jmakeconst(char* x) {
     return f4[MAKECONST_IDX](x);

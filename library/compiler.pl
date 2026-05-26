@@ -2525,19 +2525,19 @@ gen_a_det_body(X >= Y) :-
 
 gen_a_det_body((((X->Y),Y1);Z)) :-
     case_arg((((X->Y),Y1);Z),L),
-    write('if (Jcall(Jmakesys("case"),Jwlist1('),
+    write('if (Jcall_det(Jmakesys("case"),Jwlist1('),
     gen_a_argument(L),
     write(',th),th) == YES)').
 
 gen_a_det_body((X->Y;Z)) :-
     case_arg((X->Y;Z),L),
-    write('if (Jcall(Jmakesys("case"),Jwlist1('),
+    write('if (Jcall_det(Jmakesys("case"),Jwlist1('),
     gen_a_argument(L),
     write(',th),th) == YES)').
 
 gen_a_det_body(X) :-
     X =.. [P|A],
-    write('if (Jcall('),
+    write('if (Jcall_det('),
     gen_a_body(P),
     write(','),
     gen_a_argument(A),

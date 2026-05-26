@@ -167,7 +167,8 @@ void dynamic_link(int x)
     init_f3(XOR_IDX, (tpred) f_xor);
     init_f3(ROUND_IDX, (tpred) f_round);
     init_f3(DIV_IDX, (tpred) f_div);
-    init_f3(CALL_IDX, (tpred) call);
+    init_f3(CALL_NONDET_IDX, (tpred) call_nondet);
+    init_f3(CALL_DET_IDX, (tpred) call_det);
     
 
     //argument-1 string type
