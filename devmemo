@@ -104,4 +104,7 @@ derefのタイミング　
 それが非決定性のものであればderefしないで呼び出す。retryのときにderefされていると
 うまくいかないからだ。
 Jcall はderefしない。名前をJcall_nondet に変えることにしよう。
-Jcall_det はderefする。
+Jcall_det はderefする。　対処済み
+
+exec_all は削除した。当面、新コンパイラが完成するまではprove_allが代行する。
+その後はそれもコンパイルコードには必要なくなる。
