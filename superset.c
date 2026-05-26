@@ -18,7 +18,6 @@ int b_atom_concat(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, atom;
     char str1[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_concat", n, th);
     if (n == 3) {
@@ -55,7 +54,7 @@ int b_select(int arglist, int rest, int th)
     int arg1, arg2, arg3, varYs, varY, varZs, varX, varXs, n, ind, body,
 	save1, save2;
     save2 = sp[th];
-	arglist = deref(arglist,th);
+
     n = length(arglist);
     ind = makeind("select", n, th);
     if (n == 3) {
@@ -101,7 +100,6 @@ int b_succ(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("succ", n, th);
     if (n == 2) {
@@ -145,7 +143,6 @@ int b_maplist(int arglist, int rest, int th)
 {
     int arg1, arg2, arg3, n, ind, save1, pred, varR, result;
     
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("maplist", n, th);
 	pred = NIL;
@@ -206,7 +203,6 @@ int b_once(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("once", n, th);
     if (n == 1) {
@@ -235,7 +231,6 @@ int b_compound(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("compound", n, th);
     if (n == 1) {
@@ -253,7 +248,6 @@ int b_ground(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ground", n, th);
     if (n == 1) {
@@ -276,7 +270,7 @@ int b_member(int arglist, int rest, int th)
 
     save2 = sp[th];
     res = NIL;
-	arglist = deref(arglist,th);
+	
     n = length(arglist);
     ind = makeind("member", n, th);
     if (n == 2) {
@@ -360,7 +354,7 @@ int b_append(int arglist, int rest, int th)
 
     save2 = sp[th];
     body = NIL;
-	arglist = deref(arglist,th);
+	
     n = length(arglist);
     ind = makeind("append", n, th);
     if (n == 3) {
@@ -418,7 +412,6 @@ int b_between(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, save3, low, high,
 	betweenval;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("between", n, th);
     if (n == 3) {
@@ -477,7 +470,6 @@ int b_bagof(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, free, vars, nonfree, goal,
 	lis;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("bagof", n, th);
     if (n == 3) {
@@ -520,7 +512,6 @@ int b_setof(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, free, vars, nonfree, goal,
 	lis;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("setof", n, th);
     if (n == 3) {
@@ -561,7 +552,6 @@ int b_findall(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, save2, goal;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("findall", n, th);
     if (n == 3) {
@@ -704,7 +694,6 @@ int b_atom_length(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_length", n, th);
     if (n == 2) {
@@ -730,7 +719,6 @@ int b_get_code(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, i, res;
     char str[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get_code", n, th);
     if (n == 1) {
@@ -811,7 +799,6 @@ int b_get_char(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, res;
     char str[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get_char", n, th);
     if (n == 1) {
@@ -889,7 +876,6 @@ int b_get_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, c, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get_byte", n, th);
     if (n == 1) {
@@ -930,7 +916,6 @@ int b_put_char(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put_char", n, th);
     if (n == 1) {
@@ -963,7 +948,6 @@ int b_put_code(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put_code", n, th);
     if (n == 1) {
@@ -995,7 +979,6 @@ int b_put_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put_byte", n, th);
     if (n == 1) {
@@ -1029,7 +1012,6 @@ int b_peek_code(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, i, res;
     char str[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("peek_code", n, th);
     if (n == 1) {
@@ -1124,7 +1106,6 @@ int b_peek_char(int arglist, int rest, int th)
     int n, ind, arg1, arg2, c, res;
     char str[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("peek_char", n, th);
     if (n == 1) {
@@ -1213,7 +1194,6 @@ int b_peek_byte(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, c, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("peek_byte", n, th);
     if (n == 1) {
@@ -1253,7 +1233,6 @@ int b_flush_output(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("flush_output", n, th);
     if (n == 0) {
@@ -1280,7 +1259,6 @@ int b_atom_codes(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, code, res;
     char str1[STRSIZE], str2[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_codes", n, th);
     if (n == 2) {
@@ -1377,7 +1355,6 @@ int b_atom_chars(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, c, res;
     char str1[STRSIZE], str2[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_chars", n, th);
     if (n == 2) {
@@ -1471,7 +1448,6 @@ int b_number_codes(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, num, pos, code, res;
     char str1[STRSIZE] = { 0 }, str2[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("number_codes", n, th);
     if (n == 2) {
@@ -1538,7 +1514,6 @@ int b_number_chars(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, num, pos, c, res;
     char str1[STRSIZE] = { 0 }, str2[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("number_chars", n, th);
     if (n == 2) {
@@ -1604,7 +1579,6 @@ int b_catch(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, pt, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("catch", n, th);
     if (n == 3) {
@@ -1661,7 +1635,6 @@ int b_throw(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("throw", n, th);
     if (n == 1) {
@@ -1699,7 +1672,6 @@ int b_unify_with_occurs_check(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("unify_with_occurs_check", n, th);
     if (n == 2) {
@@ -1722,7 +1694,6 @@ int b_current_input(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_input", n, th);
     if (n == 1) {
@@ -1744,7 +1715,6 @@ int b_current_output(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_output", n, th);
     if (n == 1) {
@@ -1767,7 +1737,6 @@ int b_set_input(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("set_input", n, th);
     if (n == 1) {
@@ -1788,7 +1757,6 @@ int b_set_output(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("set_output", n, th);
     if (n == 1) {
@@ -1810,7 +1778,6 @@ int b_use_module(int arglist, int rest, int th)
     char str[STRSIZE];
     FILE *fp;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("use_module", n, th);
     if (n == 1) {
@@ -1849,7 +1816,6 @@ int b_module(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("module", n, th);
     if (n == 2) {
@@ -1882,7 +1848,6 @@ int b_copy_term(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("copy_term", n, th);
     if (n == 2) {
@@ -1904,7 +1869,6 @@ int b_at_end_of_stream(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("at_end_of_stream", n, th);
     if (n == 1) {
@@ -1928,7 +1892,6 @@ int b_stream_property(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, prop;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("stream_property", n, th);
     if (n == 2) {
@@ -1965,7 +1928,6 @@ int b_create_client_socket(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, res, sock;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("create_client_socket", n, th);
     if (n == 3) {
@@ -2014,7 +1976,6 @@ int b_create_server_socket(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, sock0, sock1, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("create_server_socket", n, th);
     if (n == 2) {
@@ -2068,7 +2029,6 @@ int b_send_socket(int arglist, int rest, int th)
     int n, ind, arg1, arg2, m;
     char buf[256];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("send_socket", n, th);
     if (n == 2) {
@@ -2096,7 +2056,6 @@ int b_recv_socket(int arglist, int rest, int th)
     int n, ind, arg1, arg2, sock, m;
     char buf[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recv_socket", n, th);
     if (n == 2) {
@@ -2127,7 +2086,6 @@ int b_close_socket(int arglist, int rest, int th)
 {
     int n, ind, arg1, sock0, sock1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("close_socket", n, th);
     if (n == 1) {
@@ -2152,7 +2110,6 @@ int b_dynamic(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("dynamic", n, th);
     if (n == 1) {
@@ -2172,7 +2129,6 @@ int b_cinline(int arglist, int rest, int th)
 {
     int n, arg1, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("cinline", n, th);
     if (n == 1) {
@@ -2234,7 +2190,6 @@ int b_n_format(int arglist, int rest, int th)
     int n, arg1, arg2, arg3, ind, i, j, k, save;
     char c, format[STRSIZE], output[STRSIZE], substr[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("format", n, th);
     if (n == 3) {
@@ -2391,7 +2346,6 @@ int b_string_atom(int arglist, int rest, int th)
 {
     int n, arg1, arg2, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string_atom", n, th);
 
@@ -2425,7 +2379,6 @@ int b_initialization(int arglist, int rest, int th)
 {
     int n, arg1, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("initialization", n, th);
     if (n == 1) {
@@ -2442,7 +2395,6 @@ int b_version(int arglist, int rest, int th)
 {
     int n, arg1, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("version", n, th);
     if (n == 1) {

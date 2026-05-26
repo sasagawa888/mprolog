@@ -435,7 +435,7 @@ int b_length(int arglist, int rest, int th)
     int n, ind, arg1, arg2, i, ls, res, save1, save2;
     int list_length, properp, improper_last_not_var, improper_last_var;
     save2 = sp[th];
-	arglist = deref(arglist,th);
+
     n = length(arglist);
     ind = makeind("length", n, th);
     if (n == 2) {
@@ -538,7 +538,6 @@ int b_op(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, weight, type;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("op", n, th);
     if (n == 3) {
@@ -717,7 +716,6 @@ int b_n_unify(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=", n, th);
     if (n == 2) {
@@ -737,7 +735,6 @@ int b_n_notunify(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("\\=", n, th);
     if (n == 2) {
@@ -765,7 +762,6 @@ int b_write(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("write", n, th);
     if (n == 1) {
@@ -804,7 +800,6 @@ int b_display(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("display", n, th);
     if (n == 1) {
@@ -843,7 +838,6 @@ int b_writeq(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("writeq", n, th);
     if (n == 1) {
@@ -880,7 +874,6 @@ int b_nl(int arglist, int rest, int th)
 {
     int n, ind, arg1, save;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nl", n, th);
     if (n == 0) {
@@ -910,7 +903,6 @@ int b_put(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("put", n, th);
     if (n == 1) {
@@ -940,7 +932,6 @@ int b_get0(int arglist, int rest, int th)
 {
     int n, ind, c, arg1, arg2, i, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get0", n, th);
     if (n == 1) {
@@ -985,7 +976,6 @@ int b_get(int arglist, int rest, int th)
 {
     int n, ind, c, arg1, arg2, i, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get", n, th);
     if (n == 1) {
@@ -1036,7 +1026,6 @@ int b_get0_noecho(int arglist, int rest, int th)
 {
     int n, ind, c, arg1, i, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("get0_noecho", n, th);
     if (n == 1) {
@@ -1058,7 +1047,6 @@ int b_tab(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, count;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("tab", n, th);
     if (n == 1) {
@@ -1119,7 +1107,6 @@ int b_read(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1, save2, temp, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("read", n, th);
     if (n == 1) {
@@ -1164,7 +1151,6 @@ int b_read_line(int arglist, int rest, int th)
     int n, ind, arg1, arg2, save1, save2, res, pos;
     char str[STRSIZE], c;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("read_line", n, th);
     if (n == 2) {
@@ -1217,7 +1203,6 @@ int b_read_string(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, res, pos, maxlen;
     char str[STRSIZE], c;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("read_string", n, th);
     if (n == 2) {
@@ -1278,7 +1263,6 @@ int b_skip(int arglist, int rest, int th)
     int n, ind, arg1, arg2, save;
     char c, str[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("skip", n, th);
     if (n == 1) {
@@ -1316,7 +1300,6 @@ int b_stdin(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1, save2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("stdin", n, th);
     if (n == 2) {
@@ -1346,7 +1329,6 @@ int b_stdout(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1, save2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("stdout", n, th);
     if (n == 2) {
@@ -1376,7 +1358,6 @@ int b_stdinout(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, save2, save3;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("stdinout", n, th);
     if (n == 3) {
@@ -1413,7 +1394,6 @@ int b_create(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, stream;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("create", n, th);
     if (n == 2) {
@@ -1449,7 +1429,6 @@ int b_open(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, stream;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("open", n, th);
     if (n == 3) {
@@ -1532,7 +1511,6 @@ int b_dup(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, addr;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("dup", n, th);
     if (n == 2) {
@@ -1561,7 +1539,6 @@ int b_close(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("clsoe", n, th);
     if (n == 1) {
@@ -1578,7 +1555,6 @@ int b_see(int arglist, int rest, int th)
 {
     int n, ind, arg1, save;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("see", n, th);
     if (n == 1) {
@@ -1612,7 +1588,6 @@ int b_seeing(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("seeing", n, th);
     if (n == 1) {
@@ -1632,7 +1607,6 @@ int b_seen(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("seen", n, th);
     if (n == 0) {
@@ -1650,7 +1624,6 @@ int b_tell(int arglist, int rest, int th)
 {
     int n, ind, arg1, save;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("tell", n, th);
     if (n == 1) {
@@ -1685,7 +1658,6 @@ int b_telling(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("telling", n, th);
     if (n == 1) {
@@ -1701,7 +1673,6 @@ int b_told(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("told", n, th);
     if (n == 0) {
@@ -1720,7 +1691,6 @@ int b_flush(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("flush", n, th);
     if (n == 0) {
@@ -1749,7 +1719,6 @@ int b_consult(int arglist, int rest, int th)
     int n, ind, arg1, clause, save;
     char str[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("consult", n, th);
     execute_list = NIL;
@@ -1829,7 +1798,6 @@ int b_reconsult(int arglist, int rest, int th)
     int n, ind, arg1, clause, clause1, head, atom, save;
     char str[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("reconsult", n, th);
     execute_list = NIL;
@@ -1978,7 +1946,6 @@ int b_save(int arglist, int rest, int th)
     static char str[STREAM];
     char str1[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("save", n, th);
     if (n == 0) {
@@ -2032,7 +1999,6 @@ int b_directory(int arglist, int rest, int th)
     struct stat stat_buf;
     struct tm *t_st;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("directory", n, th);
     if (n == 6) {
@@ -2118,7 +2084,6 @@ int b_is(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("is", n, th);
     if (n == 2) {
@@ -2147,7 +2112,6 @@ int b_n_greater(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind(">", n, th);
     if (n == 2) {
@@ -2176,7 +2140,6 @@ int b_n_smaller(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("<", n, th);
     if (n == 2) {
@@ -2205,7 +2168,6 @@ int b_n_eqsmaller(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=<", n, th);
     if (n == 2) {
@@ -2233,7 +2195,6 @@ int b_n_eqgreater(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind(">=", n, th);
     if (n == 2) {
@@ -2262,7 +2223,6 @@ int b_n_numeq(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=:=", n, th);
     if (n == 2) {
@@ -2283,7 +2243,6 @@ int b_n_notnumeq(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=\\=", n, th);
     if (n == 2) {
@@ -2304,7 +2263,6 @@ int b_n_equalp(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("==", n, th);
     if (n == 2) {
@@ -2328,7 +2286,6 @@ int b_n_notequalp(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("\\==", n, th);
     if (n == 2) {
@@ -2350,7 +2307,6 @@ int b_eq(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("eq", n, th);
     if (n == 2) {
@@ -2372,7 +2328,6 @@ int b_compare(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("compare", n, th);
     if (n == 3) {
@@ -2407,7 +2362,6 @@ int b_n_atsmaller(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("@<", n, th);
     if (n == 2) {
@@ -2508,7 +2462,6 @@ int b_n_ateqsmaller(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("@=<", n, th);
     if (n == 2) {
@@ -2530,7 +2483,6 @@ int b_n_atgreater(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("@>", n, th);
     if (n == 2) {
@@ -2551,7 +2503,6 @@ int b_n_ateqgreater(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("@>=", n, th);
     if (n == 2) {
@@ -2572,7 +2523,6 @@ int b_ctr_set(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ctr_set", n, th);
     if (n == 2) {
@@ -2598,7 +2548,6 @@ int b_ctr_dec(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ctr_dec", n, th);
     if (n == 2) {
@@ -2626,7 +2575,6 @@ int b_ctr_inc(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ctr_inc", n, th);
     if (n == 2) {
@@ -2654,7 +2602,6 @@ int b_ctr_is(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ctr_is", n, th);
     if (n == 2) {
@@ -2762,7 +2709,6 @@ int b_assert(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th); 
     n = length(arglist);
     ind = makeind("assertz", n, th);
     if (n == 1) {
@@ -2814,7 +2760,6 @@ int b_asserta(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th); 
     n = length(arglist);
     ind = makeind("asserta", n, th);
     if (n == 1) {
@@ -2868,7 +2813,7 @@ int b_retract(int arglist, int rest, int th)
 
     save2 = sp[th];
     clause = clauses = head = NIL;
-	arglist = deref(arglist,th);
+
     n = length(arglist);
     ind = makeind("retract", n, th);
     if (n == 1) {
@@ -2941,7 +2886,7 @@ int b_retractall(int arglist, int rest, int th)
 
     save2 = sp[th];
     clause = clauses = head = NIL;
-	arglist = deref(arglist,th);
+
     n = length(arglist);
     ind = makeind("retractall", n, th);
     if (n == 1) {
@@ -3004,7 +2949,6 @@ int b_abolish(int arglist, int rest, int th)
     int n, ind, arg1, pred, clause, arity, clauses, new_clauses;
 
     clause = clauses = NIL;
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("abolish", n, th);
     if (n == 1) {
@@ -3063,7 +3007,6 @@ int b_clause(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, clause, clauses, save1, save2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("clause", n, th);
     if (n == 2) {
@@ -3115,7 +3058,6 @@ int b_nth_char(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, pos, code;
     char str1[STRSIZE], str2[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nth_char", n, th);
     if (n == 3) {
@@ -3189,7 +3131,6 @@ int b_name(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, code, res;
     char str1[STRSIZE], str2[10];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("name", n, th);
     if (n == 2) {
@@ -3286,8 +3227,6 @@ int b_list_text(int arglist, int rest, int th)
     int n, ind, arg1, arg2, ls, atom, pos, code, index, res;
     char str1[STRSIZE], str2[10];
 
-	
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("list_text", n, th);
     if (n == 2) {
@@ -3401,7 +3340,6 @@ int b_atom_string(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, temp;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom_string", n, th);
     if (n == 2) {
@@ -3436,7 +3374,6 @@ int b_char_code(int arglist, int rest, int th)
     int n, ind, arg1, arg2, code, res;
     char str[16];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("char_code", n, th);
     if (n == 2) {
@@ -3503,7 +3440,6 @@ int b_concat(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, str;
     char str1[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("concat", n, th);
     if (n == 2) {
@@ -3566,7 +3502,6 @@ int b_string_length(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, val;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string_length", n, th);
     if (n == 2) {
@@ -3596,7 +3531,6 @@ int b_string_term(int arglist, int rest, int th)
     int n, ind, arg1, arg2, l, i, res;
     char str[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string_term", n, th);
     if (n == 2) {
@@ -3663,7 +3597,6 @@ int b_substring(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, arg4, i, j, k, start, len, str;
     char str1[STRSIZE], str2[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("substring", n, th);
     if (n == 4) {
@@ -3720,7 +3653,6 @@ int b_float_text(int arglist, int rest, int th)
     char str[STRSIZE], format[STRSIZE];
     double flt;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("float_text", n, th);
     if (n == 3) {
@@ -3795,7 +3727,6 @@ int b_int_text(int arglist, int rest, int th)
     int n, ind, arg1, arg2, i;
     char str[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("int_text", n, th);
     if (n == 2) {
@@ -3846,7 +3777,6 @@ int b_ifthen(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, save1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ifthen", n, th);
     if (n == 2) {
@@ -3876,7 +3806,6 @@ int b_ifthenelse(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ifthenelse", n, th);
     if (n == 3) {
@@ -3924,7 +3853,6 @@ int b_case(int arglist, int rest, int th)
 {
     int n, ind, arg1, save1, ifthen;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("case", n, th);
     if (n == 1) {
@@ -3966,7 +3894,6 @@ int b_measure(int arglist, int rest, int th)
     int n, ind, arg1;
     double start_time, end_time, time, lips;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("measure", n, th);
     if (n == 1) {
@@ -4019,7 +3946,6 @@ int b_spy(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("spy", n, th);
     if (n == 0) {
@@ -4041,7 +3967,6 @@ int b_nospy(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nospy", n, th);
     if (n == 0) {
@@ -4063,7 +3988,6 @@ int b_leash(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("leash", n, th);
     if (n == 1) {
@@ -4109,7 +4033,6 @@ int b_break(int arglist, int rest, int th)
 {
     int n, ind, ret, save1, save2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("break", n, th);
     if (n == 0) {
@@ -4142,7 +4065,6 @@ int b_end_of_file(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("end_of_file", n, th);
     if (n == 0) {
@@ -4163,7 +4085,6 @@ int b_halt(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("halt", n, th);
     if (n == 0) {
@@ -4182,7 +4103,6 @@ int b_abort(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("abort", n, th);
     if (n == 0) {
@@ -4198,7 +4118,6 @@ int b_atom(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atom", n, th);
     if (n == 1) {
@@ -4217,7 +4136,6 @@ int b_integer(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("integer", n, th);
     if (n == 1) {
@@ -4235,7 +4153,6 @@ int b_real(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("real", n, th);
     if (n == 1) {
@@ -4253,7 +4170,6 @@ int b_number(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("number", n, th);
     if (n == 1) {
@@ -4272,7 +4188,6 @@ int b_system(int arglist, int rest, int th)
 {
     int n, ind, arg1, save1, save2, syslist, pred;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("system", n, th);
     if (n == 1) {
@@ -4307,7 +4222,6 @@ int b_var(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("var", n, th);
     if (n == 1) {
@@ -4327,7 +4241,6 @@ int b_nonvar(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nonvar", n, th);
     if (n == 1) {
@@ -4348,7 +4261,6 @@ int b_atomic(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("atomic", n, th);
     if (n == 1) {
@@ -4367,7 +4279,6 @@ int b_list(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("list", n, th);
     if (n == 1) {
@@ -4385,7 +4296,6 @@ int b_string(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("string", n, th);
     if (n == 1) {
@@ -4407,7 +4317,6 @@ int b_functor(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, res, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("functor", n, th);
     if (n == 3) {
@@ -4497,7 +4406,6 @@ int b_arg(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, elt, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("arg", n, th);
     if (n == 3) {
@@ -4535,7 +4443,6 @@ int b_arg0(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, elt, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("arg0", n, th);
     if (n == 3) {
@@ -4575,7 +4482,6 @@ int b_listing(int arglist, int rest, int th)
 {
     int n, ind, arg1, clauses, pred, list, temp;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("listing", n, th);
     if (n == 0) {
@@ -4663,7 +4569,6 @@ int b_n_univ(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("=..", n, th);
     if (n == 2) {
@@ -4762,7 +4667,6 @@ int b_current_predicate(int arglist, int rest, int th)
 {
     int n, ind, arg1, save1, save2, predlist, pred, aritylist, arity;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_predicate", n, th);
     if (n == 1) {
@@ -4823,7 +4727,6 @@ int b_current_op(int arglist, int rest, int th)
     int n, ind, arg1, arg2, arg3, save1, save2, lis, weight, spec, op, w,
 	s, o;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("current_op", n, th);
     if (n == 3) {
@@ -4879,7 +4782,6 @@ int b_predicate_property(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("predicate_property", n, th);
     if (n == 2) {
@@ -4934,7 +4836,6 @@ int b_reset_op(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("reset_op", n, th);
     if (n == 0) {
@@ -4997,7 +4898,6 @@ int b_gbc(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("gc", n, th);
     if (n == 1) {
@@ -5033,7 +4933,6 @@ int b_mkdir(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("mkdir", n, th);
     if (n == 1) {
@@ -5055,7 +4954,6 @@ int b_rmdir(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("rmdir", n, th);
     if (n == 1) {
@@ -5077,7 +4975,6 @@ int b_chdir(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("chdir", n, th);
     if (n == 1) {
@@ -5100,7 +4997,6 @@ int b_delete(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("delete", n, th);
     if (n == 1) {
@@ -5122,7 +5018,6 @@ int b_rename(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("rename", n, th);
     if (n == 2) {
@@ -5217,7 +5112,6 @@ int b_edit(int arglist, int rest, int th)
     char str[STRSIZE];
     char *editor;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("edit", n, th);
     if (n == 1) {
@@ -5266,7 +5160,6 @@ int b_shell(int arglist, int rest, int th)
     int n, ind, arg1, res;
     char str1[STRSIZE];
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("shell", n, th);
     if (n == 1) {
@@ -5289,7 +5182,6 @@ int b_syntaxerrors(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("syntaxerrors", n, th);
     if (n == 2) {
@@ -5315,7 +5207,6 @@ int b_fileerrors(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, res;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("fileerrors", n, th);
     if (n == 2) {
@@ -5341,7 +5232,6 @@ int b_statistics(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("statistics", n, th);
     if (n == 2) {
@@ -5375,7 +5265,6 @@ int b_sort(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("sort", n, th);
     if (n == 2) {
@@ -5400,7 +5289,6 @@ int b_keysort(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("keysort", n, th);
     if (n == 2) {
@@ -5427,7 +5315,6 @@ int b_inc(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("inc", n, th);
     if (n == 2) {
@@ -5475,7 +5362,6 @@ int b_dec(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("dec", n, th);
     if (n == 2) {
@@ -5523,7 +5409,6 @@ int b_ansi_cup(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, r, c;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cup", n, th);
     if (n == 2) {
@@ -5612,7 +5497,6 @@ int b_ansi_cpr(int arglist, int rest, int th)
     int n, ind, arg1, arg2, r, c, res1, res2;
     cursor position;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cpr", n, th);
     if (n == 2) {
@@ -5643,7 +5527,6 @@ int b_ansi_scp(int arglist, int rest, int th)
     int n, ind;
     cursor position;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_scp", n, th);
     if (n == 0) {
@@ -5663,7 +5546,6 @@ int b_ansi_rcp(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_rcp", n, th);
     if (n == 0) {
@@ -5680,7 +5562,6 @@ int b_ansi_ed(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_ed", n, th);
     if (n == 0) {
@@ -5696,7 +5577,6 @@ int b_ansi_el(int arglist, int rest, int th)
 {
     int n, ind;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_el", n, th);
     if (n == 0) {
@@ -5712,7 +5592,6 @@ int b_ansi_cuu(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cuu", n, th);
     if (n == 1) {
@@ -5738,7 +5617,6 @@ int b_ansi_cud(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cud", n, th);
     if (n == 1) {
@@ -5764,7 +5642,6 @@ int b_ansi_cuf(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cuf", n, th);
     if (n == 1) {
@@ -5790,7 +5667,6 @@ int b_ansi_cub(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_cub", n, th);
     if (n == 1) {
@@ -5816,7 +5692,6 @@ int b_ansi_sgr(int arglist, int rest, int th)
 {
     int n, ind, arg1, m;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ansi_sgr", n, th);
     if (n == 1) {
@@ -5850,7 +5725,6 @@ int b_date(int arglist, int rest, int th)
     struct tm *jst;
     time_t t;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("data", n, th);
     if (n == 1) {
@@ -5876,7 +5750,6 @@ int b_date_day(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, y, m, d, w;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("data_day", n, th);
     if (n == 2) {
@@ -5910,7 +5783,6 @@ int b_time(int arglist, int rest, int th)
     struct tm *jst;
     time_t t;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("time", n, th);
     if (n == 1) {
@@ -5934,7 +5806,6 @@ int b_errcode(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("errcode", n, th);
     if (n == 1) {
@@ -5973,7 +5844,6 @@ int b_recordh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, data, record_id, index;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recordh", n, th);
     if (n == 3) {
@@ -6015,7 +5885,6 @@ int b_retrieveh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, record_id, index, lis, term;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("retrieveh", n, th);
     if (n == 3) {
@@ -6064,7 +5933,6 @@ int b_instance(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("instance", n, th);
     if (n == 2) {
@@ -6090,7 +5958,6 @@ int b_recordz(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, temp, chain, next;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recordz", n, th);
     if (n == 3) {
@@ -6143,7 +6010,6 @@ int b_record_after(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain, chain1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("record_after", n, th);
     if (n == 3) {
@@ -6181,7 +6047,6 @@ int b_recorda(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recorda", n, th);
     if (n == 3) {
@@ -6222,7 +6087,6 @@ int b_recorded(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain, save1, save2;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("recorded", n, th);
     if (n == 3) {
@@ -6256,7 +6120,6 @@ int b_nref(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, chain;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nref", n, th);
     if (n == 2) {
@@ -6285,7 +6148,6 @@ int b_pref(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, chain;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("pref", n, th);
     if (n == 2) {
@@ -6315,7 +6177,6 @@ int b_nth_ref(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, chain, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("nth_ref", n, th);
     if (n == 3) {
@@ -6355,7 +6216,6 @@ int b_replace(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, chain;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("replace", n, th);
     if (n == 2) {
@@ -6383,7 +6243,6 @@ int b_erase(int arglist, int rest, int th)
 {
     int n, ind, arg1, addr;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("erase", th, n);
     if (n == 1) {
@@ -6404,7 +6263,6 @@ int b_eraseall(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("eraseall", n, th);
     if (n == 1) {
@@ -6430,7 +6288,6 @@ int b_removeh(int arglist, int rest, int th)
 {
     int n, ind, arg1, arg2, arg3, save1, record_id, index, lis, prev, term;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("removeh", n, th);
     if (n == 3) {
@@ -6488,7 +6345,6 @@ int b_removeallh(int arglist, int rest, int th)
 {
     int n, ind, arg1, record_id, i;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("removeallh", n, th);
     if (n == 1) {
@@ -6508,7 +6364,6 @@ int b_ref(int arglist, int rest, int th)
 {
     int n, ind, arg1, list, key, num, chain;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("ref", n, th);
     if (n == 1) {
@@ -6547,7 +6402,6 @@ int b_key(int arglist, int rest, int th)
     int n, ind, arg1, arg2, save1, save2, list, key, chain, arity,
 	keyarity;
 
-	arglist = deref(arglist,th);
     n = length(arglist);
     ind = makeind("key", n, th);
     if (n == 1) {

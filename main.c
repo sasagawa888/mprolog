@@ -708,9 +708,12 @@ int prove(int goal, int bindings, int rest, int th)
 	exception(RESOURCE_ERR, NIL, makestr("prove recursion over max"),
 		  th);
 
+	
+
     if (nullp(goal)) {
 	return (prove_all(rest, bindings, th));
     } else if (builtinp(goal)) {
+	goal = deref(goal, th);
 	if (atomp(goal)) {
 	    if ((res = (GET_SUBR(goal)) (NIL, rest, th)) == YES)
 		return (YES);
