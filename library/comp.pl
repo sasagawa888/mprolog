@@ -56,7 +56,7 @@ Junify_var(head,arg,th)    for variable term
 Junify_nil(arg,th)    for [] check.
 */
 
-:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
+%:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
 
 option(_,_).
 pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn nondet
@@ -146,8 +146,8 @@ pass4(X) :-
 	write('#include "jump.h"'),nl,
     gen_c_pred,
     gen_c_exec,
-    abolish(pred_data/3),
-    abolish(optimize/1),
+    %abolish(pred_data/3),
+    %abolish(optimize/1),
     n_reconsult_abolish,
     told.
 
@@ -549,6 +549,7 @@ Jset_wp(save1,th);
 
 
 */
+
 % inline C language
 gen_body(cinline(X),_) :-
     write('{'),
@@ -560,171 +561,23 @@ gen_body(X,_) :-
     optimize(det),
     gen_det_body(X).
 
-% ifthenelse
-gen_body((X->Y;Z),N) :-
-    write('{body = '),
-    gen_a_body((X->Y;Z)),
-    write(';'),nl,
-    write('if((res=Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);}'),nl.
+gen_body(X,_) :-
+    optimize(nondet),
+    gen_nondet_body(X).
 
-% disjunction
-gen_body(((X;_);Y),N) :-
-    write('{dp['),write(N),write(']=Jget_sp(th);'),nl,
-    N1 is N+1,
-    gen_body(X,N1),
-    write('Junbind(dp['),write(N),write('],th);'),nl,
-    write('body = '),nl,
-    gen_body1(Y,N),
-    write(';'),nl,
-    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Junbind(dp['),write(N),write('],th);}'),nl.
+gen_nondet_body((!,Y),N,M,B) :-
+    gen_nondet_body(Y,N,M,[]).
+gen_nondet_body((X,Y),N,M,B) :-
+    gen_a_nondet_body(X,N,M,B),
+    gen_nondet_body(Y,N,M,B).
+gen_nondet_body((X;Y),N,M,B) :-
+    gen_nondet_body(X,N,M,B),
+    gen_nondet_body(Y,N,M,B).
+gen_nondet_body(X,N,M,B) :-
+    gen_a_nondet_body(X,N,M,B).
 
-
-gen_body((X;(Y1;Y2)),N) :-
-    write('{dp['),write(N),write(']=Jget_sp(th);'),nl,
-    write('body = '),nl,
-    gen_body1(X,N),
-    write(';'),nl,
-    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Junbind(dp['),write(N),write('],th);'),nl,
-    N1 is N+1,
-    gen_body((Y1;Y2),N1),
-    write('Junbind(dp['),write(N),write('],th);}'),nl.
-
-
-gen_body((X;Y),N) :-
-    write('{dp['),write(N),write(']=Jget_sp(th);'),nl,
-    write('body = '),nl,
-    gen_body1(X,N),
-    write(';'),nl,
-    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Junbind(dp['),write(N),write('],th);'),nl,
-    write('body = '),nl,
-    gen_body1(Y,N),
-    write(';'),nl,
-    write('if(Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Junbind(dp['),write(N),write('],th);}'),nl.
-
-
-% has cut
-gen_body(X,N) :-
-    n_has_cut(X),
-    n_before_cut(X,X1),
-    n_after_cut(X,X2),
-    not(n_has_cut(X2)),
-    write('{body = '),
-    gen_body1(X1,N),
-    write(';'),nl,
-    write('if((res=Jprove_all(body,Jget_sp(th),th)) == YES)'),nl,
-    gen_after_body(X2,N),
-    write('}'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl.
-
-% nested has cut
-gen_body(X,N) :-
-    n_has_cut(X),
-    n_before_cut(X,X1),
-    n_after_cut(X,X2),
-    n_has_cut(X2),
-    write('{body = '),
-    gen_body1(X1,N),
-    write(';'),nl,
-    write('if(Jprove_all(body,Jget_sp(th),th) == YES)'),nl,
-    gen_body(X2,N),
-    write('}'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl.
-    
-    
-% conjunction 
-gen_body(X,N) :-
-    write('{body = '),
-    gen_body1(X,N),
-    write(';'),nl,
-    write('if((res=Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);}'),nl.
-    
-gen_after_body(X,N) :-
-    write('{body = '),
-    gen_body1(X,N),
-    write(';'),nl,
-    write('if((Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)'),nl,
-    write('return(YES);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl,
-    write('return(NO);}'),nl.
-
-
-gen_body1([],_) :-
-    write('NIL').
-
-gen_body1((((X->Y),Y1);Z),N) :-
-	gen_a_body((((X->Y),Y1);Z)).
-
-gen_body1((X->Y;Z),N) :-
-	gen_a_body((X->Y;Z)).
-
-gen_body1((D1;D2),N) :-
-	write('Jwlist3(Jmakeope(";"),'),
-	gen_body1(D1,N),
-    write(','),
-    gen_body1(D2,N),
-    write(',th)').
-
-gen_body1(((X->Y;Z),Xs),N) :-
-    write('Jwlist3(Jmakeope(","),'),
-	gen_a_body((X->Y;Z)),
-    write(','),
-    gen_body1(Xs,N),
-    write(',th)').
-
-gen_body1(((D1;D2),Xs),N) :-
-    write('Jwlist3(Jmakeope(","),'),
-	write('Jwlist3(Jmakeope(";"),'),
-	gen_body1(D1,N),
-    write(','),
-    gen_body1(D2,N),
-    write(',th),'),
-    gen_body1(Xs,N),
-    write(',th)').
-
-
-gen_body1(((C1,C2),Xs),N) :-
-    write('Jwlist3(Jmakeope(","),'),
-	write('Jwlist3(Jmakeope(","),'),
-	gen_body1(C1,N),
-    write(','),
-    gen_body1(C2,N),
-    write(',th),'),
-    gen_body1(Xs,N),
-    write(',th)').
-    
-gen_body1((X,Xs),N) :-
-	write('Jwlist3(Jmakeope(","),'),
-	gen_a_body(X),
-    write(','),
-    gen_body1(Xs,N),
-    write(',th)').
-
-
-
-gen_body1(X,_) :-
-	gen_a_body(X).
+gen_a_nondet_body(X,N,M,B) :-
+    write(user_output,X).
 
 /*
 generate one operation,user,builtin or compiled predicate.
@@ -959,19 +812,7 @@ gen_a_body(X \= Y) :-
     gen_form(Y),
     write(',th),th)').
 
-/*
-% ifthen
-gen_a_body(X->Y) :-
-    n_findatom(n_exec_ifthen,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_body1(X,0),
-    write(','),
-    gen_body1(Y,0),
-    write(',th),th)').
-*/
+
 % atom builtin e.g. nl fail
 gen_a_body(X) :-
     n_property(X,builtin),
