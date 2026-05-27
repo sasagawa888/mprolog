@@ -3,4 +3,4 @@
 p(1).
 p(2).
 
-foo :- p(X),display(X),fail.
+foo :- p(X),write(X),fail.

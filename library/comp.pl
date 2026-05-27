@@ -562,8 +562,8 @@ gen_body(X,_) :-
     gen_det_body(X).
 
 gen_body(X,_) :-
-    optimize(nondet),
-    gen_nondet_body(X).
+    write(user_output,"!!!nondet-body"),nl(user_output),
+    gen_nondet_body(X,1,1,[]).
 
 gen_nondet_body((!,Y),N,M,B) :-
     gen_nondet_body(Y,N,M,[]).
@@ -577,7 +577,7 @@ gen_nondet_body(X,N,M,B) :-
     gen_a_nondet_body(X,N,M,B).
 
 gen_a_nondet_body(X,N,M,B) :-
-    write(user_output,X).
+    write(user_output,X),nl(user_output).
 
 /*
 generate one operation,user,builtin or compiled predicate.

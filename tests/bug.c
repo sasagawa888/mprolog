@@ -31,12 +31,6 @@ n = Jlength(arglist);
 if(n == 0){
 loop0:
 varX = Jmakevariant(th);
-{body = Jwlist3(Jmakeope(","),Jwcons(Jmakecomp("p"),Jwcons(varX,NIL,th),th),Jwlist3(Jmakeope(","),Jwcons(535,Jwcons(varX,NIL,th),th),593,th),th);
-if((res=Jprove_all(Jaddtail_body(rest,body,th),Jget_sp(th),th)) == YES)
-return(YES);
-Jset_ac(save3,th);
-Junbind(save2,th);
-Jset_wp(save1,th);}
 Jset_wp(save1,th);
 return(NO);}
 Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("foo"),arglist);
