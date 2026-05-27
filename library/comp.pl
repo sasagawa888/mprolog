@@ -401,7 +401,9 @@ gen_a_pred1(P,[L|Ls]) :-
     pred_data(P,L,nondet),
     write(user_output,$/$),write(user_output,L),
     write(user_output,' nondet'),
+    assert(optimize(nondet)),
     gen_a_pred2(P,L),
+    retract(optimize(nondet)),
     gen_a_pred1(P,Ls).
 
 % if(n == N){...}
@@ -562,6 +564,7 @@ gen_body(X,_) :-
     gen_det_body(X).
 
 gen_body(X,_) :-
+    optimize(nondet),
     write(user_output,"!!!nondet-body"),nl(user_output),
     gen_nondet_body(X,1,1,[]).
 
