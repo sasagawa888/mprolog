@@ -493,7 +493,9 @@ gen_a_pred5(P,_) :-
     P =.. [P1|_],
     not(n_dynamic_predicate(P1)),
 	gen_head(P),
-    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
+    write('if(rest==NIL){'),nl,
+    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
+    write('else return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
