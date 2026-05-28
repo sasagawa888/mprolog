@@ -419,6 +419,7 @@ gen_a_pred2(P,N) :-
 % select all clauses that arity is N
 gen_a_pred3(P,N) :-
     gen_var_assign(1,N),
+    gen_jump_switch(P,N),
     write(loop),write(N),write(':'),nl,
 	n_clause_with_arity(P,N,C),
     gen_a_pred4(C,N).
@@ -436,6 +437,12 @@ gen_var_assign(S,E) :-
     write(');\n'),
     S1 is S+1,
     gen_var_assign(S1,E).
+
+gen_jump_switch(P,N) :-
+    n_clause_count_with_arity(P,N,M),
+    write(user_output,M),
+    write(user_output,'\nswitch'),
+    true.
 
 
 % generate each clause in CPS
