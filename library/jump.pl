@@ -422,7 +422,7 @@ gen_a_pred3(P,N) :-
     gen_jump_switch(P,N),
     write(loop),write(N),write(':'),nl,
 	n_clause_with_arity(P,N,C),
-    gen_a_pred4(C,N).
+    gen_a_pred4(C,N,0).
 
 % arg1 = Jnth(arglist,1);
 % arg2 = Jnth(arglist,2);
@@ -446,13 +446,14 @@ gen_jump_switch(P,N) :-
 
 
 % generate each clause in CPS
-gen_a_pred4([],_).
-gen_a_pred4([C|Cs],N) :-
+gen_a_pred4([],_,_).
+gen_a_pred4([C|Cs],N,M) :-
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
-    gen_a_pred5(X,N),
-    gen_a_pred4(Cs,N).
+    gen_a_pred5(X,N,M),
+    M1 is M+1,
+    gen_a_pred4(Cs,N,M1).
 
 
 /*
@@ -464,8 +465,9 @@ if( )... head
 ...
 */
 
+% N is arity , M is Mth clause from 0.
 % clause as tail recursive
-gen_a_pred5((Head :- Body),N) :-
+gen_a_pred5((Head :- Body),N,M) :-
     tail_body(Head,Body),
     Head =.. [P|Args],
     length(Args,L),
@@ -475,18 +477,18 @@ gen_a_pred5((Head :- Body),N) :-
 
 
 % clause
-gen_a_pred5((Head :- Body),N) :-
+gen_a_pred5((Head :- Body),N,M) :-
 	gen_head(Head),
     gen_body(Body,N).
 
 % predicate with no arity
-gen_a_pred5(P,_) :-
+gen_a_pred5(P,_,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
     not(n_dynamic_predicate(P)),
     write('return(Jprove_all(rest,Jget_sp(th),th));'),nl.
 
-gen_a_pred5(P,_) :-
+gen_a_pred5(P,_,M) :-
     n_property(P,predicate),
     functor(P,_,0),
     n_dynamic_predicate(P),
@@ -495,7 +497,7 @@ gen_a_pred5(P,_) :-
     write(')'),nl.
 
 % predicate
-gen_a_pred5(P,_) :-
+gen_a_pred5(P,_,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
     not(n_dynamic_predicate(P1)),
@@ -506,7 +508,7 @@ gen_a_pred5(P,_) :-
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
-gen_a_pred5(P,_) :-
+gen_a_pred5(P,_,M) :-
     n_property(P,predicate),
     P =.. [P1|L],
     n_dynamic_predicate(P),
@@ -519,7 +521,7 @@ gen_a_pred5(P,_) :-
 
 
 % user ope
-gen_a_pred5(P,_) :-
+gen_a_pred5(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
