@@ -819,6 +819,7 @@ int b_char_set(int arglist, int rest, int th);
 int b_cinline(int arglist, int rest, int th);
 int b_clause(int arglist, int rest, int th);
 int b_n_clause_with_arity(int arglist, int rest, int th);
+int b_n_clause_count_with_arity(int arglist, int rest, int th);
 int b_create_client_socket(int arglist, int rest, int th);
 int b_close(int arglist, int rest, int th);
 int b_close_socket(int arglist, int rest, int th);

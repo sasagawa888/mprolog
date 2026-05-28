@@ -322,6 +322,7 @@ void init_builtin(void)
     defbuiltin("n_generate_all_variable", b_n_generate_all_variable, -1);
     defbuiltin("n_generate_variable", b_n_generate_variable, -1);
     defbuiltin("n_clause_with_arity", b_n_clause_with_arity, -1);
+	defbuiltin("n_clause_count_with_arity", b_n_clause_count_with_arity, -1);
     defbuiltin("n_property", b_n_property, -1);
     defbuiltin("n_imported_predicate", b_n_imported_predicate, -1);
     defbuiltin("n_imported_userop", b_n_imported_userop, -1);

@@ -618,6 +618,50 @@ int b_n_clause_with_arity(int arglist, int rest, int th)
     return (NO);
 }
 
+
+
+int b_n_clause_count_with_arity(int arglist, int rest, int th)
+{
+    int n, ind, arg1, arg2, arg3, l, clause, clauses, res;
+
+    n = length(arglist);
+    ind = makeind("n_clause_with_arity", n, th);
+    if (n == 3) {
+	arg1 = deref(car(arglist), th);
+	arg2 = deref(cadr(arglist), th);
+	arg3 = deref(caddr(arglist), th);
+	if (!singlep(arg1))
+	    exception(NOT_ATOM, ind, arg1, th);
+	if (!integerp(arg2))
+	    exception(NOT_INT, ind, arg2, th);
+
+	clauses = GET_CAR(arg1);
+	l = GET_INT(arg2);
+	res = 0;
+
+	while (!nullp(clauses)) {
+	    clause = car(clauses);
+	    if (atomp(clause) && l == 0)
+		res++;
+	    else if (predicatep(clause) && length(clause) == l + 1)
+		res++;
+	    else if (user_operation_p(clause) && length(clause) == l + 1)
+		res++;
+	    else if (clausep(clause) && atomp(cadr(clause)) && l == 0)
+		res++;
+	    else if (clausep(clause) && length(cadr(clause)) == l + 1)
+		res++;
+
+	    clauses = cdr(clauses);
+	}
+	unify(makeint(res), arg3, th);
+	return (prove_all(rest, sp[th], th));
+    }
+    return (NO);
+}
+
+
+
 int b_n_error(int arglist, int rest, int th)
 {
     int n, arg1, arg2;

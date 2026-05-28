@@ -156,9 +156,18 @@ if(n==?){
 }
 このスイッチ文で対応する節にgotoで飛ぶようにする。
 このためには節が全部で何個あるのかが必要になる。
-n_clause_coount_with_arity(P,A,N) を新設する。ArityがAの
+n_clause_count_with_arity(P,A,N) を新設する。ArityがAの
 節の個数をNに返す仕様にしようと思う。
 
 ジャンプ先のラベルは　clause_M_N
 if(n==M)のなかでN番目という意味。０からカウントする。
 
+?- [-'./tests/bench'].
+yes
+?- n_clause_count_with_arity(qsort,3,X).
+X = 2 .
+yes
+?- n_clause_count_with_arity(partition,4,X).
+X = 3 .
+yes
+?- 
