@@ -175,7 +175,7 @@ yes
 2026/5/30 
 ライブラリでコンパイルされた述語を呼び出す場合がある。
 これについて決定性なのか非決定性なのかを判別する必要がある。
-compiledのものについてはAUX部にdet、nondetの識別ができる値をいれておくことにする。
+compiledのものについてはARITY部にdet、nondetの識別ができる値をいれておくことにする。
 これをn_property(X,Y)で呼び出したときにcompiled_det compiled_nondet と返すことにする。
 
 deftpred に第３引数を加えた。ここにnondet、detに該当する番号を追加することにする。

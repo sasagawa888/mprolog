@@ -444,7 +444,7 @@ void defcompiled(char *name, int (*func)(int, int, int), int arity, int type)
 
     atom = makeatom(name, COMP);
     SET_SUBR(atom, func);
-	SET_AUX(atom,type);
+	SET_ARITY(atom,type);
 
     if (arity > 2 && structurep(arity))
 	while (!nullp(arity)) {
