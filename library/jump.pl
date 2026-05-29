@@ -250,7 +250,7 @@ gen_def(P) :-
     write('b_'),
     n_atom_convert(P,P1),
     write(P1),
-    write(');'),
+    write(',1);'), % dummy it will replace type
     nl,!.
 
 % generate deftinfix for user op

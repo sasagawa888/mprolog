@@ -250,7 +250,7 @@ gen_def(P) :-
     write('b_'),
     n_atom_convert(P,P1),
     write(P1),
-    write(');'),
+    write(',1);'), % 1 is dummy 
     nl,!.
 
 % generate deftinfix for user op
@@ -434,6 +434,10 @@ gen_var_assign(S,E) :-
     write(');\n'),
     S1 is S+1,
     gen_var_assign(S1,E).
+
+gen_jump_switch(P,N):-
+    write(user_output,'swtich'),
+    true.
 
 
 % generate each clause in CPS

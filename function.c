@@ -438,12 +438,13 @@ void defbuiltin(char *name, int (*func)(int, int, int), int arity)
     return;
 }
 
-void defcompiled(char *name, int (*func)(int, int, int), int arity)
+void defcompiled(char *name, int (*func)(int, int, int), int arity, int type)
 {
     int atom;
 
     atom = makeatom(name, COMP);
     SET_SUBR(atom, func);
+	SET_AUX(atom,type);
 
     if (arity > 2 && structurep(arity))
 	while (!nullp(arity)) {
