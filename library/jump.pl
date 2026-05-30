@@ -445,12 +445,13 @@ gen_jump_switch(P,N) :-
     true.
 
 
-% generate each clause in CPS
+% generate each clause 
 gen_a_pred4([],_,_).
 gen_a_pred4([C|Cs],A,M) :-
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
+    write('clause_'),write(A),write('_'),write(M),write(':'),nl,
     gen_a_pred5(X,A,M),
     M1 is M+1,
     gen_a_pred4(Cs,A,M1).
