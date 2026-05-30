@@ -412,7 +412,10 @@ gen_a_pred2(P,A) :-
     write(A),
     write('){\n'),
     gen_a_pred3(P,A),
+    write('allfail:'),nl,
     write('Jset_wp(save1,th);'),nl,
+    write('Junbind(save2,th);'),nl,
+    write('Jset_ac(save3,th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 
@@ -441,7 +444,7 @@ gen_var_assign(S,E) :-
 
 gen_jump_switch(P,A):-
     n_clause_count_with_arity(P,A,M),
-    write('clause = Fget_back_choice(th);'),nl,
+    write('clause = Jget_back_choice(th);'),nl,
     write('switch(clause){'),nl,
     gen_jump_switch1(A,0,M),
     write('}').
@@ -449,7 +452,7 @@ gen_jump_switch(P,A):-
 gen_jump_switch1(A,M,M) :-
     write('default: goto allfail;'),nl.
 gen_jump_switch1(A,M,N) :-
-    write('case '),write(M),write(':'),
+    write('case '),write(M),write(': '),
     write('goto '),write('clause_'),write(A),write('_'),write(M),write(';'),nl,
     M1 is M+1,
     gen_jump_switch1(A,M1,N).
