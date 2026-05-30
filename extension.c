@@ -699,6 +699,14 @@ int b_n_error(int arglist, int rest, int th)
     return (NO);
 }
 
+int get_arity(int x)
+{
+	if(atomp(x)){
+		return(GET_ARITY(x));
+	}
+		return(GET_ARITY(car(x)));
+}
+
 int b_n_property(int arglist, int rest, int th)
 {
     int n, arg1, arg2;
@@ -724,7 +732,10 @@ int b_n_property(int arglist, int rest, int th)
 	    else
 		return (NO);
 	} else if (compiledp(arg1)) {
-	    if (unify(arg2, makeconst("compiled"), th) == YES)
+		printf("asdf%d",get_arity(arg1));
+	    if (get_arity(arg1) == 1 && unify(arg2, makeconst("compiled_nondet"), th) == YES)
+		return (prove_all(rest, sp[th], th));
+		else if (get_arity(arg1) == 2 && unify(arg2, makeconst("compiled_det"), th) == YES)
 		return (prove_all(rest, sp[th], th));
 	    else
 		return (NO);
