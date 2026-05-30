@@ -500,8 +500,11 @@ gen_a_pred5(P,_,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
     not(n_dynamic_predicate(P)),
-    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl.
+    write('if(rest!=NIL){'),nl,
+    write('return(Jprove_all(rest,Jget_sp(th),th));}'),nl,
+    write('else return(YES);'),nl.
 
+% dynamic predicate with no arity 
 gen_a_pred5(P,_,M) :-
     n_property(P,predicate),
     functor(P,_,0),
@@ -510,7 +513,7 @@ gen_a_pred5(P,_,M) :-
     write(P),
     write(')'),nl.
 
-% predicate
+% nondet predicate
 gen_a_pred5(P,_,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
@@ -522,6 +525,7 @@ gen_a_pred5(P,_,M) :-
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
+% dynamic predicate
 gen_a_pred5(P,_,M) :-
     n_property(P,predicate),
     P =.. [P1|L],
@@ -538,7 +542,9 @@ gen_a_pred5(P,_,M) :-
 gen_a_pred5(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
-    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
+     write('if(rest!=NIL){'),nl,
+    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
+    write('else return(YES);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
