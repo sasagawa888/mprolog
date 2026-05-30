@@ -4587,7 +4587,7 @@ int b_current_predicate(int arglist, int rest, int th)
     ind = makeind("current_predicate", n, th);
     if (n == 1) {
 	arg1 = car(arglist);
-	if (!indicatorp(arg1))
+	if (!indicatorp(arg1) && !wide_variable_p(arg1))
 	    exception(NOT_INDICATOR, ind, arg1, th);
 
 	predlist = reverse(predicates);
