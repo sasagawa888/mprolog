@@ -250,7 +250,7 @@ gen_def(P) :-
     write('b_'),
     n_atom_convert(P,P1),
     write(P1),
-    write(',1);'), % dummy it will replace type
+    write(',1,2);'), % dummy it will replace arity and type
     nl,!.
 
 % generate deftinfix for user op
@@ -385,44 +385,44 @@ gen_a_pred1(P,[]) :-
 	write('return(NO);').
 
 % when tail recursive or deterministic or halt
-gen_a_pred1(P,[L|Ls]) :-
-    pred_data(P,L,O),
+gen_a_pred1(P,[A|As]) :-
+    pred_data(P,A,O),
     (O = det;O=tail;O=halt),
-    write(user_output,$/$),write(user_output,L),
+    write(user_output,$/$),write(user_output,A),
     write(user_output,' '),write(user_output,O),
     assert(optimize(O)), % det or tail or halt
-	gen_a_pred2(P,L),
+	gen_a_pred2(P,A),
     retract(optimize(O)), % delete optimize data
-    gen_a_pred1(P,Ls).
+    gen_a_pred1(P,As).
 
 
 %when normal predicate
-gen_a_pred1(P,[L|Ls]) :-
-    pred_data(P,L,nondet),
-    write(user_output,$/$),write(user_output,L),
+gen_a_pred1(P,[A|As]) :-
+    pred_data(P,A,nondet),
+    write(user_output,$/$),write(user_output,A),
     write(user_output,' nondet'),
     assert(optimize(nondet)),
-    gen_a_pred2(P,L),
+    gen_a_pred2(P,A),
     retract(optimize(nondet)),
-    gen_a_pred1(P,Ls).
+    gen_a_pred1(P,As).
 
-% if(n == N){...}
-gen_a_pred2(P,N) :-
+% if(n == A){...}
+gen_a_pred2(P,A) :-
 	write('if(n == '),
-    write(N),
+    write(A),
     write('){\n'),
-    gen_a_pred3(P,N),
+    gen_a_pred3(P,A),
     write('Jset_wp(save1,th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 
-% select all clauses that arity is N
-gen_a_pred3(P,N) :-
-    gen_var_assign(1,N),
-    gen_jump_switch(P,N),
-    write(loop),write(N),write(':'),nl,
-	n_clause_with_arity(P,N,C),
-    gen_a_pred4(C,N,0).
+% select all clauses that arity is A
+gen_a_pred3(P,A) :-
+    gen_var_assign(1,A),
+    gen_jump_switch(P,A),
+    write(loop),write(A),write(':'),nl,
+	n_clause_with_arity(P,A,C),
+    gen_a_pred4(C,A,0).
 
 % arg1 = Jnth(arglist,1);
 % arg2 = Jnth(arglist,2);
@@ -447,13 +447,13 @@ gen_jump_switch(P,N) :-
 
 % generate each clause in CPS
 gen_a_pred4([],_,_).
-gen_a_pred4([C|Cs],N,M) :-
+gen_a_pred4([C|Cs],A,M) :-
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
-    gen_a_pred5(X,N,M),
+    gen_a_pred5(X,A,M),
     M1 is M+1,
-    gen_a_pred4(Cs,N,M1).
+    gen_a_pred4(Cs,A,M1).
 
 
 /*
@@ -467,19 +467,19 @@ if( )... head
 
 % N is arity , M is Mth clause from 0.
 % clause as tail recursive
-gen_a_pred5((Head :- Body),N,M) :-
+gen_a_pred5((Head :- Body),A,M) :-
     tail_body(Head,Body),
     Head =.. [P|Args],
     length(Args,L),
     pred_data(P,L,tail),
 	gen_head(Head),
-    gen_tail_body(Body,N).
+    gen_tail_body(Body,A).
 
 
 % clause
-gen_a_pred5((Head :- Body),N,M) :-
+gen_a_pred5((Head :- Body),A,M) :-
 	gen_head(Head),
-    gen_body(Body,N).
+    gen_body(Body,A).
 
 % predicate with no arity
 gen_a_pred5(P,_,M) :-
@@ -574,23 +574,25 @@ gen_body(X,_) :-
     optimize(det),
     gen_det_body(X).
 
-gen_body(X,_) :-
+gen_body(X,A) :-
     optimize(nondet),
     write(user_output,"!!!nondet-body"),nl(user_output),
-    gen_nondet_body(X,1,1,[]).
+    gen_nondet_body(X,A,0,0,[]).
 
-gen_nondet_body((!,Y),N,M,B) :-
-    gen_nondet_body(Y,N,M,[]).
-gen_nondet_body((X,Y),N,M,B) :-
-    gen_a_nondet_body(X,N,M,B),
-    gen_nondet_body(Y,N,M,B).
-gen_nondet_body((X;Y),N,M,B) :-
-    gen_nondet_body(X,N,M,B),
-    gen_nondet_body(Y,N,M,B).
-gen_nondet_body(X,N,M,B) :-
-    gen_a_nondet_body(X,N,M,B).
+% A is arith Mth clause, Nth body
+gen_nondet_body((!,Y),A,M,N,B) :-
+    gen_nondet_body(Y,A,M,N,[]).
+gen_nondet_body((X,Y),A,M,N,B) :-
+    gen_a_nondet_body(X,A,M,N,B),
+    N1 is N+1,
+    gen_nondet_body(Y,A,M,N,B).
+gen_nondet_body((X;Y),A,M,N,B) :-
+    gen_nondet_body(X,A,M,N,B),
+    gen_nondet_body(Y,A,M,N,B).
+gen_nondet_body(X,A,M,N,B) :-
+    gen_a_nondet_body(X,A,M,N,B).
 
-gen_a_nondet_body(X,N,M,B) :-
+gen_a_nondet_body(X,A,N,M,B) :-
     write(user_output,X),nl(user_output).
 
 /*

@@ -250,7 +250,8 @@ gen_def(P) :-
     write('b_'),
     n_atom_convert(P,P1),
     write(P1),
-    write(',1);'), % 1 is dummy 
+    write(',1,2);'), % 1 2 is dummy 
+
     nl,!.
 
 % generate deftinfix for user op
