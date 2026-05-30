@@ -1,14 +1,19 @@
 #include "jump.h"
 static int b_p(int arglist, int rest, int th);
 static int b_p(int arglist, int rest, int th){
-int arg1,n,body,save1,save2,save3,goal,cont,res;
+int arg1,n,body,save1,save2,save3,goal,cont,clause,res;
 save1 = Jget_wp(th);
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
 n = Jlength(arglist);
 if(n == 1){
 arg1 = Jnth(arglist,1);
-loop1:
+clause = Fget_back_choice(th);
+switch(clause){
+case 0:goto clause_1_0;
+case 1:goto clause_1_1;
+default: goto allfail;
+}loop1:
 clause_1_0:
 if(Junify_int(arg1,Jmakeint(1),th) == YES && 1)
 if(rest==NIL){
@@ -29,13 +34,17 @@ Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("p"),arglist);
 return(NO);}
 static int b_foo(int arglist, int rest, int th);
 static int b_foo(int arglist, int rest, int th){
-int varX,n,body,save1,save2,save3,goal,cont,res;
+int varX,n,body,save1,save2,save3,goal,cont,clause,res;
 save1 = Jget_wp(th);
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
 n = Jlength(arglist);
 if(n == 0){
-loop0:
+clause = Fget_back_choice(th);
+switch(clause){
+case 0:goto clause_0_0;
+default: goto allfail;
+}loop0:
 varX = Jmakevariant(th);
 clause_0_0:
 Jset_wp(save1,th);

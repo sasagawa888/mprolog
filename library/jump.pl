@@ -326,7 +326,7 @@ gen_var_declare(P) :-
     gen_var_declare1(1,E),
     n_generate_all_variable(P,V),
     gen_all_var(V),
-    write('n,body,save1,save2,save3,goal,cont,res;'),nl,!.
+    write('n,body,save1,save2,save3,goal,cont,clause,res;'),nl,!.
 
 max_list([N],N).
 max_list([X|Xs],X) :-
@@ -438,11 +438,21 @@ gen_var_assign(S,E) :-
     S1 is S+1,
     gen_var_assign(S1,E).
 
-gen_jump_switch(P,N) :-
-    n_clause_count_with_arity(P,N,M),
-    write(user_output,M),
-    write(user_output,'\nswitch'),
-    true.
+
+gen_jump_switch(P,A):-
+    n_clause_count_with_arity(P,A,M),
+    write('clause = Fget_back_choice(th);'),nl,
+    write('switch(clause){'),nl,
+    gen_jump_switch1(A,0,M),
+    write('}').
+
+gen_jump_switch1(A,M,M) :-
+    write('default: goto allfail;'),nl.
+gen_jump_switch1(A,M,N) :-
+    write('case '),write(M),write(':'),
+    write('goto '),write('clause_'),write(A),write('_'),write(M),write(';'),nl,
+    M1 is M+1,
+    gen_jump_switch1(A,M1,N).
 
 
 % generate each clause 
