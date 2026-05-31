@@ -430,11 +430,11 @@ int pop_stack(int th)
 
 int push_back(int x, int y, int z, int a, int th)
 {
+    bp[th]++;
     backstack[bp[th]][0][th] = x; //local sp
     backstack[bp[th]][1][th] = y; //clause choice 
     backstack[bp[th]][2][th] = z; //working  wp
     backstack[bp[th]][3][th] = a; //alpha counter ac
-    bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("backstacksize"), th);
     return(NIL);
@@ -448,7 +448,7 @@ int pop_back(int th)
 
 int get_back_sp(int th)
 {
-    return(backstack[bp[th]][0][th]);
+    return(backstack[bp[th]-1][0][th]);
 }
 
 
