@@ -433,7 +433,7 @@ int push_back(int x, int y, int z, int a, int th)
     backstack[bp[th]][0][th] = x; //local sp
     backstack[bp[th]][1][th] = y; //clause choice 
     backstack[bp[th]][2][th] = z; //working  wp
-    backstack[bp[th]][3][th] = z; //alpha counter ac
+    backstack[bp[th]][3][th] = a; //alpha counter ac
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("backstacksize"), th);
