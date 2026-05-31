@@ -48,7 +48,6 @@ if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);
 clause1:
 Jset_ac(save3,th);
 Junbind(save2,th);
-//wpはそのままにしないといけない
 if(rest == NIL){
 Jinc_back_choice(th);
 arg1 = Jnth(arglist,1);
@@ -80,7 +79,7 @@ save3 = Jget_ac(th);
 save1 = Jget_back_wp(th);
 save2 = Jget_back_sp(th);
 save3 = Jget_back_ac(th);
-clause = Jget_back_clause(th);
+clause = Jget_back_choice(th);
 }
 n = Jlength(arglist);
 if(n == 0){
@@ -94,10 +93,10 @@ clause0:
 varX = Jmakevariant(th);
 Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);
 retry_p:
-res = Jcall(Jmakecomp("p"),Jwcons(varX,NIL,th),th);
+res = Jcall_nondet(Jmakecomp("p"),Jwcons(varX,NIL,th),th);
 if(res == YES){
-    if(Jcall(Jmakesys("write"),Jwcons(varX,NIL,th),th) == YES){
-        if(Jcall(Jmakesys("fail"),NIL,th) == YES)
+    if(Jcall_det(Jmakesys("write"),Jwcons(varX,NIL,th),th) == YES){
+        if(Jcall_det(Jmakesys("fail"),NIL,th) == YES)
             return(YES);
         else
             goto retry_p;
@@ -114,8 +113,8 @@ Jset_wp(save1,th);
 return(NO);}
 Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("foo"),arglist);
 return(NO);}
-void init_tpredicate(void){(deftpred)("p",b_p);
-(deftpred)("foo",b_foo);
+void init_tpredicate(void){(deftpred)("p",b_p,1,2);
+(deftpred)("foo",b_foo,1,2);
 }
 void init_declare(void){int body,th; th=0;
 }
