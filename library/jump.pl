@@ -1,45 +1,4 @@
-/* template. generate c file as following
-
-#include "jump.h"
-int b_<name>(int arglist, int rest, int th);
-int b_<name>(int arglist, int rest, int th){
-int arg1,arg2,arg4,varX,varY,varZ,...,save1,save2,save3,goal,cont;
-save2 = Jget_sp(th);
-if(n == 2){
-    arg1 = Jnth(arglist,1);
-    arg2 = Jnth(arglist,2);
-  
-    % first clause
-    varX = Jmakevariant(th);
-    varZ = Jmakevariant(th);
-    varY = Jmakevariant(th);
-    if(Junify(term1,arg1,th) == YES && Junify_var(term2,arg2,th) == YES){
-        body =Jwcons(119,Jwcons(varX,Jwcons(varY,NIL),th),th);
-        if(Jprove_all(Jaddtail_body(rest,body,th),save2,th) == YES)
-            return(YES);
-    }
-    Jset_ac(save3,th);
-    Junbind(save2,th);
-    Jset_wp(save1,th);}
-
-    % second clause
-    varX1 = Jmakevariant(th);
-    varY1 = Jmakevariant(th);
-    varZ1 = Jmakevariant(th);
-    ...
-    if(Junify(term1,arg1,th) == YES && Junify_const(term1,arg2,th) == YES){
-        body = Jwlist3(Jmakeope(","),Jwcons(173,Jwc ...., th)),th);
-        if(Jprove_all(Jaddtail_body(rest,body,th),save2,th) == YES)
-            return(YES);
-    }
-    Jset_ac(save3,th);
-    Junbind(save2,th);
-    Jset_wp(save1,th);
-
-    Jerrorcomp(makeint(AIRTY_ERR),Jmakecomp(<name>),arglist);
-    return(NO);
-}
-
+/*
 % initialize predicate
 void init_tpredicate(void){(deftpred)("<name>",b_<name>);
 }
@@ -56,7 +15,7 @@ Junify_var(head,arg,th)    for variable term
 Junify_nil(arg,th)    for [] check.
 */
 
-%:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
+:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
 
 option(_,_).
 pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn nondet
