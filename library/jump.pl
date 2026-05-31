@@ -616,9 +616,8 @@ gen_nondet_body((X;Y),A,M,N,B) :-
 gen_nondet_body(X,A,M,N,B) :-
     n_property(X,builtin),
     X =.. [P|Args],
-    write('if(Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('if(rest != NIL) Jprove_all(body,Jget_sp(th),th);'),
-    write('else return(YES);}'),
+    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('return(YES);}'),
     gen_nondet_body_retry(B),nl.
 gen_nondet_body(X,A,M,N,B) :-
      n_property(X,predicate),
@@ -626,8 +625,7 @@ gen_nondet_body(X,A,M,N,B) :-
     functor(X,_,Arity),
     pred_data(P,Arity,det),
     write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('if(rest != NIL) Jprove_all(body,Jget_sp(th),th);'),
-    write('else return(YES);}'),
+    write('return(YES);}'),
     gen_nondet_body_retry(B),nl.
 gen_nondet_body(X,A,M,N,B) :-
      n_property(X,predicate),
