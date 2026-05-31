@@ -391,6 +391,7 @@ gen_a_pred3(P,A) :-
     gen_var_assign(1,A),
     gen_jump_switch(P,A),
     write(loop),write(A),write(':'),nl,
+    write('clause_'),write(A),write('_0:'),nl,
 	n_clause_with_arity(P,A,C),
     gen_a_pred4(C,A,0).
 
@@ -429,7 +430,6 @@ gen_jump_switch1(A,M,N) :-
 % generate each clause 
 gen_a_pred4([],_,_).
 gen_a_pred4([C|Cs],A,M) :-
-    write('clause_'),write(A),write('_'),write(M),write(':'),nl,
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
@@ -465,7 +465,11 @@ gen_a_pred5((Head :- Body),A,M) :-
 % clause
 gen_a_pred5((Head :- Body),A,M) :-
 	gen_head(Head),
-    gen_body(Body,A).
+    gen_body(Body,A),
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('Junbind(save2,th);'),nl.
 
 % predicate with no arity
 gen_a_pred5(P,_,M) :-
@@ -486,7 +490,7 @@ gen_a_pred5(P,_,M) :-
     write(')'),nl.
 
 % nondet predicate
-gen_a_pred5(P,_,M) :-
+gen_a_pred5(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
     not(n_dynamic_predicate(P1)),
@@ -494,6 +498,8 @@ gen_a_pred5(P,_,M) :-
     write('if(rest!=NIL){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
     write('else return(YES);'),nl,
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
@@ -624,7 +630,7 @@ gen_nondet_body(X,A,M,N,B) :-
     write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
     write('if(rest != NIL) Jprove_all(body,Jget_sp(th),th);'),
     write('else return(YES);}'),
-    gen_nondet_body_retry(B),nl.
+    gen_nondet_body_retry(B).
 gen_nondet_body(X,A,M,N,B) :-
      n_property(X,predicate),
     X =.. [P|Args],
