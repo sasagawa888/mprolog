@@ -52,6 +52,7 @@ if(rest == NIL){
 Jinc_back_choice(th);
 arg1 = Jnth(arglist,1);
 }
+Jdebug();
 if(Junify_int(arg1,Jmakeint(2),th) == YES && 1){
 if(rest != NIL){
 if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);

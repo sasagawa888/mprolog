@@ -452,6 +452,8 @@ gen_var_assign(S,E) :-
 gen_jump_switch(P,A):-
     n_clause_count_with_arity(P,A,M),
     write('if(rest == NIL){'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('Junbind(save2,th);'),nl,
     write('clause = Jget_back_choice(th);'),nl,
     write('switch(clause){'),nl,
     gen_jump_switch1(A,0,M),
