@@ -413,6 +413,7 @@ gen_a_pred2(P,A) :-
     write('){\n'),
     gen_a_pred3(P,A),
     write('allfail:'),nl,
+    write('Jpop_back(th);'),nl,
     write('Jset_wp(save1,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_ac(save3,th);'),nl,
@@ -522,6 +523,7 @@ gen_a_pred5(P,_,M) :-
     write('if(rest!=NIL){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
     write('else return(YES);'),nl,
+    write('Jinc_back_choice(th);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
@@ -542,9 +544,10 @@ gen_a_pred5(P,_,M) :-
 gen_a_pred5(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
-     write('if(rest!=NIL){'),nl,
+    write('if(rest!=NIL){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
     write('else return(YES);'),nl,
+    write('Jinc_back_choice(th);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl.
 
@@ -573,10 +576,13 @@ body for compiler
 foo(X),bar(X),boo(X).
 
 if(unify(....)){
-    body = ...;
-    if(Jprove_all(body,Jget_sp(th),th) == YES)
-        return(YES)};
-
+    if(Jcall(foo) == YES){
+        if(Jcall(bar) == YES){
+            if(Jcallboo) == YES)
+                return(YES);    
+        }
+    }
+}
 Junbind(save2,th);
 Jset_wp(save1,th);
 
@@ -596,24 +602,70 @@ gen_body(X,_) :-
 
 gen_body(X,A) :-
     optimize(nondet),
-    write(user_output,"!!!nondet-body"),nl(user_output),
     gen_nondet_body(X,A,0,0,[]).
 
 % A is arith Mth clause, Nth body
 gen_nondet_body((!,Y),A,M,N,B) :-
     gen_nondet_body(Y,A,M,N,[]).
 gen_nondet_body((X,Y),A,M,N,B) :-
-    gen_a_nondet_body(X,A,M,N,B),
+    n_property(X,builtin),
+    X =.. [P|Args],
+    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
     N1 is N+1,
-    gen_nondet_body(Y,A,M,N,B).
+    gen_nondet_body(Y,A,M,N1,B1),
+    write('}'),nl.
+gen_nondet_body((X,Y),A,M,N,B) :-
+     n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    pred_data(P,Arity,det),
+    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+     N1 is N+1,
+    gen_nondet_body(Y,A,M,N1,B),
+    write('}'),nl.
+gen_nondet_body((X,Y),A,M,N,B) :-
+     n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    pred_data(P,Arity,nondet),
+    write('Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);'),nl,
+    gen_nondet_body_label([A,M,N]),
+    write('if (Jcall_nondet(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    N1 is N+1,
+    gen_nondet_body(Y,A,M,N1,[A,M,N]),
+    write('}'),nl.
 gen_nondet_body((X;Y),A,M,N,B) :-
     gen_nondet_body(X,A,M,N,B),
     gen_nondet_body(Y,A,M,N,B).
 gen_nondet_body(X,A,M,N,B) :-
-    gen_a_nondet_body(X,A,M,N,B).
+    n_property(X,builtin),
+    X =.. [P|Args],
+    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('return(YES);}'),nl.
+gen_nondet_body(X,A,M,N,B) :-
+     n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    pred_data(P,Arity,det),
+    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('return(YES);}'),nl.
+gen_nondet_body(X,A,M,N,B) :-
+     n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    pred_data(P,Arity,nondet),
+    write('Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);'),nl,
+    gen_nondet_body_label([A,M,N]),
+    write('if (Jcall_nondet(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('}'),nl.
 
-gen_a_nondet_body(X,A,N,M,B) :-
-    write(user_output,X),nl(user_output).
+
+gen_nondet_body_label([A,M,N]) :-
+    write('label_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
+
+gen_nondet_body_retry([]).
+gen_nondet_body_retry([A,M,N]) :-
+    write('else goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';'),nl.
 
 /*
 generate one operation,user,builtin or compiled predicate.
