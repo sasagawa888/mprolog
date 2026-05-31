@@ -105,7 +105,7 @@ edlog.o: edlog.c edlog.h term.h
 	$(CC) $(CFLAGS) -c $< $(CURSES_CFLAGS)
 
 
-%.o: %.c MPL.h
+%.o: %.c mpl.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
