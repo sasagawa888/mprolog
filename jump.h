@@ -27,7 +27,6 @@ tpred deftpred;
 tuser deftinfix;
 tpred deftsys;
 
-static dp[10]; // disjunction pointer
 static int dynamic_clause;
 
 void init0(int n, tpred x){
