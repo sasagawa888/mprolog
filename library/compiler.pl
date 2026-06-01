@@ -328,6 +328,7 @@ gen_a_pred(P) :-
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
+    write('Jinc_proof(th);'),nl,
     write('n = Jlength(arglist);'),nl,
     write('if(rest != NIL){'),nl,
     write('save1 = Jget_wp(th);'),nl,
