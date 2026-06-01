@@ -15,6 +15,7 @@ bench :-
     n(X),
     n(Y),
     n(Z),
+    n(A),
     fail.
 bench.
 
