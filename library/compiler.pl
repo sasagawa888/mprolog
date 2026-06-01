@@ -613,6 +613,11 @@ gen_nondet_body((X,Y),A,M,N,B) :-
 gen_nondet_body((X;Y),A,M,N,B) :-
     gen_nondet_body(X,A,M,N,B),
     gen_nondet_body(Y,A,M,N,B).
+
+gen_nondet_body(fail,A,M,N,[]) :-
+    gen_nondet_body_fail([A,M]),nl.
+gen_nondet_body(fail,A,M,N,B) :-
+    gen_nondet_body_fail_retry(B),nl.
 gen_nondet_body(X,A,M,N,B) :-
     n_property(X,builtin),
     X =.. [P|Args],
@@ -647,6 +652,12 @@ gen_nondet_body_label([A,M,N]) :-
 gen_nondet_body_retry([]).
 gen_nondet_body_retry([A,M,N]) :-
     write('else goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+
+gen_nondet_body_fail_retry([A,M,N]) :-
+    write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+
+gen_nondet_body_fail_retry([A,M]) :-
+    write('goto clause_'),write(A),write('_'),write(M1),write(';').
 
 /*
 generate one operation,user,builtin or compiled predicate.
