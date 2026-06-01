@@ -640,18 +640,28 @@ int makestrlong(char *str)
 
 void debug(void)
 {
-printf("sp=%d wp=%d ac=%d\n",sp[0],wp[0],ac[0]);
+printf("----- debug print ------\n");
+printf("sp=%d wp=%d ac=%d bp=%d\n",sp[0],wp[0],ac[0],bp[0]);
 int i;
+printf("backstack sp chlice wp ac\n");
+for(i=1;i<=bp[0];i++){
+    printf("%d %d %d %d %d\n",
+        i,backstack[i][0][0], backstack[i][1][0],backstack[i][2][0],backstack[i][3][0]);
+}
 printf("variant\n");
-for(i=0;i<15;i++){
-    printf("%d\n",variant[i][0]);
+for(i=0;i<ac[0]-cell_size;i++){
+    printf("%d ",i);
+    print(variant[i][0]);
+    printf("\n");
 }
 printf("stack\n");
-for(i=0;i<5;i++){
-    printf("%d\n",stack[i][0]);
+for(i=0;i<sp[0];i++){
+    printf("%d ", i);
+    print(stack[i][0]);
+    printf("\n");
 }
-DEBUG}
-
+printf("------------------------\n");
+}
 
 int op_connect(int x, int y, int th)
 {
