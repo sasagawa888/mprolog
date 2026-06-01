@@ -448,7 +448,7 @@ int pop_back(int th)
 
 int get_back_sp(int th)
 {
-    return(backstack[bp[th]-1][0][th]);
+    return(backstack[bp[th]][0][th]);
 }
 
 
@@ -640,10 +640,10 @@ int makestrlong(char *str)
 
 void debug(void)
 {
-printf("----- debug print ------\n");
+printf("\n----- debug print ------\n");
 printf("sp=%d wp=%d ac=%d bp=%d\n",sp[0],wp[0],ac[0],bp[0]);
 int i;
-printf("backstack sp chlice wp ac\n");
+printf("backstack sp choice wp ac\n");
 for(i=1;i<=bp[0];i++){
     printf("%d %d %d %d %d\n",
         i,backstack[i][0][0], backstack[i][1][0],backstack[i][2][0],backstack[i][3][0]);
