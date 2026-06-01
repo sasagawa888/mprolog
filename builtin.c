@@ -3805,6 +3805,13 @@ double getETime()
     return tv.tv_sec + (double) tv.tv_usec * 1e-6;
 }
 
+double getCPUTime(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+    return (double)ts.tv_sec + (double)ts.tv_nsec / 1.0e9;
+}
+
 int b_measure(int arglist, int rest, int th)
 {
     int n, ind, arg1;
@@ -3815,9 +3822,9 @@ int b_measure(int arglist, int rest, int th)
     if (n == 1) {
 	arg1 = car(arglist);
 	proof[th] = 0;
-	start_time = getETime();	//time_flag on and it store start time
+	start_time = getCPUTime();	//time_flag on and it store start time
 	prove_all(addtail_body(makesys("true"),arg1,th), sp[th], th);
-	end_time = getETime();
+	end_time = getCPUTime();
 	time = end_time - start_time;
 	lips = (double) proof[th] / time;
 	ESCFGREEN;
