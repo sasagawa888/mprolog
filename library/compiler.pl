@@ -605,7 +605,7 @@ gen_nondet_body((X,Y),A,M,N,B) :-
     pred_data(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (Jcall_nondet(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('if (b_'),write(P),write('('),gen_a_argument(Args),write(',NIL,th) == YES){'),nl,
     N1 is N+1,
     gen_nondet_body(Y,A,M,N1,[A,M,N]),
     write('}'),
@@ -636,7 +636,7 @@ gen_nondet_body(X,A,M,N,B) :-
     pred_data(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (Jcall_nondet(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('if (b_'),write(P),write('('),gen_a_argument(Args),write(',NIL,th) == YES){'),nl,
     write('}'),
     gen_nondet_body_retry(B),nl.
 
