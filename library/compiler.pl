@@ -381,8 +381,6 @@ gen_a_pred2(P,A) :-
     write('allfail:'),nl,
     write('Jpop_back(th);'),nl,
     write('Jset_wp(save1,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_ac(save3,th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 
