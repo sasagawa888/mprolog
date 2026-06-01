@@ -170,7 +170,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX, MA
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_BACK_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
-       GET_BACK_AC_IDX,
+       GET_BACK_AC_IDX, PUSH_BACK_IDX,
        NUM_FN1S
 };
 
@@ -213,7 +213,7 @@ enum { GET_FLT_IDX,
        NUM_FN7S,
 };
 
-enum { PUSH_BACK_IDX,
+enum { 
        NUM_FN8S,
 };
 
@@ -1351,7 +1351,7 @@ int propagate_all(int sets);
 int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
-int push_back(int x, int y, int z, int a, int th);
+int push_back(int th);
 int pop_back(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);

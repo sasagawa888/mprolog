@@ -27,7 +27,6 @@ void dynamic_link(int x)
     int (*init_f5)(int x, tpred y);
     int (*init_f6)(int x, tpred y);
     int (*init_f7)(int x, tpred y);
-    int (*init_f8)(int x, tpred y);
     void (*init_deftpred)(tpred x);
     void (*init_deftinfix)(tuser x);
     void (*init_tpredicate)();
@@ -51,7 +50,6 @@ void dynamic_link(int x)
     init_f5 = dlsym(hmod, "init5");
     init_f6 = dlsym(hmod, "init6");
     init_f7 = dlsym(hmod, "init7");
-    init_f8 = dlsym(hmod, "init8");
     init_deftpred = dlsym(hmod, "init_deftpred");
     init_deftinfix = dlsym(hmod, "init_deftinfix");
     init_tpredicate = dlsym(hmod, "init_tpredicate");
@@ -92,6 +90,7 @@ void dynamic_link(int x)
     init_f1(GET_BACK_AC_IDX, (tpred) get_back_ac);
     init_f1(GET_BACK_CHOICE_IDX, (tpred) get_back_choice);
     init_f1(INC_BACK_CHOICE_IDX, (tpred) inc_back_choice);
+    init_f1(PUSH_BACK_IDX, (tpred) push_back);
 
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
@@ -196,7 +195,7 @@ void dynamic_link(int x)
     init_f7(GET_FLT_IDX, (tpred) get_flt);
 
     /* argument 5*/
-    init_f8(PUSH_BACK_IDX, (tpred) push_back);
+    //non
 
     init_deftpred((tpred) defcompiled);
     init_deftinfix((tuser) definfixcomp);
