@@ -576,6 +576,7 @@ gen_body(X,_) :-
 
 gen_body(X,A) :-
     optimize(nondet),
+    gen_nondet_body_argument(X,A,0,0),
     gen_nondet_body(X,A,0,0,[]).
 
 % A is arith Mth clause, Nth body
@@ -606,7 +607,8 @@ gen_nondet_body((X,Y),A,M,N,B) :-
     pred_data(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (b_'),write(P),write('('),gen_a_argument(Args),write(',NIL,th) == YES){'),nl,
+    write('if (b_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
     N1 is N+1,
     gen_nondet_body(Y,A,M,N1,[A,M,N]),
     write('}'),
@@ -642,7 +644,8 @@ gen_nondet_body(X,A,M,N,B) :-
     pred_data(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (b_'),write(P),write('('),gen_a_argument(Args),write(',NIL,th) == YES){'),nl,
+    write('if (b_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
     write('}'),
     gen_nondet_body_retry(B),nl.
 
@@ -659,6 +662,18 @@ gen_nondet_body_fail_retry([A,M,N]) :-
 
 gen_nondet_body_fail_retry([A,M]) :-
     write('goto clause_'),write(A),write('_'),write(M1),write(';').
+
+gen_nondet_body_argument((X,Y),A,M,N) :-
+    X =.. [_|Args],
+    write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
+    gen_a_argument(Args),write(';'),nl,
+    N1 is N+1,
+    gen_nondet_body_argument(Y,A,M,N1).
+
+gen_nondet_body_argument(X,A,M,N) :-
+    X =.. [_|Args],
+    write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
+    gen_a_argument(Args),write(';'),nl.
 
 /*
 generate one operation,user,builtin or compiled predicate.
