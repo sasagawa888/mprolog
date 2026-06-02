@@ -210,8 +210,16 @@ gen_def(P) :-
     write('c_'),
     n_atom_convert(P,P1),
     write(P1),
-    write(',1,2);'), % dummy it will replace arity and type
+    pred_data(P,A,T),
+    pred_type(T,T1),
+    write(','),write(A),
+    write(','),write(T1),write(');'),
     nl,!.
+
+pred_type(nondet,1).
+pred_type(det,2).
+pred_type(tail,3).
+pred_type(halt,0).
 
 % generate deftinfix for user op
 gen_def(P) :-

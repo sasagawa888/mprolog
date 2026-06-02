@@ -732,10 +732,13 @@ int b_n_property(int arglist, int rest, int th)
 	    else
 		return (NO);
 	} else if (compiledp(arg1)) {
-		printf("asdf%d",get_arity(arg1));
 	    if (get_arity(arg1) == 1 && unify(arg2, makeconst("compiled_nondet"), th) == YES)
 		return (prove_all(rest, sp[th], th));
 		else if (get_arity(arg1) == 2 && unify(arg2, makeconst("compiled_det"), th) == YES)
+		return (prove_all(rest, sp[th], th));
+		else if (get_arity(arg1) == 3 && unify(arg2, makeconst("compiled_tail"), th) == YES)
+		return (prove_all(rest, sp[th], th));
+		else if (get_arity(arg1) == 3 && unify(arg2, makeconst("compiled_halt"), th) == YES)
 		return (prove_all(rest, sp[th], th));
 	    else
 		return (NO);
