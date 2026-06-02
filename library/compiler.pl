@@ -630,32 +630,8 @@ gen_nondet_body(fail,A,M,N,[]) :-
 gen_nondet_body(fail,A,M,N,B) :-
     gen_nondet_body_fail_retry(B),nl.
 gen_nondet_body(X,A,M,N,B) :-
-    n_property(X,builtin),
-    X =.. [P|Args],
-    write('if(Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('if(rest != NIL) Jprove_all(body,Jget_sp(th),th);'),
-    write('else return(YES);}'),
-    gen_nondet_body_retry(B),nl.
-gen_nondet_body(X,A,M,N,B) :-
-     n_property(X,predicate),
-    X =.. [P|Args],
-    functor(X,_,Arity),
-    pred_data(P,Arity,det),
-    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('if(rest != NIL) Jprove_all(body,Jget_sp(th),th);'),
-    write('else return(YES);}'),
-    gen_nondet_body_retry(B).
-gen_nondet_body(X,A,M,N,B) :-
-     n_property(X,predicate),
-    X =.. [P|Args],
-    functor(X,_,Arity),
-    pred_data(P,Arity,nondet),
-    write('Jpush_back(th);'),nl,
-    gen_nondet_body_label([A,M,N]),
-    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
-    write(',NIL,th) == YES){'),nl,
-    write('}'),
-    gen_nondet_body_retry(B),nl.
+    N1 is N+1,
+    gen_nondet_body((X,end_of_body),A,M,N1,B).
 
 
 gen_nondet_body_label([A,M,N]) :-
