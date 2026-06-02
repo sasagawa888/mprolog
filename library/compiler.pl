@@ -1,6 +1,6 @@
 /*
 % initialize predicate
-void init_tpredicate(void){(deftpred)("<name>",b_<name>);
+void init_tpredicate(void){(deftpred)("<name>",c_<name>);
 }
 % set execution code
 void init_declare(void){
@@ -207,7 +207,7 @@ gen_def(P) :-
 	write('(deftpred)("'),
     write(P),
     write('",'),
-    write('b_'),
+    write('c_'),
     n_atom_convert(P,P1),
     write(P1),
     write(',1,2);'), % dummy it will replace arity and type
@@ -219,7 +219,7 @@ gen_def(P) :-
 	write('(deftinfix)("'),
     write(P),
     write('",'),
-    write('b_'),
+    write('c_'),
     n_atom_convert(P,P1),
     write(P1),
     write(','),
@@ -264,10 +264,10 @@ gen_c_exec :-
 /*
 parts for gen_predicate
 C type declare.
-static int b_foo(int arglist, int rest);
+static int c_foo(int arglist, int rest);
 */
 gen_type_declare(P) :-
-	write('static int b_'),
+	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
     write('(int arglist, int rest, int th);'),
@@ -309,7 +309,7 @@ gen_var_declare1(S,E) :-
 
 /*
 generate predicate for not tail recursive
-static int b_<name>(int arglist, int rest){
+static int c_<name>(int arglist, int rest){
 int varX,varY,...
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
@@ -323,7 +323,7 @@ gen_a_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
     gen_type_declare(P),
-	write('static int b_'),
+	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
@@ -607,7 +607,7 @@ gen_nondet_body((X,Y),A,M,N,B) :-
     pred_data(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (b_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
     N1 is N+1,
     gen_nondet_body(Y,A,M,N1,[A,M,N]),
@@ -644,7 +644,7 @@ gen_nondet_body(X,A,M,N,B) :-
     pred_data(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (b_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
     write('}'),
     gen_nondet_body_retry(B),nl.
