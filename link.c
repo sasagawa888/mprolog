@@ -70,7 +70,6 @@ void dynamic_link(int x)
     init_f1(CAAR_IDX, (tpred) caar);
     init_f1(CADAR_IDX, (tpred) cadar);
     init_f1(PRINT_IDX, (tpred) print);
-    init_f1(MAKEINT_IDX, (tpred) makeint);
     init_f1(LENGTH_IDX, (tpred) length);
     init_f1(GET_INT_IDX, (tpred) get_int);
     init_f1(LISTP_IDX, (tpred) listp);

@@ -23,7 +23,7 @@ optimize(_).  % when det or tail  optmiize(det) or optimize(tail)
 
 % main
 compile_file(X) :-
-    write(user_output,'ver0.10'),nl,
+    write(user_output,'ver0.11'),nl,
     abolish(option/2),
     assert(option(dummy,-1)),
     abolish(pred_data/3),

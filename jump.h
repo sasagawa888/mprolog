@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include "mpl.h"
 
+#define INT_FLAG    1073741824 //#b1000000000000000000000000000000
+#define INT_MASK    1073741823 //#b0111111111111111111111111111111
+
 typedef int (*fn0)();
 typedef int (*fn1)(int);
 typedef int (*fn2)(int , int);
@@ -119,10 +122,14 @@ static inline int Jprint(int x) {
     return f1[PRINT_IDX](x);
 }
 
-static inline int Jmakeint(int x) {
-    return f1[MAKEINT_IDX](x);
-}
 
+static int Jmakeint(int num)
+{
+    if (num >= 0)
+	return (INT_FLAG | num);
+    else
+	return (num);
+}
 
 static inline int Jlength(int x) {
     return f1[LENGTH_IDX](x);
