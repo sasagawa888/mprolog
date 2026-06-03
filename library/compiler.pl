@@ -343,7 +343,7 @@ gen_a_pred(P) :-
     write('save2 = Jget_sp(th);'),nl,
     write('save3 = Jget_ac(th);'),nl,
     write('}else{'),nl,
-    write('save1 = Jget_back_wp(th);'),nl,
+    %write('save1 = Jget_back_wp(th);'),nl,
     %write('save2 = Jget_back_sp(th);'),nl,
     %write('save3 = Jget_back_ac(th);'),nl,
     write('clause = Jget_back_choice(th);}'),nl,
@@ -388,8 +388,9 @@ gen_a_pred2(P,A) :-
     write('){\n'),
     gen_a_pred3(P,A),
     write('allfail:'),nl,
-    write('Jset_wp(save1,th);'),nl,
-    write('Jpop_back(th);'),nl,
+    write('Jdiscard_back(th);'),nl,
+    %write('Jset_wp(save1,th);'),nl,
+    %write('Jpop_back(th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 

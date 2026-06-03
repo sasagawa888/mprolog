@@ -231,6 +231,10 @@ static inline int Jrelease_back(int th) {
 }
 
 
+static inline int Jdiscard_back(int th) {
+    return f1[DISCARD_BACK_IDX](th);
+}
+
 
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
@@ -390,10 +394,6 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
-
-static inline int Jdiscard_back(int x, int th) {
-    return f2[DISCARD_BACK_IDX](x, th);
-}
 
 
 static inline int Jlist3(int x, int y, int z) {

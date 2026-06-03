@@ -91,6 +91,7 @@ void dynamic_link(int x)
     init_f1(INC_BACK_CHOICE_IDX, (tpred) inc_back_choice);
     init_f1(PUSH_BACK_IDX, (tpred) push_back);
     init_f1(RELEASE_BACK_IDX, (tpred) release_back);
+    init_f1(DISCARD_BACK_IDX, (tpred) discard_back);
 
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
@@ -132,7 +133,7 @@ void dynamic_link(int x)
     init_f2(COMPLEMENT_IDX, (tpred) f_complement);
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
-    init_f1(DISCARD_BACK_IDX, (tpred) discard_back);
+    
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);
