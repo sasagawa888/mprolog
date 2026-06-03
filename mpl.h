@@ -170,7 +170,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_BACK_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
-       GET_BACK_AC_IDX, PUSH_BACK_IDX,
+       GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX,
        NUM_FN1S
 };
 
@@ -181,7 +181,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, 
+       COPY_WORK_IDX, DISCARD_BACK_IDX,
        NUM_FN2S
 };
 
@@ -1133,6 +1133,7 @@ int deref(int x, int th);
 int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
+int discard_back(int rest, int th);
 int each_car(int x);
 int each_cdr(int x);
 int eqgreaterp(int x1, int x2);
@@ -1365,6 +1366,7 @@ int readdouble(int th);
 int read_string_term(int flag);
 int receive_from_parent(void);
 int receive_from_child(int n);
+int release_back(int th);
 int remove_cut(int x);
 int remove_duplicate(int x);
 int replace(int x, int lis);

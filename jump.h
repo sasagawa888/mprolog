@@ -226,6 +226,10 @@ static inline int Jpush_back(int th) {
     return f1[PUSH_BACK_IDX](th);
 }
 
+static inline int Jrelease_back(int th) {
+    return f1[RELEASE_BACK_IDX](th);
+}
+
 
 
 static inline int Jcons(int x, int y) {
@@ -384,6 +388,11 @@ static inline int Junify_nil(int x, int th) {
 
 static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
+}
+
+
+static inline int Jdiscard_back(int x, int th) {
+    return f2[DISCARD_BACK_IDX](x, th);
 }
 
 
