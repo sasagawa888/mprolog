@@ -487,7 +487,7 @@ int release_back(int th)
 int discard_back(int rest, int th)
 {
     wp[th] = backstack[bp[th]][2][th];
-    if(rest == NIL) bp[th]--;
+    bp[th]--;
     return(NIL);
 }
 

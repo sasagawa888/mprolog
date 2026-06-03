@@ -344,8 +344,8 @@ gen_a_pred(P) :-
     write('save3 = Jget_ac(th);'),nl,
     write('}else{'),nl,
     write('save1 = Jget_back_wp(th);'),nl,
-    write('save2 = Jget_back_sp(th);'),nl,
-    write('save3 = Jget_back_ac(th);'),nl,
+    %write('save2 = Jget_back_sp(th);'),nl,
+    %write('save3 = Jget_back_ac(th);'),nl,
     write('clause = Jget_back_choice(th);}'),nl,
     n_arity_count(P,L),
     gen_a_pred1(P,L),
@@ -388,8 +388,8 @@ gen_a_pred2(P,A) :-
     write('){\n'),
     gen_a_pred3(P,A),
     write('allfail:'),nl,
-    write('Jpop_back(th);'),nl,
     write('Jset_wp(save1,th);'),nl,
+    write('Jpop_back(th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 
@@ -475,8 +475,9 @@ gen_a_pred5((Head :- Body),A,M) :-
     gen_body(Body,A),
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Jrelease_back(th);'),nl.
+    %write('Jset_ac(save3,th);'),nl,
+    %write('Junbind(save2,th);'),nl.
 
 % predicate with no arity
 gen_a_pred5(P,_,M) :-
@@ -507,8 +508,9 @@ gen_a_pred5(P,A,M) :-
     write('else return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    write('Jrelease_back(th);').
+    %write('Jset_ac(save3,th);'),nl,
+    %write('Junbind(save2,th);'),nl.
 
 % dynamic predicate
 gen_a_pred5(P,_,M) :-
