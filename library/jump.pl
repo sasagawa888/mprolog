@@ -1,8 +1,10 @@
 
 %:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,type/2,mode/3]).
 
-type(_,_).    %(functor,property) nondet det tail dyn mut
-mode(_,_,_).  %(functor,arity,modelist)
+type(f,a,t).  %(functor,arity,type) nondet det tail dyn mut
+mode(f,1,[+]).  %(functor,arity,modelist)
+
+type(foo,1,det).
 
 % main
 compile_file(X) :-
@@ -60,7 +62,7 @@ pass3(X) :-
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
     %gen_c_pred,
-    %gen_c_exec,
+    gen_def,
     n_reconsult_abolish,
     told.
 
@@ -129,9 +131,20 @@ gen_pred :-
 gen_pred.
 
 
+/*
+void init_tpredicate(void){
+(deftpred)("p",c_p,1,1);
+(deftpred)("foo",c_foo,0,1);
+(deftpred)("n",c_n,1,1);
+(deftpred)("bench",c_bench,0,1);
+(deftpred)("bench1",c_bench1,0,1);
+(deftpred)("nodiag",c_nodiag,3,3);
+(deftpred)("bar",c_bar,1,2);
+}
+*/
 % define compiled predicate
 gen_def :-
-	write('void init_tpredicate(void){'),
+	write('void init_tpredicate(void){'),nl,
     gen_def1,
     write('}'),nl.
 
@@ -140,13 +153,13 @@ gen_def1 :-
     not(n_dynamic_predicate(P)),
     P \= cdeclare,
     P \= clibrary,
-	gen_def(P),
+	gen_pred_def(P),
     fail.
 gen_def1.
 
 
 % generate deftpred for normal predicate
-gen_def(P) :-
+gen_pred_def(P) :-
     n_defined_predicate(P),
 	write('(deftpred)("'),
     write(P),
@@ -154,7 +167,7 @@ gen_def(P) :-
     write('c_'),
     n_atom_convert(P,P1),
     write(P1),
-    pred_data(P,A,T),
+    type(P,A,T),
     pred_type(T,T1),
     write(','),write(A),
     write(','),write(T1),write(');'),

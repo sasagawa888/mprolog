@@ -8,10 +8,10 @@ compile_file(filename,option)  option c only generate C code
                                       o only generate Object code from C code
 
 
-type(Predicate,type)  type [nondet,det,tail,dyn,mut]
+type(Predicate,Arity,type)  type [nondet,det,tail,dyn,mut]
 mode(Predicate,Arity,[+,+,-,-])
 
-p/2 p/3 が混在する場合には全体をtypeに従って生成する。
+p/2 p/3 が混在する場合には全体をtypeに従って生成する。arityは無視する。述語情報としてgen_defで利用する。
 モードはアリティーの異なるごとに分析する。
 
 pass1   typeの判定
