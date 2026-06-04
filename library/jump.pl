@@ -30,22 +30,19 @@ compile_file2(X) :-
     invoke_gcc_not_remove(X).
 
 %test
-pass1(_).
-pass2(_).
-pass3(_).
 invoke_gcc(_).
 invoke_gcc_not_remove(_).
  
 pass1(X) :-
 	write(user_output,'phase pass1'),
     nl(user_output),
-    reconsult(X,compiler),
-    pass1_analize.
+    reconsult(X,compiler).
+    %pass1_analize.
 
 pass2(_) :-
     write(user_output,'phase pass2'),
-    nl(user_output),
-    pass1_analize.
+    nl(user_output).
+    %pass1_analize.
 
 
 pass1_analize :-
@@ -62,8 +59,8 @@ pass3(X) :-
     atom_concat(F,'.c',Cfile),
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
-    gen_c_pred,
-    gen_c_exec,
+    %gen_c_pred,
+    %gen_c_exec,
     n_reconsult_abolish,
     told.
 
