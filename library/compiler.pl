@@ -2395,7 +2395,7 @@ gen_a_det_body(X is Y) :-
     eval_form(Y),
     write(','),
     write(th),
-    write(')==YES && Jinc_proof(th))').
+    write(')==YES)').
 
 gen_a_det_body(X = Y) :-
     write('if(Junify('),
@@ -2404,49 +2404,49 @@ gen_a_det_body(X = Y) :-
     gen_a_argument(Y),
     write(','),
     write(th),
-    write(')==YES && Jinc_proof(th))').
+    write(')==YES)').
 
 gen_a_det_body(X =:= Y) :-
     write('if(Jnumeqp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X =\= Y) :-
     write('if(Jnot_numeqp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X < Y) :-
     write('if(Jsmallerp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X =< Y) :-
     write('if(Jeqsmallerp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))'),nl.
+    write('))'),nl.
 
 gen_a_det_body(X > Y) :-
     write('if(Jgreaterp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X >= Y) :-
     write('if(Jeqgreaterp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body((((X->Y),Y1);Z)) :-
     case_arg((((X->Y),Y1);Z),L),

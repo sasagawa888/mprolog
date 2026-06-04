@@ -35,3 +35,5 @@ nodiag([N|L], B, D) :-
     D =\= B - N,
     D1 is D + 1,
     nodiag(L, B, D1).
+
+bar(X) :- write(X).

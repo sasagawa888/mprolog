@@ -45,6 +45,7 @@ reset_dyn :-
 add_dyn1(X) :-
     assertz(dyn1(X)).
 
+
 get_dyn1(X) :-
     dyn1(X).
 
@@ -346,3 +347,4 @@ test_all(A,B,C,D,E,F,G,H,I,J) :-
     test_call(G),
     test_path(H, I),
     test_collect(J, _).
+
