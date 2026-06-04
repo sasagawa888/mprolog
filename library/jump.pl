@@ -1,41 +1,16 @@
-/*
-% initialize predicate
-void init_tpredicate(void){(deftpred)("<name>",c_<name>);
-}
-% set execution code
-void init_declare(void){
-  ...execution 
-}
 
+%:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,type/2,mode/3]).
 
-unification 
-Junify(head,arg,th)  all-round
-Junify_const(head,arg,th)  for constant term
-Junify_var(head,arg,th)    for variable term
-Junify_nil(arg,th)    for [] check.
-*/
-
-:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,option/2,pred_data/3,optimize/1]).
-
-option(_,_).
-pred_data(_,_,_).  %(functor,arity,property) property is one of them det tail dyn nondet
-optimize(_).  % when det or tail  optmiize(det) or optimize(tail)
+type(_,_).    %(functor,property) nondet det tail dyn mut
+mode(_,_,_).  %(functor,arity,modelist)
 
 % main
 compile_file(X) :-
-    write(user_output,'ver0.11'),nl,
-    abolish(option/2),
-    assert(option(dummy,-1)),
-    abolish(pred_data/3),
+    write(user_output,'ver0.01'),nl,
     pass1(X),
     pass2(X),
     pass3(X),
-    pass4(X),
-    invoke_gcc(X),
-    abolish(option/1).
-
-compile_file(X,co) :-
-    compile_file1(X).
+    invoke_gcc(X).
 
 compile_file(X,c) :-
     compile_file2(X).
@@ -43,42 +18,32 @@ compile_file(X,c) :-
 compile_file(X,o) :-
     compile_file3(X).
 
-% for debug not remove C code.
+
+% genrate only c code 
 compile_file1(X) :-
     pass1(X),
     pass2(X),
-    pass3(X),
-    pass4(X),
-    invoke_gcc_not_remove(X).
-
-
-% genrate only c code 
-compile_file2(X) :-
-    pass1(X),
-    pass2(X),
-    pass3(X),
-    pass4(X).
+    pass3(X).
 
 % generate object from c code
-compile_file3(X) :-
+compile_file2(X) :-
     invoke_gcc_not_remove(X).
+
+%test
+pass1(_).
+pass2(_).
+pass3(_).
+invoke_gcc(_).
+invoke_gcc_not_remove(_).
  
 pass1(X) :-
 	write(user_output,'phase pass1'),
     nl(user_output),
-    abolish(pred_data/3),
-    assert(pred_data(dummy,-1,-1)),
     reconsult(X,compiler),
-    reconsult(X,compiler), % twice to parse e.g. a. or zzz :- fail.
     pass1_analize.
 
 pass2(_) :-
     write(user_output,'phase pass2'),
-    nl(user_output),
-    pass1_analize.
-
-pass3(_) :-
-    write(user_output,'phase pass3'),
     nl(user_output),
     pass1_analize.
 
@@ -90,24 +55,15 @@ pass1_analize :-
 pass1_analize.
 
 
-/*
-pass3 generate each clause or predicate code.
-and write to <filename>.c
-when all code is generated, close file and abolish optimize/1
-*/
-pass4(X) :-
-	write(user_output,'phase pass4'),
+pass3(X) :-
+	write(user_output,'phase pass3'),
     nl(user_output),
-    abolish(optimize/1),
-    assert(optimize(dummy)),
 	n_filename(X,F),
     atom_concat(F,'.c',Cfile),
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
     gen_c_pred,
     gen_c_exec,
-    abolish(pred_data/3),
-    abolish(optimize/1),
     n_reconsult_abolish,
     told.
 
@@ -148,12 +104,6 @@ generate each predicate to make compiled pred
 */
 
 
-
-% normal predicate
-gen_c_pred :-
-    gen_pred,
-    gen_c_def.
-
 % generate all predicate code
 gen_pred :-
     n_reconsult_predicate(P),
@@ -170,7 +120,7 @@ gen_pred :-
     P \= cdeclare,
     P \= clibrary,
     not(n_dynamic_predicate(P)),
-    gen_pred1(P),
+    gen_a_pred(P),
     fail.
 gen_pred :-
     n_reconsult_predicate(P),
@@ -181,24 +131,21 @@ gen_pred :-
     fail.
 gen_pred.
 
-gen_pred1(P) :-
-    gen_a_pred(P),!.
-
 
 % define compiled predicate
-gen_c_def :-
+gen_def :-
 	write('void init_tpredicate(void){'),
-    gen_c_def1,
+    gen_def1,
     write('}'),nl.
 
-gen_c_def1 :-
+gen_def1 :-
     n_reconsult_predicate(P),
     not(n_dynamic_predicate(P)),
     P \= cdeclare,
     P \= clibrary,
 	gen_def(P),
     fail.
-gen_c_def1.
+gen_def1.
 
 
 % generate deftpred for normal predicate
@@ -219,7 +166,8 @@ gen_def(P) :-
 pred_type(nondet,1).
 pred_type(det,2).
 pred_type(tail,3).
-pred_type(halt,0).
+pred_type(dyn,4).
+pred_type(mut,5).
 
 % generate deftinfix for user op
 gen_def(P) :-
