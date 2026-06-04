@@ -63,6 +63,7 @@ pass3(X) :-
 	write('#include "jump.h"'),nl,
     %gen_c_pred,
     gen_def,
+    gen_exec,
     n_reconsult_abolish,
     told.
 
@@ -135,11 +136,6 @@ gen_pred.
 void init_tpredicate(void){
 (deftpred)("p",c_p,1,1);
 (deftpred)("foo",c_foo,0,1);
-(deftpred)("n",c_n,1,1);
-(deftpred)("bench",c_bench,0,1);
-(deftpred)("bench1",c_bench1,0,1);
-(deftpred)("nodiag",c_nodiag,3,3);
-(deftpred)("bar",c_bar,1,2);
 }
 */
 % define compiled predicate
@@ -161,17 +157,11 @@ gen_def1.
 % generate deftpred for normal predicate
 gen_pred_def(P) :-
     n_defined_predicate(P),
-	write('(deftpred)("'),
-    write(P),
-    write('",'),
-    write('c_'),
     n_atom_convert(P,P1),
-    write(P1),
     type(P,A,T),
     pred_type(T,T1),
-    write(','),write(A),
-    write(','),write(T1),write(');'),
-    nl,!.
+	write('(deftpred)("'),write(P),write('",'),write('c_'),write(P1),
+    write(','),write(A),write(','),write(T1),write(');'),nl,!.
 
 pred_type(nondet,1).
 pred_type(det,2).
@@ -182,20 +172,64 @@ pred_type(mut,5).
 % generate deftinfix for user op
 gen_def(P) :-
     n_defined_userop(P),
-	write('(deftinfix)("'),
-    write(P),
-    write('",'),
-    write('c_'),
     n_atom_convert(P,P1),
-    write(P1),
-    write(','),
     current_op(W,S,P),
     spec_to_c(S,S1),
-    write(W),
-    write(','),
-    write(S1),
-    write(');'),
-    nl,!.
+	write('(deftinfix)("'),write(P),write('",'),write('c_'),write(P1),write(','),
+    write(W),write(','),write(S1),write(');'),nl,!.
+
+/*
+last C code to make direct execute
+void init_declare(void){
+    execute code...
+}
+*/
+gen_exec :-
+	write('void init_declare(void){'),nl,
+    gen_dyn_exec,
+    gen_det_exec,
+    write('}').
+
+
+/* generate execute definition of dynamic clause*/
+gen_dyn_exec :-
+    write('int body,th; th=0;'),nl,
+    n_get_dynamic(X),
+    gen_dyn_exec1(X).
+
+gen_dyn_exec1([]).
+gen_dyn_exec1([L|Ls]) :-
+    write(L),
+    write('();'),nl,
+    gen_dyn_exec1(Ls).
+
+
+
+/*
+e.g. :- op(...)
+generate execution 
+*/
+gen_det_exec :-
+    n_get_execute(X),
+    gen_det_exec1(X).
+
+gen_det_exec1([]).
+gen_det_exec1([L|Ls]) :-
+    gen_det_exec2(L),
+    nl,
+    gen_det_exec1(Ls).
+
+
+gen_det_exec2(X) :-
+    write('body = '),
+    gen_det_exec3(X),
+    write(';'),nl,
+    write('Jprove_all(body,Jget_sp(th),th);'),!.
+
+gen_det_exec3(X) :-
+    n_property(X,builtin),
+    X =.. [P|Args],
+    write('Jwlist3(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th)').
 
 
 spec_to_c(fx,'FX').
@@ -215,17 +249,7 @@ spec_to_c(fy_xf,'FY_XF').
 spec_to_c(fy_yf,'FY_YF').
 
 
-/*
-last C code to make direct execute
-void init_declare(void){
-    execute code...
-}
-*/
-gen_c_exec :-
-	write('void init_declare(void){'),
-    gen_dyn_exec,
-    gen_exec,
-    write('}').
+
 
 /*
 parts for gen_predicate
@@ -1925,42 +1949,6 @@ invoke_error(Message,Code) :-
     write(user_output,Code),nl(user_output),
     told,
     abort.
-
-/* generate execute definition of dynamic clause*/
-gen_dyn_exec :-
-    write('int body,th; th=0;'),nl,
-    n_get_dynamic(X),
-    gen_dyn_exec1(X).
-
-gen_dyn_exec1([]).
-gen_dyn_exec1([L|Ls]) :-
-    write(L),
-    write('();'),nl,
-    gen_dyn_exec1(Ls).
-
-
-
-/*
-e.g. :- op(...)
-generate execution 
-*/
-gen_exec :-
-    n_get_execute(X),
-    gen_exec1(X).
-
-gen_exec1([]).
-gen_exec1([L|Ls]) :-
-    gen_exec2(L),
-    nl,
-    gen_exec1(Ls).
-
-
-gen_exec2(X) :-
-    write('body = '),
-    gen_body1(X,0),
-    write(';'),nl,
-    write('Jprove_all(body,Jget_sp(th),th);'),!.
-
 
 analize(P) :-
     n_arity_count(P,[N]),
