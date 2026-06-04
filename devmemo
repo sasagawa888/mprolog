@@ -221,4 +221,18 @@ unbindのためにJrelease_back(th)
 速度差は1.12倍遅いところまで達成した。ほぼ同等性能といっても
 いいだろう。今後は正確に動作することを目標とする。
 
+gen_a_pred をタイプ別に分けることにする。今までは
+すべてのタイプをこれひとつでやってきた。しかし、
+それぞれに生成されるCコードが異なる。この際、明確に切り分けることにする。
+
+gen_a_pred ->
+      gen_a_nondet_pred
+      gen_a_det_pred 
+      gen_a_tail_pred 
+      gen_a_mut_pred 
+      gen_a_dyn_pred
+
+      haltはnondetに包含することにする。
+既存のコードを解析してそれぞれを明確に分離する作業にはいる。
+
 
