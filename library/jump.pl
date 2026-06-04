@@ -1,6 +1,6 @@
 /*
 % initialize predicate
-void init_tpredicate(void){(deftpred)("<name>",b_<name>);
+void init_tpredicate(void){(deftpred)("<name>",c_<name>);
 }
 % set execution code
 void init_declare(void){
@@ -23,7 +23,7 @@ optimize(_).  % when det or tail  optmiize(det) or optimize(tail)
 
 % main
 compile_file(X) :-
-    write(user_output,'ver0.10'),nl,
+    write(user_output,'ver0.11'),nl,
     abolish(option/2),
     assert(option(dummy,-1)),
     abolish(pred_data/3),
@@ -207,11 +207,19 @@ gen_def(P) :-
 	write('(deftpred)("'),
     write(P),
     write('",'),
-    write('b_'),
+    write('c_'),
     n_atom_convert(P,P1),
     write(P1),
-    write(',1,2);'), % dummy it will replace arity and type
+    pred_data(P,A,T),
+    pred_type(T,T1),
+    write(','),write(A),
+    write(','),write(T1),write(');'),
     nl,!.
+
+pred_type(nondet,1).
+pred_type(det,2).
+pred_type(tail,3).
+pred_type(halt,0).
 
 % generate deftinfix for user op
 gen_def(P) :-
@@ -219,7 +227,7 @@ gen_def(P) :-
 	write('(deftinfix)("'),
     write(P),
     write('",'),
-    write('b_'),
+    write('c_'),
     n_atom_convert(P,P1),
     write(P1),
     write(','),
@@ -264,10 +272,10 @@ gen_c_exec :-
 /*
 parts for gen_predicate
 C type declare.
-static int b_foo(int arglist, int rest);
+static int c_foo(int arglist, int rest);
 */
 gen_type_declare(P) :-
-	write('static int b_'),
+	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
     write('(int arglist, int rest, int th);'),
@@ -309,7 +317,7 @@ gen_var_declare1(S,E) :-
 
 /*
 generate predicate for not tail recursive
-static int b_<name>(int arglist, int rest){
+static int c_<name>(int arglist, int rest){
 int varX,varY,...
 save2 = Jget_sp(th);
 save3 = Jget_ac(th);
@@ -323,20 +331,18 @@ gen_a_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
     gen_type_declare(P),
-	write('static int b_'),
+	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
+    write('Jinc_proof(th);'),nl,
     write('n = Jlength(arglist);'),nl,
     write('if(rest != NIL){'),nl,
     write('save1 = Jget_wp(th);'),nl,
     write('save2 = Jget_sp(th);'),nl,
     write('save3 = Jget_ac(th);'),nl,
     write('}else{'),nl,
-    write('save1 = Jget_back_wp(th);'),nl,
-    write('save2 = Jget_back_sp(th);'),nl,
-    write('save3 = Jget_back_ac(th);'),nl,
     write('clause = Jget_back_choice(th);}'),nl,
     n_arity_count(P,L),
     gen_a_pred1(P,L),
@@ -379,10 +385,7 @@ gen_a_pred2(P,A) :-
     write('){\n'),
     gen_a_pred3(P,A),
     write('allfail:'),nl,
-    write('Jpop_back(th);'),nl,
-    write('Jset_wp(save1,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_ac(save3,th);'),nl,
+    write('Jdiscard_back(th);'),nl,
     write('return(NO);}'),
     nl(user_output),!.
 
@@ -391,6 +394,7 @@ gen_a_pred3(P,A) :-
     gen_var_assign(1,A),
     gen_jump_switch(P,A),
     write(loop),write(A),write(':'),nl,
+    write('clause_'),write(A),write('_0:'),nl,
 	n_clause_with_arity(P,A,C),
     gen_a_pred4(C,A,0).
 
@@ -412,8 +416,6 @@ gen_var_assign(S,E) :-
 gen_jump_switch(P,A):-
     n_clause_count_with_arity(P,A,M),
     write('if(rest == NIL){'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
     write('clause = Jget_back_choice(th);'),nl,
     write('switch(clause){'),nl,
     gen_jump_switch1(A,0,M),
@@ -431,13 +433,10 @@ gen_jump_switch1(A,M,N) :-
 % generate each clause 
 gen_a_pred4([],_,_).
 gen_a_pred4([C|Cs],A,M) :-
-    write('clause_'),write(A),write('_'),write(M),write(':'),nl,
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
     write('if(rest == NIL){'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
     write('Jinc_back_choice(th);'),nl,
     gen_var_assign(1,A),
     write('}'),nl,
@@ -469,7 +468,10 @@ gen_a_pred5((Head :- Body),A,M) :-
 % clause
 gen_a_pred5((Head :- Body),A,M) :-
 	gen_head(Head),
-    gen_body(Body,A).
+    gen_body(Body,A),
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
+    write('Jrelease_back(th);'),nl.
 
 % predicate with no arity
 gen_a_pred5(P,_,M) :-
@@ -490,7 +492,7 @@ gen_a_pred5(P,_,M) :-
     write(')'),nl.
 
 % nondet predicate
-gen_a_pred5(P,_,M) :-
+gen_a_pred5(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
     not(n_dynamic_predicate(P1)),
@@ -498,8 +500,9 @@ gen_a_pred5(P,_,M) :-
     write('if(rest!=NIL){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
     write('else return(YES);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl.
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
+    write('Jrelease_back(th);').
 
 % dynamic predicate
 gen_a_pred5(P,_,M) :-
@@ -575,6 +578,7 @@ gen_body(X,_) :-
 
 gen_body(X,A) :-
     optimize(nondet),
+    gen_nondet_body_argument(X,A,0,0),
     gen_nondet_body(X,A,0,0,[]).
 
 % A is arith Mth clause, Nth body
@@ -603,9 +607,10 @@ gen_nondet_body((X,Y),A,M,N,B) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     pred_data(P,Arity,nondet),
-    write('Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);'),nl,
+    write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
-    write('if (Jcall_nondet(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
     N1 is N+1,
     gen_nondet_body(Y,A,M,N1,[A,M,N]),
     write('}'),
@@ -613,30 +618,14 @@ gen_nondet_body((X,Y),A,M,N,B) :-
 gen_nondet_body((X;Y),A,M,N,B) :-
     gen_nondet_body(X,A,M,N,B),
     gen_nondet_body(Y,A,M,N,B).
+
+gen_nondet_body(fail,A,M,N,[]) :-
+    gen_nondet_body_fail([A,M]),nl.
+gen_nondet_body(fail,A,M,N,B) :-
+    gen_nondet_body_fail_retry(B),nl.
 gen_nondet_body(X,A,M,N,B) :-
-    n_property(X,builtin),
-    X =.. [P|Args],
-    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('return(YES);}'),
-    gen_nondet_body_retry(B),nl.
-gen_nondet_body(X,A,M,N,B) :-
-     n_property(X,predicate),
-    X =.. [P|Args],
-    functor(X,_,Arity),
-    pred_data(P,Arity,det),
-    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('return(YES);}'),
-    gen_nondet_body_retry(B),nl.
-gen_nondet_body(X,A,M,N,B) :-
-     n_property(X,predicate),
-    X =.. [P|Args],
-    functor(X,_,Arity),
-    pred_data(P,Arity,nondet),
-    write('Jpush_back(Jget_sp(th),0,Jget_wp(th),Jget_ac(th),th);'),nl,
-    gen_nondet_body_label([A,M,N]),
-    write('if (Jcall_nondet(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    write('}'),
-    gen_nondet_body_retry(B),nl.
+    N1 is N+1,
+    gen_nondet_body((X,end_of_body),A,M,N1,B).
 
 
 gen_nondet_body_label([A,M,N]) :-
@@ -645,6 +634,24 @@ gen_nondet_body_label([A,M,N]) :-
 gen_nondet_body_retry([]).
 gen_nondet_body_retry([A,M,N]) :-
     write('else goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+
+gen_nondet_body_fail_retry([A,M,N]) :-
+    write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+
+gen_nondet_body_fail_retry([A,M]) :-
+    write('goto clause_'),write(A),write('_'),write(M1),write(';').
+
+gen_nondet_body_argument((X,Y),A,M,N) :-
+    X =.. [_|Args],
+    write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
+    gen_a_argument(Args),write(';'),nl,
+    N1 is N+1,
+    gen_nondet_body_argument(Y,A,M,N1).
+
+gen_nondet_body_argument(X,A,M,N) :-
+    X =.. [_|Args],
+    write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
+    gen_a_argument(Args),write(';'),nl.
 
 /*
 generate one operation,user,builtin or compiled predicate.
@@ -2354,7 +2361,6 @@ gen_tail_body(X,N) :-
     X =.. [_|A],
     write('{'),nl,
     gen_tail_args(A,1),
-    %write('Jset_wp(save1,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_ac(save3,th);'),nl,
     write('goto loop'),write(N),write(';'),nl,
@@ -2379,7 +2385,7 @@ gen_a_det_body(X is Y) :-
     eval_form(Y),
     write(','),
     write(th),
-    write(')==YES && Jinc_proof(th))').
+    write(')==YES)').
 
 gen_a_det_body(X = Y) :-
     write('if(Junify('),
@@ -2388,49 +2394,49 @@ gen_a_det_body(X = Y) :-
     gen_a_argument(Y),
     write(','),
     write(th),
-    write(')==YES && Jinc_proof(th))').
+    write(')==YES)').
 
 gen_a_det_body(X =:= Y) :-
     write('if(Jnumeqp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X =\= Y) :-
     write('if(Jnot_numeqp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X < Y) :-
     write('if(Jsmallerp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X =< Y) :-
     write('if(Jeqsmallerp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))'),nl.
+    write('))'),nl.
 
 gen_a_det_body(X > Y) :-
     write('if(Jgreaterp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body(X >= Y) :-
     write('if(Jeqgreaterp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write(') && Jinc_proof(th))').
+    write('))').
 
 gen_a_det_body((((X->Y),Y1);Z)) :-
     case_arg((((X->Y),Y1);Z),L),
