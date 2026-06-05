@@ -225,21 +225,21 @@ gen_predicate :-
     fail.
 gen_predicate :-
     n_reconsult_predicate(P),
-    gen_clause(P),
+    gen_a_pred(P),
     fail.
 gen_predicate.
 
-% generate clause of predicate P
-gen_clause(P) :- 
-    type(P,_,nondet),gen_nondet_clause(P).
-gen_clause(P) :- 
-    type(P,_,det),gen_det_clause(P).
-gen_clause(P) :- 
-    type(P,_,tail),gen_tail_clause(P).
-gen_clause(P) :- 
-    type(P,_,dyn),gen_dyn_clause(P).
-gen_clause(P) :- 
-    type(P,_,mut),gen_nondet_clause(P).
+% generate predicate P
+gen_a_pred(P) :- 
+    type(P,_,nondet),gen_nondet_pred(P).
+gen_a_pred(P) :- 
+    type(P,_,det),gen_det_pred(P).
+gen_a_pred(P) :- 
+    type(P,_,tail),gen_tail_pred(P).
+gen_a_pred(P) :- 
+    type(P,_,dyn),gen_dyn_pred(P).
+gen_a_pred(P) :- 
+    type(P,_,mut),gen_mut_pred(P).
 
 
 
@@ -1663,7 +1663,7 @@ gen_argument_list([X|Xs]) :-
     write(th),
     write(')').
 
-/*
+/*-----------------------dynamic predicate----------------------------
 assert dynamic predicate
 :- dynamic(foo/1)
 foo(X) :- ...
@@ -1671,240 +1671,182 @@ dynamic_clause = Jcons(Jmakesys(":-"),...;
 Jadd_dynamic(dyn); 
 */
 
-gen_dynamic(P) :-
+gen_dyn_pred(P) :-
     n_arity_count(P,L),
-    write('void '),
-    write(P),
-    write('(void){'),
-    gen_dynamics(P,L),
+    write('void '),write(P),write('(void){'),
+    gen_dyn_pred1(P,L),
     write('}'),!.
 
-gen_dynamics(_,[]).
-gen_dynamics(P,[L|Ls]) :-
+gen_dyn_pred1(_,[]).
+gen_dyn_pred1(P,[L|Ls]) :-
     atom_concat('compiling ',P,M),
     write(user_output,M),write(user_output,$/$),write(user_output,L),
     write(user_output,' dyn'),nl(user_output),
-    gen_dyn(P,L),
-    gen_dynamics(P,Ls).
+    gen_dyn_arity(P,L),
+    gen_dyn_pred1(P,Ls).
 
-gen_dyn(P,A) :-
+gen_dyn_arity(P,A) :-
     n_clause_with_arity(P,A,C),
     n_variable_convert(C,X),
-    gen_dyn1(X).
+    gen_dyn_clause(X).
 
 
-gen_dyn1([]).
-gen_dyn1([X|Xs]) :-
-    n_property(X,operation),
-    write('dynamic_clause = '),
-    gen_dyn2(X),
-    write(';'),nl,
-    write('Jadd_dynamic(dynamic_clause);'),nl,
-    gen_dyn1(Xs).
-gen_dyn1([X|Xs]) :-
-    n_property(X,predicate),
-    write('dynamic_clause = '),
-    gen_dyn2(X),
-    write(';'),nl,
-    write('Jadd_dynamic(dynamic_clause);'),nl,
-    gen_dyn1(Xs).
+gen_dyn_clause([]).
+gen_dyn_cluase([X|Xs]) :-
+    gen_a_dyn_clause(X),
+    gen_dyn_clause(Xs).
 
-gen_dyn2([]) :-
+gen_a_dyn_clause([]) :-
     write('NIL').
-gen_dyn2((X :- Y)) :-
+gen_a_dyn_clause(X) :-
+    n_property(X,predicate),
+    write('dynamic_clause = '),gen_a_dyn_elt(X),write(';'),nl,
+    write('Jadd_dynamic(dynamic_clause);'),nl.
+gen_a_dyn_clause(X) :-
+    n_property(X,operation),
+    write('dynamic_clause = '),gen_dyn_elt(X),write(';'),nl,
+    write('Jadd_dynamic(dynamic_clause);'),nl.
+gen_a_dyn_clause((X :- Y)) :-
     write('Jlist3(Jmakeope(":-"),'),
-    gen_dyn2(X),
-    write(','),
-    gen_dyn2(Y),
-    write(')').
+    gen_dyn_head(X),write(','),gen_dyn_body(Y),write(')').
 
-gen_dyn2((X,Y)) :-
+gen_dyn_head(X) :- gen_dyn_elt(X).
+gen_dyn_body(X) :- gen_dyn_elt(X).
+gen_dyn_elt((X,Y)) :-
     write('Jlist3(Jmakeope(","),'),
-    gen_dyn2(X),
+    gen_dyn_elt(X),
     write(','),
-    gen_dyn2(Y),
+    gen_dyn_elt(Y),
     write(')').
 
 
 % ifthenelse
-gen_dyn2((X->Y;Z)) :-
+gen_dyn_elt((X->Y;Z)) :-
     n_findatom(ifthenelse,builtin,A),
-    write('Jcons('),
-    write(A),
-    write(','),
-    write('Jlist3('),
-    gen_dyn2(X),
-    write(','),
-    gen_dyn2(Y),
-    write(','),
-    gen_dyn2(Z),
-    write('))').
+    write('Jcons('),write(A),write(','),
+    write('Jlist3('),gen_dyn_elt(X),write(','),gen_dyn_elt(Y),write(','),gen_dyn_elt(Z),write('))').
 
 
 % ifthen
-gen_dyn2(X->Y) :-
+gen_dyn_elt(X->Y) :-
     n_findatom(ifthen,builtin,A),
-    write('Jcons('),
-    write(A),
-    write(','),
-    write('Jlist2('),
-    gen_dyn2(X),
-    write(','),
-    gen_dyn2(Y),
-    write('))').
+    write('Jcons('),write(A),write(','),
+    write('Jlist2('),gen_dyn_elt(X),write(','),gen_dyn_elt(Y),write('))').
 
 
-gen_dyn2((X;Y)) :-
-    write('Jlist3(Jmakeope(";")),'),
-    gen_dyn2(X),
-    write(','),
-    gen_dyn2(Y),
-    write(')').
+gen_dyn_elt((X;Y)) :-
+    write('Jlist3(Jmakeope(";")),'),gen_dyn_elt(X),write(','),gen_dyn_elt(Y),write(')').
 
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     compound(X),
     n_property(X,compiled),
     X =.. [P|L],
-    write('Jcons(Jmakecomp("'),
-    write(P),
-    write('"),'),
-    gen_dyn2_argument(L),
+    write('Jcons(Jmakecomp("'),write(P),write('"),'),
+    gen_dyn_argument(L),
     write(')').
     
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     compound(X),
     n_property(X,predicate),
     X =.. [P|L],
-    write('Jcons(Jmakepred("'),
-    write(P),
-    write('"),'),
-    gen_dyn2_argument(L),
+    write('Jcons(Jmakepred("'),write(P),write('"),'),
+    gen_dyn_argument(L),
     write(')').
 
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     atom(X),
     n_property(X,compiled),
-    write('Jmakecomp("'),
-    write(X),
-    write('")').
+    write('Jmakecomp("'),write(X),write('")').
 
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     atom(X),
     n_property(X,predicate),
-    write('Jmakepred("'),
-    write(X),
-    write('")').
+    write('Jmakepred("'),write(X),write('")').
 
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     atom(X),
     n_dynamic_predicate(X),
-    write('Jmakepred("'),
-    write(X),
-    write('")').
+    write('Jmakepred("'),write(X),write('")').
 
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     n_property(X,builtin),
     functor(X,P,0),
     n_findatom(P,builtin,A),
     write(A).
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     n_property(X,builtin),
     X =.. [P|L],
     n_findatom(P,builtin,A),
-    write('Jcons('),
-    write(A),
-    write(','),
-    gen_dyn2_argument(L),
+    write('Jcons('),write(A),write(','),
+    gen_dyn_argument(L),
     write(')').
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     n_property(X,operation),
     X =.. [P|L],
     n_findatom(P,operator,A),
-    write('Jcons('),
-    write(A),
-    write(','),
-    gen_dyn2_argument(L),
+    write('Jcons('),write(A),write(','),
+    gen_dyn_argument(L),
     write(')').
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     n_property(X,userop),
     functor(X,P,0),
-    write('Jmakeuser("'),
-    write(P),
+    write('Jmakeuser("'),write(P),
     write('")').
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     n_property(X,userop),
     X =.. [P|L],
-    write('Jcons(Jmakeuser("'),
-    write(P),
-    write('"),'),
-    gen_dyn2_argument(L),
+    write('Jcons(Jmakeuser("'),write(P),write('"),'),
+    gen_dyn_argument(L),
     write(')').
-gen_dyn2(X) :-
+gen_dyn_elt(X) :-
     n_compiler_anonymous(X),
-    write('Jmakeanony("'),
-    write(X),
-    write('")').
-gen_dyn2(X) :-
+    write('Jmakeanony("'),write(X),write('")').
+gen_dyn_elt(X) :-
     n_compiler_variable(X),
-    write('Jmakevar("'),
-    write(X),
-    write('")').
-gen_dyn2(X) :-
+    write('Jmakevar("'),write(X),write('")').
+gen_dyn_elt(X) :-
     n_bignum(X),
-    write('Jbigx_to_parmanent(Jmakebig("'),
-    write(X),
-    write('"))').
-gen_dyn2(X) :-
+    write('Jbigx_to_parmanent(Jmakebig("'),write(X),write('"))').
+gen_dyn_elt(X) :-
     n_longnum(X),
-    write('Jmakestrlong("'),
-    write(X),
-    write('")').
-gen_dyn2(X) :-
+    write('Jmakestrlong("'),write(X),write('")').
+gen_dyn_elt(X) :-
     integer(X),
-    write('Jmakeint('),
-    write(X),
-    write(')').
-gen_dyn2(X) :-
+    write('Jmakeint('),write(X),write(')').
+gen_dyn_elt(X) :-
     float(X),
-    write('Jmakestrflt("'),
-    write(X),
-    write('")').
-gen_dyn2(X) :-
+    write('Jmakestrflt("'),write(X),write('")').
+gen_dyn_elt(X) :-
     list(X),
-    gen_dyn2_list(X).
-gen_dyn2(X) :-
+    gen_dyn_list(X).
+gen_dyn_elt(X) :-
     atom(X),
-	write('Jmakepred("'),
-    write(X),
-    write('")').
-gen_dyn2(X) :-
+	write('Jmakepred("'),write(X),write('")').
+gen_dyn_elt(X) :-
     string(X),
-	write('Jmakestr("'),
-    write(X),
-    write('")').
-gen_dyn2(X) :-
+	write('Jmakestr("'),write(X),write('")').
+gen_dyn_elt(X) :-
     invoke_error('illegal clause ',X).
 
-gen_dyn2_argument([]) :-
+gen_dyn_argument([]) :-
     write('NIL').
-gen_dyn2_argument([X|Xs]) :-
-    write('Jcons('),
-    gen_dyn2(X),
-    write(','),
-    gen_dyn2_argument(Xs),
+gen_dyn_argument([X|Xs]) :-
+    write('Jcons('),gen_dyn_elt(X),write(','),
+    gen_dyn_argument(Xs),
     write(')').
 
-gen_dyn2_list([]) :-
+gen_dyn_list([]) :-
     write('NIL').
-gen_dyn2_list(X) :-
+gen_dyn_list(X) :-
     atom(X),
-    gen_dyn2(X).
-gen_dyn2_list([L|Ls]) :-
-    write('Jlistcons('),
-    gen_dyn2(L),
-    write(','),
-    gen_dyn2_list(Ls),
+    gen_dyn_elt(X).
+gen_dyn_list([L|Ls]) :-
+    write('Jlistcons('),gen_dyn_elt(L),write(','),
+    gen_dyn_list(Ls),
     write(')').
+
+%---------------------------------------------
+
 
 gen_cdeclare(P) :-
     n_clause_with_arity(P,1,X),
