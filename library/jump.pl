@@ -60,7 +60,7 @@ pass3(X) :-
     atom_concat(F,'.c',Cfile),
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
-    %gen_predicate,
+    gen_predicate,
     gen_definition,
     gen_execution,
     n_reconsult_abolish,
@@ -213,6 +213,7 @@ spec_to_c(fy_yf,'FY_YF').
 
 
 % generate all predicate code
+/*
 gen_predicate :-
     n_reconsult_predicate(P),
     P = cdeclare,
@@ -223,6 +224,7 @@ gen_predicate :-
     P = clibrary,
     gen_clibrary(P),
     fail.
+*/
 gen_predicate :-
     n_reconsult_predicate(P),
     gen_a_pred(P),
@@ -241,7 +243,7 @@ gen_a_pred(P) :-
 gen_a_pred(P) :- 
     type(P,_,mut),gen_mut_pred(P).
 
-
+gen_dyn_pred(_).
 
 /*
 parts for gen_predicate
@@ -296,6 +298,7 @@ if(n == N){
 return(NO);
 }
 */
+/*
 gen_a_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
@@ -316,7 +319,7 @@ gen_a_pred(P) :-
     n_arity_count(P,L),
     gen_a_pred1(P,L),
     write('}'),nl.
-
+*/
 % pred_arity1,pred_arity2,...,pred_arityN
 gen_a_pred1(P,[]) :-
     nl,
