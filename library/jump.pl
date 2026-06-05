@@ -1,10 +1,10 @@
 
 %:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,type/2,mode/3]).
 
-type(f,a,t).  %(functor,arity,type) nondet det tail dyn mut
-mode(f,1,[+]).  %(functor,arity,modelist)
+%type(f,a,t).  (functor,arity,type) nondet det tail dyn mut
+%mode(f,1,[+]).  (functor,arity,modelist)
 
-type(foo,1,det).
+option(non,non). % for GCC option 
 
 % main
 compile_file(X) :-
@@ -38,32 +38,31 @@ invoke_gcc_not_remove(_).
 pass1(X) :-
 	write(user_output,'phase pass1'),
     nl(user_output),
-    reconsult(X,compiler).
-    %pass1_analize.
+    reconsult(X,compiler),
+    analize.
 
 pass2(_) :-
     write(user_output,'phase pass2'),
-    nl(user_output).
-    %pass1_analize.
+    nl(user_output),
+    analize.
 
 
-pass1_analize :-
+analize :-
     n_reconsult_predicate(P),
-    analize(P),
+    analize_pred(P),
     fail.
-pass1_analize.
+analize.
 
 
 pass3(X) :-
-	write(user_output,'phase pass3'),
-    nl(user_output),
+	write(user_output,'phase pass3'),nl(user_output),
 	n_filename(X,F),
     atom_concat(F,'.c',Cfile),
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
-    %gen_c_pred,
-    gen_def,
-    gen_exec,
+    %gen_predicate,
+    gen_definition,
+    gen_execution,
     n_reconsult_abolish,
     told.
 
@@ -73,8 +72,7 @@ system builtin predicate invoke GCC
 gcc -O3 -w -shared -fPIC -o <filenam>.c <filename>.o <option>
 */
 invoke_gcc(X) :-
-	write(user_output,'invoke GCC'),
-    nl(user_output),
+	write(user_output,'invoke GCC'),nl(user_output),
 	n_filename(X,F),
     atom_concat(F,'.c ',Cfile),
     atom_concat(F,'.o ',Ofile),
@@ -97,61 +95,25 @@ invoke_gcc_not_remove(X) :-
 
 
 /*
-generate C code for predicate or clause.
-They are provided by list.
-e.g. [foo,bar,boo]
-generate each predicate to make compiled pred
-*/
-
-
-% generate all predicate code
-gen_pred :-
-    n_reconsult_predicate(P),
-    P = cdeclare,
-    gen_cdeclare(P),
-    fail.
-gen_pred :-
-    n_reconsult_predicate(P),
-    P = clibrary,
-    gen_clibrary(P),
-    fail.
-gen_pred :-
-    n_reconsult_predicate(P),
-    P \= cdeclare,
-    P \= clibrary,
-    not(n_dynamic_predicate(P)),
-    gen_a_pred(P),
-    fail.
-gen_pred :-
-    n_reconsult_predicate(P),
-    P \= cdeclare,
-    P \= clibrary,
-    n_dynamic_predicate(P),
-    gen_dynamic(P),
-    fail.
-gen_pred.
-
-
-/*
 void init_tpredicate(void){
 (deftpred)("p",c_p,1,1);
 (deftpred)("foo",c_foo,0,1);
 }
 */
 % define compiled predicate
-gen_def :-
+gen_definition :-
 	write('void init_tpredicate(void){'),nl,
-    gen_def1,
+    gen_definition1,
     write('}'),nl.
 
-gen_def1 :-
+gen_definition1 :-
     n_reconsult_predicate(P),
     not(n_dynamic_predicate(P)),
     P \= cdeclare,
     P \= clibrary,
 	gen_pred_def(P),
     fail.
-gen_def1.
+gen_definition1.
 
 
 % generate deftpred for normal predicate
@@ -184,7 +146,7 @@ void init_declare(void){
     execute code...
 }
 */
-gen_exec :-
+gen_execution :-
 	write('void init_declare(void){'),nl,
     gen_dyn_exec,
     gen_det_exec,
@@ -248,6 +210,36 @@ spec_to_c(fx_yf,'FX_YF').
 spec_to_c(fy_xf,'FY_XF').
 spec_to_c(fy_yf,'FY_YF').
 
+
+
+% generate all predicate code
+gen_predicate :-
+    n_reconsult_predicate(P),
+    P = cdeclare,
+    gen_cdeclare(P),
+    fail.
+gen_predicate :-
+    n_reconsult_predicate(P),
+    P = clibrary,
+    gen_clibrary(P),
+    fail.
+gen_predicate :-
+    n_reconsult_predicate(P),
+    gen_clause(P),
+    fail.
+gen_predicate.
+
+% generate clause of predicate P
+gen_clause(P) :- 
+    type(P,_,nondet),gen_nondet_clause(P).
+gen_clause(P) :- 
+    type(P,_,det),gen_det_clause(P).
+gen_clause(P) :- 
+    type(P,_,tail),gen_tail_clause(P).
+gen_clause(P) :- 
+    type(P,_,dyn),gen_dyn_clause(P).
+gen_clause(P) :- 
+    type(P,_,mut),gen_nondet_clause(P).
 
 
 
@@ -1950,39 +1942,45 @@ invoke_error(Message,Code) :-
     told,
     abort.
 
-analize(P) :-
+analize_pred(P) :-
     n_arity_count(P,[N]),
 	n_clause_with_arity(P,N,C),
     n_variable_convert(C,C1),
-    analize1(P,N,C1),!,
+    analize_pred1(P,N,C1),!,
     fail.
 
-analize1(P,N,C) :-
+analize_pred1(P,N,C) :-
+    n_dynamic_predicate(P),
+    length(C,M),
+    P1 =.. [type,P,_,_],
+    (retract(P1);true),
+    asserta(type(P,N,dyn)),!.
+analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
     tail_recursive(C,0,0,0,M,N),
-    P1 =.. [pred_data,P,_,_],
+    P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(pred_data(P,N,tail)),!.
-analize1(P,N,C) :-
+    asserta(type(P,N,tail)),!.
+analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
     deterministic(C,0,0,0,M),
-    P1 =.. [pred_data,P,_,_],
+    P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(pred_data(P,N,det)),!.
-analize1(P,N,C) :-
+    asserta(type(P,N,det)),!.
+analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
     halt_check(C,0,0,M),
-    P1 =.. [pred_data,P,_,_],
+    P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(pred_data(P,N,halt)),!.
-analize1(P,N,C) :-
+    asserta(type(P,N,halt)),!.
+analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
-    P1 =.. [pred_data,P,_,_],
+    P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(pred_data(P,N,nondet)),!.
+    asserta(type(P,N,nondet)),!.
 
 % arguments = [clauses],det_count,pred_count,halt_count,all_count
 deterministic([],D,P,H,A) :-
