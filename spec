@@ -29,13 +29,18 @@ pass3　Cコード生成とオブジェクトコードの生成
 
 gen_predicate  reconsult したすべての述語の本体のCコードを生成する。
 gen_definition reconslutしたすべての述語の定義のCコードを生成する。
+gen_a_pred(P) 述語Pを生成する  
+            gen_nondet_pred(P) 非決定性述語
+            gen_det_pred(P) 決定性述語
+            gen_tail_pred(P) 動的述語
+            gen_dyn_pred(P) 末尾再帰述語
+            gen_mut_pred(P) 関数類似述語
 
-gen_clause  述語の節を生成する。これはtypeにより次のように分岐する。
-            gen_nondet_clause 非決定性述語
-            gen_det_clause　決定性述語
-            gen_dyn_clause　動的述語
-            gen_tail_clause　末尾再帰述語
-            gen_mut_clause　関数類似述語
+            gen_nondet_clause(C) 
+            gen_det_clause(C)
+            gen_dyn_clause(C)
+            gen_tail_clause(C)
+            gen_mut_clause(C)
 
 typeの異なるごとに頭部生成、本体部生成のコードをもつ。
 類似しているものもあるが、メンテナンスするうえで各々独立させておいた方が良い

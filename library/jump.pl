@@ -249,24 +249,21 @@ C type declare.
 static int c_foo(int arglist, int rest);
 */
 gen_type_declare(P) :-
-	write('static int c_'),
     n_atom_convert(P,P1),
-    write(P1),
-    write('(int arglist, int rest, int th);'),
-    nl.
+	write('static int c_'),write(P1),write('(int arglist, int rest, int th);'),nl.
 /*
 C variable declare.
 generate following code
 int(int arg1,arg2,...,argN){
-int arg1,arg2 ... argN,body,save1,save2;
+int arg1,arg2 ... argN,body,save1,save2...;
 
 */
 gen_var_declare(P) :-
-    write('int '),
     n_arity_count(P,L),
     max_list(L,E),
     gen_var_declare1(1,E),
     n_generate_all_variable(P,V),
+    write('int '),
     gen_all_var(V),
     write('n,body,save1,save2,save3,goal,cont,clause,res;'),nl,!.
 
@@ -282,9 +279,7 @@ max_list([X|Xs],Y) :-
 gen_var_declare1(S,E) :-
 	S > E.
 gen_var_declare1(S,E) :-
-	write(arg),
-    write(S),
-    write(','),
+	write(arg),write(S),write(','),
     S1 is S+1,
     gen_var_declare1(S1,E).
 
