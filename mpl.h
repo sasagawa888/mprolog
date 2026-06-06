@@ -223,7 +223,7 @@ extern int cell_size;
 extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
-extern int stack[STACKSIZE][THREADSIZE];
+extern int localstack[STACKSIZE][THREADSIZE];
 extern int backstack[STACKSIZE][4][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;

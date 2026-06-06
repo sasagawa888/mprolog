@@ -418,14 +418,14 @@ int makesocket(int sockfd, int type, const char *name, int listenfd)
 //stack
 void push_stack(int x, int th)
 {
-    stack[sp[th]++][th] = x;
+    localstack[sp[th]++][th] = x;
     if (sp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("stacksize"), th);
 }
 
 int pop_stack(int th)
 {
-    return (stack[--sp[th]][th]);
+    return (localstack[--sp[th]][th]);
 }
 
 int push_back(int th)
@@ -669,7 +669,7 @@ for(i=0;i<ac[0]-cell_size;i++){
 printf("stack\n");
 for(i=0;i<sp[0];i++){
     printf("%d ", i);
-    print(stack[i][0]);
+    print(localstack[i][0]);
     printf("\n");
 }
 printf("------------------------\n");

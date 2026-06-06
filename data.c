@@ -2097,7 +2097,7 @@ void unbind(int x, int th)
     int i;
 
     for (i = x; i < sp[th]; i++) {
-	int stack_index = stack[i][th];
+	int stack_index = localstack[i][th];
 	if (alpha_variable_p(stack_index)) {
 	    int variant_index = stack_index - cell_size;
 	    variant[variant_index][th] = UNBIND;
@@ -2235,14 +2235,14 @@ void printenv(int th)
 
     for (j = 0; j < thread_num; j++) {
 	for (i = 0; i < sp[j]; i++) {
-	    if (alpha_variable_p(stack[i][th])) {
-		print(stack[i][th]);
+	    if (alpha_variable_p(localstack[i][th])) {
+		print(localstack[i][th]);
 		printf("=");
-		print(variant[stack[i][th] - cell_size][j]);
-	    } else if (atom_variable_p(stack[i][th])) {
-		print(stack[i][th]);
+		print(variant[localstack[i][th] - cell_size][j]);
+	    } else if (atom_variable_p(localstack[i][th])) {
+		print(localstack[i][th]);
 		printf("=");
-		print(GET_CAR(stack[i][th]));
+		print(GET_CAR(localstack[i][th]));
 	    }
 	}
 	printf("sp = %d", sp[j]);
