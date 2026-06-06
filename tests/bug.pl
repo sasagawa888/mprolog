@@ -3,7 +3,7 @@
 f(1,Y) :- Y is 2.
 f(2,Y) :- Y is 3.
 
-/*
+
 p(1).
 p(2).
 
@@ -42,4 +42,3 @@ nodiag([N|L], B, D) :-
 
 bar(X) :- write(X).
 
-*/

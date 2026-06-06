@@ -375,7 +375,10 @@ gen_a_nondet_clause((Head :- Body),A,M) :-
     gen_nondet_body(Body,A),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease_back(th);'),nl.
+    write('if(rest != NIL){'),
+    write('Junbind(save2,th);'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('} else Jrelease_back(th);'),nl.
 
 % predicate with no arity
 gen_a_nondet_clause(P,_,M) :-
@@ -395,7 +398,10 @@ gen_a_nondet_clause(P,A,M) :-
     write('else return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease_back(th);').
+    write('if(rest != NIL){'),
+    write('Junbind(save2,th);'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('} else Jrelease_back(th);'),nl.
 
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
@@ -405,7 +411,10 @@ gen_a_nondet_clause(P,_,M) :-
     write('else return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease_back(th);').
+    write('if(rest != NIL){'),
+    write('Junbind(save2,th);'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('} else Jrelease_back(th);'),nl.
 
 
 
