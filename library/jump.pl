@@ -224,6 +224,7 @@ gen_a_pred(P) :-
 gen_a_pred(P) :- 
     type(P,_,mut),gen_mut_pred(P).
 
+gen_det_pred(_).
 
 /*
 parts for gen_predicate
@@ -1034,6 +1035,65 @@ gen_head1([X|Xs],N) :-
     gen_head1(Xs,N1).
 
 
+%---------------det determinant predicate-------------------
+gen_det_pred(P) :-
+	atom_concat('compiling ',P,M),
+    write(user_output,M),
+    gen_type_declare(P),
+	write('static int c_'),
+    n_atom_convert(P,P1),
+    write(P1),
+    write('(int arglist, int rest, int th){'),nl,
+    gen_var_declare(P),
+    write('Jinc_proof(th);'),nl,
+    write('n = Jlength(arglist);'),nl,
+    write('save1 = Jget_wp(th);'),nl,
+    write('save2 = Jget_sp(th);'),nl,
+    write('save3 = Jget_ac(th);'),nl,
+    n_arity_count(P,L),
+    gen_det_pred1(P,L),
+    write('}'),nl.
+
+gen_det_pred1(P,[]).
+gen_det_pred1(P,[A|As]) :-
+    write(user_output,$/$),write(user_output,A),
+    write(user_output,' '),write(user_output,det),nl(user_output),
+	gen_det_arity(P,A),
+    gen_det_pred1(P,As).
+
+gen_det_arity(P,A) :-
+	write('if(n == '),write(A),write('){'),nl,
+    gen_det_clause(P,A),
+    write('return(NO);}'),nl,!.
+
+gen_det_clause(P,A) :-
+    gen_var_assign(1,A),
+	n_clause_with_arity(P,A,C),
+    gen_det_clause1(C,A,0).
+
+gen_det_clause1([],_,_).
+gen_det_clause1([C|Cs],A,M) :-
+	n_variable_convert(C,X),
+    n_generate_variable(X,V),
+    gen_var(V),
+    gen_var_assign(1,A),
+    gen_a_det_clause(X,A,M),
+    M1 is M+1,
+    gen_det_clause1(Cs,A,M1).
+
+
+gen_a_det_clause((Head :- Body),A,M) :-
+	gen_head(Head),
+    gen_det_body(Body).
+
+gen_a_det_clause(P,_,M) :-
+	n_property(P,predicate),
+    functor(P,_,0),
+    write('if(rest!=NIL){'),nl,
+    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl,
+    write('else return(YES);}'),nl.
+
+
 /*
 generate evauation code
 e.g.  X is 1+2.  X == 3*4.
@@ -1647,6 +1707,16 @@ gen_argument_list([X|Xs]) :-
     write(')').
 
 /*----------------------tail TCO--------------------------------------
+generate predicate for not tail recursive
+static int c_<name>(int arglist, int rest){
+int varX,varY,...
+save2 = Jget_sp(th);
+save3 = Jget_ac(th);
+if(n == N){
+    ...main code...
+}
+return(NO);
+}
 
 */
 
