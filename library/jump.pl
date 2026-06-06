@@ -8,7 +8,7 @@ option(non,non). % for GCC option
 
 % main
 compile_file(X) :-
-    write(user_output,'ver0.01'),nl,
+    write(user_output,'JUMP ver0.01'),nl,
     pass1(X),
     pass2(X),
     pass3(X),
@@ -203,7 +203,6 @@ spec_to_c(fy_yf,'FY_YF').
 
 
 % generate all predicate code
-/*
 gen_predicate :-
     n_reconsult_predicate(P),
     P = cdeclare,
@@ -214,7 +213,6 @@ gen_predicate :-
     P = clibrary,
     gen_clibrary(P),
     fail.
-*/
 gen_predicate :-
     n_reconsult_predicate(P),
     gen_a_pred(P),
@@ -275,7 +273,7 @@ gen_var_declare1(S,E) :-
     gen_var_declare1(S1,E).
 
 
-/*
+/* --------------------tail TCO-----------------------------------
 generate predicate for not tail recursive
 static int c_<name>(int arglist, int rest){
 int varX,varY,...
@@ -1655,6 +1653,119 @@ gen_argument_list([X|Xs]) :-
     write(th),
     write(')').
 
+/*----------------------tail TCO--------------------------------------
+if(n == 3){
+arg1 = Jnth(arglist,1);
+arg2 = Jnth(arglist,2);
+arg3 = Jnth(arglist,3);
+loop3:
+ano_2 = Jmakevariant(th);
+ano_1 = Jmakevariant(th);
+save1 = Jget_wp(th);
+if(Junify_nil(arg1,th) == YES && Junify_var(arg2,ano_2,th) == YES && Junify_var(arg3,ano_1,th) == YES && 1)
+if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);
+Jset_ac(save3,th);
+Junbind(save2,th);
+Jset_wp(save1,th);
+varD1 = Jmakevariant(th);
+varN = Jmakevariant(th);
+varL = Jmakevariant(th);
+varB = Jmakevariant(th);
+varD = Jmakevariant(th);
+save1 = Jget_wp(th);
+if(Junify_pair(arg1,Jwlistcons(varN,varL,th),th) == YES && Junify_var(arg2,varB,th) == YES && Junify_var(arg3,varD,th) == YES && 1)
+if(Jnot_numeqp(Jderef(varD,th),Jminus(Jderef(varN,th),Jderef(varB,th),th)) && Jinc_proof(th))if(Jnot_numeqp(Jderef(varD,th),Jminus(Jderef(varB,th),Jderef(varN,th),th)) && Jinc_proof(th))if(Junify(varD1,Jplus(Jderef(varD,th),Jmakeint(1),th),th)==YES && Jinc_proof(th)){
+arg1 = Jcopy_work(Jderef(varL,th),th);
+arg2 = Jcopy_work(Jderef(varB,th),th);
+arg3 = Jcopy_work(Jderef(varD1,th),th);
+Junbind(save2,th);
+Jset_ac(save3,th);
+goto loop3;
+}
+return(NO);}
+Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("nodiag"),arglist);
+return(NO);}
+*/
+
+gen_tail_pred(P) :-
+	atom_concat('compiling ',P,M),
+    write(user_output,M),
+    gen_type_declare(P),
+    n_atom_convert(P,P1),
+	write('static int c_'),write(P1),write('(int arglist, int rest, int th){'),nl,
+    gen_var_declare(P),
+    write('Jinc_proof(th);'),nl,
+    write('n = Jlength(arglist);'),nl,
+    write('if(rest != NIL){'),nl,
+    n_arity_count(P,L),
+    gen_tail_pred1(P,L),
+    write('}'),nl.
+
+gen_tail_pred1(P,[A|As]) :-
+    write(user_output,$/$),write(user_output,A),
+    write(user_output,' '),write(user_output,tail),
+	gen_tail_arity(P,A),
+    gen_tail_pred1(P,As).
+
+gen_tail_arity(P,A) :-
+	write('if(n == '),write(A),write('){'),nl,
+    gen_tail_clause(P,A),
+    write('return(NO);}'),nl,!.
+
+gen_tail_clause(P,A) :-
+    gen_var_assign(1,A),
+    gen_jump_switch(P,A),
+    write(loop),write(A),write(':'),nl,
+	n_clause_with_arity(P,A,C),
+    gen_tail_clause1(C,A,0).
+
+gen_tail_clause1([],_,_).
+gen_tail_cluase1([C|Cs],A,M) :-
+	n_variable_convert(C,X),
+    n_generate_variable(X,V),
+    gen_var(V),
+    gen_a_tail_clause(X,A,M),
+    M1 is M+1,
+    gen_tail_clause1(Cs,A,M1).
+
+gen_a_tail_clause(P,A,M) :-
+	n_property(P,predicate),
+    P =.. [P1|_],
+	gen_head(P),
+    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl.
+
+gen_a_tail_clause((Head :- Body),A,M) :-
+    tail_body(Head,Body),
+    Head =.. [P|Args],
+	gen_head(Head),
+    gen_tail_body(Body,A).
+
+
+gen_tail_body((X,Y),N) :-
+    gen_a_det_body(X),
+    gen_tail_body(Y,N).
+gen_tail_body(X,N) :-
+    X =.. [_|A],
+    write('{'),nl,
+    gen_tail_args(A,1),
+    write('Junbind(save2,th);'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('goto loop'),write(N),write(';'),nl,
+    write('}'),nl.
+
+gen_tail_args([],_).
+gen_tail_args([A|As],N) :-
+    write('arg'),write(N),write(' = '),
+    write('Jcopy_work(Jderef('),
+    gen_a_argument(A),
+    write(',th),th);'),nl,
+    N1 is N+1,
+    gen_tail_args(As,N1).
+
+    
+
+
+
 /*-----------------------dynamic predicate----------------------------
 assert dynamic predicate
 :- dynamic(foo/1)
@@ -2226,29 +2337,6 @@ gen_det_body(X) :-
     write('Jset_ac(save3,th);'),nl,
     write('Junbind(save2,th);'),nl,
     write('Jset_wp(save1,th);'),nl.
-
-gen_tail_body((X,Y),N) :-
-    gen_a_det_body(X),
-    gen_tail_body(Y,N).
-gen_tail_body(X,N) :-
-    X =.. [_|A],
-    write('{'),nl,
-    gen_tail_args(A,1),
-    write('Junbind(save2,th);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('goto loop'),write(N),write(';'),nl,
-    write('}'),nl.
-
-gen_tail_args([],_).
-gen_tail_args([A|As],N) :-
-    write('arg'),write(N),write(' = '),
-    write('Jcopy_work(Jderef('),
-    gen_a_argument(A),
-    write(',th),th);'),nl,
-    N1 is N+1,
-    gen_tail_args(As,N1).
-
-    
 
 gen_a_det_body(!).
 gen_a_det_body(X is Y) :-
