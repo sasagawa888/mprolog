@@ -517,310 +517,6 @@ gen_nondet_body_argument(X,A,M,N) :-
     write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
     gen_a_argument(Args),write(';'),nl.
 
-/*
-generate one operation,user,builtin or compiled predicate.
-when except of above type, invoke error.
-*/
-
-% case
-% transform if-then-else / if-then 
-% to argument of case/1
-case_arg((Cond -> Then ; Else), [Cond -> Then1 | Else1]) :-
-    case_body(Then, Then1),
-    case_body(Else, Else1).
-
-case_arg((Cond -> Then), [Cond -> Then1 | true]) :-
-    case_body(Then, Then1).
-
-% parse body recursively
-case_body((P,Q), (P1,Q1)) :-
-    case_body(P, P1),
-    case_body(Q, Q1).
-
-% nested if-then-else transform case/1 
-case_body((Cond -> Then ; Else), Case) :-
-    case_arg((Cond -> Then ; Else), L),
-    Case =.. [case, L].
-
-% nested if-then transform to case/1.
-case_body((Cond -> Then), Case) :-
-    case_arg((Cond -> Then), L),
-    Case =.. [case, L].
-
-case_body(X, X).
-
-
-gen_a_body((X->Y;Z)) :-
-    n_findatom(case,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist1('),
-    case_arg((X->Y;Z),L),
-    gen_argument_list(L),
-    write(',th),th)').
-
-
-% use_module
-gen_a_body(use_module(X)) :-
-    n_findatom(use_module,builtin,A),
-    write('Jwlist2('),
-    write(A),
-    write(','),
-    write('Jmakeconst("'),
-    write(X),
-    write('"),th)').
-
-
-gen_a_body((X;Xs)) :-
-	write('Jwlist3(Jmakeope(";"),'),
-	gen_a_body(X),
-    write(','),
-    gen_body1(Xs,0),
-    write(',th)').
-
-
-gen_a_body(X) :-
-    n_defined_predicate(X),
-    functor(X,P,0),
-    n_dynamic_predicate(P),
-    write('Jmakepred("'),
-    write(P),
-    write('")').
-
-
-% atom compiled predicate in module 
-gen_a_body(X) :-
-    functor(X,P,0),
-    n_property(P,compiled),
-    write('Jmakecomp("'),
-    write(P),
-    write('")').
-
-% atom predicate in module
-gen_a_body(X) :-
-    functor(X,P,0),
-    n_property(P,predicate),
-    n_imported_predicate(P),
-    write('Jmakepred("'),
-    write(P),
-    write('")').
-
-% compound compiled predicate in module
-gen_a_body(X) :-
-    X =.. [P|L],
-    n_property(P,compiled),
-    write('Jwcons(Jmakecomp("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-
-% compound predicate in module
-gen_a_body(X) :-
-    X =.. [P|L],
-    n_property(P,predicate),
-    n_imported_predicate(P),
-    write('Jwcons(Jmakepred("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-
-
-% defined predicate will become compiled predicate
-gen_a_body(X) :-
-    n_defined_predicate(X),
-    functor(X,P,0),
-    not(n_dynamic_predicate(P)),
-    write('Jmakecomp("'),
-    write(P),
-    write('")').
-
-% defined predicate will become compiled predicate
-gen_a_body(X) :-
-    n_defined_predicate(X),
-    X =.. [P|L],
-    not(n_dynamic_predicate(P)),
-    write('Jwcons(Jmakecomp("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-gen_a_body(X) :-
-    n_property(X,predicate),
-    X =.. [P|L],
-    write('Jwcons(Jmakepred("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-% is/2 
-gen_a_body(X is Y) :-
-    n_findatom(is,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-% </2 
-gen_a_body(X < Y) :-
-    n_findatom(<,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-% >/2 
-gen_a_body(X > Y) :-
-    n_findatom(>,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-% =</2 
-gen_a_body(X =< Y) :-
-    n_findatom(=<,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-% >=/2 
-gen_a_body(X >= Y) :-
-    n_findatom(>=,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-% ==/2 
-gen_a_body(X == Y) :-
-    n_findatom(==,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-% =:=/2 
-gen_a_body(X =:= Y) :-
-    n_findatom(=:=,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-% \=/2 
-gen_a_body(X \= Y) :-
-    n_findatom(\=,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    write('Jwlist2('),
-    gen_form(X),
-    write(','),
-    gen_form(Y),
-    write(',th),th)').
-
-
-% atom builtin e.g. nl fail
-gen_a_body(X) :-
-    n_property(X,builtin),
-    functor(X,P,0),
-    n_findatom(P,builtin,A),
-    write(A).
-gen_a_body(ifthenelse(X,Y,Z)) :-
-    write('Jwcons(Jmakesys("n_exec_ifthenelse"),'),
-    write('Jwlist3('),
-    gen_a_argument(X),
-    write(','),
-    gen_a_argument(Y),
-    write(','),
-    gen_a_argument(Z),
-    write(',th),th)').
-gen_a_body(X) :-
-    n_property(X,builtin),
-    X =.. [P|L], 
-    n_findatom(P,builtin,A),
-    write('Jwcons('),
-    write(A),
-    write(','),
-    gen_argument(L),
-    write(',th)').
-gen_a_body(X) :-
-    n_property(X,operation),
-    gen_body1(X,0).
-gen_a_body(X) :-
-    n_property(X,compiled),
-    X =.. [P|L],
-    write('Jwcons(Jmakecomp("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-gen_a_body(X) :-
-    n_property(X,userop),
-    functor(X,P,0),
-    write('Jmakeuser("'),
-    write(P),
-    write('")').
-gen_a_body(X) :-
-    n_defined_userop(X),
-    not(n_imported_userop(X)),
-    X =.. [P|L],
-    write('Jwcons(Jmakecomp("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-gen_a_body(X) :-
-    n_property(X,userop),
-    X =.. [P|L],
-    write('Jwcons(Jmakeuser("'),
-    write(P),
-    write('"),'),
-    gen_argument(L),
-    write(',th)').
-gen_a_body(X) :-
-    atom(X),
-    n_dynamic_predicate(X),
-	write('Jmakepred("'),
-    write(X),
-    write('")').
-% for FCG {} compile
-gen_a_body(',') :-
-    write('Jmakesys("n_exec_no_operation")').
-gen_a_body(X) :-
-    invoke_error('illegal body ',X).
-
 
 /*
 generate_unify of head
@@ -2039,11 +1735,23 @@ butlast_body((Body,Bs),(Body,Butlast)) :-
 
 /*
  a,b,c ->  if(a==YES) if(b==YES) if(c==YES) return(Jprove_all(rest,Jget_sp(th),th));
+ /*
+generate one operation,user,builtin or compiled predicate.
+when except of above type, invoke error.
 */
+
 gen_det_body((X,Y)) :-
     gen_a_det_body(X),
     nl,
     gen_det_body(Y).
+
+gen_a_det_body((X;Y)) :-
+	write('Jwlist3(Jmakeope(";"),'),
+	gen_det_body(X),
+    write(','),
+    gen_det_body(Y),
+    write(',th)').
+
 gen_det_body(X) :-
     gen_a_det_body(X),
     nl,
@@ -2133,13 +1841,73 @@ gen_a_det_body((X->Y;Z)) :-
     gen_a_argument(L),
     write(',th),th) == YES)').
 
-gen_a_det_body(X) :-
-    X =.. [P|A],
-    write('if (Jcall_det('),
-    gen_a_body(P),
+gen_a_det_body((X->Y;Z)) :-
+    n_findatom(case,builtin,A),
+    write('Jwcons('),
+    write(A),
     write(','),
-    gen_a_argument(A),
+    write('Jwlist1('),
+    case_arg((X->Y;Z),L),
+    gen_argument_list(L),
+    write(',th),th)').
+
+
+% use_module
+gen_a_det_body(use_module(X)) :-
+    n_findatom(use_module,builtin,A),
+    write('Jwlist2('),
+    write(A),
+    write(','),
+    write('Jmakeconst("'),
+    write(X),
+    write('"),th)').
+
+
+% for FCG {} compile
+gen_a_det_body(',') :-
+    write('Jmakesys("n_exec_no_operation")').
+
+gen_a_det_body(X) :-
+    n_property(X,builtin),
+    X =.. [P|A],
+    write('if (Jcall_det(Jmakesys("'),
+    write(P),
+    write('"),'),
+    gen_argument(A),
     write(',th) == YES)').
+
+
+gen_a_det_body(X) :-
+    invoke_error('illegal body ',X).
+
+
+% case
+% transform if-then-else / if-then 
+% to argument of case/1
+case_arg((Cond -> Then ; Else), [Cond -> Then1 | Else1]) :-
+    case_body(Then, Then1),
+    case_body(Else, Else1).
+
+case_arg((Cond -> Then), [Cond -> Then1 | true]) :-
+    case_body(Then, Then1).
+
+% parse body recursively
+case_body((P,Q), (P1,Q1)) :-
+    case_body(P, P1),
+    case_body(Q, Q1).
+
+% nested if-then-else transform case/1 
+case_body((Cond -> Then ; Else), Case) :-
+    case_arg((Cond -> Then ; Else), L),
+    Case =.. [case, L].
+
+% nested if-then transform to case/1.
+case_body((Cond -> Then), Case) :-
+    case_arg((Cond -> Then), L),
+    Case =.. [case, L].
+
+case_body(X, X).
+
 
 
 
