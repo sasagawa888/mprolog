@@ -43,13 +43,6 @@ pass2(_) :-
     analize.
 
 
-analize :-
-    n_reconsult_predicate(P),
-    analize_pred(P),
-    fail.
-analize.
-
-
 pass3(X) :-
 	write(user_output,'phase pass3'),nl(user_output),
 	n_filename(X,F),
@@ -1982,6 +1975,222 @@ invoke_error(Message,Code) :-
     told,
     abort.
 
+% deterministic body case. Each has cut or each is builtin or each is tail-recur 
+% G is gournd_variable
+det_body(Head,(_->_;_),_).       % a->b;c
+det_body(_,(_;_),_) :- !,fail.
+det_body(_,((_;_),_),_) :- !,fail.
+det_body(_,!,_).
+det_body(_,(_,!),_).
+det_body(Head,(_,(!,Y)),G) :-
+    det_body(Head,Y,G).
+det_body(Head,(V is _,Y),G) :-
+    det_body(Head,Y,[V|G]).
+det_body(Head,(X,Y),G) :-
+    det_builtin(X,G),
+    det_body(Head,Y,G).
+det_body(Head,(X,Y),G) :-
+    X = (((_->_),_);_),
+    det_body(Head,Y,G).
+det_body(Head,(X,Y),G) :-
+    det_pass1(X),
+    det_body(Head,Y,G).
+det_body(Head,(X,Y),G) :-
+    functor(Head,Pred1,Arity1),
+    functor(X,Pred2,Arity2),
+    Pred1 == Pred2,
+    Arity1 == Arity2,
+    pred_data(Pred1,Arity1,halt),
+    P =.. [pred_data,Pred1,_,_],
+    (retract(P);true),
+    asserta(pred_data(Pred1,Arity1,det)),
+    det_body(Head,Y,G).
+det_body(_,X,G) :-
+    det_builtin(X,G).
+det_body(_,X,_) :-
+    det_pass1(X).
+det_body(Head,X,_) :-
+    functor(Head,Pred1,Arity1),
+    functor(X,Pred2,Arity2),
+    Pred1 == Pred2,
+    Arity1 == Arity2,
+    pred_data(Pred1,Arity1,halt),
+    P =.. [pred_data,Pred1,_,_],
+    (retract(P);true),
+    asserta(pred_data(Pred1,Arity1,det)).
+det_pass1(X) :-
+    functor(X,P,A),
+    pred_data(P,A,det).
+det_pass1(X) :-
+    functor(X,P,A),
+    pred_data(P,A,tail).
+
+
+% generaly builtin is deterministic. but some cases is non deterministic.
+det_builtin(length(X,Y),G) :-
+    n_compiler_variable(X),
+    not(member(X,G)),
+    n_compiler_variable(Y),
+    not(member(Y,G)),!,fail.
+
+det_builtin(append(X,Y,_),G) :-
+    n_compiler_variable(X),
+    not(member(X,G)),
+    n_compiler_variable(Y),
+    not(member(Y,G)),!,fail.
+
+det_builtin(member(X,_),G) :-
+    n_compiler_variable(X),
+    not(member(X,G)),!,fail.
+
+det_builtin(between(_,_,X),G) :-
+    n_compiler_variable(X),
+    not(member(X,G)),!,fail.
+
+det_builtin(repeat,G) :-
+    !,fail.
+
+det_builtin(select(_,_,_),G) :-
+    !,fail.
+
+det_builtin(length(X,Y),G) :-
+    n_compiler_variable(X),
+    n_compiler_variable(Y),
+    not(member(X,G)),
+    not(member(Y,G)),!,fail.
+
+det_builtin(X,_) :-
+    n_property(X,builtin).
+
+
+
+% tail recursive
+tail_body(Head,Body) :-
+    last_body(Body,Last),
+    functor(Head,Pred1,Arity1),
+    functor(Last,Pred2,Arity2),
+    Pred1 == Pred2,
+    Arity1 == Arity2.
+
+last_body((_,Body),Last) :-
+    last_body(Body,Last).
+last_body(Body,Body).
+
+butlast_body((Body,Bs),Body) :-
+    n_property(Bs,predicate).
+butlast_body((Body,Bs),Body) :-
+    n_property(Bs,builtin).
+butlast_body((Body,Bs),(Body,Butlast)) :-
+    butlast_body(Bs,Butlast).
+
+
+/*
+ a,b,c ->  if(a==YES) if(b==YES) if(c==YES) return(Jprove_all(rest,Jget_sp(th),th));
+*/
+gen_det_body((X,Y)) :-
+    gen_a_det_body(X),
+    nl,
+    gen_det_body(Y).
+gen_det_body(X) :-
+    gen_a_det_body(X),
+    nl,
+    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('Junbind(save2,th);'),nl,
+    write('Jset_wp(save1,th);'),nl.
+
+gen_a_det_body(!).
+gen_a_det_body(X is Y) :-
+    write('if(Junify('),
+    gen_a_argument(X),
+    write(','),
+    eval_form(Y),
+    write(','),
+    write(th),
+    write(')==YES)').
+
+gen_a_det_body(X = Y) :-
+    write('if(Junify('),
+    gen_a_argument(X),
+    write(','),
+    gen_a_argument(Y),
+    write(','),
+    write(th),
+    write(')==YES)').
+
+gen_a_det_body(X =:= Y) :-
+    write('if(Jnumeqp('),
+    eval_form(X),
+    write(','),
+    eval_form(Y),
+    write('))').
+
+gen_a_det_body(X =\= Y) :-
+    write('if(Jnot_numeqp('),
+    eval_form(X),
+    write(','),
+    eval_form(Y),
+    write('))').
+
+gen_a_det_body(X < Y) :-
+    write('if(Jsmallerp('),
+    eval_form(X),
+    write(','),
+    eval_form(Y),
+    write('))').
+
+gen_a_det_body(X =< Y) :-
+    write('if(Jeqsmallerp('),
+    eval_form(X),
+    write(','),
+    eval_form(Y),
+    write('))'),nl.
+
+gen_a_det_body(X > Y) :-
+    write('if(Jgreaterp('),
+    eval_form(X),
+    write(','),
+    eval_form(Y),
+    write('))').
+
+gen_a_det_body(X >= Y) :-
+    write('if(Jeqgreaterp('),
+    eval_form(X),
+    write(','),
+    eval_form(Y),
+    write('))').
+
+gen_a_det_body((((X->Y),Y1);Z)) :-
+    case_arg((((X->Y),Y1);Z),L),
+    write('if (Jcall_det(Jmakesys("case"),Jwlist1('),
+    gen_a_argument(L),
+    write(',th),th) == YES)').
+
+gen_a_det_body((X->Y;Z)) :-
+    case_arg((X->Y;Z),L),
+    write('if (Jcall_det(Jmakesys("case"),Jwlist1('),
+    gen_a_argument(L),
+    write(',th),th) == YES)').
+
+gen_a_det_body(X) :-
+    X =.. [P|A],
+    write('if (Jcall_det('),
+    gen_a_body(P),
+    write(','),
+    gen_a_argument(A),
+    write(',th) == YES)').
+
+
+
+%------------------------analizer-------------------------
+
+analize :-
+    n_reconsult_predicate(P),
+    analize_pred(P),
+    fail.
+analize.
+
+
 analize_pred(P) :-
     n_arity_count(P,[N]),
 	n_clause_with_arity(P,N,C),
@@ -2213,209 +2422,4 @@ halt_check([_|Cs],D,P,A) :-
     halt_check(Cs,D,P,A).
 
 
-
-% deterministic body case. Each has cut or each is builtin or each is tail-recur 
-% G is gournd_variable
-det_body(Head,(_->_;_),_).       % a->b;c
-det_body(_,(_;_),_) :- !,fail.
-det_body(_,((_;_),_),_) :- !,fail.
-det_body(_,!,_).
-det_body(_,(_,!),_).
-det_body(Head,(_,(!,Y)),G) :-
-    det_body(Head,Y,G).
-det_body(Head,(V is _,Y),G) :-
-    det_body(Head,Y,[V|G]).
-det_body(Head,(X,Y),G) :-
-    det_builtin(X,G),
-    det_body(Head,Y,G).
-det_body(Head,(X,Y),G) :-
-    X = (((_->_),_);_),
-    det_body(Head,Y,G).
-det_body(Head,(X,Y),G) :-
-    det_pass1(X),
-    det_body(Head,Y,G).
-det_body(Head,(X,Y),G) :-
-    functor(Head,Pred1,Arity1),
-    functor(X,Pred2,Arity2),
-    Pred1 == Pred2,
-    Arity1 == Arity2,
-    pred_data(Pred1,Arity1,halt),
-    P =.. [pred_data,Pred1,_,_],
-    (retract(P);true),
-    asserta(pred_data(Pred1,Arity1,det)),
-    det_body(Head,Y,G).
-det_body(_,X,G) :-
-    det_builtin(X,G).
-det_body(_,X,_) :-
-    det_pass1(X).
-det_body(Head,X,_) :-
-    functor(Head,Pred1,Arity1),
-    functor(X,Pred2,Arity2),
-    Pred1 == Pred2,
-    Arity1 == Arity2,
-    pred_data(Pred1,Arity1,halt),
-    P =.. [pred_data,Pred1,_,_],
-    (retract(P);true),
-    asserta(pred_data(Pred1,Arity1,det)).
-det_pass1(X) :-
-    functor(X,P,A),
-    pred_data(P,A,det).
-det_pass1(X) :-
-    functor(X,P,A),
-    pred_data(P,A,tail).
-
-
-% generaly builtin is deterministic. but some cases is non deterministic.
-det_builtin(length(X,Y),G) :-
-    n_compiler_variable(X),
-    not(member(X,G)),
-    n_compiler_variable(Y),
-    not(member(Y,G)),!,fail.
-
-det_builtin(append(X,Y,_),G) :-
-    n_compiler_variable(X),
-    not(member(X,G)),
-    n_compiler_variable(Y),
-    not(member(Y,G)),!,fail.
-
-det_builtin(member(X,_),G) :-
-    n_compiler_variable(X),
-    not(member(X,G)),!,fail.
-
-det_builtin(between(_,_,X),G) :-
-    n_compiler_variable(X),
-    not(member(X,G)),!,fail.
-
-det_builtin(repeat,G) :-
-    !,fail.
-
-det_builtin(select(_,_,_),G) :-
-    !,fail.
-
-det_builtin(length(X,Y),G) :-
-    n_compiler_variable(X),
-    n_compiler_variable(Y),
-    not(member(X,G)),
-    not(member(Y,G)),!,fail.
-
-det_builtin(X,_) :-
-    n_property(X,builtin).
-
-
-
-% tail recursive
-tail_body(Head,Body) :-
-    last_body(Body,Last),
-    functor(Head,Pred1,Arity1),
-    functor(Last,Pred2,Arity2),
-    Pred1 == Pred2,
-    Arity1 == Arity2.
-
-last_body((_,Body),Last) :-
-    last_body(Body,Last).
-last_body(Body,Body).
-
-butlast_body((Body,Bs),Body) :-
-    n_property(Bs,predicate).
-butlast_body((Body,Bs),Body) :-
-    n_property(Bs,builtin).
-butlast_body((Body,Bs),(Body,Butlast)) :-
-    butlast_body(Bs,Butlast).
-
-
-/*
- a,b,c ->  if(a==YES) if(b==YES) if(c==YES) return(Jprove_all(rest,Jget_sp(th),th));
-*/
-gen_det_body((X,Y)) :-
-    gen_a_det_body(X),
-    nl,
-    gen_det_body(Y).
-gen_det_body(X) :-
-    gen_a_det_body(X),
-    nl,
-    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('Junbind(save2,th);'),nl,
-    write('Jset_wp(save1,th);'),nl.
-
-gen_a_det_body(!).
-gen_a_det_body(X is Y) :-
-    write('if(Junify('),
-    gen_a_argument(X),
-    write(','),
-    eval_form(Y),
-    write(','),
-    write(th),
-    write(')==YES)').
-
-gen_a_det_body(X = Y) :-
-    write('if(Junify('),
-    gen_a_argument(X),
-    write(','),
-    gen_a_argument(Y),
-    write(','),
-    write(th),
-    write(')==YES)').
-
-gen_a_det_body(X =:= Y) :-
-    write('if(Jnumeqp('),
-    eval_form(X),
-    write(','),
-    eval_form(Y),
-    write('))').
-
-gen_a_det_body(X =\= Y) :-
-    write('if(Jnot_numeqp('),
-    eval_form(X),
-    write(','),
-    eval_form(Y),
-    write('))').
-
-gen_a_det_body(X < Y) :-
-    write('if(Jsmallerp('),
-    eval_form(X),
-    write(','),
-    eval_form(Y),
-    write('))').
-
-gen_a_det_body(X =< Y) :-
-    write('if(Jeqsmallerp('),
-    eval_form(X),
-    write(','),
-    eval_form(Y),
-    write('))'),nl.
-
-gen_a_det_body(X > Y) :-
-    write('if(Jgreaterp('),
-    eval_form(X),
-    write(','),
-    eval_form(Y),
-    write('))').
-
-gen_a_det_body(X >= Y) :-
-    write('if(Jeqgreaterp('),
-    eval_form(X),
-    write(','),
-    eval_form(Y),
-    write('))').
-
-gen_a_det_body((((X->Y),Y1);Z)) :-
-    case_arg((((X->Y),Y1);Z),L),
-    write('if (Jcall_det(Jmakesys("case"),Jwlist1('),
-    gen_a_argument(L),
-    write(',th),th) == YES)').
-
-gen_a_det_body((X->Y;Z)) :-
-    case_arg((X->Y;Z),L),
-    write('if (Jcall_det(Jmakesys("case"),Jwlist1('),
-    gen_a_argument(L),
-    write(',th),th) == YES)').
-
-gen_a_det_body(X) :-
-    X =.. [P|A],
-    write('if (Jcall_det('),
-    gen_a_body(P),
-    write(','),
-    gen_a_argument(A),
-    write(',th) == YES)').
-
+%---------------------------------------------------------

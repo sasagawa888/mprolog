@@ -267,7 +267,6 @@ static inline int Jgreaterp(int x, int y) {
 }
 
 static inline int Jeqgreaterp(int x, int y) {
-    Jinc_proof
     return f2[EQGREATERP_IDX](x, y);
 }
 
