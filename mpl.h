@@ -225,7 +225,7 @@ extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
 extern int backstack[STACKSIZE][4][THREADSIZE];
-extern int envstack[STACKSIZE][THREADSIZE];
+extern int envstack[STACKSIZE][3][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;

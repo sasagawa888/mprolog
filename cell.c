@@ -420,7 +420,7 @@ void push_stack(int x, int th)
 {
     localstack[sp[th]++][th] = x;
     if (sp[th] >= STACKSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("stacksize"), th);
+	exception(RESOURCE_ERR, NIL, makestr("local stack size"), th);
 }
 
 int pop_stack(int th)
@@ -432,7 +432,7 @@ int push_back(int th)
 {
     bp[th]++;
     if (bp[th] >= STACKSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("backstacksize"), th);
+	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
     backstack[bp[th]][0][th] = sp[th]; //local sp
     backstack[bp[th]][1][th] = 0; //clause choice 
     backstack[bp[th]][2][th] = wp[th]; //working  wp
@@ -477,6 +477,8 @@ int inc_back_choice(int th)
     return(NIL);
 }
 
+
+
 int release_back(int th)
 {
     unbind(backstack[bp[th]][0][th],th);
@@ -490,6 +492,74 @@ int discard_back(int th)
     bp[th]--;
     return(NIL);
 }
+
+
+void push_env(int th)
+{
+    ep[th]++;
+    if (ep[th] >= STACKSIZE)
+	exception(RESOURCE_ERR, NIL, makestr("env stack size"), th);
+    envstack[ep[th]][0][th] = sp[th]; //local sp
+    envstack[ep[th]][1][th] = wp[th]; //working  wp
+    envstack[ep[th]][2][th] = ac[th]; //alpha counter ac
+}
+
+
+int prepare(int rest, int th)
+{
+    if(rest != NIL){
+        push_env(th);
+        return(NIL);
+    } else {
+        return(get_back_choice(th));
+    }
+}
+
+
+int release(int rest, int th)
+{
+    if(rest == NIL){
+        unbind(backstack[bp[th]][0][th],th);
+        ac[th] = backstack[bp[th]][3][th];
+        backstack[bp[th]][1][th]++; //increment back choice
+    } else{
+        unbind(envstack[ep[th]][0][th],th);
+        ac[th] = envstack[ep[th]][2][th];
+    }
+    return(NIL);
+}
+
+
+int decchoice(int th)
+{
+    backstack[bp[th]][1][th]--;
+    return(NIL);
+}
+
+int respond(int rest, int th)
+{
+    if(rest == NIL){
+        return(YES);
+    } else{
+        return(prove_all(rest,sp[th],th));
+    }
+}
+
+
+int discard(int rest, int th)
+{
+    if(rest == NIL){
+        wp[th] = backstack[bp[th]][2][th];
+        bp[th]--;
+    } else {
+        sp[th] = envstack[ep[th]][0][th];
+        wp[th] = envstack[ep[th]][1][th];
+        ac[th] = envstack[ep[th]][2][th];
+        ep[th]--;
+    }
+    return(NIL);
+}
+
 
 
 
