@@ -666,7 +666,7 @@ for(i=0;i<ac[0]-cell_size;i++){
     print(variant[i][0]);
     printf("\n");
 }
-printf("stack\n");
+printf("localstack\n");
 for(i=0;i<sp[0];i++){
     printf("%d ", i);
     print(localstack[i][0]);

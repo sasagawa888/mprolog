@@ -27,6 +27,7 @@ int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int localstack[STACKSIZE][THREADSIZE];
 int backstack[STACKSIZE][4][THREADSIZE]; //[0]sp, [1]choice, [2]wp, [3]ac
+int envstack[STACKSIZE][THREADSIZE];
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
 int record_pt = 1;		// current index of record database
 int counter[31];		// counter str_set,str_dec ... 
@@ -98,7 +99,8 @@ int wp_min[THREADSIZE];		// start wp point in each thread
 int wp_max[THREADSIZE];		// end wp point in each thread
 int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
-int bp[THREADSIZE]; // backtrack pointer    
+int bp[THREADSIZE]; // backtrack pointer 
+int ep[THREADSIZE]; // environment pointer   
 
 // bignum pointer
 int big_pt0 = 0;		// pointer of temporaly bignum
