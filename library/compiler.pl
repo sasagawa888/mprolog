@@ -427,13 +427,6 @@ gen_var([L|Ls]) :-
     gen_var(Ls).
 
 
-% inline C language
-gen_body(cinline(X),_) :-
-    write('{'),
-    write(X),
-    write('}'),
-    nl.
-
 
 gen_nondet_body(X,A) :-
     gen_nondet_body_argument(X,A,0,0),
@@ -2047,6 +2040,14 @@ gen_det_body(X) :-
     write('Jset_wp(save1,th);'),nl.
 
 gen_a_det_body(!).
+
+% inline C language
+gen_a_det_body(cinline(X)) :-
+    write('{'),
+    write(X),
+    write('}'),
+    nl.
+
 gen_a_det_body(X is Y) :-
     write('if(Junify('),
     gen_a_argument(X),

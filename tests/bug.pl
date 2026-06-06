@@ -37,3 +37,4 @@ nodiag([N|L], B, D) :-
     nodiag(L, B, D1).
 
 bar(X) :- write(X).
+

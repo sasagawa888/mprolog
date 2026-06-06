@@ -20,7 +20,7 @@ cinline($ //ack
             m1 = Jmakevariant(th);
             n1 =  Jmakevariant(th);
               if(a1 == Jmakeint(0)){
-                  Jcall(Jmakesym("is"),Jwcons(a,Jplus(x,l1,l2,th),th),th);
+                  Jcall_det(Jmakesym("is"),Jwcons(a,Jplus(x,l1,l2,th),th),th);
                   r1 =Jcar(exec1(Jderef(l2,th),r0));
                   r2 =Jcar(exec1(Jderef(l1,th),Jwlistcons(x,r1,th)));
                   return(Jwlist1(r2,th));
@@ -30,7 +30,7 @@ cinline($ //ack
           }}
           int m = Jderef(varM,th);
           int n = Jderef(varN,th);
-          int res = Jcar(exec1(x,z));
+          int res = Jcar(exec1(m,n));
           Junify(varA,res,th);
-          return(Jexec_all(rest,Jget_sp(th),th)); $).
+          return(Jprove_all(rest,Jget_sp(th),th)); $).
 
