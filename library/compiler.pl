@@ -371,8 +371,8 @@ gen_nondet_clause1([C|Cs],A,M) :-
 % clause
 
 gen_a_nondet_clause((Head :- Body),A,M) :-
-	gen_head(Head),
-    gen_nondet_body(Body,A),
+	gen_head(Head),write('{'),nl,
+    gen_nondet_body(Body,A),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease_back(th);'),nl.
@@ -474,6 +474,10 @@ gen_nondet_body1(fail,A,M,N,[]) :-
     gen_nondet_body_fail([A,M]),nl.
 gen_nondet_body1(fail,A,M,N,B) :-
     gen_nondet_body_fail_retry(B),nl.
+gen_nondet_body1(end_of_body,A,M,N,B) :-
+    write('if(rest!=NIL)'),nl,
+    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl,
+    write('else return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B) :-
     N1 is N+1,
     gen_nondet_body1((X,end_of_body),A,M,N1,B).
