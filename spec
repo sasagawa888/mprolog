@@ -47,7 +47,7 @@ typeの異なるごとに頭部生成、本体部生成のコードをもつ。
 
 頭部生成　gen_nondet_head  nondetなどは頭部の構成は同じなので共通して
           gen_det_head    gen_headを呼び出す
-          gen_dyn_head
+          gen_dyn_head　　これらは同じ機能なので
           gen_dyn_head 
           gen_mut_head
           gen_tail_head  TCO用の頭部は特殊なので独自に作る
@@ -60,6 +60,8 @@ typeの異なるごとに頭部生成、本体部生成のコードをもつ。
            gen_mut_body    -> gen_a_mut_body
 
 命名規則　Cコードを生成するもの　gen_***
+          主たる述語名は正確にする。例 gen_definition 
+          その内部の述語名は省略可。長くなりすぎるとバグや誤読の原因となる。
           コンパイラ用の組み込み述語 n_***
 　　　　　共通する述語は適宜、機能を表す命名
 
