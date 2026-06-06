@@ -71,6 +71,7 @@ void errorcomp(int errnum, int name, int arg)
 void exception(int errnum, int ind, int arg, int th)
 {
 
+
     error_code = errnum;
     if (check_flag) {
 	longjmp(buf1, 1);
@@ -312,6 +313,7 @@ void exception(int errnum, int ind, int arg, int th)
 	throw(exsistence_tag, th);
 	ESCFRED;
 	printf("Existence error ");
+	output_stream = standard_output;
 	print(arg);
 	break;
 
@@ -468,7 +470,8 @@ void exception(int errnum, int ind, int arg, int th)
     stok.type = NUL;
     stok.ahead = NUL;
     memset(stok.buf, NUL, BUFSIZE);
-    FLUSH if (open_flag) {
+    FLUSH
+	if (open_flag) {
 	open_flag = 0;
 	printf("around here line=%d column=%d\n", line, column);
 	fflush(stdout);

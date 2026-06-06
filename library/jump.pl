@@ -436,7 +436,6 @@ gen_body(cinline(X),_) :-
 
 
 gen_nondet_body(X,A) :-
-    optimize(nondet),
     gen_nondet_body_argument(X,A,0,0),
     gen_nondet_body1(X,A,0,0,[]).
 
