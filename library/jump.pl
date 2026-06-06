@@ -15,10 +15,10 @@ compile_file(X) :-
     invoke_gcc(X).
 
 compile_file(X,c) :-
-    compile_file2(X).
+    compile_file1(X).
     
 compile_file(X,o) :-
-    compile_file3(X).
+    compile_file2(X).
 
 
 % genrate only c code 
