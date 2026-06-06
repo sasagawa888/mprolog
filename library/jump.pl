@@ -31,10 +31,6 @@ compile_file1(X) :-
 compile_file2(X) :-
     invoke_gcc_not_remove(X).
 
-%test
-invoke_gcc(_).
-invoke_gcc_not_remove(_).
- 
 pass1(X) :-
 	write(user_output,'phase pass1'),
     nl(user_output),
@@ -183,15 +179,9 @@ gen_det_exec1([L|Ls]) :-
 
 
 gen_det_exec2(X) :-
-    write('body = '),
-    gen_det_exec3(X),
-    write(';'),nl,
+    write('body = '),gen_dyn_elt(X),write(';'),nl,
     write('Jprove_all(body,Jget_sp(th),th);'),!.
 
-gen_det_exec3(X) :-
-    n_property(X,builtin),
-    X =.. [P|Args],
-    write('Jwlist3(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th)').
 
 
 spec_to_c(fx,'FX').
@@ -243,7 +233,6 @@ gen_a_pred(P) :-
 gen_a_pred(P) :- 
     type(P,_,mut),gen_mut_pred(P).
 
-gen_dyn_pred(_).
 
 /*
 parts for gen_predicate
@@ -1676,7 +1665,7 @@ Jadd_dynamic(dyn);
 
 gen_dyn_pred(P) :-
     n_arity_count(P,L),
-    write('void '),write(P),write('(void){'),
+    write('void '),write(P),write('(void){'),nl,
     gen_dyn_pred1(P,L),
     write('}'),!.
 
@@ -1695,7 +1684,7 @@ gen_dyn_arity(P,A) :-
 
 
 gen_dyn_clause([]).
-gen_dyn_cluase([X|Xs]) :-
+gen_dyn_clause([X|Xs]) :-
     gen_a_dyn_clause(X),
     gen_dyn_clause(Xs).
 
