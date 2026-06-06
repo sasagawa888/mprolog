@@ -243,9 +243,9 @@ int arg1,arg2 ... argN,body,save1,save2...;
 gen_var_declare(P) :-
     n_arity_count(P,L),
     max_list(L,E),
-    gen_var_declare1(1,E),
     n_generate_all_variable(P,V),
     write('int '),
+    gen_var_declare1(1,E),
     gen_all_var(V),
     write('n,body,save1,save2,save3,goal,cont,clause,res;'),nl,!.
 
@@ -1647,37 +1647,7 @@ gen_argument_list([X|Xs]) :-
     write(')').
 
 /*----------------------tail TCO--------------------------------------
-if(n == 3){
-arg1 = Jnth(arglist,1);
-arg2 = Jnth(arglist,2);
-arg3 = Jnth(arglist,3);
-loop3:
-ano_2 = Jmakevariant(th);
-ano_1 = Jmakevariant(th);
-save1 = Jget_wp(th);
-if(Junify_nil(arg1,th) == YES && Junify_var(arg2,ano_2,th) == YES && Junify_var(arg3,ano_1,th) == YES && 1)
-if(Jexec_all(rest,Jget_sp(th),th) == YES) return(YES);
-Jset_ac(save3,th);
-Junbind(save2,th);
-Jset_wp(save1,th);
-varD1 = Jmakevariant(th);
-varN = Jmakevariant(th);
-varL = Jmakevariant(th);
-varB = Jmakevariant(th);
-varD = Jmakevariant(th);
-save1 = Jget_wp(th);
-if(Junify_pair(arg1,Jwlistcons(varN,varL,th),th) == YES && Junify_var(arg2,varB,th) == YES && Junify_var(arg3,varD,th) == YES && 1)
-if(Jnot_numeqp(Jderef(varD,th),Jminus(Jderef(varN,th),Jderef(varB,th),th)) && Jinc_proof(th))if(Jnot_numeqp(Jderef(varD,th),Jminus(Jderef(varB,th),Jderef(varN,th),th)) && Jinc_proof(th))if(Junify(varD1,Jplus(Jderef(varD,th),Jmakeint(1),th),th)==YES && Jinc_proof(th)){
-arg1 = Jcopy_work(Jderef(varL,th),th);
-arg2 = Jcopy_work(Jderef(varB,th),th);
-arg3 = Jcopy_work(Jderef(varD1,th),th);
-Junbind(save2,th);
-Jset_ac(save3,th);
-goto loop3;
-}
-return(NO);}
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("nodiag"),arglist);
-return(NO);}
+
 */
 
 gen_tail_pred(P) :-
@@ -1687,16 +1657,19 @@ gen_tail_pred(P) :-
     n_atom_convert(P,P1),
 	write('static int c_'),write(P1),write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
+    write('save1 = Jget_wp(th);'),nl,
+    write('save2 = Jget_sp(th);'),nl,
+    write('save3 = Jget_ac(th);'),nl,
     write('Jinc_proof(th);'),nl,
     write('n = Jlength(arglist);'),nl,
-    write('if(rest != NIL){'),nl,
     n_arity_count(P,L),
     gen_tail_pred1(P,L),
     write('}'),nl.
 
+gen_tail_pred1(P,[]).
 gen_tail_pred1(P,[A|As]) :-
     write(user_output,$/$),write(user_output,A),
-    write(user_output,' '),write(user_output,tail),
+    write(user_output,' '),write(user_output,tail),nl(user_output),
 	gen_tail_arity(P,A),
     gen_tail_pred1(P,As).
 
@@ -1707,13 +1680,12 @@ gen_tail_arity(P,A) :-
 
 gen_tail_clause(P,A) :-
     gen_var_assign(1,A),
-    gen_jump_switch(P,A),
     write(loop),write(A),write(':'),nl,
 	n_clause_with_arity(P,A,C),
     gen_tail_clause1(C,A,0).
 
 gen_tail_clause1([],_,_).
-gen_tail_cluase1([C|Cs],A,M) :-
+gen_tail_clause1([C|Cs],A,M) :-
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
