@@ -134,6 +134,9 @@ void dynamic_link(int x)
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
     init_f2(RESPOND_IDX, (tpred) respond);
+    init_f2(PREPARE_IDX, (tpred) prepare);
+    init_f2(RELEASE_IDX, (tpred) release);
+    init_f2(DISCARD_IDX, (tpred) discard);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);

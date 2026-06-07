@@ -521,7 +521,6 @@ int release(int rest, int th)
     if(rest == NIL){
         unbind(backstack[bp[th]][0][th],th);
         ac[th] = backstack[bp[th]][3][th];
-        backstack[bp[th]][1][th]++; //increment back choice
     } else{
         unbind(envstack[ep[th]][0][th],th);
         ac[th] = envstack[ep[th]][2][th];

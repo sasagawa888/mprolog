@@ -405,6 +405,22 @@ static inline int Jrespond(int x, int th) {
     else                           \
         if(Jrespond(x, th) == YES) return(YES);
 
+static inline int Jprepare(int x, int th) {
+    return f2[PREPARE_IDX](x, th);
+}
+
+static inline int Jrelease(int x, int th) {
+    return f2[RELEASE_IDX](x, th);
+}
+
+static inline int Jdiscard(int x, int th) {
+    return f2[DISCARD_IDX](x, th);
+}
+
+
+
+
+
 
 
 static inline int Jlist3(int x, int y, int z) {

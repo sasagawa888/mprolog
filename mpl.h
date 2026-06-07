@@ -181,7 +181,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, RESPOND_IDX,
+       COPY_WORK_IDX, RESPOND_IDX, RELEASE_IDX, PREPARE_IDX, DISCARD_IDX,
        NUM_FN2S
 };
 
@@ -1136,6 +1136,7 @@ int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
 int discard_back(int th);
+int discard(int rest, int th);
 int each_car(int x);
 int each_cdr(int x);
 int eqgreaterp(int x1, int x2);
@@ -1354,6 +1355,7 @@ int propagate_all(int sets);
 int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
+int prepare(int rest, int th);
 int push_back(int th);
 int pop_back(int th);
 int quoted_option_p(int x);
@@ -1369,6 +1371,7 @@ int read_string_term(int flag);
 int receive_from_parent(void);
 int receive_from_child(int n);
 int release_back(int th);
+int release(int rest, int th);
 int remove_cut(int x);
 int remove_duplicate(int x);
 int replace(int x, int lis);
