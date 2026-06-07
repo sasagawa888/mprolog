@@ -312,7 +312,7 @@ gen_nondet_pred(P) :-
     gen_var_declare(P),
     write('Jinc_proof(th);'),nl,
     write('n = Jlength(arglist);'),nl,
-    write('clause = Jprepare(rest,th);'),nl,
+    write('Jprepare(rest,th);'),nl,
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
