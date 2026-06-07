@@ -394,6 +394,12 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
+static inline int Jrespond(int x, int th) {
+    if(x == NIL)
+        return(YES);
+    else 
+        return f2[CRESPOND_IDX](x, th);
+}
 
 
 static inline int Jlist3(int x, int y, int z) {
