@@ -538,11 +538,7 @@ int decchoice(int th)
 
 int respond(int rest, int th)
 {
-    if(rest == NIL){
-        return(YES);
-    } else{
-        return(prove_all(rest,sp[th],th));
-    }
+    return(prove_all(rest,sp[th],th));
 }
 
 

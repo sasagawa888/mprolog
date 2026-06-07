@@ -398,7 +398,7 @@ static inline int Jrespond(int x, int th) {
     if(x == NIL)
         return(YES);
     else 
-        return f2[CRESPOND_IDX](x, th);
+        return f2[RESPOND_IDX](x, th);
 }
 
 
