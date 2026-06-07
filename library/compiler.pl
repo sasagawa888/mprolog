@@ -511,8 +511,7 @@ gen_head(X) :-
     gen_head1(Y,1),
     write(')\n').
 
-gen_head1([],_) :-
-    write(1).
+gen_head1([],_).
 
 gen_head1([[]|Xs],N) :-
     write('Junify_nil('),
@@ -520,7 +519,8 @@ gen_head1([[]|Xs],N) :-
     write(N),
     write(','),
     write(th),
-    write(') == YES && '),
+    write(') == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1).
 
@@ -530,7 +530,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1).  
 
@@ -540,7 +541,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -551,7 +553,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -562,7 +565,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -573,7 +577,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -584,7 +589,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -595,7 +601,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -606,7 +613,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1). 
 
@@ -615,7 +623,8 @@ gen_head1([X|Xs],N) :-
     write(N),
     write(','),
     gen_a_argument(X),
-    write(',th) == YES && '),
+    write(',th) == YES'),
+    ifthenelse(Xs \= [],write(' && '),true),
     N1 is N + 1,
     gen_head1(Xs,N1).
 
