@@ -89,8 +89,9 @@ prepare: selfstackに現時点でのwp,sp,acを記憶する。これはインタ
         
 release: sp,acを解除するとともにchoice番号を+1する。
 
-respond: インタプリタである場合にはproveallにより継続を呼び出す。
+☓respond: インタプリタである場合にはproveallにより継続を呼び出す。
          コンパイラの場合にはyesを返す。それらの値をreturnすることにより述語を抜ける
+         これを呼び出すと却って遅くなる。if(rest == NIL){} でyesを返すだけのときの方が圧倒的に多い。
 
 discard: wpを復元することによりワーキングメモリを開放する。さらにコンパイラ動作している場合
 にはBPをpopする。
