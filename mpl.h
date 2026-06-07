@@ -218,6 +218,7 @@ enum {
 };
 
 
+
 extern cell *heap;
 extern int cell_size;
 extern int variant_max;
