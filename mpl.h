@@ -169,7 +169,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LENGTH_IDX,  GET_INT_IDX, INTEGER_IDX, ABS_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
-       INCCHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
+       INC_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
        NUM_FN1S
 };
@@ -1246,7 +1246,7 @@ int ishexch(char c);
 int isnumlis(int arg);
 int isqrt(int x);
 int isqrt1(int s, int s2, int x);
-int incchoice(int th);
+int inc_choice(int th);
 int keysort(int x);
 int keyinsert(int x, int y);
 int last_predicate(int x);
