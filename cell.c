@@ -511,6 +511,7 @@ int prepare(int rest, int th)
         push_env(th);
         return(NIL);
     } else {
+        proof[th]++;
         return(get_back_choice(th));
     }
 }
