@@ -393,9 +393,7 @@ gen_a_nondet_clause(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
 	gen_head(P),
-    write('if(rest!=NIL){'),nl,
-    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
-    write('else return(YES);'),nl,
+    write('RESPOND(rest,th)'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('if(rest != NIL){'),
@@ -406,9 +404,7 @@ gen_a_nondet_clause(P,A,M) :-
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
-    write('if(rest!=NIL){'),nl,
-    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);}'),nl,
-    write('else return(YES);'),nl,
+    write('RESPOND(rest,th)'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('if(rest != NIL){'),
@@ -484,9 +480,7 @@ gen_nondet_body1(fail,A,M,N,[],C,O) :-
 gen_nondet_body1(fail,A,M,N,B,C,O) :-
     gen_nondet_body_fail_retry(B),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,C,O) :-
-    write('if(rest!=NIL)'),nl,
-    write('return(Jprove_all(rest,Jget_sp(th),th));'),nl,
-    write('else return(YES);'),nl.
+    write('RESPOND(rest,th)'),nl.
 gen_nondet_body1(X,A,M,N,B,C,O) :-
     N1 is N+1,
     gen_nondet_body1((X,end_of_body),A,M,N1,B,C,O).

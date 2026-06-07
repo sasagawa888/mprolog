@@ -395,11 +395,16 @@ static inline int Jcopy_work(int x, int th) {
 }
 
 static inline int Jrespond(int x, int th) {
-    if(x == NIL)
-        return(YES);
-    else 
-        return f2[RESPOND_IDX](x, th);
+    return f2[RESPOND_IDX](x, th);
 }
+
+
+#define  RESPOND(x,th)            \
+    if(x == NIL)                   \
+        return(YES);               \
+    else                           \
+        if(Jrespond(x, th) == YES) return(YES);
+
 
 
 static inline int Jlist3(int x, int y, int z) {
