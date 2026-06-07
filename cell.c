@@ -471,7 +471,7 @@ int get_back_ac(int th)
 
 
 
-int inc_back_choice(int th)
+int incchoice(int th)
 {
     backstack[bp[th]][1][th]++;
     return(NIL);

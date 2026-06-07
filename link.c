@@ -88,7 +88,7 @@ void dynamic_link(int x)
     init_f1(GET_BACK_WP_IDX, (tpred) get_back_wp);
     init_f1(GET_BACK_AC_IDX, (tpred) get_back_ac);
     init_f1(GET_BACK_CHOICE_IDX, (tpred) get_back_choice);
-    init_f1(INC_BACK_CHOICE_IDX, (tpred) inc_back_choice);
+    init_f1(INCCHOICE_IDX, (tpred) incchoice);
     init_f1(PUSH_BACK_IDX, (tpred) push_back);
     init_f1(RELEASE_BACK_IDX, (tpred) release_back);
     init_f1(DISCARD_BACK_IDX, (tpred) discard_back);

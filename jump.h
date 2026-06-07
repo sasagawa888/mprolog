@@ -199,8 +199,8 @@ static inline int Jpop_back(int x) {
     return f1[POP_BACK_IDX](x);
 }
 
-static inline int Jinc_back_choice(int x) {
-    return f1[INC_BACK_CHOICE_IDX](x);
+static inline int Jincchoice(int x) {
+    return f1[INCCHOICE_IDX](x);
 }
 
 
