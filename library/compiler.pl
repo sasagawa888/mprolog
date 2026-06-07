@@ -312,12 +312,7 @@ gen_nondet_pred(P) :-
     gen_var_declare(P),
     write('Jinc_proof(th);'),nl,
     write('n = Jlength(arglist);'),nl,
-    write('if(rest != NIL){'),nl,
-    write('save1 = Jget_wp(th);'),nl,
-    write('save2 = Jget_sp(th);'),nl,
-    write('save3 = Jget_ac(th);'),nl,
-    write('}else{'),nl,
-    write('clause = Jget_back_choice(th);}'),nl,
+    write('clause = Jprepare(rest,th);'),nl,
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
@@ -341,7 +336,7 @@ gen_nondet_arity(P,A) :-
     write('){'),nl,
     gen_nondet_clause(P,A),
     write('allfail:'),nl,
-    write('Jdiscard_back(th);'),nl,
+    write('Jdiscard(rest,th);'),nl,
     write('return(NO);}'),nl,!.
 
 % select all clauses that arity is A
@@ -375,10 +370,7 @@ gen_a_nondet_clause((Head :- Body),A,M) :-
     gen_nondet_body(Body,A,non,non),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('if(rest != NIL){'),
-    write('Junbind(save2,th);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('} else Jrelease_back(th);'),nl.
+    write('Jrelease(rest,th);'),nl.
 
 % predicate with no arity
 gen_a_nondet_clause(P,_,M) :-
@@ -396,10 +388,7 @@ gen_a_nondet_clause(P,A,M) :-
     write('RESPOND(rest,th)'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('if(rest != NIL){'),
-    write('Junbind(save2,th);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('} else Jrelease_back(th);'),nl.
+    write('Jrelease(rest,th);'),nl.
 
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
@@ -407,10 +396,7 @@ gen_a_nondet_clause(P,_,M) :-
     write('RESPOND(rest,th)'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('if(rest != NIL){'),
-    write('Junbind(save2,th);'),nl,
-    write('Jset_ac(save3,th);'),nl,
-    write('} else Jrelease_back(th);'),nl.
+    write('Jrelease(rest,th);'),nl.
 
 
 
