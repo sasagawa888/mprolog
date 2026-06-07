@@ -1,15 +1,5 @@
 
 
-f(1,Y) :- Y is 2.
-f(2,Y) :- Y is 3.
-
-
-p(1).
-p(2).
-
-
-foo :- p(X),p(Y),write(X),write(Y),fail.
-foo.
 
 
 n(1). n(2). n(3). n(4). n(5).
@@ -42,3 +32,13 @@ nodiag([N|L], B, D) :-
 
 bar(X) :- write(X).
 
+f(1,Y) :- Y is 2.
+f(2,Y) :- Y is 3.
+
+
+p(1).
+p(2).
+
+
+foo :- p(X),p(Y),write(X),write(Y),fail.
+foo.
