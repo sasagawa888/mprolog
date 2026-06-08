@@ -1897,7 +1897,18 @@ int unify_pair(int x, int y, int th)
 int unify_int(int x, int y, int th)
 {
     int x1;
-    if (anonymousp(x)) {
+	if(IS_ALPHA(x)){
+		if(variant[x - cell_size][th] == UNBIND){
+			variant[x - cell_size][th] = y;
+			push_stack(x,th);
+			return(YES);
+		} else {
+			if(deref1(x,th) == y)
+				return(YES);
+			else 
+				return(NO);
+		}
+	} else if (anonymousp(x)) {
 	return (YES);
     } else if (variablep(x)) {
 	x1 = deref(x, th);
