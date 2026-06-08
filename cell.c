@@ -531,7 +531,7 @@ int nprepare(int rest, int arglist, int *arity, int *args, int th)
         proof[th]++;
         if(backstack[bp[th]][4][th] == UNBIND){
         backstack[bp[th]][4][th] = *arity = length(arglist);
-        if(*arity > 15) exception(RESOURCE_ERR, NIL, makestr("argments size"),th);
+        if(*arity > 15) exception(RESOURCE_ERR, NIL, makestr("arguments size"),th);
         i = 5;
         j = 0;
         while(arglist != NIL){
