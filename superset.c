@@ -1836,7 +1836,7 @@ int b_module(int arglist, int rest, int th)
 	    arg2 = cdr(arg2);
 	    export_pt++;
 	    if (export_pt >= 256)
-		exception(RESOURCE_ERR, NIL, ind, th);
+		exception(RESOURCE_ERR, ind, makestr("export size"), th);
 	}
 	return (prove_all(rest, sp[th], th));
     }

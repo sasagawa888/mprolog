@@ -521,13 +521,33 @@ int prepare(int rest, int th)
 }
 
 
-int nprepare(int rest, int arglist, int *n, int *args, int th)
+int nprepare(int rest, int arglist, int *arity, int *args, int th)
 {
     if(rest != NIL){
         push_env(th);
         return(NIL);
     } else {
+        int i,j;
         proof[th]++;
+        if(backstack[bp[th]][4][th] == UNBIND){
+        backstack[bp[th]][4][th] = *arity = length(arglist);
+        if(*arity > 15) exception(RESOURCE_ERR, NIL, makestr("argments size"),th);
+        i = 5;
+        j = 0;
+        while(arglist != NIL){
+            backstack[bp[th]][i][th] = args[j] = car(arglist);
+            i++;
+            j++;
+            arglist =cdr(arglist);
+        }
+        } else {
+            *arity = backstack[bp[th]][4][th];
+            j = 0;
+            for(i=5;i<*arity+5;i++){
+                args[j] = backstack[bp[th]][i][th];
+                j++;
+            }
+        }
         return(get_back_choice(th));
     }
 }
