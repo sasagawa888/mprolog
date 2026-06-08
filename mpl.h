@@ -213,7 +213,7 @@ enum { GET_FLT_IDX,
        NUM_FN7S,
 };
 
-enum { NPREPARE_IDX,
+enum { 
        NUM_FN8S,
 };
 
@@ -225,7 +225,7 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
-extern int backstack[STACKSIZE][20][THREADSIZE];
+extern int backstack[STACKSIZE][4][THREADSIZE];
 extern int envstack[STACKSIZE][3][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
@@ -1357,7 +1357,6 @@ int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int rest, int th);
-int nprepare(int rest, int arglist, int *n, int *args, int th);
 int push_back(int th);
 int pop_back(int th);
 int quoted_option_p(int x);

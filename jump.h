@@ -13,7 +13,7 @@ typedef int (*fn4)(char*);
 typedef int (*fn5)(int , int , int, int);
 typedef char* (*fn6)(int);
 typedef double (*fn7)(int);
-typedef int (*fn8)(int , int , int *, int *, int);
+typedef int (*fn8)(int , int , int , int , int);
 typedef void (*tpred)(char*, int(*pred)(int , int, int), int, int);
 typedef void (*tuser)(char*, int(*user)(int , int), int weight, int spec);
 
@@ -625,11 +625,6 @@ static inline char *Jgetname(int x)
 static inline double Jget_flt(int x)
 {
     return f7[GET_FLT_IDX] (x);
-}
-
-
-static inline int Jnprepare(int rest, int arglist, int *n, int *args, int th) {
-    return f8[NPREPARE_IDX](rest,arglist,*n,*args,th);
 }
 
 
