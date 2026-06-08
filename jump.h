@@ -238,6 +238,13 @@ static inline int Jdiscard_back(int th) {
 }
 
 
+static inline int Jarity_count(int x) {
+    return f1[ARITY_COUNT_IDX](th);
+}
+
+
+
+
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
 }

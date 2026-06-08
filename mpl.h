@@ -171,6 +171,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
+       ARITY_COUNT_IDX,
        NUM_FN1S
 };
 
@@ -755,6 +756,7 @@ int anonymous_conversion(int x);
 int append(int x, int y);
 int append1(int x, int y);
 int argumentsp(int addr);
+int arity_count(int arglist);
 int assq(int sym, int lis);
 int assq1(int sym, int lis);
 int atmarkp(int addr);
