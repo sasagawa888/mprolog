@@ -213,7 +213,7 @@ enum { GET_FLT_IDX,
        NUM_FN7S,
 };
 
-enum { 
+enum { NPREPARE_IDX,
        NUM_FN8S,
 };
 
@@ -1357,6 +1357,7 @@ int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int rest, int th);
+int nprepare(int rest, int arglist, int *n, int *args, int th);
 int push_back(int th);
 int pop_back(int th);
 int quoted_option_p(int x);

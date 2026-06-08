@@ -13,6 +13,7 @@ typedef int (*fn4)(char*);
 typedef int (*fn5)(int , int , int, int);
 typedef char* (*fn6)(int);
 typedef double (*fn7)(int);
+typedef int (*fn8)(int , int , int, int, int);
 typedef void (*tpred)(char*, int(*pred)(int , int, int), int, int);
 typedef void (*tuser)(char*, int(*user)(int , int), int weight, int spec);
 
@@ -24,6 +25,7 @@ static fn4 f4[NUM_FN4S];
 static fn5 f5[NUM_FN5S];
 static fn6 f6[NUM_FN6S];
 static fn7 f7[NUM_FN7S];
+static fn8 f8[NUM_FN7S];
 tpred deftpred;
 tuser deftinfix;
 tpred deftsys;

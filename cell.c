@@ -517,6 +517,18 @@ int prepare(int rest, int th)
 }
 
 
+int nprepare(int rest, int arglist, int *n, int *args, int th)
+{
+    if(rest != NIL){
+        push_env(th);
+        return(NIL);
+    } else {
+        proof[th]++;
+        return(get_back_choice(th));
+    }
+}
+
+
 int release(int rest, int th)
 {
     if(rest == NIL){
