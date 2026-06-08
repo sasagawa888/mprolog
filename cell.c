@@ -437,6 +437,10 @@ int push_back(int th)
     backstack[bp[th]][1][th] = 0; //clause choice 
     backstack[bp[th]][2][th] = wp[th]; //working  wp
     backstack[bp[th]][3][th] = ac[th]; //alpha counter ac
+    /* [4]arity, [5]~[19]args */
+    int i;
+    for(i=4;i<20;i++)
+        backstack[bp[th]][i][th] = UNBIND;
     return(NIL);
 }
 
