@@ -96,6 +96,7 @@ int wcons(int car, int cdr, int th)
     SET_CAR(addr, car);
     SET_CDR(addr, cdr);
     SET_AUX(addr, 0);
+	SET_ARITY(addr ,UNBIND);
     return (addr);
 }
 

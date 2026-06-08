@@ -557,6 +557,16 @@ int discard(int rest, int th)
 }
 
 
+int arity_count(int arglist)
+{
+    int n;
+    if(GET_ARITY(arglist) == UNBIND){
+        n = length(arglist);
+        SET_ARITY(arglist,n);
+        return(n);
+    }else 
+        return(GET_ARITY(arglist));
+}
 
 
 
@@ -621,6 +631,7 @@ int wlistcons(int x, int y, int th)
 
     res = wcons(x, y, th);
     SET_AUX(res, LIST);
+    SET_ARITY(res, UNBIND);
     return (res);
 }
 
