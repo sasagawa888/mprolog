@@ -383,7 +383,8 @@ gen_a_nondet_clause(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
 	gen_head(P),
-    write('RESPOND(rest,th)'),nl,
+    write('if(rest==NIL) return(YES);'),nl,
+    write('else if(Jrespond(rest,th)==YES) return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(rest,th);'),nl.
@@ -391,7 +392,8 @@ gen_a_nondet_clause(P,A,M) :-
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
-    write('RESPOND(rest,th)'),nl,
+    write('if(rest==NIL) return(YES);'),nl,
+    write('else if(Jrespond(rest,th)==YES) return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(rest,th);'),nl.
@@ -464,7 +466,8 @@ gen_nondet_body1(fail,A,M,N,[],C,O) :-
 gen_nondet_body1(fail,A,M,N,B,C,O) :-
     gen_nondet_body_fail_retry(B),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,C,O) :-
-    write('RESPOND(rest,th)'),nl.
+    write('if(rest==NIL) return(YES);'),nl,
+    write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B,C,O) :-
     N1 is N+1,
     gen_nondet_body1((X,end_of_body),A,M,N1,B,C,O).

@@ -401,12 +401,6 @@ static inline int Jrespond(int x, int th) {
 }
 
 
-#define  RESPOND(x,th)            \
-    if(x == NIL)                   \
-        return(YES);               \
-    else                           \
-        if(Jrespond(x, th) == YES) return(YES);
-
 static inline int Jprepare(int x, int th) {
     return f2[PREPARE_IDX](x, th);
 }
