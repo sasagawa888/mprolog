@@ -352,9 +352,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
-    write('if(rest == NIL){'),nl,
     write('Jinc_choice(th);'),nl,
-    write('}'),nl,
     gen_a_nondet_clause(X,A,M),
     M1 is M+1,
     gen_nondet_clause1(Cs,A,M1).
