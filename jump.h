@@ -205,6 +205,12 @@ static inline int Jinc_choice(int x) {
     return f1[INC_CHOICE_IDX](x);
 }
 
+static inline int Jmax_choice(int x) {
+    return f1[MAX_CHOICE_IDX](x);
+}
+
+
+
 
 static inline int Jget_back_sp(int x) {
     return f1[GET_BACK_SP_IDX](x);
