@@ -311,7 +311,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
-    write('Jprepare(rest,th);'),nl,
+    write('if(rest != NIL) Jprepare(rest,th);'),nl,
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
