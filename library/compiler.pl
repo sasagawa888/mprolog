@@ -266,17 +266,21 @@ gen_var_declare1(S,E) :-
     gen_var_declare1(S1,E).
 
 
-% arg1 = Jnth(arglist,1);
+% arg1 = Jcar(arglist);
 % arg2 = Jnth(arglist,2);
 % argn = Jnth(artglist,n);
 gen_var_assign(S,E) :-
 	S > E.
+gen_var_assign(1,E) :-
+    write('arg1 = Jcar(arglist);'),nl,
+    S1 is 2,
+    gen_var_assign(S1,E).
 gen_var_assign(S,E) :-
 	write(arg),
     write(S),
     write(' = Jnth(arglist,'),
     write(S),
-    write(');\n'),
+    write(');'),nl,
     S1 is S+1,
     gen_var_assign(S1,E).
 
