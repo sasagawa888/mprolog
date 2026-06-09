@@ -1,5 +1,12 @@
 
+p(1).
+p(2).
+p(3).
 
+test(X) :-
+    p(X),
+    !,
+    write(X).
 
 
 n(1). n(2). n(3). n(4). n(5).
@@ -35,10 +42,3 @@ bar(X) :- write(X).
 f(1,Y) :- Y is 2.
 f(2,Y) :- Y is 3.
 
-
-p(1).
-p(2).
-
-
-foo :- p(X),p(Y),write(X),write(Y),fail.
-foo.
