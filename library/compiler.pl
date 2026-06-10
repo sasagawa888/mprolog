@@ -467,7 +467,7 @@ gen_nondet_body1(fail,A,M,N,[],O) :-
     gen_nondet_body_fail([A,M]),nl.
 gen_nondet_body1(fail,A,M,N,B,O) :-
     gen_nondet_body_fail_retry(B),nl.
-gen_nondet_body1(end_of_body,A,M,N,[],O) :-
+gen_nondet_body1(!,A,M,N,[],O) :-
     write('if(rest==NIL){max_choice(th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.    
 gen_nondet_body1(end_of_body,A,M,N,B,O) :-
