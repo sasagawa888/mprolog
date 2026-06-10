@@ -454,6 +454,7 @@ int get_back_sp(int th)
 
 int get_back_choice(int th)
 {
+    proof[th]++;
     return(backstack[bp[th]][1][th]);
 }
 

@@ -119,11 +119,9 @@ exit_A_M_N:
 これによりネストした選言にも対応できる。
 
 カットの生成
-gen_nondet_body にカット出現の有無を表す項を追加する。
-nonはカット出現なし。
-cutは以前にカットが出現していることを表す。
-カットが出現している場合全部失敗のときには次節に飛ばず
-allfailに飛ぶ
+カットが出現した場合にはBacktrackを[]にする。
+Bの生成中はBacktrackは[]なのでバックトラックを生成しない。
+次節に進む
 
 A,!,B
 
@@ -131,11 +129,23 @@ if(A=yes){
     if(B=yes){
        return(respond());
     }
-    goto allfail;
+}
+next_clause:
+
+本体部の末尾にカットがある場合。
+A,B,!.
+if(A=yes){
+    if(B=yes){
+       max_choice(th);
+       return(respond());
+    }
 }
 
-allfail:
-discard();
+max_choiceを呼び出す。これは次節を999,999,999に設定する。
+これにより失敗により再度呼び出される場合にはallfailに飛ぶ。
+全部失敗となる。
+
+
 
 特殊構文
 ifthenelse・ifthen
