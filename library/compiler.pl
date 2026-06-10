@@ -367,7 +367,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 
 gen_a_nondet_clause((Head :- Body),A,M) :-
 	gen_head(Head),write('{'),nl,
-    gen_nondet_body(Body,A,non),write('}'),nl,
+    gen_nondet_body(Body,A,ret),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(rest,th);'),nl.
@@ -460,9 +460,11 @@ gen_nondet_body1((X,Y),A,M,N,B,O) :-
     write('}'),
     gen_nondet_body_retry(B),nl.
 gen_nondet_body1((X;Y),A,M,N,B,O) :-
-    gen_nondet_body1(X,A,M,N,B,O),
-    gen_nondet_body1(Y,A,M,N,B,O).
-
+    write('rse == NIL;'),nl,
+    gen_nondet_body1(X,A,M,N,B,res),
+    write('if(res != YES) goto '),gen_nondet_body_exit([A,M,N]),nl,
+    gen_nondet_body1(Y,A,M,N,B,res),
+    gen_nondet_body_exit_label([A,M,N]),nl.
 gen_nondet_body1(fail,A,M,N,[],O) :-
     gen_nondet_body_fail([A,M]),nl.
 gen_nondet_body1(fail,A,M,N,B,O) :-
@@ -470,9 +472,12 @@ gen_nondet_body1(fail,A,M,N,B,O) :-
 gen_nondet_body1(!,A,M,N,[],O) :-
     write('if(rest==NIL){max_choice(th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.    
-gen_nondet_body1(end_of_body,A,M,N,B,O) :-
+gen_nondet_body1(end_of_body,A,M,N,B,ret) :-
     write('if(rest==NIL) return(YES);'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
+gen_nondet_body1(end_of_body,A,M,N,B,res) :-
+    write('if(rest==NIL) res = YES);'),nl,
+    write('else if(Jrespond(rest,th)==YES) res = YES;'),nl.
 gen_nondet_body1(X,A,M,N,B,O) :-
     N1 is N+1,
     gen_nondet_body1((X,end_of_body),A,M,N1,B,O).
@@ -480,6 +485,13 @@ gen_nondet_body1(X,A,M,N,B,O) :-
 
 gen_nondet_body_label([A,M,N]) :-
     write('retry_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
+
+gen_nondet_body_exit_label([A,M,N]) :-
+    write('exit_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
+
+gen_nondet_body_exit([A,M,N]) :-
+    write('exit_'),write(A),write('_'),write(M),write('_'),write(N),write(';'),nl.
+
 
 gen_nondet_body_retry([]).
 gen_nondet_body_retry([A,M,N]) :-
