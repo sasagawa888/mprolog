@@ -1624,10 +1624,6 @@ invoke_error(Message,Code) :-
 det_body(Head,(_->_;_),_).       % a->b;c
 det_body(_,(_;_),_) :- !,fail.
 det_body(_,((_;_),_),_) :- !,fail.
-det_body(_,!,_).
-det_body(_,(_,!),_).
-det_body(Head,(_,(!,Y)),G) :-
-    det_body(Head,Y,G).
 det_body(Head,(V is _,Y),G) :-
     det_body(Head,Y,[V|G]).
 det_body(Head,(X,Y),G) :-
