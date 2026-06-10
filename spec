@@ -137,6 +137,7 @@ res = YES;
 if(res == YES) goto exit_A_M_N_L;
 disj_A_M_N_1:
 if(B=YES){
+Jinc_disj(th);   
 res = YES;
 }
 exit_A_M_N_L:
