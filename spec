@@ -134,12 +134,12 @@ if(A=YES){
 Jinc_disj(th);
 res = YES;
 }
-if(res == YES) goto exit_A_M_N;
+if(res == YES) goto exit_A_M_N_L;
 disj_A_M_N_1:
 if(B=YES){
 res = YES;
 }
-exit_A_M_N:
+exit_A_M_N_L:
 
 
 カットの生成
