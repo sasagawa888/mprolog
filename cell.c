@@ -437,6 +437,7 @@ int push_back(int th)
     backstack[bp[th]][1][th] = 0; //clause choice 
     backstack[bp[th]][2][th] = wp[th]; //working  wp
     backstack[bp[th]][3][th] = ac[th]; //alpha counter ac
+    backstack[bp[th]][4][th] = 0; //disjunction choice
     return(NIL);
 }
 
