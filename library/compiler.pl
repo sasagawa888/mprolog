@@ -459,12 +459,14 @@ gen_nondet_body1((X,Y),A,M,N,B,O) :-
     gen_nondet_body1(Y,A,M,N1,[A,M,N],O),
     write('}'),
     gen_nondet_body_retry(B),nl.
-gen_nondet_body1((X;Y),A,M,N,B,O) :-
+gen_nondet_body1(((X1;X2),Y),A,M,N,B,O) :-
     write('res == NIL;'),nl,
-    gen_nondet_body1(X,A,M,N,B,res),
+    gen_nondet_body1(X1,A,M,N,B,res),
     write('if(res == YES) goto '),gen_nondet_body_exit([A,M,N]),nl,
-    gen_nondet_body1(Y,A,M,N,B,res),
-    gen_nondet_body_exit_label([A,M,N]),nl.
+    gen_nondet_body1(X2,A,M,N,B,res),
+    gen_nondet_body_exit_label([A,M,N]),nl,
+    N1 is N+1,
+    gen_nondet_body1(Y,A,M,N,B,O).
 gen_nondet_body1(fail,A,M,N,[],O) :-
     gen_nondet_body_fail([A,M]),nl.
 gen_nondet_body1(fail,A,M,N,B,O) :-
