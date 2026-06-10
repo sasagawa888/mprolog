@@ -107,8 +107,8 @@ inc_choice：releaseでは節選択点は変更しない。これにより選択
 
 選言のコード生成
 gen_nondet_body にオプションの項をついてして生成コードを調整する。
-nonの場合には連言の最後はreturn(respond(rest,th))となる。
-exceptの場合には連言の場合には res=respond(rest,th)となる。
+retの場合には連言の最後はreturn(respond(rest,th))となる。
+resの場合には連言の場合には res=respond(rest,th)となる。
 
 A;B の場合
 if(Aの連言)
@@ -117,6 +117,30 @@ if(Bの連言)
 exit_A_M_N:
 ラベルはユニークにするためにarity、M番目の節、N番目での選言
 これによりネストした選言にも対応できる。
+
+選言においてfailにより再試行する場合
+nondetを呼び出すまえにJpush_back()を実行する。ここではdisjunction-choiceを０として設定する。
+選言の左が成功した場合にはそれを+1として１とする。再試行する場合にはこれを参照してgotoにより飛ぶ。
+disjunction-choiceのためにL引数を追加する。これは０から順番にユニークになる。ネストした場合にこれで
+ラベルをユニークにできる。
+
+disj = Jget_back_disj(th);
+switch(disj){
+    case 0: goto disj_A_M_N_0;
+    case 1: goto disj_A_M_N_1;
+}
+disj_A_M_N_0:
+if(A=YES){
+Jinc_disj(th);
+res = YES;
+}
+if(res == YES) goto exit_A_M_N;
+disj_A_M_N_1:
+if(B=YES){
+res = YES;
+}
+exit_A_M_N:
+
 
 カットの生成
 カットが出現した場合にはBacktrackを[]にする。

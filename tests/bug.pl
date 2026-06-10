@@ -4,6 +4,10 @@ disj :-
  ;
     write(b).
 
+disjfail :-
+    disj,
+    fail.
+
 p(1).
 p(2).
 p(3).
