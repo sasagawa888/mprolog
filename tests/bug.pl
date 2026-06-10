@@ -1,9 +1,14 @@
 
+disj :-
+    write(a)
+ ;
+    write(b).
+
 p(1).
 p(2).
 p(3).
 
-test(X) :-
+cut(X) :-
     p(X),
     !,
     write(X).

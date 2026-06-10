@@ -460,7 +460,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O) :-
     write('}'),
     gen_nondet_body_retry(B),nl.
 gen_nondet_body1((X;Y),A,M,N,B,O) :-
-    write('rse == NIL;'),nl,
+    write('res == NIL;'),nl,
     gen_nondet_body1(X,A,M,N,B,res),
     write('if(res != YES) goto '),gen_nondet_body_exit([A,M,N]),nl,
     gen_nondet_body1(Y,A,M,N,B,res),
@@ -476,7 +476,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,ret) :-
     write('if(rest==NIL) return(YES);'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,res) :-
-    write('if(rest==NIL) res = YES);'),nl,
+    write('if(rest==NIL) res = YES;'),nl,
     write('else if(Jrespond(rest,th)==YES) res = YES;'),nl.
 gen_nondet_body1(X,A,M,N,B,O) :-
     N1 is N+1,
