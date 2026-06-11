@@ -308,7 +308,7 @@ gen_jump_switch(P,A):-
     write('clause = Jget_back_choice(th);'),nl,
     write('switch(clause){'),nl,
     gen_jump_switch1(A,0,M),
-    write('}}').
+    write('}}'),nl.
 
 gen_jump_switch1(A,M,M) :-
     write('default: goto allfail;'),nl.
