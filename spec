@@ -120,26 +120,32 @@ exit_A_M_N:
 
 選言においてfailにより再試行する場合
 nondetを呼び出すまえにJpush_back()を実行する。ここではdisjunction-choiceを０として設定する。
-選言の左が成功した場合にはそれを+1として１とする。再試行する場合にはこれを参照してgotoにより飛ぶ。
+選言の左が成功した場合にはそれを1とする。再試行する場合にはこれを参照してgotoにより飛ぶ。
+選言の右が成功した場合にはそれを3にする。
 disjunction-choiceのためにL引数を追加する。これは０から順番にユニークになる。ネストした場合にこれで
 ラベルをユニークにできる。
+
+選言のネストは制限する。ややこしい割に実益がない。
 
 disj = Jget_back_disj(th);
 switch(disj){
     case 0: goto disj_A_M_N_0;
     case 1: goto disj_A_M_N_1;
+    default: goto clause_A_M+1;
 }
 disj_A_M_N_0:
+Jinc_disj(th); ->1
 if(A=YES){
-Jinc_disj(th);
 res = YES;
 }
 if(res == YES) goto exit_A_M_N_L;
 disj_A_M_N_1:
+Jrelease_disj(th);
+Jinc_disj(th); ->0 for next clause
 if(B=YES){
-Jinc_disj(th);   
 res = YES;
 }
+Jrelease_disj(th);
 exit_A_M_N_L:
 
 
