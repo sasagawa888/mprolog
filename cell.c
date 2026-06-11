@@ -577,6 +577,22 @@ int arity_count(int arglist)
         return(GET_ARITY(arglist));
 }
 
+int get_disj_choice(int th)
+{
+    return(backstack[bp[th]][4][th]);
+}
+
+int inc_disj_choice(int th)
+{
+    backstack[bp[th]][4][th]++;
+    return(NIL);
+}
+
+int reset_disj_choice(int th)
+{
+    backstack[bp[th]][4][th] = 0;
+    return(NIL);
+}
 
 
 //------for JUMP compiler-----

@@ -94,6 +94,9 @@ void dynamic_link(int x)
     init_f1(RELEASE_BACK_IDX, (tpred) release_back);
     init_f1(DISCARD_BACK_IDX, (tpred) discard_back);
     init_f1(ARITY_COUNT_IDX, (tpred) arity_count);
+    init_f1(GET_DISJ_CHOICE_IDX, (tpred) get_disj_choice);
+    init_f1(INC_DISJ_CHOICE_IDX, (tpred) inc_disj_choice);
+    init_f1(RESET_DISJ_CHOICE_IDX, (tpred) reset_disj_choice);
 
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);

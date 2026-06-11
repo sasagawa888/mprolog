@@ -249,6 +249,20 @@ static inline int Jarity_count(int x) {
 }
 
 
+static inline int Jget_disj_choice(int x) {
+    return f1[GET_DISJ_CHOICE_IDX](x);
+}
+
+
+static inline int Jinc_disj_choice(int x) {
+    return f1[INC_DISJ_CHOICE_IDX](x);
+}
+
+
+static inline int Jreset_disj_choice(int x) {
+    return f1[RESET_DISJ_CHOICE_IDX](x);
+}
+
 
 
 static inline int Jcons(int x, int y) {

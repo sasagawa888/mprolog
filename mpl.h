@@ -171,7 +171,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
-       ARITY_COUNT_IDX,
+       ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_CHOICE_IDX,
        NUM_FN1S
 };
 
@@ -1218,6 +1218,7 @@ int get_back_sp(int th);
 int get_back_wp(int th);
 int get_back_ac(int th);
 int get_back_choice(int th);
+int get_disj_choice(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
 int gettrace(int goal);
@@ -1251,6 +1252,7 @@ int isnumlis(int arg);
 int isqrt(int x);
 int isqrt1(int s, int s2, int x);
 int inc_choice(int th);
+int inc_disj_choice(int th);
 int keysort(int x);
 int keyinsert(int x, int y);
 int last_predicate(int x);
@@ -1383,6 +1385,7 @@ int reposition_option_p(int x);
 int resolve_all(int end, int bindings, int n);
 int resolve(int end, int bindings, int trail, int n);
 int respond(int rest, int th);
+int reset_disj_choice(int th);
 int revderef(int x, int th);
 int revderef1(int x, int th);
 int reverse(int x);
