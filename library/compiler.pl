@@ -20,6 +20,9 @@ compile_file(X,c) :-
 compile_file(X,o) :-
     compile_file2(X).
 
+compile_file(X,a) :-
+    compile_file3(X).
+
 
 % genrate only c code 
 compile_file1(X) :-
@@ -30,6 +33,12 @@ compile_file1(X) :-
 % generate object from c code
 compile_file2(X) :-
     invoke_gcc_not_remove(X).
+
+% only analize
+compile_file3(X) :-
+    pass1(X),
+    pass2(X).
+
 
 pass1(X) :-
 	write(user_output,'phase pass1'),
