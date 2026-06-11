@@ -579,7 +579,11 @@ int arity_count(int arglist)
 
 int get_disj_choice(int th)
 {
-    return(backstack[bp[th]][4][th]);
+    int choice;
+    choice = backstack[bp[th]][4][th];
+    if(choice == 0)
+        backstack[bp[th]][1][th]--;
+    return(choice);
 }
 
 int inc_disj_choice(int th)
@@ -588,9 +592,20 @@ int inc_disj_choice(int th)
     return(NIL);
 }
 
-int reset_disj_choice(int th)
+
+int set_disj(int th)
 {
     backstack[bp[th]][4][th] = 0;
+    backstack[bp[th]][5][th] = backstack[bp[th]][1][th]; 
+    backstack[bp[th]][1][th]--; 
+    return(NIL);
+}
+
+
+int reset_disj(int th)
+{
+    backstack[bp[th]][4][th] = 0;
+    backstack[bp[th]][1][th] = backstack[bp[th]][5][th]; 
     return(NIL);
 }
 

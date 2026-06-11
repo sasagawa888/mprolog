@@ -259,8 +259,8 @@ static inline int Jinc_disj_choice(int x) {
 }
 
 
-static inline int Jreset_disj_choice(int x) {
-    return f1[RESET_DISJ_CHOICE_IDX](x);
+static inline int Jreset_disj(int x) {
+    return f1[RESET_DISJ_IDX](x);
 }
 
 

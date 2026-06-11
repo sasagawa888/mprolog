@@ -171,7 +171,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
-       ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_CHOICE_IDX,
+       ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        NUM_FN1S
 };
 
@@ -226,7 +226,7 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
-extern int backstack[STACKSIZE][5][THREADSIZE];
+extern int backstack[STACKSIZE][6][THREADSIZE];
 extern int envstack[STACKSIZE][3][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
@@ -1385,7 +1385,7 @@ int reposition_option_p(int x);
 int resolve_all(int end, int bindings, int n);
 int resolve(int end, int bindings, int trail, int n);
 int respond(int rest, int th);
-int reset_disj_choice(int th);
+int reset_disj(int th);
 int revderef(int x, int th);
 int revderef1(int x, int th);
 int reverse(int x);
