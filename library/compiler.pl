@@ -375,7 +375,6 @@ gen_nondet_clause1([C|Cs],A,M) :-
 	n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),
-    write('Jinc_choice(th);'),nl,
     gen_a_nondet_clause(X,A,M),
     M1 is M+1,
     gen_nondet_clause1(Cs,A,M1).
@@ -385,6 +384,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 % clause
 
 gen_a_nondet_clause((Head :- Body),A,M) :-
+    ifthenelse(tail_body(Head,Body),true,(write('Jinc_choice(th);'),nl)),
 	gen_head(Head),write('{'),nl,
     gen_nondet_body(Body,A,ret,0),write('}'),nl,
     M1 is M+1,
@@ -395,6 +395,7 @@ gen_a_nondet_clause((Head :- Body),A,M) :-
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
+    write('Jinc_choice(th);'),nl,
     write('if(rest!=NIL){'),nl,
     write('return(Jprove_all(rest,Jget_sp(th),th));}'),nl,
     write('else return(YES);'),nl.
@@ -403,6 +404,7 @@ gen_a_nondet_clause(P,_,M) :-
 gen_a_nondet_clause(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
+    write('Jinc_choice(th);'),nl,
 	gen_head(P),
     write('if(rest==NIL) return(YES);'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl,
@@ -413,6 +415,7 @@ gen_a_nondet_clause(P,A,M) :-
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
+    write('Jinc_choice(th);'),nl,
     write('if(rest==NIL) return(YES);'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl,
     M1 is M+1,
@@ -493,7 +496,7 @@ gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L) :-
     ifthenelse(L=:=0,gen_nondet_body_exit_label([A,M,N]),true),
     N1 is N+1,
     gen_nondet_body1(Y,A,M,N,B,O,L),
-    ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj_choice(th);'),nl),true).
+    ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
 gen_nondet_body1(fail,A,M,N,[],O,L) :-
     gen_nondet_body_fail([A,M]),nl.
 gen_nondet_body1(fail,A,M,N,B,O,L) :-
