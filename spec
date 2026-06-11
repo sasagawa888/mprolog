@@ -140,12 +140,13 @@ res = YES;
 }
 if(res == YES) goto exit_A_M_N_L;
 disj_A_M_N_1:
-Jrelease_disj(th);
-Jinc_disj(th); ->0 for next clause
+Jrelease(th);
+Jinc_disj(th); ->2
 if(B=YES){
 res = YES;
 }
-Jrelease_disj(th);
+Jrelease(th);
+Jreset_disj(th); ->0
 exit_A_M_N_L:
 
 

@@ -302,6 +302,22 @@ gen_jump_switch1(A,M,N) :-
     gen_jump_switch1(A,M1,N).
 
 
+gen_disj_jump_switch(X,A,M,N):-
+    write('int disj = Jget_disj_choice(th);'),nl,
+    write('switch(disj){'),nl,
+    gen_disj_jump_switch1(X,A,M,N,0),
+    write('}').
+
+gen_disj_jump_switch1((X;Y),A,M,N,L) :-
+    write('case '),write(L),write(': '),
+    write('goto '),write('disj_'),write(A),write('_'),
+    write(M),write('_'),write(N),write('_'),write(L),write(';'),nl,
+    L1 is L+1,
+    gen_disj_jump_switch1(Y,A,M,N,L1).
+gen_disj_jump_switch1(X,A,M,N,L) :-
+    M1 is M+1,
+    write('default: goto clause'),write(A),write('_'),write(M1),write(';'),nl.
+
 
 /* --------------------nondet-----------------------------------
 */
