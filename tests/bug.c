@@ -14,14 +14,16 @@ default: goto allfail;
 Jinc_choice(th);
 {
 int arg_0_0_0 = Jwlistcons(Jwcons(1204,Jwcons(Jmakeconst("a"),NIL,th),th),Jwlistcons(Jwcons(1204,Jwcons(Jmakeconst("b"),NIL,th),th),NIL,th),th);
-res == NIL;
+res = NIL;
 int disj = Jget_disj_choice(th);
 switch(disj){
 case 0: goto disj_0_0_1_0;
 case 1: goto disj_0_0_1_1;
-default: goto clause_0_1;
+default: Jreset_disj_choice(th);
+goto clause_0_1;
 }
 disj_0_0_1_0:
+Jinc_disj_choice(th);
 if (Jcall_det(Jmakesys("write"),Jwlistcons(Jmakeconst("a"),NIL,th),th) == YES){
 if(rest==NIL) res = YES;
 else if(Jrespond(rest,th)==YES) res = YES;
@@ -29,17 +31,16 @@ else if(Jrespond(rest,th)==YES) res = YES;
 if(res == YES) goto exit_0_0_1;
 
 disj_0_0_1_1:
-Jrelease(rest,th);
 Jinc_disj_choice(th);
+Jrelease(rest,th);
 if (Jcall_det(Jmakesys("write"),Jwlistcons(Jmakeconst("b"),NIL,th),th) == YES){
 if(rest==NIL) res = YES;
 else if(Jrespond(rest,th)==YES) res = YES;
 }
 exit_0_0_1:
-
-Jreset_disj_choice(th);
 if(rest==NIL) return(YES);
 else if(Jrespond(rest,th)==YES) return(YES);
+if(rest!=NIL) Jreset_disj(th);
 }
 clause_0_1:
 Jrelease(rest,th);
