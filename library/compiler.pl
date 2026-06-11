@@ -306,7 +306,7 @@ gen_disj_jump_switch(X,A,M,N):-
     write('int disj = Jget_disj_choice(th);'),nl,
     write('switch(disj){'),nl,
     gen_disj_jump_switch1(X,A,M,N,0),
-    write('}').
+    write('}'),nl.
 
 gen_disj_jump_switch1((X;Y),A,M,N,L) :-
     write('case '),write(L),write(': '),
@@ -314,9 +314,11 @@ gen_disj_jump_switch1((X;Y),A,M,N,L) :-
     write(M),write('_'),write(N),write('_'),write(L),write(';'),nl,
     L1 is L+1,
     gen_disj_jump_switch1(Y,A,M,N,L1).
-gen_disj_jump_switch1(X,A,M,N,L) :-
+gen_disj_jump_switch1(end_of_disjunction,A,M,N,L) :-
     M1 is M+1,
-    write('default: goto clause'),write(A),write('_'),write(M1),write(';'),nl.
+    write('default: goto clause_'),write(A),write('_'),write(M1),write(';'),nl.
+gen_disj_jump_switch1(X,A,M,N,L) :-
+    gen_disj_jump_switch1((X;end_of_disjunction),A,M,N,L).
 
 
 /* --------------------nondet-----------------------------------
@@ -477,10 +479,17 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L) :-
     gen_nondet_body_retry(B),nl.
 gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L) :-
     write('res == NIL;'),nl,
+    ifthenelse(L=:=0,gen_disj_jump_switch((X1;X2),A,M,N),true),
+    gen_nondet_body_disj_label([A,M,N,L]),
     gen_nondet_body1(X1,A,M,N,B,res,L),
     write('if(res == YES) goto '),gen_nondet_body_exit([A,M,N]),nl,
-    gen_nondet_body1(X2,A,M,N,B,res,L),
-    gen_nondet_body_exit_label([A,M,N]),nl,
+    L1 is L+1,
+    gen_nondet_body_disj_label([A,M,N,L1]),
+    write('Jrelease(rest,th);'),nl,
+    write('Jinc_disj_choice(th);'),nl,
+    gen_nondet_body1(X2,A,M,N,B,res,L1),
+    ifthenelse(L=:=0,(gen_nondet_body_exit_label([A,M,N]),nl),true),
+    ifthenelse(L=:=0,(write('Jreset_disj_choice(th);'),nl),true),
     N1 is N+1,
     gen_nondet_body1(Y,A,M,N,B,O,L).
 gen_nondet_body1(fail,A,M,N,[],O,L) :-
@@ -503,6 +512,9 @@ gen_nondet_body1(X,A,M,N,B,O,L) :-
 
 gen_nondet_body_label([A,M,N]) :-
     write('retry_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
+
+gen_nondet_body_disj_label([A,M,N,L]) :-
+    write('disj_'),write(A),write('_'),write(M),write('_'),write(N),write('_'),write(L),write(':'),nl.
 
 gen_nondet_body_exit_label([A,M,N]) :-
     write('exit_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
