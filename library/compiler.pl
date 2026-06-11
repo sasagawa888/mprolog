@@ -50,7 +50,14 @@ pass1(X) :-
 pass2(_) :-
     write(user_output,'phase pass2'),
     nl(user_output),
-    analize.
+    analize,
+    retype_halt.
+
+retype_halt :-
+    retract(type(P,A,halt)),
+    asserta(type(P,A,nondet)),
+    fail.
+retype_halt.
 
 
 pass3(X) :-
@@ -224,9 +231,7 @@ gen_predicate.
 
 % generate predicate P
 gen_a_pred(P) :- 
-    type(P,_,nondet),gen_nondet_pred(P).
-gen_a_pred(P) :- 
-    type(P,_,halt),gen_nondet_pred(P).    
+    type(P,_,nondet),gen_nondet_pred(P).  
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
 gen_a_pred(P) :- 
@@ -523,8 +528,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,res,L) :-
     write('if(rest==NIL) res = YES;'),nl,
     write('else if(Jrespond(rest,th)==YES) res = YES;'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L) :-
-    N1 is N+1,
-    gen_nondet_body1((X,end_of_body),A,M,N1,B,O,L).
+    gen_nondet_body1((X,end_of_body),A,M,N,B,O,L).
 
 
 gen_nondet_body_label([A,M,N]) :-
