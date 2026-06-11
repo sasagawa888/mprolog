@@ -41,6 +41,7 @@ compile_file3(X) :-
 
 
 pass1(X) :-
+    assertz((type(dummy,dummy,dummy))),
 	write(user_output,'phase pass1'),
     nl(user_output),
     reconsult(X,compiler),
@@ -224,6 +225,8 @@ gen_predicate.
 % generate predicate P
 gen_a_pred(P) :- 
     type(P,_,nondet),gen_nondet_pred(P).
+gen_a_pred(P) :- 
+    type(P,_,halt),gen_nondet_pred(P).    
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
 gen_a_pred(P) :- 
