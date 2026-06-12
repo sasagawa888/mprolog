@@ -2080,13 +2080,11 @@ int unify_var(int x, int y, int th)
 	}} else if (anonymousp(x) || anonymousp(y)) {
 	return (YES);
 	} else {
-	y1 = deref1(y, th);
-	if (y1 == y) {
-	    bindsym(y, x, th);
-	    return (YES);
-	} else
-	    return (unify(x, y1, th));
+	variant[y - cell_size][th] = x;
+	push_stack(x, th);
+	return (YES);
     } 
+	
 	return (NO);
 }
 
