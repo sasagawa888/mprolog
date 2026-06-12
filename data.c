@@ -2053,7 +2053,16 @@ int unify_var(int x, int y, int th)
 {
     int x1, y1;
 
-    if (anonymousp(x)) {
+	if (IS_ALPHA(x)) {
+	if (variant[x - cell_size][th] == UNBIND) {
+	    variant[x - cell_size][th] = y;
+	    push_stack(x, th);
+	    return (YES);
+	} else {
+	    variant[y - cell_size][th] = variant[x - cell_size][th];
+		push_stack(y, th);
+		return (YES);
+	}} else if (anonymousp(x)) {
 	return (YES);
     } else if (!variablep(x)) {
 	y1 = deref1(y, th);
