@@ -1057,6 +1057,8 @@ int variantp(int addr)
 	return (0);
 }
 
+
+
 int narrow_variable_p(int addr)
 {
     char *var;
@@ -1911,13 +1913,13 @@ int unify_int(int x, int y, int th)
 		}
 	} else if (anonymousp(x)) {
 	return (YES);
-    } else if (variablep(x)) {
+    } else if (atom_variable_p(x)) {
 	x1 = deref(x, th);
-	if (variablep(x1)) {
-	    bindsym(x, y, th);
+	if (atom_variable_p(x1)) {
+		SET_CAR(x, y);
 	    return (YES);
 	} else
-	    return (unify_int(x1, y, th));
+	    return (eqp(x1, y));
     } else if (!integerp(x))
 	return (NO);
     else if (eqp(x, y))
