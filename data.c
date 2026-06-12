@@ -2064,14 +2064,7 @@ int unify_var(int x, int y, int th)
 		return (YES);
 	}} else if (anonymousp(x)) {
 	return (YES);
-    } else if (!variablep(x)) {
-	y1 = deref1(y, th);
-	if (y1 == y) {
-	    bindsym(y, x, th);
-	    return (YES);
-	} else
-	    return (unify(x, y1, th));
-    } else if (variablep(x)) {
+    } else if (atom_variable_p(x)) {
 	x1 = deref1(x, th);
 	y1 = deref1(y, th);
 	if (variablep(x1) && variablep(y1)) {
@@ -2084,15 +2077,16 @@ int unify_var(int x, int y, int th)
 		bindsym(x1, makevariant(th), th);	// ex ?- X = X
 		return (YES);
 	    }
-	} else if (!variablep(x1)) {
-	    bindsym(y1, x1, th);
-	    return (YES);
-	} else {
-	    return (unify(x1, y1, th));
-	}
-    } else if (anonymousp(x) || anonymousp(y)) {
+	}} else if (anonymousp(x) || anonymousp(y)) {
 	return (YES);
-    } else
+	} else {
+	y1 = deref1(y, th);
+	if (y1 == y) {
+	    bindsym(y, x, th);
+	    return (YES);
+	} else
+	    return (unify(x, y1, th));
+    } 
 	return (NO);
 }
 
