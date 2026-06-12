@@ -187,7 +187,7 @@ void init_builtin(void)
     defbuiltin("between", b_between, 3);
     defbuiltin("select", b_select, 3);
     defbuiltin("succ", b_succ, 2);
-    defbuiltin("maplist", b_maplist, list2(2,3));
+    defbuiltin("maplist", b_maplist, list2(2, 3));
     defbuiltin("compound", b_compound, 1);
     defbuiltin("ground", b_ground, 1);
     defbuiltin("once", b_once, 1);
@@ -232,7 +232,7 @@ void init_builtin(void)
     defbuiltin("string_atom", b_string_atom, 2);
     defbuiltin("initialization", b_initialization, 1);
     defbuiltin("subsumes_term", b_subsumes_term, 2);
-	defbuiltin("version", b_version,1);
+    defbuiltin("version", b_version, 1);
     definfix("\\+", b_not, 850, FY);
 
     //-----Distributed parallel
@@ -322,7 +322,8 @@ void init_builtin(void)
     defbuiltin("n_generate_all_variable", b_n_generate_all_variable, -1);
     defbuiltin("n_generate_variable", b_n_generate_variable, -1);
     defbuiltin("n_clause_with_arity", b_n_clause_with_arity, -1);
-	defbuiltin("n_clause_count_with_arity", b_n_clause_count_with_arity, -1);
+    defbuiltin("n_clause_count_with_arity", b_n_clause_count_with_arity,
+	       -1);
     defbuiltin("n_property", b_n_property, -1);
     defbuiltin("n_imported_predicate", b_n_imported_predicate, -1);
     defbuiltin("n_imported_userop", b_n_imported_userop, -1);
@@ -682,7 +683,7 @@ int b_write(int arglist, int rest, int th)
     ind = makeind("write", n, th);
     if (n == 1) {
 	arg1 = output_stream;
-	arg2 = deref(car(arglist),th);
+	arg2 = deref(car(arglist), th);
 	goto write;
 
     } else if (n == 2) {
@@ -2558,7 +2559,7 @@ int b_call(int arglist, int rest, int th)
 {
     int n, ind, arg1;
 
-	deref(arglist,th);
+    deref(arglist, th);
     n = length(arglist);
     ind = makeind("call", n, th);
     if (n == 1) {
@@ -2586,7 +2587,7 @@ int b_not(int arglist, int rest, int th)
 {
     int n, ind, arg1, res;
 
-	deref(arglist,th);
+    deref(arglist, th);
     n = length(arglist);
     ind = makeind("not", n, th);
     if (n == 1) {
@@ -3752,7 +3753,8 @@ int case_list_p(int x)
 {
 
     int elt;
-    if (predicatep(x) || builtinp(x) || compiledp(x) || conjunctionp(x) || disjunctionp(x))
+    if (predicatep(x) || builtinp(x) || compiledp(x) || conjunctionp(x)
+	|| disjunctionp(x))
 	return (1);
     else if (nullp(x))
 	return (0);
@@ -3778,9 +3780,8 @@ int b_case(int arglist, int rest, int th)
 	if (!(listp(arg1) && case_list_p(arg1)))
 	    exception(ILLEGAL_ARGS, ind, arg1, th);
 
-	while (!
-	       (predicatep(arg1) || builtinp(arg1) || compiledp(arg1)
-		|| conjunctionp(arg1) || disjunctionp(arg1))) {
+	while (!(predicatep(arg1) || builtinp(arg1) || compiledp(arg1)
+		 || conjunctionp(arg1) || disjunctionp(arg1))) {
 	    ifthen = car(arg1);
 	    if (prove_all(cadr(ifthen), sp[th], th) == YES)
 		return (prove_all
@@ -3809,7 +3810,7 @@ double getCPUTime(void)
 {
     struct timespec ts;
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-    return (double)ts.tv_sec + (double)ts.tv_nsec / 1.0e9;
+    return (double) ts.tv_sec + (double) ts.tv_nsec / 1.0e9;
 }
 
 int b_measure(int arglist, int rest, int th)
@@ -3823,7 +3824,7 @@ int b_measure(int arglist, int rest, int th)
 	arg1 = car(arglist);
 	proof[th] = 0;
 	start_time = getCPUTime();	//time_flag on and it store start time
-	prove_all(addtail_body(makesys("true"),arg1,th), sp[th], th);
+	prove_all(addtail_body(makesys("true"), arg1, th), sp[th], th);
 	end_time = getCPUTime();
 	time = end_time - start_time;
 	lips = (double) proof[th] / time;

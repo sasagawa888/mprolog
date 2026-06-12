@@ -10,8 +10,8 @@ void init_handler()
 {
 
     instantiation_tag = list3(makepred("error"),
-			     makepred("instantiation_error"),
-			     makevar("%Context"));
+			      makepred("instantiation_error"),
+			      makevar("%Context"));
     uninstantiation_tag =
 	list2(makepred("uninstantiation_error"), makevar("%Term"));
     type_tag =
@@ -470,8 +470,7 @@ void exception(int errnum, int ind, int arg, int th)
     stok.type = NUL;
     stok.ahead = NUL;
     memset(stok.buf, NUL, BUFSIZE);
-    FLUSH
-	if (open_flag) {
+    FLUSH if (open_flag) {
 	open_flag = 0;
 	printf("around here line=%d column=%d\n", line, column);
 	fflush(stdout);

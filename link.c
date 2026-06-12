@@ -4,8 +4,8 @@
 #include "mpl.h"
 
 
-typedef void (*tpred)(char *, int (*pred)(int, int));
-typedef void (*tuser)(char *, int (*user)(int, int), int weight, int spec);
+typedef void (*tpred)(char *, int(*pred)(int, int));
+typedef void (*tuser)(char *, int(*user)(int, int), int weight, int spec);
 
 
 char *get_name(int x)
@@ -176,7 +176,7 @@ void dynamic_link(int x)
     init_f3(DIV_IDX, (tpred) f_div);
     init_f3(CALL_NONDET_IDX, (tpred) call_nondet);
     init_f3(CALL_DET_IDX, (tpred) call_det);
-    
+
 
     //argument-1 string type
     init_f4(MAKECONST_IDX, (tpred) makeconst);
@@ -196,14 +196,14 @@ void dynamic_link(int x)
     /* argument 4 */
     init_f5(CALLSUBR_IDX, (tpred) callsubr);
     init_f5(WLIST3_IDX, (tpred) wlist3);
-    
+
     /* argument-1 return char* */
     init_f6(GETNAME_IDX, (tpred) get_name);
 
     /* argument-1 return double */
     init_f7(GET_FLT_IDX, (tpred) get_flt);
 
-    /* argument 5*/
+    /* argument 5 */
     //non
 
     init_deftpred((tpred) defcompiled);

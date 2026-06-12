@@ -701,10 +701,10 @@ int b_n_error(int arglist, int rest, int th)
 
 int get_arity(int x)
 {
-	if(atomp(x)){
-		return(GET_ARITY(x));
-	}
-		return(GET_ARITY(car(x)));
+    if (atomp(x)) {
+	return (GET_ARITY(x));
+    }
+    return (GET_ARITY(car(x)));
 }
 
 int b_n_property(int arglist, int rest, int th)
@@ -732,13 +732,17 @@ int b_n_property(int arglist, int rest, int th)
 	    else
 		return (NO);
 	} else if (compiledp(arg1)) {
-	    if (get_arity(arg1) == 1 && unify(arg2, makeconst("compiled_nondet"), th) == YES)
+	    if (get_arity(arg1) == 1
+		&& unify(arg2, makeconst("compiled_nondet"), th) == YES)
 		return (prove_all(rest, sp[th], th));
-		else if (get_arity(arg1) == 2 && unify(arg2, makeconst("compiled_det"), th) == YES)
+	    else if (get_arity(arg1) == 2
+		     && unify(arg2, makeconst("compiled_det"), th) == YES)
 		return (prove_all(rest, sp[th], th));
-		else if (get_arity(arg1) == 3 && unify(arg2, makeconst("compiled_tail"), th) == YES)
+	    else if (get_arity(arg1) == 3
+		     && unify(arg2, makeconst("compiled_tail"), th) == YES)
 		return (prove_all(rest, sp[th], th));
-		else if (get_arity(arg1) == 3 && unify(arg2, makeconst("compiled_halt"), th) == YES)
+	    else if (get_arity(arg1) == 3
+		     && unify(arg2, makeconst("compiled_halt"), th) == YES)
 		return (prove_all(rest, sp[th], th));
 	    else
 		return (NO);
@@ -1083,11 +1087,10 @@ int b_n_exec_no_operation(int arglist, int rest, int th)
 int call_nondet(int pred, int arglist, int th)
 {
     proof[th]++;
-    
-    if (predicatep(pred)){
-		return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
-	}
-    else
+
+    if (predicatep(pred)) {
+	return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
+    } else
 	return ((GET_SUBR(pred)) (arglist, NIL, th));
 
     return (NO);
@@ -1097,12 +1100,11 @@ int call_nondet(int pred, int arglist, int th)
 int call_det(int pred, int arglist, int th)
 {
     proof[th]++;
-    
-	arglist = deref(arglist,th);
-    if (predicatep(pred)){
-		return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
-	}
-    else
+
+    arglist = deref(arglist, th);
+    if (predicatep(pred)) {
+	return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
+    } else
 	return ((GET_SUBR(pred)) (arglist, NIL, th));
 
     return (NO);

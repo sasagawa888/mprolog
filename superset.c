@@ -142,12 +142,12 @@ int b_succ(int arglist, int rest, int th)
 int b_maplist(int arglist, int rest, int th)
 {
     int arg1, arg2, arg3, n, ind, save1, pred, varR, result;
-    
+
     n = length(arglist);
     ind = makeind("maplist", n, th);
-	pred = NIL;
-	result = NIL;
-	save1 = sp[th];
+    pred = NIL;
+    result = NIL;
+    save1 = sp[th];
     if (n == 2) {
 	arg1 = car(arglist);
 	arg2 = cadr(arglist);
@@ -157,16 +157,16 @@ int b_maplist(int arglist, int rest, int th)
 	    exception(NOT_LIST, ind, arg2, th);
 	if (listp(arg2) && length(arg2) == -1)
 	    exception(NOT_LIST, ind, arg2, th);
-	
-	while(!nullp(arg2)){
-		pred = wlist2(arg1,car(arg2),th);
-		prove_all(pred,sp[th],th);
-		unbind(save1,th);
-		arg2 = cdr(arg2);
-	}
-	return(prove_all(rest,sp[th],th));
 
-	} else if (n == 3){
+	while (!nullp(arg2)) {
+	    pred = wlist2(arg1, car(arg2), th);
+	    prove_all(pred, sp[th], th);
+	    unbind(save1, th);
+	    arg2 = cdr(arg2);
+	}
+	return (prove_all(rest, sp[th], th));
+
+    } else if (n == 3) {
 	arg1 = car(arglist);
 	arg2 = cadr(arglist);
 	arg3 = caddr(arglist);
@@ -177,23 +177,23 @@ int b_maplist(int arglist, int rest, int th)
 	if (listp(arg2) && length(arg2) == -1)
 	    exception(NOT_LIST, ind, arg2, th);
 	if (!variablep(arg3) && !listp(arg3))
-		exception(NOT_VAR, ind, arg3, th);
+	    exception(NOT_VAR, ind, arg3, th);
 
 	varR = makevariant(th);
-	while(!nullp(arg2)){
-		pred = wlist3(arg1,car(arg2),varR,th);
-		if(prove_all(pred,sp[th],th) == NO)
-			return(NO);
-		result = wlistcons(deref(varR,th),result,th);
-		unbind(save1,th);
-		arg2 = cdr(arg2);
+	while (!nullp(arg2)) {
+	    pred = wlist3(arg1, car(arg2), varR, th);
+	    if (prove_all(pred, sp[th], th) == NO)
+		return (NO);
+	    result = wlistcons(deref(varR, th), result, th);
+	    unbind(save1, th);
+	    arg2 = cdr(arg2);
 	}
 	result = listreverse(result);
-	if(unify(arg3,result,th) == YES)
-		return(prove_all(rest,sp[th],th));
-	
-	return(NO);
-	}
+	if (unify(arg3, result, th) == YES)
+	    return (prove_all(rest, sp[th], th));
+
+	return (NO);
+    }
 
     exception(ARITY_ERR, ind, arglist, th);
     return (NO);
@@ -270,7 +270,7 @@ int b_member(int arglist, int rest, int th)
 
     save2 = sp[th];
     res = NIL;
-	
+
     n = length(arglist);
     ind = makeind("member", n, th);
     if (n == 2) {
@@ -280,8 +280,8 @@ int b_member(int arglist, int rest, int th)
 
 	if (nullp(arg2))
 	    return (NO);
-	
-	
+
+
 	save1 = wp[th];
 	x = makevariant(th);
 	l = makevariant(th);
@@ -323,26 +323,28 @@ int b_member(int arglist, int rest, int th)
 */
 
 int wappend1(int x, int y, int th);
-int wappend1(int x, int y, int th){
-	if(nullp(x))
-		return(y);
-	else{
-		proof[th]++;
-		return(wlistcons(car(x),wappend1(cdr(x),y,th),th));
-	} 
+int wappend1(int x, int y, int th)
+{
+    if (nullp(x))
+	return (y);
+    else {
+	proof[th]++;
+	return (wlistcons(car(x), wappend1(cdr(x), y, th), th));
+    }
 
 }
 
 int properp(int x);
-int properp(int x){
-	if(nullp(x))
-		return(1);
-	else if(atomicp(x))
-		return(0);
-	else if(wide_variable_p(x))
-		return(0);
-	else 
-		return(properp(cdr(x)));
+int properp(int x)
+{
+    if (nullp(x))
+	return (1);
+    else if (atomicp(x))
+	return (0);
+    else if (wide_variable_p(x))
+	return (0);
+    else
+	return (properp(cdr(x)));
 
 }
 
@@ -354,7 +356,7 @@ int b_append(int arglist, int rest, int th)
 
     save2 = sp[th];
     body = NIL;
-	
+
     n = length(arglist);
     ind = makeind("append", n, th);
     if (n == 3) {
@@ -369,15 +371,16 @@ int b_append(int arglist, int rest, int th)
 	if (!listp(arg3) && !nullp(arg3) && !wide_variable_p(arg3))
 	    exception(NOT_LIST, ind, arg3, th);
 
-	
-	if (properp(arg1) && !wide_variable_p(arg2) && wide_variable_p(arg3)){
-		unify(arg3,wappend1(arg1,arg2,th),th);
-		if (prove_all(rest, sp[th], th) == YES)
+
+	if (properp(arg1) && !wide_variable_p(arg2)
+	    && wide_variable_p(arg3)) {
+	    unify(arg3, wappend1(arg1, arg2, th), th);
+	    if (prove_all(rest, sp[th], th) == YES)
 		return (YES);
-		else 
+	    else
 		return (NO);
 	}
-	
+
 
 	save1 = wp[th];
 	if (unify_nil(arg1, th) == YES && unify(arg2, arg3, th) == YES) {
@@ -2399,10 +2402,10 @@ int b_version(int arglist, int rest, int th)
     ind = makeind("version", n, th);
     if (n == 1) {
 	arg1 = car(arglist);
-	if(unify(arg1,makeflt(VERSION),th) == YES)
-		return (prove_all(rest, sp[th], th));
-	else 
-		return(NO);
+	if (unify(arg1, makeflt(VERSION), th) == YES)
+	    return (prove_all(rest, sp[th], th));
+	else
+	    return (NO);
     }
     exception(ARITY_ERR, ind, arglist, th);
     return (NO);

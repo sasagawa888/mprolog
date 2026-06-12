@@ -96,7 +96,7 @@ int wcons(int car, int cdr, int th)
     SET_CAR(addr, car);
     SET_CDR(addr, cdr);
     SET_AUX(addr, 0);
-	SET_ARITY(addr ,UNBIND);
+    SET_ARITY(addr, UNBIND);
     return (addr);
 }
 
@@ -1900,23 +1900,23 @@ int unify_pair(int x, int y, int th)
 int unify_int(int x, int y, int th)
 {
     int x1;
-	if(IS_ALPHA(x)){
-		if(variant[x - cell_size][th] == UNBIND){
-			variant[x - cell_size][th] = y;
-			push_stack(x,th);
-			return(YES);
-		} else {
-			if(deref1(x,th) == y)
-				return(YES);
-			else 
-				return(NO);
-		}
-	} else if (anonymousp(x)) {
+    if (IS_ALPHA(x)) {
+	if (variant[x - cell_size][th] == UNBIND) {
+	    variant[x - cell_size][th] = y;
+	    push_stack(x, th);
+	    return (YES);
+	} else {
+	    if (deref1(x, th) == y)
+		return (YES);
+	    else
+		return (NO);
+	}
+    } else if (anonymousp(x)) {
 	return (YES);
     } else if (atom_variable_p(x)) {
 	x1 = deref(x, th);
 	if (atom_variable_p(x1)) {
-		SET_CAR(x, y);
+	    SET_CAR(x, y);
 	    return (YES);
 	} else
 	    return (eqp(x1, y));
@@ -2091,13 +2091,30 @@ int unify_var(int x, int y, int th)
 // typed unify. x is [] ?  (empty list)
 int unify_nil(int x, int th)
 {
-
-    if (x == NIL)
+    int x1;
+    if (IS_ALPHA(x)) {
+	if (variant[x - cell_size][th] == UNBIND) {
+	    variant[x - cell_size][th] = NIL;
+	    push_stack(x, th);
+	    return (YES);
+	} else {
+	    if (deref1(x, th) == NIL)
+		return (YES);
+	    else
+		return (NO);
+	}
+    } else if (anonymousp(x)) {
 	return (YES);
-    else if (variablep(x)) {
-	bindsym(x, NIL, th);
+    } else if (atom_variable_p(x)) {
+	x1 = deref(x, th);
+	if (atom_variable_p(x1)) {
+	    SET_CAR(x, NIL);
+	    return (YES);
+	} else if (x1 == NIL)
+	    return (YES);
+    } else if (x == NIL)
 	return (YES);
-    } else
+    else
 	return (NO);
 
     return (NO);
