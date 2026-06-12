@@ -1887,17 +1887,14 @@ int unify_pair(int x, int y, int th)
 		return (YES);
 	}} else if (anonymousp(x)) {
 	return (YES);
-    } else if (variablep(x)) {
+    } else if (atom_variable_p(x)) {
 	x1 = deref(x, th);
 	if (variablep(x1)) {
 	    bindsym(x, y, th);
 	    return (YES);
 	} else
 	    return (unify_pair(x1, y, th));
-
-    } else if (!listp(x))
-	return (NO);
-    else if (listp(x) && x != NIL && unify_var(car(x), car(y), th) == YES
+    } else if (listp(x) && x != NIL && unify_var(car(x), car(y), th) == YES
 	     && unify_var(cdr(x), cdr(y), th) == YES)
 	return (YES);
     else
