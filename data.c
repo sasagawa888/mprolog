@@ -2144,8 +2144,8 @@ void unbind(int x, int th)
 	    }
 	    SET_CAR(stack_index, UNBIND);
 	    SET_CDR(stack_index, UNBIND);
-	} else
-	    exception(SYSTEM_ERR, makestr("unbind"), x, th);
+	} //else
+	  //  exception(SYSTEM_ERR, makestr("unbind"), x, th);
     }
     sp[th] = x;
 }
