@@ -401,7 +401,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 % clause
 
 gen_a_nondet_clause((Head :- Body),A,M) :-
-    ifthenelse(tail_body(Head,Body),true,(write('Jinc_choice(th);'),nl)),
+    ifthenelse(tail_body(Head,Body),(write('Jclear_choice(th);'),nl),(write('Jinc_choice(th);'),nl)),
 	gen_head(Head),write('{'),nl,
     gen_nondet_body(Body,A,ret,0),write('}'),nl,
     M1 is M+1,

@@ -1880,6 +1880,7 @@ int unify_pair(int x, int y, int th)
 	    push_stack(x, th);
 	    return (YES);
 	} else {
+		if(variant[x - cell_size][th] == NIL) return(NO);
 	    variant[car(y) - cell_size][th] = car(variant[x - cell_size][th]);
 		variant[cdr(y) - cell_size][th] = cdr(variant[x - cell_size][th]);
 		push_stack(car(y), th);
