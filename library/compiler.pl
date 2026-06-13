@@ -403,7 +403,6 @@ gen_nondet_clause1([C|Cs],A,M) :-
 gen_a_nondet_clause((Head :- Body),A,M) :-
     ifthenelse(tail_body(Head,Body),true,(write('Jinc_choice(th);'),nl)),
 	gen_head(Head),write('{'),nl,
-    ifthenelse(tail_body(Head,Body),(write('Jclear_choice(th);'),nl),true),
     gen_nondet_body(Body,A,ret,0,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
