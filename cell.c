@@ -487,6 +487,11 @@ int max_choice(int th)
 }
 
 
+int clear_choice(int th)
+{
+    backstack[bp[th]][1][th] = 0;
+    return(NIL);
+}
 
 
 int release_back(int th)

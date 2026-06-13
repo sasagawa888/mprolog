@@ -264,6 +264,11 @@ static inline int Jreset_disj(int x) {
 }
 
 
+static inline int Jclear_choice(int x) {
+    return f1[CLEAR_CHOICE_IDX](x);
+}
+
+
 
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);

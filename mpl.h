@@ -171,7 +171,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
-       ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
+       ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX, CLEAR_CHOICE_IDX,
        NUM_FN1S
 };
 
@@ -1113,6 +1113,7 @@ int cddr(int addr);
 int cdr(int addr);
 int characterp(int addr);
 int clausep(int addr);
+int clear_choice(int th);
 int colonp(int addr);
 int compiler_anonymous_p(int x);
 int compiler_variable_p(int x);
