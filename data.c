@@ -1873,7 +1873,7 @@ int unify(int x, int y, int th)
 //typed unify. y is a pair list e.g. [L|Ls]
 int unify_pair(int x, int y, int th)
 {
-    int x1;
+
 	if (IS_ALPHA(x)) {
 	if (variant[x - cell_size][th] == UNBIND) {
 	    variant[x - cell_size][th] = y;
@@ -1888,12 +1888,8 @@ int unify_pair(int x, int y, int th)
 	}} else if (anonymousp(x)) {
 	return (YES);
     } else if (atom_variable_p(x)) {
-	x1 = deref(x, th);
-	if (variablep(x1)) {
 	    bindsym(x, y, th);
 	    return (YES);
-	} else
-	    return (unify_pair(x1, y, th));
     } else if (listp(x) && x != NIL && unify_var(car(x), car(y), th) == YES
 	     && unify_var(cdr(x), cdr(y), th) == YES)
 	return (YES);
