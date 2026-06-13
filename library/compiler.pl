@@ -459,7 +459,7 @@ gen_var([L|Ls]) :-
     gen_var(Ls).
 
 
-% X=body A=arity O=ret/res L=disjunction-number H=Head
+% X=body A=arity O=ret/res/rec L=disjunction-number H=Head
 gen_nondet_body(X,A,O,L,H) :-
     gen_nondet_body_argument(X,A,0,0),
     gen_nondet_body1(X,A,0,0,[],O,L,H).
@@ -496,7 +496,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',rest,th) == YES){'),nl,
     N1 is N+1,
-    gen_nondet_body1(Y,A,M,N1,[A,M,N],O,L,H),
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
     gen_nondet_body_retry(B),nl.
 gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
@@ -541,6 +541,8 @@ gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('if(rest==NIL) res = YES;'),nl,
     write('else if(Jrespond(rest,th)==YES) res = YES;'),nl.
+gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
+    write('if(rest==NIL) res = YES;'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
 

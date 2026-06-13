@@ -35,7 +35,7 @@ Jpush_back(th);
 retry_3_0_0:
 if (c_mappend(arg_3_0_0,rest,th) == YES){
 if(rest==NIL) return(YES);
-else if(Jrespond(rest,th)==YES) return(YES);
+//else if(Jrespond(rest,th)==YES) return(YES);
 }
 }
 clause_3_2:
