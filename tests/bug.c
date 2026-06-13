@@ -27,15 +27,14 @@ varX = Jmakevariant(th);
 varY = Jmakevariant(th);
 varA = Jmakevariant(th);
 varZ = Jmakevariant(th);
-Jclear_choice(th);
 if(Junify_pair(arg1,Jwlistcons(varA,varX,th),th) == YES && Junify_var(arg2,varY,th) == YES && Junify_pair(arg3,Jwlistcons(varA,varZ,th),th) == YES)
 {
+Jclear_choice(th);
 int arg_3_0_0 = Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(varZ,NIL,th),th),th);
 Jpush_back(th);
 retry_3_0_0:
 if (c_mappend(arg_3_0_0,rest,th) == YES){
-if(rest==NIL) return(YES);
-//else if(Jrespond(rest,th)==YES) return(YES);
+if(rest==NIL) res = YES;
 }
 }
 clause_3_2:
@@ -45,6 +44,47 @@ Jdiscard(rest,th);
 return(NO);}
 
 Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("mappend"),arglist);
+return(NO);}
+static int c_apptest(int arglist, int rest, int th);
+static int c_apptest(int arglist, int rest, int th){
+int varX,varY,n,body,save1,save2,save3,goal,cont,clause,res;
+n = Jarity_count(arglist);
+if(rest != NIL) Jprepare(rest,th);
+if(n == 0){
+if(rest == NIL){
+clause = Jget_back_choice(th);
+switch(clause){
+case 0: goto clause_0_0;
+default: goto allfail;
+}}
+clause_0_0:
+varX = Jmakevariant(th);
+varY = Jmakevariant(th);
+Jinc_choice(th);
+{
+int arg_0_0_0 = Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(Jwlistcons(Jmakeint(1),Jwlistcons(Jmakeint(2),Jwlistcons(Jmakeint(3),NIL,th),th),th),NIL,th),th),th);
+int arg_0_0_1 = Jwlistcons(varX,NIL,th);
+int arg_0_0_2 = Jwlistcons(varY,NIL,th);
+int arg_0_0_3 = NIL;
+Jpush_back(th);
+retry_0_0_0:
+if (c_mappend(arg_0_0_0,NIL,th) == YES){
+if (Jcall_det(Jmakesys("write"),Jwlistcons(varX,NIL,th),th) == YES){
+if (Jcall_det(Jmakesys("write"),Jwlistcons(varY,NIL,th),th) == YES){
+goto retry_0_0_0;
+if(rest==NIL) return(YES);
+else if(Jrespond(rest,th)==YES) return(YES);
+}else goto retry_0_0_0;
+}else goto retry_0_0_0;
+}
+}
+clause_0_1:
+Jrelease(rest,th);
+allfail:
+Jdiscard(rest,th);
+return(NO);}
+
+Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("apptest"),arglist);
 return(NO);}
 static int c_disj(int arglist, int rest, int th);
 static int c_disj(int arglist, int rest, int th){
@@ -119,6 +159,8 @@ Jpush_back(th);
 retry_0_0_0:
 if (c_disj(arg_0_0_0,NIL,th) == YES){
 goto retry_0_0_0;
+if(rest==NIL) return(YES);
+else if(Jrespond(rest,th)==YES) return(YES);
 }
 }
 clause_0_1:
@@ -339,6 +381,8 @@ Jpush_back(th);
 retry_0_0_4:
 if (c_n(arg_0_0_4,NIL,th) == YES){
 goto retry_0_0_4;
+if(rest==NIL) return(YES);
+else if(Jrespond(rest,th)==YES) return(YES);
 }else goto retry_0_0_3;
 }else goto retry_0_0_2;
 }else goto retry_0_0_1;
@@ -394,6 +438,8 @@ if (c_n(arg_0_0_2,NIL,th) == YES){
 if (Jcall_det(Jmakesys("write"),Jwlistcons(Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(varZ,NIL,th),th),th),NIL,th),th) == YES){
 if (Jcall_det(Jmakesys("nl"),NIL,th) == YES){
 goto retry_0_0_2;
+if(rest==NIL) return(YES);
+else if(Jrespond(rest,th)==YES) return(YES);
 }else goto retry_0_0_2;
 }else goto retry_0_0_2;
 }else goto retry_0_0_1;
@@ -513,6 +559,7 @@ Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("f"),arglist);
 return(NO);}
 void init_tpredicate(void){
 (deftpred)("mappend",c_mappend,3,1);
+(deftpred)("apptest",c_apptest,0,1);
 (deftpred)("disj",c_disj,0,1);
 (deftpred)("disjfail",c_disjfail,0,1);
 (deftpred)("p",c_p,1,1);

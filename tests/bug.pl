@@ -3,6 +3,13 @@ mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
 
+apptest :-
+    mappend(X,Y,[1,2,3]),
+    write(X),
+    write(Y),
+    fail.
+
+
 disj :-
     write(a)
  ;
