@@ -33,7 +33,7 @@ if(Junify_pair(arg1,Jwlistcons(varA,varX,th),th) == YES && Junify_var(arg2,varY,
 int arg_3_0_0 = Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(varZ,NIL,th),th),th);
 Jpush_back(th);
 retry_3_0_0:
-if (c_mappend(arg_3_0_0,rest,th) == YES){
+if (c_mappend(arg_3_0_0,NIL,th) == YES){
 if(rest==NIL) return(YES);
 else if(Jrespond(rest,th)==YES) return(YES);
 }

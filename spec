@@ -235,3 +235,33 @@ envstack: インタプリタから呼び出された述語が開始時にsp,wp,a
 述語が始まるときにprepare命令によりpushされる。
 述語が終わるときにdiscard命令によりpopされて解除される
 
+
+再帰の場合においてappend/3のようにバックトラックする場合
+mappend(X,Y,[1,2,3]).
+
+retry_3_0_0:
+if (c_mappend(arg_3_0_0,rest,th) == YES){
+                        ^^^^
+if(rest==NIL) return(YES);
+else if(Jrespond(rest,th)==YES) return(YES);
+}
+再帰呼出しの場合にはrestで呼び出す必要がある。
+インタプリタから呼び出された場合にはJrespondが呼び出されないといけない。
+
+
+コンパイラから次のように呼び出される場合にはrestはNILであるため正常に動作するはずだ。
+test :-
+    mappend(X,Y,[1,2,3]),
+    write(X), write(' '), write(Y), nl,
+    fail.
+test.
+この場合のmappendは再帰呼出しではないのでNILで呼び出される。
+そしてその後のfailでretryへジャンプすることにより再試行される。
+これにそなえて再帰する場合にはclear_choiceを実行することによりchoiceを0にする。
+mappendの場合２つの節のどちらも失敗のときに完全失敗する。このときにはYESは
+返らずに実行は終了する。
+
+M-Prologの場合には従来のSLDリゾルーション方式の部分とC言語により証明木を
+直接実行するコードをが混在する。これの切り分けのために継続であるrestで
+コントロールしている。再帰の場合にはその呼び出し元の状態をrestで把握しており
+再帰する場合においてもrestを承継させる必要があるのである。
