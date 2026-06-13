@@ -486,6 +486,20 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     write('}'),
     gen_nondet_body_retry(B),nl.
 gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
+    n_property(X,predicate),
+    recur_body(X,H),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    type(P,Arity,nondet),
+    write('Jpush_back(th);'),nl,
+    gen_nondet_body_label([A,M,N]),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',rest,th) == YES){'),nl,
+    N1 is N+1,
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],O,L,H),
+    write('}'),
+    gen_nondet_body_retry(B),nl.
+gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
      n_property(X,predicate),
     X =.. [P|Args],
     functor(X,_,Arity),
@@ -566,6 +580,9 @@ gen_nondet_body_argument(X,A,M,N) :-
     write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
     gen_a_argument(Args),write(';'),nl.
 
+recur_body(X,H) :-
+    functor(X,P,A),
+    functor(H,P,A).
 
 /*
 generate_unify of head
