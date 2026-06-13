@@ -403,7 +403,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 gen_a_nondet_clause((Head :- Body),A,M) :-
     ifthenelse(tail_body(Head,Body),(write('Jclear_choice(th);'),nl),(write('Jinc_choice(th);'),nl)),
 	gen_head(Head),write('{'),nl,
-    gen_nondet_body(Body,A,ret,0),write('}'),nl,
+    gen_nondet_body(Body,A,ret,0,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(rest,th);'),nl.
@@ -459,33 +459,33 @@ gen_var([L|Ls]) :-
     gen_var(Ls).
 
 
-% X=body A=arity O=ret/res L=disjunction-number
-gen_nondet_body(X,A,O,L) :-
+% X=body A=arity O=ret/res L=disjunction-number H=Head
+gen_nondet_body(X,A,O,L,H) :-
     gen_nondet_body_argument(X,A,0,0),
-    gen_nondet_body1(X,A,0,0,[],O,L).
+    gen_nondet_body1(X,A,0,0,[],O,L,H).
 
-% A is arith Mth clause, Nth body B-retry[A,M,N] Option L-disjuncion-num
-gen_nondet_body1((!,Y),A,M,N,B,O,L) :-
-    gen_nondet_body1(Y,A,M,N,[],O,L).
-gen_nondet_body1((X,Y),A,M,N,B,O,L) :-
+% A is arith Mth clause, Nth body B-retry[A,M,N] Option L-disjuncion-num Head
+gen_nondet_body1((!,Y),A,M,N,B,O,L,H) :-
+    gen_nondet_body1(Y,A,M,N,[],O,L,H).
+gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     n_property(X,builtin),
     X =.. [P|Args],
     write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
     N1 is N+1,
-    gen_nondet_body1(Y,A,M,N1,B,O,L),
+    gen_nondet_body1(Y,A,M,N1,B,O,L,H),
     write('}'),
     gen_nondet_body_retry(B),nl.
-gen_nondet_body1((X,Y),A,M,N,B,O,L) :-
+gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
      n_property(X,predicate),
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,det),
     write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
      N1 is N+1,
-    gen_nondet_body1(Y,A,M,N1,B,O,L),
+    gen_nondet_body1(Y,A,M,N1,B,O,L,H),
     write('}'),
     gen_nondet_body_retry(B),nl.
-gen_nondet_body1((X,Y),A,M,N,B,O,L) :-
+gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
      n_property(X,predicate),
     X =.. [P|Args],
     functor(X,_,Arity),
@@ -495,40 +495,40 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L) :-
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
     N1 is N+1,
-    gen_nondet_body1(Y,A,M,N1,[A,M,N],O,L),
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],O,L,H),
     write('}'),
     gen_nondet_body_retry(B),nl.
-gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L) :-
+gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     write('res = NIL;'),nl,
     ifthenelse(L=:=0,gen_disj_jump_switch((X1;X2),A,M,N),true),
     gen_nondet_body_disj_label([A,M,N,L]),
     write('Jinc_disj_choice(th);'),nl,
-    gen_nondet_body1(X1,A,M,N,B,res,L),
+    gen_nondet_body1(X1,A,M,N,B,res,L,H),
     write('if(res == YES) goto '),gen_nondet_body_exit([A,M,N]),nl,
     L1 is L+1,
     gen_nondet_body_disj_label([A,M,N,L1]),
     write('Jinc_disj_choice(th);'),nl,
     write('Jrelease(rest,th);'),nl,
-    gen_nondet_body1(X2,A,M,N,B,res,L1),
+    gen_nondet_body1(X2,A,M,N,B,res,L1,H),
     ifthenelse(L=:=0,gen_nondet_body_exit_label([A,M,N]),true),
     N1 is N+1,
-    gen_nondet_body1(Y,A,M,N,B,O,L),
+    gen_nondet_body1(Y,A,M,N,B,O,L,H),
     ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
-gen_nondet_body1(fail,A,M,N,[],O,L) :-
+gen_nondet_body1(fail,A,M,N,[],O,L,H) :-
     gen_nondet_body_fail([A,M]),nl.
-gen_nondet_body1(fail,A,M,N,B,O,L) :-
+gen_nondet_body1(fail,A,M,N,B,O,L,H) :-
     gen_nondet_body_fail_retry(B),nl.
-gen_nondet_body1(!,A,M,N,[],O,L) :-
+gen_nondet_body1(!,A,M,N,[],O,L,H) :-
     write('if(rest==NIL){max_choice(th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.    
-gen_nondet_body1(end_of_body,A,M,N,B,ret,L) :-
+gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
     write('if(rest==NIL) return(YES);'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
-gen_nondet_body1(end_of_body,A,M,N,B,res,L) :-
+gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('if(rest==NIL) res = YES;'),nl,
     write('else if(Jrespond(rest,th)==YES) res = YES;'),nl.
-gen_nondet_body1(X,A,M,N,B,O,L) :-
-    gen_nondet_body1((X,end_of_body),A,M,N,B,O,L).
+gen_nondet_body1(X,A,M,N,B,O,L,H) :-
+    gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
 
 
 gen_nondet_body_label([A,M,N]) :-
