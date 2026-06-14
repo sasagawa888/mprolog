@@ -215,12 +215,6 @@ static inline int Jmax_choice(int x) {
 }
 
 
-
-
-static inline int Jget_back_sp(int x) {
-    return f1[GET_BACK_SP_IDX](x);
-}
-
 static inline int Jget_back_wp(int x) {
     return f1[GET_BACK_WP_IDX](x);
 }

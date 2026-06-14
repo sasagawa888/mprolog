@@ -84,7 +84,6 @@ void dynamic_link(int x)
     init_f1(ADD_DYNAMIC_IDX, (tpred) add_dynamic);
     init_f1(BIGX_TO_PARMANENT_IDX, (tpred) bigx_to_parmanent);
     init_f1(POP_BACK_IDX, (tpred) pop_back);
-    init_f1(GET_BACK_SP_IDX, (tpred) get_back_sp);
     init_f1(GET_BACK_WP_IDX, (tpred) get_back_wp);
     init_f1(GET_BACK_AC_IDX, (tpred) get_back_ac);
     init_f1(GET_BACK_CHOICE_IDX, (tpred) get_back_choice);
