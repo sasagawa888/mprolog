@@ -401,8 +401,9 @@ gen_nondet_clause1([C|Cs],A,M) :-
 % clause
 
 gen_a_nondet_clause((Head :- Body),A,M) :-
-    ifthenelse(tail_body(Head,Body),true,(write('Jinc_choice(th);'),nl)),
+    write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
+    write('Jclear_choice(th);'),nl,
     gen_nondet_body(Body,A,ret,0,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
@@ -499,7 +500,6 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,nondet),
-    write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',rest,th) == YES){'),nl,
