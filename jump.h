@@ -274,6 +274,10 @@ static inline int Jclear_choice(int x) {
 }
 
 
+static inline int Jcopy_back(int x) {
+    return f1[COPY_BACK_IDX](x);
+}
+
 
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);

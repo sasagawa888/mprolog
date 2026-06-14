@@ -172,6 +172,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_SP_IDX, GET_BACK_CHOICE_IDX, GET_BACK_WP_IDX, 
        GET_BACK_AC_IDX, PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX, CLEAR_CHOICE_IDX,
+       COPY_BACK_IDX,
        NUM_FN1S
 };
 
@@ -1128,6 +1129,7 @@ int cons_prev(int x, int y);
 int constantp(int addr);
 int convert_to_variant(int x, int th);
 int convert_to_variable(int x, int th);
+int copy_back(int th);
 int copy_heap(int x);
 int copy_term(int x);
 int copy_work(int x, int th);
