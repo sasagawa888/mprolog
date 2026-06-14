@@ -33,8 +33,7 @@ int arg_3_0_0 = Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(varZ,NIL,th),th),th);
 Jpush_back(th);
 retry_3_0_0:
 if (c_mappend(arg_3_0_0,rest,th) == YES){
-if(rest==NIL) res = YES;
-}
+if(rest==NIL) res = YES;}
 }
 clause_3_2:
 Jrelease(rest,th);

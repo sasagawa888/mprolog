@@ -546,7 +546,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('if(rest==NIL) res = YES;'),nl,
     write('else if(Jrespond(rest,th)==YES) res = YES;'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
-    write('if(rest==NIL) res = YES;'),nl.
+    write('if(rest==NIL) res = YES;').
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
 
