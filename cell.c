@@ -464,7 +464,7 @@ int copy_back(int th)
 
 int store_arg(int arglist, int th)
 {
-
+    backstack[bp[th]][6][th] = arglist;
     return(NIL);
 }
 
@@ -472,12 +472,6 @@ int get_back_choice(int th)
 {
     proof[th]++;
     return(backstack[bp[th]][1][th]);
-}
-
-
-int get_back_wp(int th)
-{
-    return(backstack[bp[th]][2][th]);
 }
 
 
