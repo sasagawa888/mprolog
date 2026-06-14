@@ -215,10 +215,6 @@ static inline int Jmax_choice(int x) {
 }
 
 
-static inline int Jget_back_ac(int x) {
-    return f1[GET_BACK_AC_IDX](x);
-}
-
 
 static inline int Jget_back_choice(int x) {
     return f1[GET_BACK_CHOICE_IDX](x);
