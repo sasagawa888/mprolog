@@ -439,6 +439,8 @@ int push_back(int th)
     backstack[bp[th]][2][th] = wp[th]; //working  wp
     backstack[bp[th]][3][th] = ac[th]; //alpha counter ac
     backstack[bp[th]][4][th] = 0; //disjunction choice
+    backstack[bp[th]][5][th] = 0; //choice backup
+    backstack[bp[th]][6][th] = UNBIND; //arglist backup
     return(NIL);
 }
 
@@ -455,6 +457,11 @@ int copy_back(int th)
     backstack[bp[th]-1][2][th] = backstack[bp[th]][2][th]; //working  wp
     backstack[bp[th]-1][3][th] = backstack[bp[th]][3][th]; //alpha counter ac
     backstack[bp[th]-1][4][th] = backstack[bp[th]][4][th]; //disjunction choice
+}
+
+int store_arg(int arglist, int th)
+{
+
 }
 
 int get_back_sp(int th)
