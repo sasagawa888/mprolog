@@ -161,7 +161,7 @@ typedef struct cursor {
 
 
 enum { CHECKGBC_IDX, GBC_IDX, FRESHCELL_IDX, 
-       DEBUG_IDX, 
+       DEBUG_IDX, STEPPER_IDX,
        NUM_FN0S
 };
 
@@ -1577,6 +1577,7 @@ int set_cdr(int x, int y);
 int makestrflt(char *str);
 int makestrlong(char *str);
 void debug(void);
+void stepper(void);
 char *get_name(int x);
 double get_flt(int x);
 

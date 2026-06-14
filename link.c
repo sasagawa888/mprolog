@@ -60,7 +60,7 @@ void dynamic_link(int x)
     init_f0(GBC_IDX, (tpred) gbc);
     init_f0(FRESHCELL_IDX, (tpred) freshcell);
     init_f0(DEBUG_IDX, (tpred) debug);
-
+    init_f0(STEPPER_IDX, (tpred) stepper);
 
     //argument-1 type
     init_f1(CAR_IDX, (tpred) car);

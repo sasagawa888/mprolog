@@ -6,8 +6,8 @@ mappend([A|X],Y,[A|Z]) :-
 apptest :-
     mappend(X,Y,[1,2,3]),
     write(X),
-    write(Y).
-    %fail.
+    write(Y),
+    fail.
 
 
 disj :-

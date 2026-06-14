@@ -95,6 +95,11 @@ static inline int Jdebug(void) {
     return f0[DEBUG_IDX]();
 }
 
+static inline int Jstepper(void) {
+    return f0[STEPPER_IDX]();
+}
+
+
 
 static inline int Jcar(x){
     return f1[CAR_IDX](x);
