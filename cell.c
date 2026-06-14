@@ -556,12 +556,6 @@ int release(int rest, int th)
 }
 
 
-int decchoice(int th)
-{
-    backstack[bp[th]][1][th]--;
-    return(NIL);
-}
-
 int respond(int rest, int th)
 {
     return(prove_all(rest,sp[th],th));

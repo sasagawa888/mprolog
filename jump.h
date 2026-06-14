@@ -255,10 +255,6 @@ static inline int Jreset_disj(int x) {
 }
 
 
-static inline int Jclear_choice(int x) {
-    return f1[CLEAR_CHOICE_IDX](x);
-}
-
 
 static inline int Jcopy_back(int x) {
     return f1[COPY_BACK_IDX](x);
