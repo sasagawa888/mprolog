@@ -462,7 +462,7 @@ int copy_back(int th)
     return(NIL);
 }
 
-int store_arg(int arglist, int th)
+int save_arg(int arglist, int th)
 {
     backstack[bp[th]][6][th] = arglist;
     return(NIL);
@@ -472,12 +472,6 @@ int get_back_choice(int th)
 {
     proof[th]++;
     return(backstack[bp[th]][1][th]);
-}
-
-
-int get_back_ac(int th)
-{
-    return(backstack[bp[th]][3][th]);
 }
 
 
@@ -531,14 +525,17 @@ void push_env(int th)
 }
 
 
-int prepare(int rest, int th)
+int prepare(int rest, int arglist, int th)
 {
     if(rest != NIL){
         push_env(th);
         return(NIL);
     } else {
-        proof[th]++;
-        return(get_back_choice(th));
+        int newarg = backstack[bp[th]][6][th];
+        if(newarg != UNBIND)
+            return(newarg);
+        else 
+            return(arglist);
     }
 }
 
