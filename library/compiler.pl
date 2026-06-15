@@ -571,7 +571,7 @@ gen_nondet_body_retry([A,M,N]) :-
 gen_nondet_body_fail_retry([A,M,N]) :-
     write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
 
-gen_nondet_body_fail_retry([A,M]) :-
+gen_nondet_body_fail([A,M]) :-
     write('goto clause_'),write(A),write('_'),write(M1),write(';').
 
 gen_nondet_body_argument((X,Y),A,M,N) :-
