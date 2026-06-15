@@ -423,7 +423,7 @@ gen_a_nondet_clause(P,A,M) :-
     P =.. [P1|_],
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
-    write('if(rest==NIL) return(YES);'),nl,
+    write('if(rest==NIL){Jsave_arg(arglist,th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
@@ -539,7 +539,7 @@ gen_nondet_body1(!,A,M,N,[],O,L,H) :-
     write('if(rest==NIL){max_choice(th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.    
 gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
-    write('if(rest==NIL) return(YES);'),nl,
+    write('if(rest==NIL){Jsave_arg(arglist,th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('if(rest==NIL) res = YES;'),nl,

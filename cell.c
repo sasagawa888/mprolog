@@ -529,7 +529,7 @@ int prepare(int rest, int arglist, int th)
 {
     if(rest != NIL){
         push_env(th);
-        return(NIL);
+        return(arglist);
     } else {
         int newarg = backstack[bp[th]][6][th];
         if(newarg != UNBIND)
