@@ -8,7 +8,6 @@ option(non,non). % for GCC option
 
 % main
 compile_file(X) :-
-    write(user_output,'JUMP ver0.11'),nl,
     pass1(X),
     pass2(X),
     pass3(X),
