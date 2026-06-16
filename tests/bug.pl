@@ -16,13 +16,13 @@ lt(X, Y) :- le(s(X), Y).
 quot(X, Y, 0, X) :- lt(X, Y).
 quot(X, Y, s(Q), R) :- plus(Y, X1, X), quot(X1, Y, Q, R).
 
-%prime(s(X)) :- df(X, s(X)).
+
+dnd(M, N) :- quot(N, M, _, s(_)).
 
 df(s(0), _).
 df(s(s(M)), N) :- dnd(s(s(M)), N), df(s(M), N).
 
-%dnd(M, N) :- quot(N, M, _, s(_)).
-
+prime(s(X)) :- df(X, s(X)).
 
 mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
