@@ -402,7 +402,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 gen_a_nondet_clause((Head :- Body),A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
-    gen_nondet_body(Body,A,ret,0,Head),write('}'),nl,
+    gen_nondet_body(Body,A,ret,M,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(rest,th);'),nl.
@@ -459,9 +459,9 @@ gen_var([L|Ls]) :-
 
 
 % X=body A=arity O=ret/res/rec L=disjunction-number H=Head
-gen_nondet_body(X,A,O,L,H) :-
-    gen_nondet_body_argument(X,A,0,0),
-    gen_nondet_body1(X,A,0,0,[],O,L,H).
+gen_nondet_body(X,A,O,M,H) :-
+    gen_nondet_body_argument(X,A,M,0),
+    gen_nondet_body1(X,A,M,0,[],O,0,H).
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Option L-disjuncion-num Head
 gen_nondet_body1((!,Y),A,M,N,B,O,L,H) :-
