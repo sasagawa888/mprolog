@@ -34,6 +34,9 @@ apptest :-
     write(Y),
     fail.
 
+apptest1 :-
+    mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
+    fail.
 
 disj :-
     write(a)
