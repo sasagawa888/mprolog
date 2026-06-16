@@ -548,8 +548,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
     write('Jcopy_back(th);'),nl,
     write('Jpop_back(th);'),nl,
-    write('if(rest==NIL) return(YES);'),
-    write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
+    write('if(rest==NIL) return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
 
