@@ -412,9 +412,7 @@ gen_a_nondet_clause(P,_,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
     write('Jinc_choice(th);'),nl,
-    write('if(rest!=NIL){'),nl,
-    write('return(Jprove_all(rest,Jget_sp(th),th));}'),nl,
-    write('else return(YES);'),nl.
+    write('return(YES);'),nl.
 
 % nondet predicate
 gen_a_nondet_clause(P,A,M) :-
