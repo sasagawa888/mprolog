@@ -502,7 +502,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
-    ifthenelse(Y=end_of_body,write(',rest,th) == YES){'),write(',NIL,th) == YES){')),nl,
+    ifthenelse(Y=end_of_body,write(',NIL,th) == YES){'),write(',NIL,th) == YES){')),nl,
     N1 is N+1,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
@@ -548,8 +548,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
     write('Jcopy_back(th);'),nl,
     write('Jpop_back(th);'),nl,
-    write('if(rest==NIL) return(YES);'),nl,
-    write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
+    write('return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
 
