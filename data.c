@@ -1874,25 +1874,29 @@ int unify(int x, int y, int th)
 int unify_pair(int x, int y, int th)
 {
 
-	if (IS_ALPHA(x)) {
+    if (IS_ALPHA(x)) {
 	if (variant[x - cell_size][th] == UNBIND) {
 	    variant[x - cell_size][th] = y;
 	    push_stack(x, th);
 	    return (YES);
 	} else {
-		if(variant[x - cell_size][th] == NIL) return(NO);
-	    variant[car(y) - cell_size][th] = car(variant[x - cell_size][th]);
-		variant[cdr(y) - cell_size][th] = cdr(variant[x - cell_size][th]);
-		push_stack(car(y), th);
-		push_stack(cdr(y), th);
-		return (YES);
-	}} else if (anonymousp(x)) {
+	    if (variant[x - cell_size][th] == NIL)
+		return (NO);
+	    variant[car(y) - cell_size][th] =
+		car(variant[x - cell_size][th]);
+	    variant[cdr(y) - cell_size][th] =
+		cdr(variant[x - cell_size][th]);
+	    push_stack(car(y), th);
+	    push_stack(cdr(y), th);
+	    return (YES);
+	}
+    } else if (anonymousp(x)) {
 	return (YES);
     } else if (atom_variable_p(x)) {
-	    bindsym(x, y, th);
-	    return (YES);
+	bindsym(x, y, th);
+	return (YES);
     } else if (listp(x) && x != NIL && unify_var(car(x), car(y), th) == YES
-	     && unify_var(cdr(x), cdr(y), th) == YES)
+	       && unify_var(cdr(x), cdr(y), th) == YES)
 	return (YES);
     else
 	return (NO);
@@ -2058,35 +2062,36 @@ int unify_var(int x, int y, int th)
 {
     int x1;
 
-	if (IS_ALPHA(x)) {
+    if (IS_ALPHA(x)) {
 	if (variant[x - cell_size][th] == UNBIND) {
 	    variant[x - cell_size][th] = y;
 	    push_stack(x, th);
 	    return (YES);
 	} else {
 	    variant[y - cell_size][th] = variant[x - cell_size][th];
-		push_stack(y, th);
-		return (YES);
-	}} else if (anonymousp(x)) {
+	    push_stack(y, th);
+	    return (YES);
+	}
+    } else if (anonymousp(x)) {
 	return (YES);
     } else if (atom_variable_p(x)) {
 	x1 = deref1(x, th);
 	if (variablep(x1)) {
-		SET_CAR(x, y);
-		return (YES);
-	} else{
-		variant[y - cell_size][th] = x1;
-		return(YES);
-	}
-	} else if (anonymousp(x) || anonymousp(y)) {
-	return (YES);
+	    SET_CAR(x, y);
+	    return (YES);
 	} else {
+	    variant[y - cell_size][th] = x1;
+	    return (YES);
+	}
+    } else if (anonymousp(x) || anonymousp(y)) {
+	return (YES);
+    } else {
 	variant[y - cell_size][th] = x;
 	push_stack(x, th);
 	return (YES);
-    } 
+    }
 
-	return (NO);
+    return (NO);
 }
 
 
@@ -2141,8 +2146,8 @@ void unbind(int x, int th)
 	    }
 	    SET_CAR(stack_index, UNBIND);
 	    SET_CDR(stack_index, UNBIND);
-	} //else
-	  //  exception(SYSTEM_ERR, makestr("unbind"), x, th);
+	}			//else
+	//  exception(SYSTEM_ERR, makestr("unbind"), x, th);
     }
     sp[th] = x;
 }

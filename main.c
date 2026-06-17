@@ -26,7 +26,7 @@ int cell_hash_table[HASHTBSIZE];
 int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int localstack[STACKSIZE][THREADSIZE];
-int backstack[STACKSIZE][7][THREADSIZE];	
+int backstack[STACKSIZE][7][THREADSIZE];
 //[0]sp, [1]choice, [2]wp, [3]ac, [4]disjunction, [5]choice-backup, [6]arglist-backup
 int envstack[STACKSIZE][3][THREADSIZE];	//[0]sp, [2]wp, [3]ac
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
@@ -724,16 +724,60 @@ int prove(int goal, int bindings, int rest, int th)
 	    return (res);
 	}
     } else if (compiledp(goal)) {
-	if (atomp(goal)) {
-	    if ((GET_SUBR(goal)) (NIL, rest, th) == YES)
-		return (YES);
+	int type;
+	if (atomp(goal))
+	    type = GET_ARITY(goal);
+	else
+	    type = GET_ARITY(car(goal));
 
-	    return (NO);
-	} else {
-	    if ((GET_SUBR(car(goal))) (cdr(goal), rest, th) == YES)
-		return (YES);
+	switch (type) {
+	    //nondet
+	case 1: goto exec;
+	  retry:
+	    if (atomp(goal)) {
+		if ((GET_SUBR(goal)) (NIL, NIL, th) == YES) {
+		    if (prove_all(rest, sp[th], th) == YES)
+			return (YES);
+		    else
+			goto retry;
+		}
 
-	    return (NO);
+		return (NO);
+	    } else {
+		if ((GET_SUBR(car(goal))) (cdr(goal), NIL, th) == YES) {
+			print(rest);
+		    if (prove_all(rest, sp[th], th) == YES)
+			return (YES);
+		    else
+			goto retry;
+		}
+
+		return (NO);
+	    }
+	    //det
+	case 2:
+	    goto exec;
+	    //tail
+	case 3:
+	    goto exec;
+	    //dyn
+	case 4:
+	    goto exec;
+	    //mut
+	case 5:
+	    goto exec;
+	  exec:
+	    if (atomp(goal)) {
+		if ((GET_SUBR(goal)) (NIL, rest, th) == YES)
+		    return (YES);
+
+		return (NO);
+	    } else {
+		if ((GET_SUBR(car(goal))) (cdr(goal), rest, th) == YES)
+		    return (YES);
+
+		return (NO);
+	    }
 	}
     } else if (predicatep(goal) || user_operation_p(goal)) {
 	//trace

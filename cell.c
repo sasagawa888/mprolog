@@ -201,7 +201,7 @@ int makevariant(int th)
     int addr;
 
     addr = ac[th];
-    variant[addr-cell_size][th] = UNBIND;
+    variant[addr - cell_size][th] = UNBIND;
     ac[th]++;
     if (ac[th] >= variant_max)
 	exception(RESOURCE_ERR, makestr("lack of variant"),
@@ -434,44 +434,44 @@ int push_back(int th)
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
-    backstack[bp[th]][0][th] = sp[th]; //local sp
-    backstack[bp[th]][1][th] = 0; //clause choice 
-    backstack[bp[th]][2][th] = wp[th]; //working  wp
-    backstack[bp[th]][3][th] = ac[th]; //alpha counter ac
-    backstack[bp[th]][4][th] = 0; //disjunction choice
-    backstack[bp[th]][5][th] = 0; //choice backup
-    backstack[bp[th]][6][th] = UNBIND; //arglist backup
-    return(NIL);
+    backstack[bp[th]][0][th] = sp[th];	//local sp
+    backstack[bp[th]][1][th] = 0;	//clause choice 
+    backstack[bp[th]][2][th] = wp[th];	//working  wp
+    backstack[bp[th]][3][th] = ac[th];	//alpha counter ac
+    backstack[bp[th]][4][th] = 0;	//disjunction choice
+    backstack[bp[th]][5][th] = 0;	//choice backup
+    backstack[bp[th]][6][th] = UNBIND;	//arglist backup
+    return (NIL);
 }
 
 int pop_back(int th)
 {
     bp[th]--;
-    return(NIL);
+    return (NIL);
 }
 
 int copy_back(int th)
 {
-    backstack[bp[th]-1][0][th] = backstack[bp[th]][0][th]; //local sp
-    backstack[bp[th]-1][1][th] = backstack[bp[th]][1][th]; //clause choice 
-    backstack[bp[th]-1][2][th] = backstack[bp[th]][2][th]; //working  wp
-    backstack[bp[th]-1][3][th] = backstack[bp[th]][3][th]; //alpha counter ac
-    backstack[bp[th]-1][4][th] = backstack[bp[th]][4][th]; //disjunction choice
-    backstack[bp[th]-1][5][th] = backstack[bp[th]][5][th]; //choice backup
-    backstack[bp[th]-1][6][th] = backstack[bp[th]][6][th]; //arglist backup
-    return(NIL);
+    backstack[bp[th] - 1][0][th] = backstack[bp[th]][0][th];	//local sp
+    backstack[bp[th] - 1][1][th] = backstack[bp[th]][1][th];	//clause choice 
+    backstack[bp[th] - 1][2][th] = backstack[bp[th]][2][th];	//working  wp
+    backstack[bp[th] - 1][3][th] = backstack[bp[th]][3][th];	//alpha counter ac
+    backstack[bp[th] - 1][4][th] = backstack[bp[th]][4][th];	//disjunction choice
+    backstack[bp[th] - 1][5][th] = backstack[bp[th]][5][th];	//choice backup
+    backstack[bp[th] - 1][6][th] = backstack[bp[th]][6][th];	//arglist backup
+    return (NIL);
 }
 
 int save_arg(int arglist, int th)
 {
     backstack[bp[th]][6][th] = arglist;
-    return(NIL);
+    return (NIL);
 }
 
 int get_back_choice(int th)
 {
     proof[th]++;
-    return(backstack[bp[th]][1][th]);
+    return (backstack[bp[th]][1][th]);
 }
 
 
@@ -479,38 +479,38 @@ int get_back_choice(int th)
 int inc_choice(int th)
 {
     backstack[bp[th]][1][th]++;
-    return(NIL);
+    return (NIL);
 }
 
 int max_choice(int th)
 {
     backstack[bp[th]][1][th] = 999999999;
-    return(NIL);
+    return (NIL);
 }
 
 
 int clear_choice(int th)
 {
-    backstack[bp[th]][0][th] = sp[th]; //local sp
-    backstack[bp[th]][1][th] = 0; //clause choice 
-    backstack[bp[th]][2][th] = wp[th]; //working  wp
-    backstack[bp[th]][3][th] = ac[th]; //alpha counter ac
-    return(NIL);
+    backstack[bp[th]][0][th] = sp[th];	//local sp
+    backstack[bp[th]][1][th] = 0;	//clause choice 
+    backstack[bp[th]][2][th] = wp[th];	//working  wp
+    backstack[bp[th]][3][th] = ac[th];	//alpha counter ac
+    return (NIL);
 }
 
 
 int release_back(int th)
 {
-    unbind(backstack[bp[th]][0][th],th);
+    unbind(backstack[bp[th]][0][th], th);
     ac[th] = backstack[bp[th]][3][th];
-    return(NIL);
+    return (NIL);
 }
 
 int discard_back(int th)
 {
     wp[th] = backstack[bp[th]][2][th];
     bp[th]--;
-    return(NIL);
+    return (NIL);
 }
 
 
@@ -519,93 +519,93 @@ void push_env(int th)
     ep[th]++;
     if (ep[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("env stack size"), th);
-    envstack[ep[th]][0][th] = sp[th]; //local sp
-    envstack[ep[th]][1][th] = wp[th]; //working  wp
-    envstack[ep[th]][2][th] = ac[th]; //alpha counter ac
+    envstack[ep[th]][0][th] = sp[th];	//local sp
+    envstack[ep[th]][1][th] = wp[th];	//working  wp
+    envstack[ep[th]][2][th] = ac[th];	//alpha counter ac
 }
 
 
 int prepare(int rest, int arglist, int th)
 {
-    if(rest != NIL){
-        push_env(th);
-        return(arglist);
+    if (rest != NIL) {
+	push_env(th);
+	return (arglist);
     } else {
-        int newarg = backstack[bp[th]][6][th];
-        if(newarg != UNBIND)
-            return(newarg);
-        else 
-            return(arglist);
+	int newarg = backstack[bp[th]][6][th];
+	if (newarg != UNBIND)
+	    return (newarg);
+	else
+	    return (arglist);
     }
 }
 
 
 int release(int rest, int th)
 {
-    if(rest == NIL){
-        unbind(backstack[bp[th]][0][th],th);
-        ac[th] = backstack[bp[th]][3][th];
-    } else{
-        unbind(envstack[ep[th]][0][th],th);
-        ac[th] = envstack[ep[th]][2][th];
+    if (rest == NIL) {
+	unbind(backstack[bp[th]][0][th], th);
+	ac[th] = backstack[bp[th]][3][th];
+    } else {
+	unbind(envstack[ep[th]][0][th], th);
+	ac[th] = envstack[ep[th]][2][th];
     }
-    return(NIL);
+    return (NIL);
 }
 
 
 int respond(int rest, int th)
 {
-    return(prove_all(rest,sp[th],th));
+    return (prove_all(rest, sp[th], th));
 }
 
 
 int discard(int rest, int th)
 {
-    if(rest == NIL){
-        wp[th] = backstack[bp[th]][2][th];
-        bp[th]--;
+    if (rest == NIL) {
+	wp[th] = backstack[bp[th]][2][th];
+	bp[th]--;
     } else {
-        sp[th] = envstack[ep[th]][0][th];
-        wp[th] = envstack[ep[th]][1][th];
-        ac[th] = envstack[ep[th]][2][th];
-        ep[th]--;
+	sp[th] = envstack[ep[th]][0][th];
+	wp[th] = envstack[ep[th]][1][th];
+	ac[th] = envstack[ep[th]][2][th];
+	ep[th]--;
     }
-    return(NIL);
+    return (NIL);
 }
 
 
 int arity_count(int arglist)
 {
     int n;
-    if(GET_ARITY(arglist) == UNBIND){
-        n = length(arglist);
-        SET_ARITY(arglist,n);
-        return(n);
-    }else 
-        return(GET_ARITY(arglist));
+    if (GET_ARITY(arglist) == UNBIND) {
+	n = length(arglist);
+	SET_ARITY(arglist, n);
+	return (n);
+    } else
+	return (GET_ARITY(arglist));
 }
 
 int get_disj_choice(int th)
 {
     int choice;
     choice = backstack[bp[th]][4][th];
-    if(choice == 0)
-        backstack[bp[th]][1][th]--;
-    return(choice);
+    if (choice == 0)
+	backstack[bp[th]][1][th]--;
+    return (choice);
 }
 
 int inc_disj_choice(int th)
 {
     backstack[bp[th]][4][th]++;
-    return(NIL);
+    return (NIL);
 }
 
 
 int reset_disj(int th)
 {
     backstack[bp[th]][4][th] = 0;
-    backstack[bp[th]][1][th] = backstack[bp[th]][5][th]; 
-    return(NIL);
+    backstack[bp[th]][1][th] = backstack[bp[th]][5][th];
+    return (NIL);
 }
 
 
@@ -768,54 +768,56 @@ int makestrlong(char *str)
 
 void debug(void)
 {
-printf("\n----- debug print ------\n");
-printf("sp=%d wp=%d ac=%d bp=%d\n",sp[0],wp[0],ac[0],bp[0]);
-int i;
-printf("backstack sp choice wp ac\n");
-for(i=1;i<=bp[0];i++){
-    printf("%d %d %d %d %d\n",
-        i,backstack[i][0][0], backstack[i][1][0],backstack[i][2][0],backstack[i][3][0]);
-}
-printf("variant\n");
-for(i=0;i<ac[0]-cell_size;i++){
-    printf("%d ",i);
-    print(variant[i][0]);
-    printf("\n");
-}
-printf("localstack\n");
-for(i=0;i<sp[0];i++){
-    printf("%d ", i);
-    print(localstack[i][0]);
-    printf("\n");
-}
-printf("------------------------\n");
+    printf("\n----- debug print ------\n");
+    printf("sp=%d wp=%d ac=%d bp=%d\n", sp[0], wp[0], ac[0], bp[0]);
+    int i;
+    printf("backstack sp choice wp ac\n");
+    for (i = 1; i <= bp[0]; i++) {
+	printf("%d %d %d %d %d\n",
+	       i, backstack[i][0][0], backstack[i][1][0],
+	       backstack[i][2][0], backstack[i][3][0]);
+    }
+    printf("variant\n");
+    for (i = 0; i < ac[0] - cell_size; i++) {
+	printf("%d ", i);
+	print(variant[i][0]);
+	printf("\n");
+    }
+    printf("localstack\n");
+    for (i = 0; i < sp[0]; i++) {
+	printf("%d ", i);
+	print(localstack[i][0]);
+	printf("\n");
+    }
+    printf("------------------------\n");
 }
 
 
 void stepper(void)
 {
-printf("\n----- stepper print ------\n");
-printf("sp=%d wp=%d ac=%d bp=%d\n",sp[0],wp[0],ac[0],bp[0]);
-int i;
-printf("backstack sp choice wp ac\n");
-for(i=1;i<=bp[0];i++){
-    printf("%d %d %d %d %d\n",
-        i,backstack[i][0][0], backstack[i][1][0],backstack[i][2][0],backstack[i][3][0]);
-}
-printf("variant\n");
-for(i=0;i<ac[0]-cell_size;i++){
-    printf("%d ",i);
-    print(variant[i][0]);
-    printf("\n");
-}
-printf("localstack\n");
-for(i=0;i<sp[0];i++){
-    printf("%d ", i);
-    print(localstack[i][0]);
-    printf("\n");
-}
-printf("------------------------\n");
-getchar();
+    printf("\n----- stepper print ------\n");
+    printf("sp=%d wp=%d ac=%d bp=%d\n", sp[0], wp[0], ac[0], bp[0]);
+    int i;
+    printf("backstack sp choice wp ac\n");
+    for (i = 1; i <= bp[0]; i++) {
+	printf("%d %d %d %d %d\n",
+	       i, backstack[i][0][0], backstack[i][1][0],
+	       backstack[i][2][0], backstack[i][3][0]);
+    }
+    printf("variant\n");
+    for (i = 0; i < ac[0] - cell_size; i++) {
+	printf("%d ", i);
+	print(variant[i][0]);
+	printf("\n");
+    }
+    printf("localstack\n");
+    for (i = 0; i < sp[0]; i++) {
+	printf("%d ", i);
+	print(localstack[i][0]);
+	printf("\n");
+    }
+    printf("------------------------\n");
+    getchar();
 }
 
 
