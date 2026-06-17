@@ -741,8 +741,11 @@ int b_n_property(int arglist, int rest, int th)
 	    else if (get_arity(arg1) == 3
 		     && unify(arg2, makeconst("compiled_tail"), th) == YES)
 		return (prove_all(rest, sp[th], th));
-	    else if (get_arity(arg1) == 3
-		     && unify(arg2, makeconst("compiled_halt"), th) == YES)
+	    else if (get_arity(arg1) == 4
+		     && unify(arg2, makeconst("compiled_dyn"), th) == YES)
+		return (prove_all(rest, sp[th], th));
+		else if (get_arity(arg1) == 5
+		     && unify(arg2, makeconst("compiled_mut"), th) == YES)
 		return (prove_all(rest, sp[th], th));
 	    else
 		return (NO);
