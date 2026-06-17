@@ -537,8 +537,7 @@ gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     gen_nondet_body1(Y,A,M,N,B,O,L,H),
     ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
 gen_nondet_body1(!,A,M,N,[],O,L,H) :-
-    write('if(rest==NIL){max_choice(th); return(YES);}'),nl,
-    write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.    
+    write('max_choice(th); return(YES);'),nl.    
 gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
     write('if(rest==NIL){Jsave_arg(arglist,th); return(YES);}'),nl,
     write('else if(Jrespond(rest,th)==YES) return(YES);'),nl.
