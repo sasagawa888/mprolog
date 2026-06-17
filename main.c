@@ -723,62 +723,41 @@ int prove(int goal, int bindings, int rest, int th)
 
 	    return (res);
 	}
-    } else if (compiledp(goal)) {
-	int type;
-	if (atomp(goal))
-	    type = GET_ARITY(goal);
-	else
-	    type = GET_ARITY(car(goal));
+} else if (compiledp(goal)) {
+    int type;
+    int pred;
+    int args;
 
-	switch (type) {
-	    //nondet
-	case 1: goto exec;
-	  retry:
-	    if (atomp(goal)) {
-		if ((GET_SUBR(goal)) (NIL, NIL, th) == YES) {
-		    if (prove_all(rest, sp[th], th) == YES)
-			return (YES);
-		    else
-			goto retry;
-		}
+    if (atomp(goal)) {
+        pred = goal;
+        args = NIL;
+        type = GET_ARITY(goal);
+    } else {
+        pred = car(goal);
+        args = cdr(goal);
+        type = GET_ARITY(pred);
+    }
 
-		return (NO);
-	    } else {
-		if ((GET_SUBR(car(goal))) (cdr(goal), NIL, th) == YES) {
-			print(rest);
-		    if (prove_all(rest, sp[th], th) == YES)
-			return (YES);
-		    else
-			goto retry;
-		}
+    switch (type) {
+    case 1: // nondet
+	push_back(th);
+    retry:
+        if ((GET_SUBR(pred))(args, NIL, th) == YES) {
+            if (prove_all(rest, sp[th], th) == YES)
+                return YES;
+            else
+                goto retry;
+        }
+        return NO;
 
-		return (NO);
-	    }
-	    //det
-	case 2:
-	    goto exec;
-	    //tail
-	case 3:
-	    goto exec;
-	    //dyn
-	case 4:
-	    goto exec;
-	    //mut
-	case 5:
-	    goto exec;
-	  exec:
-	    if (atomp(goal)) {
-		if ((GET_SUBR(goal)) (NIL, rest, th) == YES)
-		    return (YES);
-
-		return (NO);
-	    } else {
-		if ((GET_SUBR(car(goal))) (cdr(goal), rest, th) == YES)
-		    return (YES);
-
-		return (NO);
-	    }
-	}
+    case 2: // det
+    case 3: // tail
+    case 4: // dyn
+    case 5: // mut
+        if ((GET_SUBR(pred))(args, rest, th) == YES)
+            return YES;
+        return NO;
+    }
     } else if (predicatep(goal) || user_operation_p(goal)) {
 	//trace
 	if (debug_flag == ON)
