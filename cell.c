@@ -514,41 +514,20 @@ int discard_back(int th)
 }
 
 
-void push_env(int th)
-{
-    ep[th]++;
-    if (ep[th] >= STACKSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("env stack size"), th);
-    envstack[ep[th]][0][th] = sp[th];	//local sp
-    envstack[ep[th]][1][th] = wp[th];	//working  wp
-    envstack[ep[th]][2][th] = ac[th];	//alpha counter ac
-}
-
-
 int prepare(int rest, int arglist, int th)
 {
-    if (rest != NIL) {
-	push_env(th);
-	return (arglist);
-    } else {
 	int newarg = backstack[bp[th]][6][th];
 	if (newarg != UNBIND)
 	    return (newarg);
 	else
 	    return (arglist);
-    }
 }
 
 
 int release(int rest, int th)
 {
-    if (rest == NIL) {
 	unbind(backstack[bp[th]][0][th], th);
 	ac[th] = backstack[bp[th]][3][th];
-    } else {
-	unbind(envstack[ep[th]][0][th], th);
-	ac[th] = envstack[ep[th]][2][th];
-    }
     return (NIL);
 }
 
@@ -561,15 +540,8 @@ int respond(int rest, int th)
 
 int discard(int rest, int th)
 {
-    if (rest == NIL) {
 	wp[th] = backstack[bp[th]][2][th];
 	bp[th]--;
-    } else {
-	sp[th] = envstack[ep[th]][0][th];
-	wp[th] = envstack[ep[th]][1][th];
-	ac[th] = envstack[ep[th]][2][th];
-	ep[th]--;
-    }
     return (NIL);
 }
 
