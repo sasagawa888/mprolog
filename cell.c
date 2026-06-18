@@ -507,12 +507,6 @@ int release(int rest, int th)
 }
 
 
-int respond(int rest, int th)
-{
-    return (prove_all(rest, sp[th], th));
-}
-
-
 int discard(int rest, int th)
 {
 	wp[th] = backstack[bp[th]][2][th];
