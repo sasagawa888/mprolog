@@ -1,3 +1,13 @@
+
+% Partition list for quicksort
+partition([X|L], Y, [X|L1], L2) :-
+    X < Y, !, partition(L, Y, L1, L2).
+partition([X|L], Y, L1, [X|L2]) :-
+    !,partition(L, Y, L1, L2).
+partition([], _ , [], []) :- !.
+
+
+
 mmember(X,[X|_]).
 mmember(X,[_|Xs]) :-
     mmember(X,Xs).

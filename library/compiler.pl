@@ -1953,6 +1953,15 @@ gen_a_det_body(X) :-
 
 
 gen_a_det_body(X) :-
+    n_property(X,predicate),
+    X =.. [P|A],
+    write('if (Jcall_det(Jmakecomp("'),
+    write(P),
+    write('"),'),
+    gen_argument(A),
+    write(',th) == YES)').
+
+gen_a_det_body(X) :-
     invoke_error('illegal body ',X).
 
 
