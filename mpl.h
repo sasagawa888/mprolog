@@ -170,7 +170,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX,
-       PUSH_BACK_IDX, RELEASE_BACK_IDX, DISCARD_BACK_IDX, UPDATE_BACK_IDX,
+       PUSH_BACK_IDX, UPDATE_BACK_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        COPY_BACK_IDX,
        NUM_FN1S
@@ -1138,7 +1138,6 @@ int deref(int x, int th);
 int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
-int discard_back(int th);
 int discard(int rest, int th);
 int each_car(int x);
 int each_cdr(int x);
@@ -1373,7 +1372,6 @@ int readdouble(int th);
 int read_string_term(int flag);
 int receive_from_parent(void);
 int receive_from_child(int n);
-int release_back(int th);
 int release(int rest, int th);
 int remove_cut(int x);
 int remove_duplicate(int x);

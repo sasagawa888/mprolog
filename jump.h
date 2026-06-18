@@ -225,16 +225,6 @@ static inline int Jpush_back(int th) {
     return f1[PUSH_BACK_IDX](th);
 }
 
-static inline int Jrelease_back(int th) {
-    return f1[RELEASE_BACK_IDX](th);
-}
-
-
-static inline int Jdiscard_back(int th) {
-    return f1[DISCARD_BACK_IDX](th);
-}
-
-
 static inline int Jarity_count(int x) {
     return f1[ARITY_COUNT_IDX](x);
 }
