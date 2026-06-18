@@ -1880,27 +1880,32 @@ int unify_pair(int x, int y, int th)
 	    push_stack(x, th);
 	    return (YES);
 	} else {
-	    if (variant[x - cell_size][th] == NIL)
-		return (NO);
-	    variant[car(y) - cell_size][th] =
-		car(variant[x - cell_size][th]);
-	    variant[cdr(y) - cell_size][th] =
-		cdr(variant[x - cell_size][th]);
-	    push_stack(car(y), th);
-	    push_stack(cdr(y), th);
-	    return (YES);
+	    int v = variant[x - cell_size][th];
+	    if (v == NIL)
+		return NO;
+	    int save = sp[th];
+	    if (unify(car(v), car(y), th) == YES &&
+		unify(cdr(v), cdr(y), th) == YES)
+		return (YES);
+
+	    unbind(save, th);
+	    return (NO);
 	}
     } else if (anonymousp(x)) {
 	return (YES);
     } else if (atom_variable_p(x)) {
 	bindsym(x, y, th);
 	return (YES);
-    } else if (listp(x) && x != NIL && unify_var(car(x), car(y), th) == YES
-	       && unify_var(cdr(x), cdr(y), th) == YES)
-	return (YES);
-    else
-	return (NO);
+    } else if (listp(x) && x != NIL) {
+	int save = sp[th];
 
+	if (unify(car(x), car(y), th) == YES &&
+	    unify(cdr(x), cdr(y), th) == YES)
+	    return YES;
+
+	unbind(save, th);
+	return (NO);
+    }
     return (NO);
 }
 

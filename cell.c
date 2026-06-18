@@ -491,26 +491,26 @@ int max_choice(int th)
 
 int prepare(int arglist, int th)
 {
-	int newarg = backstack[bp[th]][6][th];
-	if (newarg != UNBIND)
-	    return (newarg);
-	else
-	    return (arglist);
+    int newarg = backstack[bp[th]][6][th];
+    if (newarg != UNBIND)
+	return (newarg);
+    else
+	return (arglist);
 }
 
 
 int release(int th)
 {
-	unbind(backstack[bp[th]][0][th], th);
-	ac[th] = backstack[bp[th]][3][th];
+    unbind(backstack[bp[th]][0][th], th);
+    ac[th] = backstack[bp[th]][3][th];
     return (NIL);
 }
 
 
 int discard(int th)
 {
-	wp[th] = backstack[bp[th]][2][th];
-	bp[th]--;
+    wp[th] = backstack[bp[th]][2][th];
+    bp[th]--;
     return (NIL);
 }
 
