@@ -183,7 +183,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, RESPOND_IDX, RELEASE_IDX, DISCARD_IDX, SAVE_ARG_IDX, PREPARE_IDX, 
+       COPY_WORK_IDX, RELEASE_IDX, DISCARD_IDX, SAVE_ARG_IDX, PREPARE_IDX, 
        NUM_FN2S
 };
 
@@ -1379,7 +1379,6 @@ int replace(int x, int lis);
 int reposition_option_p(int x);
 int resolve_all(int end, int bindings, int n);
 int resolve(int end, int bindings, int trail, int n);
-int respond(int rest, int th);
 int reset_disj(int th);
 int revderef(int x, int th);
 int revderef1(int x, int th);
