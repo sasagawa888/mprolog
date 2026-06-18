@@ -409,11 +409,6 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
-static inline int Jrespond(int x, int th) {
-    return f2[RESPOND_IDX](x, th);
-}
-
-
 static inline int Jrelease(int x, int th) {
     return f2[RELEASE_IDX](x, th);
 }
