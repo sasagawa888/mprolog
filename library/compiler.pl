@@ -65,6 +65,7 @@ pass3(X) :-
     atom_concat(F,'.c',Cfile),
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
+    gen_protopype,
     gen_predicate,
     gen_definition,
     gen_execution,
@@ -209,7 +210,12 @@ spec_to_c(fx_yf,'FX_YF').
 spec_to_c(fy_xf,'FY_XF').
 spec_to_c(fy_yf,'FY_YF').
 
-
+% generate all function prototype
+gen_protopype :-
+    n_reconsult_predicate(P),
+    gen_type_declare(P),
+    fail.
+gen_protopype.
 
 % generate all predicate code
 gen_predicate :-
@@ -343,7 +349,6 @@ gen_disj_jump_switch1(X,A,M,N,L) :-
 gen_nondet_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
-    gen_type_declare(P),
 	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
@@ -722,7 +727,6 @@ gen_head1([X|Xs],N) :-
 gen_det_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
-    gen_type_declare(P),
 	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
@@ -1406,7 +1410,6 @@ return(NO);
 gen_tail_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
-    gen_type_declare(P),
     n_atom_convert(P,P1),
 	write('static int c_'),write(P1),write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
