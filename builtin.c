@@ -602,6 +602,15 @@ int b_n_ask(int arglist, int rest, int th)
 		printf("\n");
 	    x2 = cdr(x2);
 	}
+	/* if atom_variable binded to comstant then unbind */
+	int i = variables[th];
+	while (!nullp(i)) {
+		if(constantp(GET_CAR(car(i)))){
+	    SET_CAR(car(i), UNBIND);
+	    SET_CDR(car(i), UNBIND);
+		}
+	    i = cdr(i);
+	}
 	if (child_flag) {
 	    dialog_flag = 0;
 	    return (YES);
