@@ -74,8 +74,12 @@ discard(th)
 push_back(th)
 inc_choice(th)
 pop_back(th)
+copy_back(th);
 save_arg(arglist,th)
 arity_count(arglist,th)
+inc_disj_choice(th)
+dec_disj_choice(th)
+reset_disj(th);
 
 thはスレッド番号である。
 arity_count(arglist,th) 引数の数を返す。その値はキャッシュされている。これによりバックトラックで
