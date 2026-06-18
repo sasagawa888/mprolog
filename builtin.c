@@ -3824,7 +3824,7 @@ int b_measure(int arglist, int rest, int th)
 	arg1 = car(arglist);
 	proof[th] = 0;
 	start_time = getCPUTime();	//time_flag on and it store start time
-	prove_all(addtail_body(makesys("true"), arg1, th), sp[th], th);
+	prove_all(arg1, sp[th], th);
 	end_time = getCPUTime();
 	time = end_time - start_time;
 	lips = (double) proof[th] / time;
