@@ -2062,10 +2062,50 @@ int unify_str(int x, int y, int th)
     return (NO);
 }
 
+// typed unify. y is a variable
+int unify_var(int x, int y, int th)
+{
+    int x1;
+
+    if (anonymousp(x) || anonymousp(y))
+        return YES;
+
+    if (IS_ALPHA(x) && variant[x - cell_size][th] != UNBIND)
+        return unify_var(variant[x - cell_size][th], y, th);
+
+    if (IS_ALPHA(y) && variant[y - cell_size][th] != UNBIND)
+        return unify(x, variant[y - cell_size][th], th);
+
+    if (IS_ALPHA(x)) {
+        variant[x - cell_size][th] = y;
+        push_stack(x, th);
+        return YES;
+    }
+
+    if (atom_variable_p(x)) {
+        x1 = deref1(x, th);
+        if (variablep(x1)) {
+            SET_CAR(x, y);
+            return YES;
+        } else {
+            variant[y - cell_size][th] = x1;
+            push_stack(y, th);
+            return YES;
+        }
+    }
+
+    variant[y - cell_size][th] = x;
+    push_stack(y, th);
+    return YES;
+}
+
+/*
 //typed unify. y is a variable
 int unify_var(int x, int y, int th)
 {
     int x1;
+
+	
 
     if (IS_ALPHA(x)) {
 	if (variant[x - cell_size][th] == UNBIND) {
@@ -2073,10 +2113,10 @@ int unify_var(int x, int y, int th)
 	    push_stack(x, th);
 	    return (YES);
 	} else {
-	    variant[y - cell_size][th] = variant[x - cell_size][th];
-	    push_stack(y, th);
-	    return (YES);
+		return unify_var(variant[x - cell_size][th], y, th);
 	}
+    } else if (IS_ALPHA(y) && variant[y - cell_size][th] != UNBIND) {
+        return unify(x, variant[y - cell_size][th], th);
     } else if (anonymousp(x)) {
 	return (YES);
     } else if (atom_variable_p(x)) {
@@ -2086,19 +2126,20 @@ int unify_var(int x, int y, int th)
 	    return (YES);
 	} else {
 	    variant[y - cell_size][th] = x1;
+		push_stack(y,th);
 	    return (YES);
 	}
     } else if (anonymousp(x) || anonymousp(y)) {
 	return (YES);
     } else {
 	variant[y - cell_size][th] = x;
-	push_stack(x, th);
+	push_stack(y, th);
 	return (YES);
     }
 
     return (NO);
 }
-
+*/
 
 // typed unify. x is [] ?  (empty list)
 int unify_nil(int x, int th)
