@@ -427,6 +427,13 @@ static inline int Jsave_arg(int x, int th) {
 }
 
 
+
+static inline int Jprepare(int arglist, int th) {
+    return f2[PREPARE_IDX](arglist, th);
+}
+
+
+
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
 }
@@ -561,12 +568,6 @@ static inline int Jcall_nondet(int x, int y, int th) {
 static inline int Jcall_det(int x, int y, int th) {
     return f3[CALL_DET_IDX](x, y, th);
 }
-
-
-static inline int Jprepare(int rest, int arglist, int th) {
-    return f3[PREPARE_IDX](rest, arglist, th);
-}
-
 
 static inline int Jmakeconst(char* x) {
     return f4[MAKECONST_IDX](x);

@@ -138,6 +138,7 @@ void dynamic_link(int x)
     init_f2(RELEASE_IDX, (tpred) release);
     init_f2(DISCARD_IDX, (tpred) discard);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
+    init_f2(PREPARE_IDX, (tpred) prepare);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);
@@ -172,7 +173,6 @@ void dynamic_link(int x)
     init_f3(DIV_IDX, (tpred) f_div);
     init_f3(CALL_NONDET_IDX, (tpred) call_nondet);
     init_f3(CALL_DET_IDX, (tpred) call_det);
-    init_f3(PREPARE_IDX, (tpred) prepare);
 
 
     //argument-1 string type

@@ -489,16 +489,7 @@ int max_choice(int th)
 }
 
 
-int clear_choice(int th)
-{
-    backstack[bp[th]][0][th] = sp[th];	//local sp
-    backstack[bp[th]][1][th] = 0;	//clause choice 
-    backstack[bp[th]][2][th] = wp[th];	//working  wp
-    backstack[bp[th]][3][th] = ac[th];	//alpha counter ac
-    return (NIL);
-}
-
-int prepare(int rest, int arglist, int th)
+int prepare(int arglist, int th)
 {
 	int newarg = backstack[bp[th]][6][th];
 	if (newarg != UNBIND)
