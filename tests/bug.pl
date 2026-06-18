@@ -1,3 +1,7 @@
+mmember(X,[X|_]).
+mmember(X,[_|Xs]) :-
+    mmember(X,Xs).
+
 
 nat(0).
 nat(s(X)) :- nat(X).
