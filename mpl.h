@@ -172,7 +172,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX,
        PUSH_BACK_IDX, UPDATE_BACK_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
-       COPY_BACK_IDX,
+       COPY_BACK_IDX, DISCARD_IDX,
        NUM_FN1S
 };
 
@@ -183,7 +183,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, RELEASE_IDX, DISCARD_IDX, SAVE_ARG_IDX, PREPARE_IDX, 
+       COPY_WORK_IDX, RELEASE_IDX, SAVE_ARG_IDX, PREPARE_IDX, 
        NUM_FN2S
 };
 
@@ -1138,7 +1138,7 @@ int deref(int x, int th);
 int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
-int discard(int rest, int th);
+int discard(int th);
 int each_car(int x);
 int each_cdr(int x);
 int eqgreaterp(int x1, int x2);

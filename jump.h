@@ -245,6 +245,11 @@ static inline int Jreset_disj(int x) {
 }
 
 
+static inline int Jdiscard(int th) {
+    return f1[DISCARD_IDX](th);
+}
+
+
 
 static inline int Jcopy_back(int x) {
     return f1[COPY_BACK_IDX](x);
@@ -411,10 +416,6 @@ static inline int Jcopy_work(int x, int th) {
 
 static inline int Jrelease(int x, int th) {
     return f2[RELEASE_IDX](x, th);
-}
-
-static inline int Jdiscard(int x, int th) {
-    return f2[DISCARD_IDX](x, th);
 }
 
 static inline int Jsave_arg(int x, int th) {

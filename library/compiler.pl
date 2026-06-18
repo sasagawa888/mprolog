@@ -374,7 +374,7 @@ gen_nondet_arity(P,A) :-
     write('){'),nl,
     gen_nondet_clause(P,A),
     write('allfail:'),nl,
-    write('Jdiscard(rest,th);'),nl,
+    write('Jdiscard(th);'),nl,
     write('return(NO);}'),nl,!.
 
 % select all clauses that arity is A

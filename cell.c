@@ -507,7 +507,7 @@ int release(int rest, int th)
 }
 
 
-int discard(int rest, int th)
+int discard(int th)
 {
 	wp[th] = backstack[bp[th]][2][th];
 	bp[th]--;
