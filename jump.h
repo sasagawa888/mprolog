@@ -256,6 +256,11 @@ static inline int Jcopy_back(int x) {
 }
 
 
+static inline int Jrelease(int th) {
+    return f1[RELEASE_IDX](th);
+}
+
+
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
 }
@@ -412,10 +417,6 @@ static inline int Junify_nil(int x, int th) {
 
 static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
-}
-
-static inline int Jrelease(int x, int th) {
-    return f2[RELEASE_IDX](x, th);
 }
 
 static inline int Jsave_arg(int x, int th) {

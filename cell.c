@@ -499,7 +499,7 @@ int prepare(int arglist, int th)
 }
 
 
-int release(int rest, int th)
+int release(int th)
 {
 	unbind(backstack[bp[th]][0][th], th);
 	ac[th] = backstack[bp[th]][3][th];
