@@ -228,6 +228,7 @@ extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
 extern int backstack[STACKSIZE][8][THREADSIZE];
+extern int forwardstack[STACKSIZE][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
@@ -587,6 +588,7 @@ extern int wp_max[THREADSIZE];
 extern int cp[THREADSIZE];
 extern int unique_num;
 extern int bp[THREADSIZE];
+extern int fp[THREADSIZE];  
 
 
 /* module */
