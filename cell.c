@@ -441,6 +441,7 @@ int push_back(int th)
     backstack[bp[th]][4][th] = 0;	//disjunction choice
     backstack[bp[th]][5][th] = 0;	//choice backup
     backstack[bp[th]][6][th] = UNBIND;	//arglist backup
+    backstack[bp[th]][7][th] = 0;	//bias
     return (NIL);
 }
 
