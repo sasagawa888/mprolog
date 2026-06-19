@@ -300,3 +300,8 @@ back_stack  forward_stack
 (dt3)          dt1  fp[th] = 3
 (dt2)          dt2
 (dt1) bp[th]=1 dt3
+
+新API
+push_forward(th)
+get_choice(th) forwardスタックが空ならBackスタックのチョイスポイントを返す。
+そうでなければfowardからBackに移し替えてからチョイスポイントを返す。
