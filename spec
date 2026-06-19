@@ -302,6 +302,8 @@ back_stack  forward_stack
 (dt1) bp[th]=1 dt3
 
 新API
-push_forward(th)
-get_choice(th) forwardスタックが空ならBackスタックのチョイスポイントを返す。
-そうでなければfowardからBackに移し替えてからチョイスポイントを返す。
+push_forward(th)　再帰から戻るときにこれを実行する。これにより再突入が可能になる。
+pop_forward(arglist,th)
+forwardスタックが空ならなにもしない。
+そうでなければfowardからBackに移し替える。直前のarglistが保存されているならそれを返す。
+そうでなければそのままarglistを返す。
