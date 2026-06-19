@@ -472,7 +472,8 @@ int save_arg(int arglist, int th)
 int get_back_choice(int th)
 {
     proof[th]++;
-    return (backstack[bp[th]][1][th]);
+    return (backstack[bp[th]][1][th]+backstack[bp[th]][7][th]);
+    /* restrun choice+bias */
 }
 
 
@@ -550,6 +551,28 @@ int reset_disj(int th)
     return (NIL);
 }
 
+int push_forward(int th)
+{
+    fp[th]++;
+    bp[th]--;
+}
+
+int pop_forward(int arglist, int th)
+{
+    if(fp[th]==0)
+        return(arglist);
+
+    bp[th]++;
+    fp[th]--;
+    if(fp[th]==0){
+        /* retry choice */
+        return(backstack[bp[th]][6][th]); //arglist for retry 
+    } else{
+        /* skip choice */
+        backstack[bp[th]][7][th] = 9999; //bias set for retry
+        return(arglist);
+    }
+}
 
 //------for JUMP compiler-----
 int get_sp(int th)
