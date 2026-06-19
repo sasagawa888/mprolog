@@ -291,7 +291,7 @@ back_stack  forward_stack
 dt3 bp[th]=3
 dt2
 dt1          fp[th]=1
-
+BOTTOM       fp[th]=0
 |
 V
 
@@ -300,13 +300,28 @@ back_stack  forward_stack
 (dt3)          dt1  fp[th] = 3
 (dt2)          dt2
 (dt1) bp[th]=1 dt3
+BOTTOM             
 
 新API
 push_forward(th)　再帰から戻るときにこれを実行する。これにより再突入が可能になる。
-forward-biasを10000にする。
-pop_forward(arglist,th)
-forwardスタックが空ならなにもしない。
+forward-biasを9999にする。
+pop_forward(arglist,th) forwardスタックが空ならなにもしない。
 そうでなければfowardからBackに移し替える。直前のarglistが保存されているならそれを返す。
-そうでなければそのままarglistを返す。get-choiceはchoiceにforward-biasを加算する。
+そうでなければそのままarglistを返す。
+get_back_choice(th) choiceにforward-biasを加算する。
 これによりskipラベルへgotoさせる。
+get_back_choiceはforwardがBOTTOMである場合にはbiasは加算しない。
 節は最大で10000という制約がつくが実用上は問題ないだろう。
+
+例
+第２節で再帰をしていて第1節でバｯクトラックした場合
+switch(clause){
+    case 0: goto clause_1_0;
+    case 10000:  goto skip_1_0;
+    case 1: goto clause_1_1;
+    case 10001:  goto skip_1_1;
+    default: goto allfail;
+}
+
+最突入につき10001でskipする。しかし最後の再試行する場面では1でclause_1_1に
+飛びrelease(th)して第2節に進む。
