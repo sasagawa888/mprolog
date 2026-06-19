@@ -303,7 +303,10 @@ back_stack  forward_stack
 
 新API
 push_forward(th)　再帰から戻るときにこれを実行する。これにより再突入が可能になる。
+forward-biasを10000にする。
 pop_forward(arglist,th)
 forwardスタックが空ならなにもしない。
 そうでなければfowardからBackに移し替える。直前のarglistが保存されているならそれを返す。
-そうでなければそのままarglistを返す。
+そうでなければそのままarglistを返す。get-choiceはchoiceにforward-biasを加算する。
+これによりskipラベルへgotoさせる。
+節は最大で10000という制約がつくが実用上は問題ないだろう。
