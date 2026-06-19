@@ -1920,10 +1920,7 @@ int unify_int(int x, int y, int th)
 	    push_stack(x, th);
 	    return (YES);
 	} else {
-	    if (deref1(x, th) == y)
-		return (YES);
-	    else
-		return (NO);
+		return unify(deref1(x, th), y, th);
 	}
     } else if (anonymousp(x)) {
 	return (YES);
@@ -1931,6 +1928,7 @@ int unify_int(int x, int y, int th)
 	x1 = deref(x, th);
 	if (atom_variable_p(x1)) {
 	    SET_CAR(x, y);
+		push_stack(x,th);
 	    return (YES);
 	} else
 	    return (eqp(x1, y));
