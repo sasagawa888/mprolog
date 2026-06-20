@@ -430,8 +430,9 @@ gen_a_nondet_clause(P,A,M) :-
     P =.. [P1|_],
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
+    write('{'),nl,
     write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
-    write('{Jsave_arg(arglist,th); return(YES);}'),nl,
+    write('Jsave_arg(arglist,th); return(YES);}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(th);'),nl.
