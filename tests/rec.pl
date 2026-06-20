@@ -1,4 +1,8 @@
 
+mappend([],X,X).
+mappend([A|X],Y,[A|Z]) :-
+    mappend(X,Y,Z).
+
 nat(0).
 nat(s(X)) :- nat(X).
 

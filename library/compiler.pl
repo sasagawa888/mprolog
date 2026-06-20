@@ -358,7 +358,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
-    write('arglist = Jprepare(arglist,th);'),nl,
+    write('arglist = Jpop_forward(arglist,th);'),nl,
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
@@ -551,8 +551,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('res = YES;'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
-    write('Jcopy_back(th);'),nl,
-    write('Jpop_back(th);'),nl,
+    write('Jpush_forward(th);'),nl,
     write('return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
