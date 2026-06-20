@@ -469,7 +469,6 @@ gen_var([L|Ls]) :-
 
 % X=body A=arity O=ret/res/rec L=disjunction-number H=Head
 gen_nondet_body(X,A,O,M,H) :-
-    gen_nondet_body_argument(X,A,M,0),
     gen_nondet_body1(X,A,M,0,[],O,0,H).
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Option L-disjuncion-num Head
@@ -510,6 +509,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     type(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
+    gen_nondet_body_argument(X,A,M,N),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
     N1 is N+1,
@@ -523,6 +523,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     type(P,Arity,nondet),
     write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
+    gen_nondet_body_argument(X,A,M,N),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
     N1 is N+1,
@@ -581,17 +582,11 @@ gen_nondet_body_fail_retry([A,M,N]) :-
 gen_nondet_body_fail([A,M]) :-
     write('goto clause_'),write(A),write('_'),write(M1),write(';').
 
-gen_nondet_body_argument((X,Y),A,M,N) :-
-    X =.. [_|Args],
-    write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
-    gen_a_argument(Args),write(';'),nl,
-    N1 is N+1,
-    gen_nondet_body_argument(Y,A,M,N1).
 
 gen_nondet_body_argument(X,A,M,N) :-
     X =.. [_|Args],
     write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
-    gen_a_argument(Args),write(';'),nl.
+    write('Jderef('),gen_a_argument(Args),write(',th);'),nl.
 
 recur_body(X,H) :-
     functor(X,P,A),
