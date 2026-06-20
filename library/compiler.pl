@@ -410,7 +410,7 @@ gen_nondet_clause1([C|Cs],A,M) :-
 gen_a_nondet_clause((Head :- Body),A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
     gen_nondet_body(Body,A,ret,M,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
@@ -421,7 +421,7 @@ gen_a_nondet_clause(P,A,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
     write('Jinc_choice(th);'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
     write('return(YES);'),nl.
 
 % nondet predicate
@@ -430,7 +430,7 @@ gen_a_nondet_clause(P,A,M) :-
     P =.. [P1|_],
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
     write('{Jsave_arg(arglist,th); return(YES);}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
@@ -440,7 +440,7 @@ gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
     write('Jinc_choice(th);'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
     write('return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
