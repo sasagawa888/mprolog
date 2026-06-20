@@ -26,8 +26,8 @@ int cell_hash_table[HASHTBSIZE];
 int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int localstack[STACKSIZE][THREADSIZE];
-int backstack[STACKSIZE][8][THREADSIZE];
-//[0]sp, [1]choice, [2]wp, [3]ac, [4]disjunction, [5]choice-backup, [6]arglist-backup [7]bias
+int backstack[STACKSIZE][9][THREADSIZE];
+//[0]sp, [1]choice, [2]wp, [3]ac, [4]disjunction, [5]choice-backup, [6]arglist-backup, [7]bias, [8]reuse
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
 int record_pt = 1;		// current index of record database
 int counter[31];		// counter str_set,str_dec ... 
@@ -472,6 +472,8 @@ void init_repl(void)
 	cp[i] = 0;
 	bp[i] = 0;
 	fp[i] = 0;
+	for(j=0;j<9;j++)
+	backstack[0][j][i] = 0;
     }
     for (i = 0; i <= thread_num; i++) {
 	wp[i] = wp_min[i];

@@ -431,6 +431,13 @@ int pop_stack(int th)
 
 int push_back(int th)
 {
+    /* if reuse not push_back and reset bias and reuse */
+    if(backstack[bp[th]][8][th] == 1){ 
+        backstack[bp[th]][7][th] = 0; //reset bias
+        backstack[bp[th]][8][th] = 0; //reset reuse
+        return(NIL);
+    }
+
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
@@ -442,6 +449,7 @@ int push_back(int th)
     backstack[bp[th]][5][th] = 0;	//choice backup
     backstack[bp[th]][6][th] = UNBIND;	//arglist backup
     backstack[bp[th]][7][th] = 0;	//bias
+    backstack[bp[th]][8][th] = 0;	//reuse
     return (NIL);
 }
 
@@ -555,6 +563,7 @@ int push_forward(int th)
 {
     fp[th]++;
     bp[th]--;
+    return(NIL);
 }
 
 int pop_forward(int arglist, int th)
@@ -570,6 +579,7 @@ int pop_forward(int arglist, int th)
     } else{
         /* skip choice */
         backstack[bp[th]][7][th] = 9999; //bias set for retry
+        backstack[bp[th]][8][th] = 1; //reuse set for retry
         return(arglist);
     }
 }
