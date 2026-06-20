@@ -261,6 +261,12 @@ static inline int Jrelease(int th) {
 }
 
 
+static inline int Jpush_forward(int th) {
+    return f1[PUSH_FORWARD_IDX](th);
+}
+
+
+
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
 }
@@ -429,6 +435,11 @@ static inline int Jprepare(int arglist, int th) {
     return f2[PREPARE_IDX](arglist, th);
 }
 
+
+
+static inline int Jpop_forward(int arglist, int th) {
+    return f2[POP_FORWARD_IDX](arglist, th);
+}
 
 
 static inline int Jlist3(int x, int y, int z) {

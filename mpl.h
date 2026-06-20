@@ -170,7 +170,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX,
-       PUSH_BACK_IDX, UPDATE_BACK_IDX, RELEASE_IDX,
+       PUSH_BACK_IDX, UPDATE_BACK_IDX, RELEASE_IDX, PUSH_FORWARD_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        COPY_BACK_IDX, DISCARD_IDX, 
        NUM_FN1S
@@ -183,7 +183,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, SAVE_ARG_IDX, PREPARE_IDX, 
+       COPY_WORK_IDX, SAVE_ARG_IDX, PREPARE_IDX, POP_FORWARD_IDX,
        NUM_FN2S
 };
 
@@ -1343,6 +1343,7 @@ int parser(int operand, int operator, int weight, int spec, int terminal, int pa
 int parse(int operand, int operator);
 int parse1(int operand, int operator ,int weight, int spec);
 int plus(int arg1, int arg2, int th);
+int pop_forward(int arglist, int th);
 int pop_stack(int th);
 int pop_back(int th);
 int pop_ustack(void);
@@ -1360,6 +1361,7 @@ int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
 int push_back(int th);
+int push_forward(int th);
 int pop_back(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);
