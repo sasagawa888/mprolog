@@ -433,7 +433,6 @@ int push_back(int th)
 {
     /* if reuse not push_back and reset bias and reuse */
     if(backstack[bp[th]][REUSE_BACKSTACK][th] == 1){ 
-        backstack[bp[th]][BIAS_BACKSTACK][th] = 0; //reset bias
         backstack[bp[th]][REUSE_BACKSTACK][th] = 0; //reset reuse
         return(NIL);
     }
@@ -448,7 +447,6 @@ int push_back(int th)
     backstack[bp[th]][DISJ_BACKSTACK][th] = 0;	//disjunction choice
     backstack[bp[th]][CHOICE_BACKUP_BACKSTACK][th] = 0;	//choice backup
     backstack[bp[th]][ARGLIST_BACKSTACK][th] = UNBIND;	//arglist backup
-    backstack[bp[th]][BIAS_BACKSTACK][th] = 0;	//bias
     backstack[bp[th]][REUSE_BACKSTACK][th] = 0;	//reuse
     return (NIL);
 }
@@ -462,7 +460,11 @@ int pop_back(int th)
 
 int repush_back(int arglist, int th)
 {
-    if(backstack[bp[th]][REUSE_BACKSTACK][th] == 1){
+    int next = bp[th] + 1;
+    if(next >= STACKSIZE)
+    return arglist;
+
+    if(backstack[next][REUSE_BACKSTACK][th] == 1){
         bp[th]++;
         if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
             return(arglist);
@@ -478,16 +480,20 @@ int save_arg(int arglist, int th)
     return (NIL);
 }
 
+/* reuse frame with saved arglist: re-enter normal clause */
+/* reuse frame without saved arglist: jump to skip label */
 int get_back_choice(int th)
 {
     proof[th]++;
     if(backstack[bp[th]][REUSE_BACKSTACK][th] == 0)
         return (backstack[bp[th]][CHOICE_BACKSTACK][th]);
-    else if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
+        /* normal case */
+    else if(backstack[bp[th]][ARGLIST_BACKSTACK][th] != UNBIND)
         return (backstack[bp[th]][CHOICE_BACKSTACK][th]);
+        /* return choice not skip */
     else 
         return (backstack[bp[th]][CHOICE_BACKSTACK][th]+9999);
-    /* restrun choice+bias */
+        /* return choice+bias to skip */
 }
 
 
@@ -505,15 +511,6 @@ int max_choice(int th)
 }
 
 
-int prepare(int arglist, int th)
-{
-    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
-    if (newarg != UNBIND)
-	return (newarg);
-    else
-	return (arglist);
-}
-
 
 int release(int th)
 {
@@ -528,7 +525,7 @@ int discard(int th)
     int i;
     wp[th] = backstack[bp[th]][WP_BACKSTACK][th];
     bp[th]--;
-    i = bp[th];
+    i = bp[th] + 1;
     while(backstack[i][REUSE_BACKSTACK][th] == 1){
         backstack[i][REUSE_BACKSTACK][th] = 0;
         i++;
@@ -571,6 +568,10 @@ int reset_disj(int th)
     return (NIL);
 }
 
+
+
+//--------garbages-----
+
 int push_forward(int th)
 {
     fp[th]++;
@@ -601,6 +602,17 @@ int reset_forward(int th)
     fp[th] = 0;
     return(NIL);
 }
+
+
+int prepare(int arglist, int th)
+{
+    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
+    if (newarg != UNBIND)
+	return (newarg);
+    else
+	return (arglist);
+}
+
 
 //------for JUMP compiler-----
 int get_sp(int th)
