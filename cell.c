@@ -453,6 +453,10 @@ int push_back(int th)
     return (NIL);
 }
 
+int pop_back(int th)
+{
+    return(NIL);
+}
 
 int save_arg(int arglist, int th)
 {
@@ -463,7 +467,12 @@ int save_arg(int arglist, int th)
 int get_back_choice(int th)
 {
     proof[th]++;
-    return (backstack[bp[th]][CHOICE_BACKSTACK][th]+backstack[bp[th]][BIAS_BACKSTACK][th]);
+    if(backstack[bp[th]][REUSE_BACKSTACK][th] == 0)
+        return (backstack[bp[th]][CHOICE_BACKSTACK][th]);
+    else if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
+        return (backstack[bp[th]][CHOICE_BACKSTACK][th]);
+    else 
+        return (backstack[bp[th]][CHOICE_BACKSTACK][th]+9999);
     /* restrun choice+bias */
 }
 
@@ -502,8 +511,14 @@ int release(int th)
 
 int discard(int th)
 {
+    int i;
     wp[th] = backstack[bp[th]][WP_BACKSTACK][th];
     bp[th]--;
+    i = bp[th];
+    while(backstack[i][REUSE_BACKSTACK][th] == 1){
+        backstack[i][REUSE_BACKSTACK][th] = 0;
+        i++;
+    }
     return (NIL);
 }
 
