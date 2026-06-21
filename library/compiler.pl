@@ -358,7 +358,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
-    write('arglist = Jpop_forward(arglist,th);'),nl,
+    write('if(rest == NIL) arglist = Jpop_forward(arglist,th);'),nl,
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
