@@ -353,11 +353,14 @@ natが中途においてprimeに制御を渡す。このときに次のように
 ownerという概念を導入する。これはbackstackのインデックスそのものである。
 再帰をする場合においてもpushbackするからownerはそれぞれに異なる。
 fp[STACKSIZE][THREADSIZE]に改める。
-pop_forwardにおいてはbackstackのownerのインデックスの数を−１して
-それが0になるかどうかで判定する。
+pop_forwardにおいてはbackstackのownerのインデックスの数を−１する。
+それぞれは０か１なのでfp[owner][th]==0になったところでpop完了
 biasの設定はbackstackのARGLIST_BACKSTACKの値を参照して決める。
 スキップするものはUNBINDになっている。
 ARGLIST_BACKSTACKに値があるものの場合だけbiasは与えない。
 
-discardにおいてはfpを操作する必要はない。
+discardにおいてはfp[owner][th]を０にする。
+これによりもう復元されることはない
 なぜならそれを所有していたbackstackが消えるからである。
+一点だけ注意するなら、owner が backstack index そのものなので、
+backstackスロットを再利用する時には fp[owner][th] を必ず初期化する必要があります。
