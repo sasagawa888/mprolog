@@ -586,7 +586,7 @@ gen_nondet_body_fail([A,M]) :-
 gen_nondet_body_argument(X,A,M,N) :-
     X =.. [_|Args],
     write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
-    write('Jderef('),gen_a_argument(Args),write(',th);'),nl.
+    gen_a_argument(Args),write(';'),nl.
 
 recur_body(X,H) :-
     functor(X,P,A),
