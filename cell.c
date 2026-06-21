@@ -455,7 +455,21 @@ int push_back(int th)
 
 int pop_back(int th)
 {
+    backstack[bp[th]][REUSE_BACKSTACK][th] = 1;
+    bp[th]--;
     return(NIL);
+}
+
+int repush_back(int arglist, int th)
+{
+    if(backstack[bp[th]][REUSE_BACKSTACK][th] == 1){
+        bp[th]++;
+        if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
+            return(arglist);
+        else 
+            return(backstack[bp[th]][ARGLIST_BACKSTACK][th]);
+    } else 
+        return(arglist);
 }
 
 int save_arg(int arglist, int th)

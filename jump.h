@@ -202,10 +202,6 @@ static inline int Jbigx_to_parmanent(int x) {
     return f1[BIGX_TO_PARMANENT_IDX](x);
 }
 
-static inline int Jpop_back(int x) {
-    return f1[POP_BACK_IDX](x);
-}
-
 static inline int Jinc_choice(int x) {
     return f1[INC_CHOICE_IDX](x);
 }
@@ -269,6 +265,12 @@ static inline int Jpush_forward(int th) {
 static inline int Jreset_forward(int th) {
     return f1[RESET_FORWARD_IDX](th);
 }
+
+
+static inline int Jpop_back(int th) {
+    return f1[POP_BACK_IDX](th);
+}
+
 
 
 
@@ -447,6 +449,12 @@ static inline int Jpop_forward(int arglist, int th) {
 }
 
 
+static inline int Jrepush_back(int arglist, int th) {
+    return f2[REPUSH_BACK_IDX](arglist, th);
+}
+
+
+
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
 }
@@ -454,6 +462,7 @@ static inline int Jlist3(int x, int y, int z) {
 static inline int Jerrorcomp(int x, int y, int z) {
     return f3[ERRORCOMP_IDX](x, y, z);
 }
+
 
 static inline int Jwlistcons(int x, int y, int th) {
     return f3[WLISTCONS_IDX](x, y, th);

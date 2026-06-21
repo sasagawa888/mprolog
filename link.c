@@ -96,6 +96,7 @@ void dynamic_link(int x)
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_FORWARD_IDX, (tpred) push_forward);
     init_f1(RESET_FORWARD_IDX, (tpred) reset_forward);
+    init_f1(POP_BACK_IDX, (tpred) pop_back);
 
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
@@ -140,6 +141,7 @@ void dynamic_link(int x)
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
     init_f2(PREPARE_IDX, (tpred) prepare);
     init_f2(POP_FORWARD_IDX, (tpred) pop_forward);
+    init_f2(REPUSH_BACK_IDX, (tpred) repush_back);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);
