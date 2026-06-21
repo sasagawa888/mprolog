@@ -432,55 +432,38 @@ int pop_stack(int th)
 int push_back(int th)
 {
     /* if reuse not push_back and reset bias and reuse */
-    if(backstack[bp[th]][8][th] == 1){ 
-        backstack[bp[th]][7][th] = 0; //reset bias
-        backstack[bp[th]][8][th] = 0; //reset reuse
+    if(backstack[bp[th]][REUSE_BACKSTACK][th] == 1){ 
+        backstack[bp[th]][BIAS_BACKSTACK][th] = 0; //reset bias
+        backstack[bp[th]][REUSE_BACKSTACK][th] = 0; //reset reuse
         return(NIL);
     }
 
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
-    backstack[bp[th]][0][th] = sp[th];	//local sp
-    backstack[bp[th]][1][th] = 0;	//clause choice 
-    backstack[bp[th]][2][th] = wp[th];	//working  wp
-    backstack[bp[th]][3][th] = ac[th];	//alpha counter ac
-    backstack[bp[th]][4][th] = 0;	//disjunction choice
-    backstack[bp[th]][5][th] = 0;	//choice backup
-    backstack[bp[th]][6][th] = UNBIND;	//arglist backup
-    backstack[bp[th]][7][th] = 0;	//bias
-    backstack[bp[th]][8][th] = 0;	//reuse
+    backstack[bp[th]][SP_BACKSTACK][th] = sp[th];	//local sp
+    backstack[bp[th]][CHOICE_BACKSTACK][th] = 0;	//clause choice 
+    backstack[bp[th]][WP_BACKSTACK][th] = wp[th];	//working  wp
+    backstack[bp[th]][AC_BACKSTACK][th] = ac[th];	//alpha counter ac
+    backstack[bp[th]][DISJ_BACKSTACK][th] = 0;	//disjunction choice
+    backstack[bp[th]][CHOICE_BACKUP_BACKSTACK][th] = 0;	//choice backup
+    backstack[bp[th]][ARGLIST_BACKSTACK][th] = UNBIND;	//arglist backup
+    backstack[bp[th]][BIAS_BACKSTACK][th] = 0;	//bias
+    backstack[bp[th]][REUSE_BACKSTACK][th] = 0;	//reuse
     return (NIL);
 }
 
-int pop_back(int th)
-{
-    bp[th]--;
-    return (NIL);
-}
-
-int copy_back(int th)
-{
-    backstack[bp[th] - 1][0][th] = backstack[bp[th]][0][th];	//local sp
-    backstack[bp[th] - 1][1][th] = backstack[bp[th]][1][th];	//clause choice 
-    backstack[bp[th] - 1][2][th] = backstack[bp[th]][2][th];	//working  wp
-    backstack[bp[th] - 1][3][th] = backstack[bp[th]][3][th];	//alpha counter ac
-    backstack[bp[th] - 1][4][th] = backstack[bp[th]][4][th];	//disjunction choice
-    backstack[bp[th] - 1][5][th] = backstack[bp[th]][5][th];	//choice backup
-    backstack[bp[th] - 1][6][th] = backstack[bp[th]][6][th];	//arglist backup
-    return (NIL);
-}
 
 int save_arg(int arglist, int th)
 {
-    backstack[bp[th]][6][th] = arglist;
+    backstack[bp[th]][ARGLIST_BACKSTACK][th] = arglist;
     return (NIL);
 }
 
 int get_back_choice(int th)
 {
     proof[th]++;
-    return (backstack[bp[th]][1][th]+backstack[bp[th]][7][th]);
+    return (backstack[bp[th]][CHOICE_BACKSTACK][th]+backstack[bp[th]][BIAS_BACKSTACK][th]);
     /* restrun choice+bias */
 }
 
@@ -488,20 +471,20 @@ int get_back_choice(int th)
 
 int inc_choice(int th)
 {
-    backstack[bp[th]][1][th]++;
+    backstack[bp[th]][CHOICE_BACKSTACK][th]++;
     return (NIL);
 }
 
 int max_choice(int th)
 {
-    backstack[bp[th]][1][th] = 999999999;
+    backstack[bp[th]][CHOICE_BACKSTACK][th] = 999999999;
     return (NIL);
 }
 
 
 int prepare(int arglist, int th)
 {
-    int newarg = backstack[bp[th]][6][th];
+    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
     if (newarg != UNBIND)
 	return (newarg);
     else
@@ -511,15 +494,15 @@ int prepare(int arglist, int th)
 
 int release(int th)
 {
-    unbind(backstack[bp[th]][0][th], th);
-    ac[th] = backstack[bp[th]][3][th];
+    unbind(backstack[bp[th]][SP_BACKSTACK][th], th);
+    ac[th] = backstack[bp[th]][AC_BACKSTACK][th];
     return (NIL);
 }
 
 
 int discard(int th)
 {
-    wp[th] = backstack[bp[th]][2][th];
+    wp[th] = backstack[bp[th]][WP_BACKSTACK][th];
     bp[th]--;
     return (NIL);
 }
@@ -539,23 +522,23 @@ int arity_count(int arglist)
 int get_disj_choice(int th)
 {
     int choice;
-    choice = backstack[bp[th]][4][th];
+    choice = backstack[bp[th]][DISJ_BACKSTACK][th];
     if (choice == 0)
-	backstack[bp[th]][1][th]--;
+	backstack[bp[th]][CHOICE_BACKSTACK][th]--;
     return (choice);
 }
 
 int inc_disj_choice(int th)
 {
-    backstack[bp[th]][4][th]++;
+    backstack[bp[th]][DISJ_BACKSTACK][th]++;
     return (NIL);
 }
 
 
 int reset_disj(int th)
 {
-    backstack[bp[th]][4][th] = 0;
-    backstack[bp[th]][1][th] = backstack[bp[th]][5][th];
+    backstack[bp[th]][DISJ_BACKSTACK][th] = 0;
+    backstack[bp[th]][CHOICE_BACKSTACK][th] = backstack[bp[th]][CHOICE_BACKUP_BACKSTACK][th];
     return (NIL);
 }
 
@@ -575,11 +558,11 @@ int pop_forward(int arglist, int th)
     fp[th]--;
     if(fp[th]==0){
         /* retry choice */
-        return(backstack[bp[th]][6][th]); //arglist for retry 
+        return(backstack[bp[th]][ARGLIST_BACKSTACK][th]); //arglist for retry 
     } else{
         /* skip choice */
-        backstack[bp[th]][7][th] = 9999; //bias set for retry
-        backstack[bp[th]][8][th] = 1; //reuse set for retry
+        backstack[bp[th]][BIAS_BACKSTACK][th] = 9999; //bias set for retry
+        backstack[bp[th]][REUSE_BACKSTACK][th] = 1; //reuse set for retry
         return(arglist);
     }
 }

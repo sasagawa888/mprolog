@@ -219,7 +219,11 @@ enum {
        NUM_FN8S,
 };
 
-
+enum {
+    SP_BACKSTACK, CHOICE_BACKSTACK, WP_BACKSTACK, AC_BACKSTACK, DISJ_BACKSTACK,
+    CHOICE_BACKUP_BACKSTACK, ARGLIST_BACKSTACK, BIAS_BACKSTACK, REUSE_BACKSTACK,
+    OWNER_BACKSTACK, BACKSTACK_SIZE
+};
 
 extern cell *heap;
 extern int cell_size;
@@ -227,7 +231,7 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
-extern int backstack[STACKSIZE][9][THREADSIZE];
+extern int backstack[STACKSIZE][11][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
