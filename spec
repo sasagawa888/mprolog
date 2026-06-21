@@ -352,8 +352,8 @@ natが中途においてprimeに制御を渡す。このときに次のように
 
 ownerという概念を導入する。これはbackstackのインデックスそのものである。
 再帰をする場合においてもpushbackするからownerはそれぞれに異なる。
-fp[OWNERSIZE][THREADSIZE]に改める。
-pop_forwardにおいてはbackstackに記憶してあるownerのインデックスの数を−１して
+fp[STACKSIZE][THREADSIZE]に改める。
+pop_forwardにおいてはbackstackのownerのインデックスの数を−１して
 それが0になるかどうかで判定する。
 biasの設定はbackstackのARGLIST_BACKSTACKの値を参照して決める。
 スキップするものはUNBINDになっている。
