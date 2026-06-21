@@ -584,6 +584,12 @@ int pop_forward(int arglist, int th)
     }
 }
 
+int reset_forward(int th)
+{
+    fp[th] = 0;
+    return(NIL);
+}
+
 //------for JUMP compiler-----
 int get_sp(int th)
 {

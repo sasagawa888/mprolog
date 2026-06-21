@@ -172,7 +172,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX,
        PUSH_BACK_IDX, UPDATE_BACK_IDX, RELEASE_IDX, PUSH_FORWARD_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
-       COPY_BACK_IDX, DISCARD_IDX, 
+       COPY_BACK_IDX, DISCARD_IDX, RESET_FORWARD_IDX,
        NUM_FN1S
 };
 
@@ -1383,6 +1383,7 @@ int reposition_option_p(int x);
 int resolve_all(int end, int bindings, int n);
 int resolve(int end, int bindings, int trail, int n);
 int reset_disj(int th);
+int reset_forward(int th);
 int revderef(int x, int th);
 int revderef1(int x, int th);
 int reverse(int x);

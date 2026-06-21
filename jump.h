@@ -266,6 +266,11 @@ static inline int Jpush_forward(int th) {
 }
 
 
+static inline int Jreset_forward(int th) {
+    return f1[RESET_FORWARD_IDX](th);
+}
+
+
 
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
