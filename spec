@@ -364,3 +364,23 @@ discardにおいてはfp[owner][th]を０にする。
 なぜならそれを所有していたbackstackが消えるからである。
 一点だけ注意するなら、owner が backstack index そのものなので、
 backstackスロットを再利用する時には fp[owner][th] を必ず初期化する必要があります。
+
+再々再考察
+バックトラックの仕組みはもっと簡単にできる。上記は複雑すぎる。
+forwardスタック、fpは不要。
+biasは不要
+ownerも不要
+
+pop_back(th)　reuseを書き込むとともにbp[th]--する。　
+repush_back(th)　ureuseであるならばbp[th]++する。
+get_back_choice(th)　bp[th]のARGLIST_BACKSTACKがUNBINDでなければCHOICE_BACKSTACKを返す。
+UNBINDならばCHOICE_BACKSTACK＋９９９９を返す。
+discard(th)　bp[th]--する。bp[th]から上のreuseを０にして解除する。
+Backstackは開始時に全部０クリアする。
+
+要するにBACKスタックは伸び縮し再利用可能なスタックである。
+Prologはバックトラックする。したがってBackスタックの上部において言ったり来たりする。
+YESで戻ってくるときにはbpを1-するとともにreuse状態にしておく。バックトラックする可能性を示す。
+バックトラックしないで終わる可能性もある。この場合には初期化により全部クリアする。
+全部失敗で終わる場合もある。この場合には上部のreuseをクリアする。
+Backスタック1本で十分に足りるのである。
