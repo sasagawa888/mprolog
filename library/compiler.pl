@@ -358,7 +358,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
-    write('if(rest == NIL) arglist = Jpop_forward(arglist,th);'),nl,
+    write('arglist = Jpop_forward(arglist,th);'),nl,
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
@@ -507,7 +507,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,nondet),
-    write('Jreset_forward(th); Jpush_back(th);'),nl,
+    write('Jpush_back(th);'),nl,
     gen_nondet_body_label([A,M,N]),
     gen_nondet_body_argument(X,A,M,N),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
