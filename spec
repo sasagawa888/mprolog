@@ -350,19 +350,14 @@ forwardは複数の述語にものが積み上がる場合がある。
 nat(N),prime(N).のようにそれぞれがnondetの場合である。
 natが中途においてprimeに制御を渡す。このときに次のように整理する。
 
-push_backにおいてその時点でのfp[th]を保存しておく。
-pop_forwardにおいては保存しておいたfp[th]の位置をみて
-その時点でのfp[th]の値が上回っている場合には
-popする。biasの設定もこの保存してあったfp[th]の値を参照して決める。
-一番下にあるものはbiasを設定してはいけない。それはスキップしないからである。
+ownerという概念を導入する。これはbackstackのインデックスそのものである。
+再帰をする場合においてもpushbackするからownerはそれぞれに異なる。
+fp[OWNERSIZE][THREADSIZE]に改める。
+pop_forwardにおいてはbackstackに記憶してあるownerのインデックスの数を−１して
+それが0になるかどうかで判定する。
+biasの設定はbackstackのARGLIST_BACKSTACKの値を参照して決める。
+スキップするものはUNBINDになっている。
+ARGLIST_BACKSTACKに値があるものの場合だけbiasは与えない。
 
-discatdにおいてはfp[h]の値をBackスタックに保持しておいた
-値に入れ替える。これはつまりforwardスタックの解放
-
-forwardstack 
-
-dt5  fp[th]=2
-dt4  fp[th]=2
-dt3  fp[th]=2  
-dt2  fp[th]=0
-dt1  fp[th]=0
+discardにおいてはfpを操作する必要はない。
+なぜならそれを所有していたbackstackが消えるからである。
