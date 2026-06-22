@@ -431,7 +431,13 @@ int pop_stack(int th)
 
 int push_back(int th)
 {
-    
+    /* if reuse not push_back and reset bias and reuse */
+    if(backstack[bp[th]+1][ARGLIST_BACKSTACK][th] != 0){ 
+        bp[th]++;
+        return(NIL);
+    }
+
+
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
@@ -514,8 +520,8 @@ int discard(int th)
     wp[th] = backstack[bp[th]][WP_BACKSTACK][th];
     bp[th]--;
     i = bp[th] + 1;
-    while(backstack[i][REUSE_BACKSTACK][th] == 1){
-        backstack[i][REUSE_BACKSTACK][th] = 0;
+    while(backstack[i][ARGLIST_BACKSTACK][th] != 0){
+        backstack[i][ARGLIST_BACKSTACK][th] = 0;
         i++;
     }
     return (NIL);
