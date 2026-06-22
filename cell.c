@@ -431,7 +431,7 @@ int pop_stack(int th)
 
 int push_back(int th)
 {
-    /* if reuse not push_back and reset bias and reuse */
+    /* if bp+1 is already exist, restore it */
     if(backstack[bp[th]+1][ARGLIST_BACKSTACK][th] != 0){ 
         bp[th]++;
         return(NIL);
