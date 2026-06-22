@@ -472,7 +472,7 @@ void init_repl(void)
 	bp[i] = 0;
 	fp[i] = 0;
 	for(j=0;j<STACKSIZE;j++)
-		backstack[j][REUSE_BACKSTACK][i] = 0;
+		backstack[j][ARGLIST_BACKSTACK][i] = 0;
     }
     for (i = 0; i <= thread_num; i++) {
 	wp[i] = wp_min[i];

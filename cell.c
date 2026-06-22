@@ -431,12 +431,7 @@ int pop_stack(int th)
 
 int push_back(int th)
 {
-    /* if reuse not push_back and reset bias and reuse */
-    if(backstack[bp[th]][REUSE_BACKSTACK][th] == 1){ 
-        backstack[bp[th]][REUSE_BACKSTACK][th] = 0; //reset reuse
-        return(NIL);
-    }
-
+    
     bp[th]++;
     if (bp[th] >= STACKSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
