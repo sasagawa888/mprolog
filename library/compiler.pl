@@ -560,7 +560,7 @@ gen_nondet_body1(X,A,M,N,B,O,L,H) :-
 
 
 gen_nondet_body_label([A,M,N]) :-
-    write('retry_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
+    write('retry_'),write(A),write('_'),write(M),write('_'),write(N),write(':;'),nl.
 
 gen_nondet_body_disj_label([A,M,N,L]) :-
     write('disj_'),write(A),write('_'),write(M),write('_'),write(N),write('_'),write(L),write(':'),nl.
