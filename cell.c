@@ -458,22 +458,6 @@ int pop_back(int th)
     return(NIL);
 }
 
-int repush_back(int arglist, int th)
-{
-    int next = bp[th] + 1;
-    if(next >= STACKSIZE)
-    return arglist;
-
-    if(backstack[next][REUSE_BACKSTACK][th] == 1){
-        bp[th]++;
-        if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
-            return(arglist);
-        else 
-            return(backstack[bp[th]][ARGLIST_BACKSTACK][th]);
-    } else 
-        return(arglist);
-}
-
 int save_arg(int arglist, int th)
 {
     backstack[bp[th]][ARGLIST_BACKSTACK][th] = arglist;
@@ -510,6 +494,15 @@ int max_choice(int th)
     return (NIL);
 }
 
+
+int prepare(int arglist, int th)
+{
+    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
+    if (newarg != UNBIND)
+	return (newarg);
+    else
+	return (arglist);
+}
 
 
 int release(int th)
@@ -572,6 +565,23 @@ int reset_disj(int th)
 
 //--------garbages-----
 
+int repush_back(int arglist, int th)
+{
+    int next = bp[th] + 1;
+    if(next >= STACKSIZE)
+    return arglist;
+
+    if(backstack[next][REUSE_BACKSTACK][th] == 1){
+        bp[th]++;
+        if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
+            return(arglist);
+        else 
+            return(backstack[bp[th]][ARGLIST_BACKSTACK][th]);
+    } else 
+        return(arglist);
+}
+
+
 int push_forward(int th)
 {
     fp[th]++;
@@ -603,15 +613,6 @@ int reset_forward(int th)
     return(NIL);
 }
 
-
-int prepare(int arglist, int th)
-{
-    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
-    if (newarg != UNBIND)
-	return (newarg);
-    else
-	return (arglist);
-}
 
 
 //------for JUMP compiler-----
