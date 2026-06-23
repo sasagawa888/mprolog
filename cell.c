@@ -432,7 +432,7 @@ int pop_stack(int th)
 int push_back(int th)
 {
     /* if bp+1 is already exist, restore it */
-    if(backstack[bp[th]+1][ARGLIST_BACKSTACK][th] != 0){ 
+    if(backstack[bp[th]+1][REUSE_BACKSTACK][th] != 0){ 
         bp[th]++;
         return(NIL);
     }
@@ -483,7 +483,7 @@ int get_back_choice(int th)
         res = backstack[bp[th]][CHOICE_BACKSTACK][th];
         /* return choice+bias to skip */
     
-    printf("clause=%d\n",res);
+    //printf("clause=%d\n",res);
     return(res);
 }
 
