@@ -473,6 +473,8 @@ int get_back_choice(int th)
     proof[th]++;
     if(backstack[bp[th]+1][REUSE_BACKSTACK][th] == 1)
         res = backstack[bp[th]][CHOICE_BACKSTACK][th]+9999;
+    else if(backstack[bp[th]+1][ARGLIST_BACKSTACK][th] != 0)
+        res = backstack[bp[th]][CHOICE_BACKSTACK][th]+9999;
     else if(backstack[bp[th]][REUSE_BACKSTACK][th] == 1 &&
        backstack[bp[th]][ARGLIST_BACKSTACK][th] != UNBIND) 
         res = backstack[bp[th]][CHOICE_BACKSTACK][th];
