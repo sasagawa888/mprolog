@@ -526,6 +526,7 @@ int release(int th)
 int discard(int th)
 {
     int i;
+    release(th);
     wp[th] = backstack[bp[th]][WP_BACKSTACK][th];
     bp[th]--;
     i = bp[th] + 1;
