@@ -257,15 +257,6 @@ static inline int Jrelease(int th) {
 }
 
 
-static inline int Jpush_forward(int th) {
-    return f1[PUSH_FORWARD_IDX](th);
-}
-
-
-static inline int Jreset_forward(int th) {
-    return f1[RESET_FORWARD_IDX](th);
-}
-
 
 static inline int Jpop_back(int th) {
     return f1[POP_BACK_IDX](th);
@@ -442,16 +433,6 @@ static inline int Jprepare(int arglist, int th) {
     return f2[PREPARE_IDX](arglist, th);
 }
 
-
-
-static inline int Jpop_forward(int arglist, int th) {
-    return f2[POP_FORWARD_IDX](arglist, th);
-}
-
-
-static inline int Jrepush_back(int arglist, int th) {
-    return f2[REPUSH_BACK_IDX](arglist, th);
-}
 
 
 
