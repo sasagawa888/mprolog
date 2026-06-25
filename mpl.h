@@ -34,6 +34,8 @@ address
 #define PARASIZE 100
 #define THREADSIZE 10
 #define PROCSIZE 10
+#define CONJSIZE 30
+#define RECURSIZE 100
 #define OPERATOR_NUMBER 24
 #define FUNCTION_NUMBER 22
 #define BUILTIN_NUMBER 220
@@ -597,6 +599,7 @@ extern int wp_max[THREADSIZE];
 extern int cp[THREADSIZE];
 extern int unique_num;
 extern int bp[THREADSIZE];
+extern int scp[2][THREADSIZE]; 
 
 
 /* module */
