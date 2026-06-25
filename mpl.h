@@ -225,6 +225,11 @@ enum {
     OWNER_BACKSTACK, BACKSTACK_SIZE
 };
 
+enum {
+    CONJ,
+    RECUR,
+};
+
 extern cell *heap;
 extern int cell_size;
 extern int variant_max;
@@ -232,6 +237,7 @@ extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
 extern int backstack[STACKSIZE][11][THREADSIZE];
+extern int scbmstack[30][100][11][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
@@ -591,7 +597,6 @@ extern int wp_max[THREADSIZE];
 extern int cp[THREADSIZE];
 extern int unique_num;
 extern int bp[THREADSIZE];
-extern int fp[THREADSIZE];  
 
 
 /* module */

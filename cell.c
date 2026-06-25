@@ -574,59 +574,6 @@ int reset_disj(int th)
 }
 
 
-
-//--------garbages-----
-
-int repush_back(int arglist, int th)
-{
-    int next = bp[th] + 1;
-    if(next >= STACKSIZE)
-    return arglist;
-
-    if(backstack[next][REUSE_BACKSTACK][th] == 1){
-        bp[th]++;
-        if(backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
-            return(arglist);
-        else 
-            return(backstack[bp[th]][ARGLIST_BACKSTACK][th]);
-    } else 
-        return(arglist);
-}
-
-
-int push_forward(int th)
-{
-    fp[th]++;
-    bp[th]--;
-    return(NIL);
-}
-
-int pop_forward(int arglist, int th)
-{
-    if(fp[th]==0)
-        return(arglist);
-
-    bp[th]++;
-    fp[th]--;
-    if(fp[th]==0){
-        /* retry choice */
-        return(backstack[bp[th]][ARGLIST_BACKSTACK][th]); //arglist for retry 
-    } else{
-        /* skip choice */
-        backstack[bp[th]][BIAS_BACKSTACK][th] = 9999; //bias set for retry
-        backstack[bp[th]][REUSE_BACKSTACK][th] = 1; //reuse set for retry
-        return(arglist);
-    }
-}
-
-int reset_forward(int th)
-{
-    fp[th] = 0;
-    return(NIL);
-}
-
-
-
 //------for JUMP compiler-----
 int get_sp(int th)
 {
