@@ -100,7 +100,7 @@ int wp_max[THREADSIZE];		// end wp point in each thread
 int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
 int bp[THREADSIZE];		// backtrack pointer 
-int scp[2][THREADSIZE];  // SCBM pointer
+int scp[2][THREADSIZE];		// SCBM pointer
 
 
 // bignum pointer
@@ -462,7 +462,7 @@ void reset(int i)
 
 void init_repl(void)
 {
-    int i, j;
+    int i, j, k, l;
 
     stok.flag = GO;
     nest = 0;
@@ -472,10 +472,16 @@ void init_repl(void)
 	ac[i] = cell_size + 1;
 	cp[i] = 0;
 	bp[i] = 0;
-	for(j=0;j<STACKSIZE;j++){
-		backstack[j][REUSE_BACKSTACK][i] = 0;
-		backstack[j][ARGLIST_BACKSTACK][i] = 0;
-		}
+	/* old data structure it will be removed */
+	for (j = 0; j < STACKSIZE; j++) {
+	    backstack[j][REUSE_BACKSTACK][i] = 0;
+	    backstack[j][ARGLIST_BACKSTACK][i] = 0;
+	}
+	/* scbm */
+	for (j = 0; j < CONJSIZE; j++)
+	    for (k = 0; k < RECURSIZE; k++)
+		for (l = 0; l < SCBM_ELT_SIZE; l++)
+		    scbmstack[j][k][l][i] = 0;
     }
     for (i = 0; i <= thread_num; i++) {
 	wp[i] = wp_min[i];

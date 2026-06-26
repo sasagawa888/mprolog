@@ -1920,7 +1920,7 @@ int unify_int(int x, int y, int th)
 	    push_stack(x, th);
 	    return (YES);
 	} else {
-		return unify(deref1(x, th), y, th);
+	    return unify(deref1(x, th), y, th);
 	}
     } else if (anonymousp(x)) {
 	return (YES);
@@ -1928,7 +1928,7 @@ int unify_int(int x, int y, int th)
 	x1 = deref(x, th);
 	if (atom_variable_p(x1)) {
 	    SET_CAR(x, y);
-		push_stack(x,th);
+	    push_stack(x, th);
 	    return (YES);
 	} else
 	    return (eqp(x1, y));
@@ -2066,30 +2066,30 @@ int unify_var(int x, int y, int th)
     int x1;
 
     if (anonymousp(x) || anonymousp(y))
-        return YES;
+	return YES;
 
     if (IS_ALPHA(x) && variant[x - cell_size][th] != UNBIND)
-        return unify_var(variant[x - cell_size][th], y, th);
+	return unify_var(variant[x - cell_size][th], y, th);
 
     if (IS_ALPHA(y) && variant[y - cell_size][th] != UNBIND)
-        return unify(x, variant[y - cell_size][th], th);
+	return unify(x, variant[y - cell_size][th], th);
 
     if (IS_ALPHA(x)) {
-        variant[x - cell_size][th] = y;
-        push_stack(x, th);
-        return YES;
+	variant[x - cell_size][th] = y;
+	push_stack(x, th);
+	return YES;
     }
 
     if (atom_variable_p(x)) {
-        x1 = deref1(x, th);
-        if (variablep(x1)) {
-            SET_CAR(x, y);
-            return YES;
-        } else {
-            variant[y - cell_size][th] = x1;
-            push_stack(y, th);
-            return YES;
-        }
+	x1 = deref1(x, th);
+	if (variablep(x1)) {
+	    SET_CAR(x, y);
+	    return YES;
+	} else {
+	    variant[y - cell_size][th] = x1;
+	    push_stack(y, th);
+	    return YES;
+	}
     }
 
     variant[y - cell_size][th] = x;
