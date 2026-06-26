@@ -603,9 +603,9 @@ int spush_recur(int th)
     scp[RECUR][th]++;
     if (scp[CONJ][th] >= CONJSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("SCBM stack size"), th);
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_BACKSTACK][th] = sp[th]; //local sp
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th] = 0;	 //clause choice 
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_BACKSTACK][th] = wp[th];	//working  wp
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_BACKSTACK][th] = sp[th];
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_BACKSTACK][th] = wp[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_BACKSTACK][th] = ac[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_BACKSTACK][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_BACKSTACK][th] = 0;
@@ -614,8 +614,91 @@ int spush_recur(int th)
     return (NIL);
 }
 
+int spop_recur(int th)
+{
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_BACKSTACK][th] = 1;
+    scp[RECUR][th]--;
+    return(NIL);
+
+}
+
+int sdiscard(int th)
+{
+    int recur;
+    scbmstack[scp[CONJ][th]][0][SP_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][CHOICE_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][WP_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][AC_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][DISJ_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][CHOICE_BACKUP_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][ARGLIST_BACKSTACK][th] = 0;
+    scbmstack[scp[CONJ][th]][0][REUSE_BACKSTACK][th] = 0;
+
+    recur = 1;
+    while(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] != 0){
+        scbmstack[scp[CONJ][th]][recur][SP_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][CHOICE_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][WP_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][AC_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][DISJ_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][CHOICE_BACKUP_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][ARGLIST_BACKSTACK][th] = 0;
+        scbmstack[scp[CONJ][th]][recur][REUSE_BACKSTACK][th] = 0;
+        recur++;
+    }
+    return (NIL);
+}
 
 
+
+int sinc_choice(int th)
+{
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th]++;
+    return (NIL);
+}
+
+int smax_choice(int th)
+{
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th] = 999999999;
+    return (NIL);
+}
+
+
+int srelease(int th)
+{
+    unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_BACKSTACK][th], th);
+    ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_BACKSTACK][th];
+    return (NIL);
+}
+
+int sget_back_choice(int th)
+{   
+    int res;
+    proof[th]++;
+    if(scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][REUSE_BACKSTACK][th] == 1)
+        res = backstack[bp[th]][CHOICE_BACKSTACK][th]+9999;
+    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][ARGLIST_BACKSTACK][th] != 0)
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th]+9999;
+    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_BACKSTACK][th] == 1 &&
+       scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] != UNBIND) 
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th];
+    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_BACKSTACK][th] == 1 &&
+       scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] == UNBIND) 
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th]+9999;
+    else 
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th];
+        /* return choice+bias to skip */
+    
+    //printf("clause=%d\n",res);
+    return(res);
+}
+
+
+int success(int arglist, int th)
+{
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] = arglist;
+    return (NIL);
+}
 
 
 //------for JUMP compiler-----
