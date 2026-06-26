@@ -681,7 +681,7 @@ int srelease(int th)
     return (NIL);
 }
 
-int sget_back_choice(int th)
+int sget_choice(int th)
 {
     int res;
     proof[th]++;

@@ -27,8 +27,8 @@ If you provide c as the second argument, the converted C code will be retained. 
 - compile_file(F,o)
 If you provide o as the second argument, it simply compiles the C source code and generates the object code. This is useful when you need to manually modify the compiled code.
 
-- compile_file(F,co)
-If you provide co as the second argument, it compiles prolog code and generate c source and object code.
+- compile_file(F,a)
+If you provide co a the second argument, it snalize prolog code. not generate c source or object code.
 
 
 # C inline
@@ -74,120 +74,59 @@ clibrary($-ltcl -ltk$).
 ## C inline variable
 In compiled Prolog, variable names have 'var' prefixed to them at compile time. When retrieving a value, deref is called first, and then the value is converted to a C value using an API corresponding to its type.
 
-## C inline API
-The publicly available APIs that can be used for embedding in this context are as follows.
+## SCBM API
 
-- static inline int Jcheckgbc(void)
-- static inline int Jgbc(void)
-- static inline int Jfreshcell(void)
-- static inline int Jdebug(void) 
-- static inline int Jcar(x)
-- static inline int Jcdr(int x) 
-- static inline int Jcadr(int x) 
-- static inline int Jcaddr(int x) 
-- static inline int Jcaar(int x) 
-- static inline int Jcadar(int x) 
-- static inline int Jprint(int x) 
-- static inline int Jmakeint(int x) 
-- static inline int Jlength(int x) 
-- static inline int Jget_int(int x) 
-- static inline int Jlist1(int x) 
-- static inline int Jrandom(int th) 
-- static inline int Jrandi(int x) 
-- static inline int Jlistp(int x) 
-- static inline int Jstructurep(int x) 
-- static inline int Jvariablep(int x) 
-- static inline int Jget_sp(int x) 
-- static inline int Jget_wp(int x) 
-- static inline int Jget_ac(int x) 
-- static inline int Jinc_proof(int x) 
-- static inline int Jmakevariant(int x) 
-- static inline int Jadd_dynamic(int x) 
-- static inline int Jbigx_to_parmanent(int x) 
-- static inline int Jcons(int x, int y) 
-- static inline int Jeqp(int x, int y) 
-- static inline int Jequalp(int x, int y) 
-- static inline int Jnumeqp(int x, int y) 
-- static inline int Jsmallerp(int x, int y) 
-- static inline int Jeqsmallerp(int x, int y) 
-- static inline int Jgreaterp(int x, int y) 
-- static inline int Jeqgreaterp(int x, int y) 
-- static inline int Jlistcons(int x, int y) 
-- static inline int Jlist2(int x, int y) 
-- static inline int Jset_car(int x, int y)
-- static inline int Jset_cdr(int x, int y)
-- static inline int Jset_aux(int x, int y) 
-- static inline int Jnot_numeqp(int x, int y) 
-- static inline int Jset_var(int x, int y) 
-- static inline int Jnth(int x, int y) 
-- static inline int Junbind(int x, int th) 
-- static inline int Jset_wp(int x, int th) 
-- static inline int Jset_ac(int x, int th) 
-- static inline int Jderef(int x, int th) 
-- static inline int Jwlist1(int x, int th) 
-- static inline int Jsin(int x, int th) 
-- static inline int Jasin(int x, int th) 
-- static inline int Jcos(int x, int th) 
-- static inline int Jacos(int x, int th) 
-- static inline int Jtan(int x, int th) 
-- static inline int Jatan(int x, int th) 
-- static inline int Jexp(int x, int th) 
-- static inline int Jlog(int x, int th) 
-- static inline int Jln(int x, int th) 
-- static inline int Junify_nil(int x, int th) 
-- static inline int Jlist3(int x, int y, int z) 
-- static inline int Jerrorcomp(int x, int y, int z) 
-- static inline int Jwlistcons(int x, int y, int th) 
-- static inline int Junify(int x, int y, int th) 
-- static inline int Junify_pair(int x, int y, int th) 
-- static inline int Junify_var(int x, int y, int th) 
-- static inline int Junify_int(int x, int y, int th) 
-- static inline int Junify_long(int x, int y, int th) 
-- static inline int Junify_big(int x, int y, int th) 
-- static inline int Junify_str(int x, int y, int th) 
-- static inline int Junify_atom(int x, int y, int th) 
-- static inline int Jexec_all(int x, int y, int th) 
-- static inline int Jwcons(int x, int y, int th) 
-- static inline int Jwlist2(int x, int y, int th) 
-- static inline int Jaddtail_body(int x, int y, int th) 
-- static inline int Jplus(int x, int y, int th) 
-- static inline int Jminus(int x, int y, int th) 
-- static inline int Jmult(int x, int y, int th) 
-- static inline int Jdivide(int x, int y, int th) 
-- static inline int Jremainder(int x, int y, int th) 
-- static inline int Jquotient(int x, int y, int th) 
-- static inline int Jmod(int x, int y, int th) 
-- static inline int Jexpt(int x, int y, int th) 
-- static inline int Jsqrt(int x, int y, int th) 
-- static inline int Jleftshift(int x, int y, int th) 
-- static inline int Jrightshift(int x, int y, int th) 
-- static inline int Jlogicaland(int x, int y, int th) 
-- static inline int Jlogicalor(int x, int y, int th) 
-- static inline int Jcomplement(int x, int y, int th) 
-- static inline int Jround(int x, int y, int th) 
-- static inline int Jdiv(int x, int y, int th) 
-- static inline int Jcall(int pred, int arglist, int th)
-  call predicate without continuation.
-- static inline int Jmakeconst(char* x) 
-- static inline int Jmakepred(char* x) 
-- static inline int Jmakevar(char* x) 
-- static inline int Jmakestrflt(char* x) 
-- static inline int Jmakecomp(char* x) 
-- static inline int Jmakesys(char* x) 
-- static inline int Jmakeope(char* x) 
-- static inline int Jmakeuser(char* x) 
-- static inline int Jmakestrlong(char* x) 
-- static inline int Jmakebig(char* x)
-- static inline int Jmakestr(char* x) 
-- static inline int Jmakefun(char* x) 
-- static inline int Jcallsubr(int x, int y, int z, int th) 
-- static inline int Jwlist3(int x, int y, int z, int th) 
-- static inline char* Jgetname(int x)
-- static inline double Jget_flt(int x)
+- Jpush_conj(th);
+scp[CONJ][th]を１つ加算しそこにその時点でのSP,WP,ACを記憶する。
+choiceポイントなどを初期化する。
 
-# Internal of compiler
-Since version 3.92, I have been rewriting the compiler. The previous compiler could optimize only a very limited subset of tail-recursive predicates. I am generalizing this optimization to cover a broader range of cases and improve execution efficiency.
+- Jpush_recur(th);
+scp[RECUR][th]を１つ加算しそこにその時点でのSP,WP,ACを記憶する。
+choiceポイントなどを初期化する。
+その位置がすでに再帰で訪れた場所である場合には単にscp[RECUR][th]を１つ加算する。
 
-Specifically, the compiler classifies predicates into the following three categories through static analysis: predicates eligible for tail-recursion optimization, deterministic predicates, and all other predicates.
+- Jpop_recur(th);
+再帰する述語において成功して戻ってきたときにその位置のREUSE_SCBMを１とする。
+SCP[RECUR][th]を１つ減ずる
 
-The predicate analyze/1 in the compiler is responsible for this classification. The analysis results are stored in pred_data/3 in the form pred_data(PredName, Arity, TailOrDetOrHalt). The code generation predicates refer to this data to generate the corresponding C code.
+- Jsuccess(arglist,th);
+成功した時点でのarglistを保存するとともに、SUCC_SCBMを１とする。
+
+- Jprepare(arglist,th);
+以前に成功していて直前のarglistが保存されている場合にはそれを返す。
+そうでなければ引数として与えられたarglistを返す。
+これは再帰のバックトラック時において直前成功時点の値を復元するものである。
+
+- Jdiscard(th);
+SCPが保持する位置の全要素を０クリアする。
+SCPが保持する位置からの再帰位置を全部０クリアする。
+
+- Jinc_choice(th);
+choiceポイントに１を加算する。次に進む節を指定する。
+
+- Jmax_choice(th);
+choiceポイントを999,999,999とする。これによりallfailにgotoで
+飛ぶこととなる。これは述語の完全失敗を意味する。
+
+- Jrelease(th);
+保存してあったsp(local stack pointer)により変数をunbindする。
+保存してあったac(argument counter)に復元する。
+
+- Jget_choice(th);
+以前再帰した位置ならばchoice+9999を返す
+以前再帰して成功した位置ならばchoiceを返す。
+再帰でない場合にはchoiceを返す。
+
+- Jsuccess(arglist,th);
+成功した場所においてそのときのarglistを記憶するとともに
+SUCC_SCBMを１とする。
+
+- Jget_disj_choice(th);
+選言のためのchoiceポイントを取り出す。
+
+- Jinc_disj_choice(th);
+選言のためのchoiceポイントに１を加算する。
+
+- Jreset_disj(th);
+選言のためのchoiceポイントから１を減算する。
+
