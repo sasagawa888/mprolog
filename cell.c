@@ -688,20 +688,19 @@ int sget_choice(int th)
 {
     int res;
     proof[th]++;
-    if (scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] == 0)
+    if (scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] == 1)
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
-    /* before success choice point */
+    /* already succeeded: replay the successful choice */
     else if (scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] == 1)
 	res =
 	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
 	    9999;
-    /* return choice+bias to skip */
+    /* reused recursion point before success: skip */
     else
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* not recursion */
 
-
-    //printf("clause=%d\n",res);
+    //printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
     return (res);
 }
 
