@@ -92,7 +92,7 @@ SCP[RECUR][th]を１つ減ずる
 - Jsuccess(arglist,th)
 成功した時点でのarglistを保存するとともに、SUCC_SCBMを１とする。
 
-- Jarity_count(arglist,th)
+- Jarity_count(arglist)
 arglistの長さを返す。長さはキャッシュされる。
 再度アクセスされるときにはキャッシュから返す。実行効率のためのものである。
 

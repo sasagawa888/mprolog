@@ -554,9 +554,20 @@ int reset_disj(int th)
     return (NIL);
 }
 
+
+int prepare(int arglist, int th)
+{
+    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
+    if (newarg != UNBIND)
+	return (newarg);
+    else
+	return (arglist);
+}
+
+
 //----------SCBM--------------------------
 
-int spush_conj(int th)
+int push_conj(int th)
 {
     scp[CONJ][th]++;
     scp[RECUR][th] = 0;
@@ -574,7 +585,7 @@ int spush_conj(int th)
     return (NIL);
 }
 
-int spush_recur(int th)
+int push_recur(int th)
 {
     if (scp[RECUR][th] + 1 >= RECURSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("SCBM stack size"), th);
@@ -599,7 +610,7 @@ int spush_recur(int th)
     return (NIL);
 }
 
-int spop_recur(int th)
+int pop_recur(int th)
 {
     if (scp[RECUR][th] <= 0)
 	exception(RESOURCE_ERR, NIL, makestr("SCBM stack size"), th);
@@ -622,9 +633,9 @@ int arity_count(int arglist)
 }
 
 
-int prepare(int arglist, int th)
+int sprepare(int arglist, int th)
 {
-    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
+    int newarg = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th];
     if (newarg != UNBIND)
 	return (newarg);
     else
