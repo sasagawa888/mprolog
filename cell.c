@@ -675,18 +675,18 @@ int sget_back_choice(int th)
 {   
     int res;
     proof[th]++;
-    if(scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][REUSE_BACKSTACK][th] == 1)
-        res = backstack[bp[th]][CHOICE_BACKSTACK][th]+9999;
-    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][ARGLIST_BACKSTACK][th] != 0)
-        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th]+9999;
-    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_BACKSTACK][th] == 1 &&
-       scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] != UNBIND) 
-        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th];
-    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_BACKSTACK][th] == 1 &&
-       scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] == UNBIND) 
-        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th]+9999;
+    if(scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][REUSE_SCBM][th] == 1)
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]+9999;
+    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][ARGLIST_SCBM][th] != 0)
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]+9999;
+    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] == 1 &&
+       scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] != UNBIND) 
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
+    else if(scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] == 1 &&
+       scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] == UNBIND) 
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]+9999;
     else 
-        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKSTACK][th];
+        res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
         /* return choice+bias to skip */
     
     //printf("clause=%d\n",res);
@@ -696,7 +696,7 @@ int sget_back_choice(int th)
 
 int success(int arglist, int th)
 {
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th] = arglist;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
     return (NIL);
 }
 
