@@ -89,44 +89,49 @@ choiceポイントなどを初期化する。
 再帰する述語において成功して戻ってきたときにその位置のREUSE_SCBMを１とする。
 SCP[RECUR][th]を１つ減ずる
 
-- Jsuccess(arglist,th);
+- Jsuccess(arglist,th)
 成功した時点でのarglistを保存するとともに、SUCC_SCBMを１とする。
 
-- Jprepare(arglist,th);
+- Jarity_count(arglist,th)
+arglistの長さを返す。長さはキャッシュされる。
+再度アクセスされるときにはキャッシュから返す。実行効率のためのものである。
+
+- Jprepare(arglist,th)
 以前に成功していて直前のarglistが保存されている場合にはそれを返す。
 そうでなければ引数として与えられたarglistを返す。
 これは再帰のバックトラック時において直前成功時点の値を復元するものである。
 
-- Jdiscard(th);
+
+- Jdiscard(th)
 SCPが保持する位置の全要素を０クリアする。
 SCPが保持する位置からの再帰位置を全部０クリアする。
 
-- Jinc_choice(th);
+- Jinc_choice(th)
 choiceポイントに１を加算する。次に進む節を指定する。
 
-- Jmax_choice(th);
+- Jmax_choice(th)
 choiceポイントを999,999,999とする。これによりallfailにgotoで
 飛ぶこととなる。これは述語の完全失敗を意味する。
 
-- Jrelease(th);
+- Jrelease(th)
 保存してあったsp(local stack pointer)により変数をunbindする。
 保存してあったac(argument counter)に復元する。
 
-- Jget_choice(th);
+- Jget_choice(th)
 以前再帰した位置ならばchoice+9999を返す
 以前再帰して成功した位置ならばchoiceを返す。
 再帰でない場合にはchoiceを返す。
 
-- Jsuccess(arglist,th);
+- Jsuccess(arglist,th)
 成功した場所においてそのときのarglistを記憶するとともに
 SUCC_SCBMを１とする。
 
-- Jget_disj_choice(th);
+- Jget_disj_choice(th)
 選言のためのchoiceポイントを取り出す。
 
-- Jinc_disj_choice(th);
+- Jinc_disj_choice(th)
 選言のためのchoiceポイントに１を加算する。
 
-- Jreset_disj(th);
+- Jreset_disj(th)
 選言のためのchoiceポイントから１を減算する。
 

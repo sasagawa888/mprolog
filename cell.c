@@ -505,16 +505,6 @@ int max_choice(int th)
 }
 
 
-int prepare(int arglist, int th)
-{
-    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
-    if (newarg != UNBIND)
-	return (newarg);
-    else
-	return (arglist);
-}
-
-
 int release(int th)
 {
     unbind(backstack[bp[th]][SP_BACKSTACK][th], th);
@@ -539,16 +529,6 @@ int discard(int th)
 }
 
 
-int arity_count(int arglist)
-{
-    int n;
-    if (GET_ARITY(arglist) == UNBIND) {
-	n = length(arglist);
-	SET_ARITY(arglist, n);
-	return (n);
-    } else
-	return (GET_ARITY(arglist));
-}
 
 int get_disj_choice(int th)
 {
@@ -628,6 +608,29 @@ int spop_recur(int th)
     return (NIL);
 
 }
+
+
+int arity_count(int arglist)
+{
+    int n;
+    if (GET_ARITY(arglist) == UNBIND) {
+	n = length(arglist);
+	SET_ARITY(arglist, n);
+	return (n);
+    } else
+	return (GET_ARITY(arglist));
+}
+
+
+int prepare(int arglist, int th)
+{
+    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
+    if (newarg != UNBIND)
+	return (newarg);
+    else
+	return (arglist);
+}
+
 
 int sdiscard(int th)
 {
