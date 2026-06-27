@@ -341,7 +341,7 @@ gen_disj_jump_switch1((X;Y),A,M,N,L) :-
     gen_disj_jump_switch1(Y,A,M,N,L1).
 gen_disj_jump_switch1(end_of_disjunction,A,M,N,L) :-
     M1 is M+1,
-    write('default: Jreset_disj_choice(th);'),nl,
+    write('default: Sreset_disj_choice(th);'),nl,
     write('goto clause_'),write(A),write('_'),write(M1),write(';'),nl.
 gen_disj_jump_switch1(X,A,M,N,L) :-
     gen_disj_jump_switch1((X;end_of_disjunction),A,M,N,L).
@@ -414,7 +414,7 @@ gen_a_nondet_clause((Head :- Body),A,M) :-
     gen_nondet_body(Body,A,ret,M,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
+    write('Srelease(th);'),nl.
 
 % predicate with no arity
 gen_a_nondet_clause(P,A,M) :-
@@ -435,7 +435,7 @@ gen_a_nondet_clause(P,A,M) :-
     write('Jsave_arg(arglist,th); return(YES);}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
+    write('Srelease(th);'),nl.
 
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
@@ -445,7 +445,7 @@ gen_a_nondet_clause(P,_,M) :-
     write('return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
+    write('Srelease(th);'),nl.
 
 
 
@@ -540,16 +540,16 @@ gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     L1 is L+1,
     gen_nondet_body_disj_label([A,M,N,L1]),
     write('Sinc_disj_choice(th);'),nl,
-    write('Jrelease(th);'),nl,
+    write('Srelease(th);'),nl,
     gen_nondet_body1(X2,A,M,N,B,res,L1,H),
     ifthenelse(L=:=0,gen_nondet_body_exit_label([A,M,N]),true),
     N1 is N+1,
     gen_nondet_body1(Y,A,M,N,B,O,L,H),
-    ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
+    ifthenelse(L=:=0,(write('if(rest!=NIL) Sreset_disj(th);'),nl),true).
 gen_nondet_body1(!,A,M,N,[],O,L,H) :-
     write('max_choice(th); return(YES);'),nl.    
 gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
-    write('{Jsave_arg(arglist,th); return(YES);}'),nl.
+    write('{Jsuccess(arglist,th); return(YES);}'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('res = YES;'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
