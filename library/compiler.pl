@@ -328,7 +328,7 @@ gen_jump_switch1(A,M,N) :-
 
 
 gen_disj_jump_switch(X,A,M,N):-
-    write('int disj = Sget_disj_choice(th);'),nl,
+    write('int disj = Jget_disj_choice(th);'),nl,
     write('switch(disj){'),nl,
     gen_disj_jump_switch1(X,A,M,N,0),
     write('}'),nl.

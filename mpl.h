@@ -174,7 +174,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX, SMAX_CHOICE_IDX, GET_CHOICE_IDX,
        PUSH_BACK_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
-       SGET_DISJ_CHOICE_IDX, SINC_DISJ_CHOICE_IDX, SRESET_DISJ_IDX,
+       SINC_DISJ_CHOICE_IDX, SRESET_DISJ_IDX,
        COPY_BACK_IDX, DISCARD_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
        NUM_FN1S
 };
@@ -1237,7 +1237,6 @@ int get_nonfree(int x, int y, int z);
 int get_predicate(int x);
 int get_choice(int th);
 int get_disj_choice(int th);
-int sget_disj_choice(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
 int gettrace(int goal);

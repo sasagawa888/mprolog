@@ -248,18 +248,9 @@ static inline int Jget_disj_choice(int x) {
 }
 
 
-static inline int Sget_disj_choice(int x) {
-    return f1[SGET_DISJ_CHOICE_IDX](x);
-}
-
 
 static inline int Jinc_disj_choice(int x) {
     return f1[INC_DISJ_CHOICE_IDX](x);
-}
-
-
-static inline int Sinc_disj_choice(int x) {
-    return f1[SINC_DISJ_CHOICE_IDX](x);
 }
 
 

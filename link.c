@@ -90,9 +90,7 @@ void dynamic_link(int x)
     init_f1(SMAX_CHOICE_IDX, (tpred) smax_choice);
     init_f1(ARITY_COUNT_IDX, (tpred) arity_count);
     init_f1(GET_DISJ_CHOICE_IDX, (tpred) get_disj_choice);
-    init_f1(SGET_DISJ_CHOICE_IDX, (tpred) sget_disj_choice);
     init_f1(INC_DISJ_CHOICE_IDX, (tpred) inc_disj_choice);
-    init_f1(SINC_DISJ_CHOICE_IDX, (tpred) sinc_disj_choice);
     init_f1(RESET_DISJ_IDX, (tpred) reset_disj);
     init_f1(SRESET_DISJ_IDX, (tpred) sreset_disj);
     init_f1(DISCARD_IDX, (tpred) discard);

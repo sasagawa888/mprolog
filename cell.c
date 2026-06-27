@@ -499,22 +499,6 @@ int max_choice(int th)
 
 
 
-int get_disj_choice(int th)
-{
-    int choice;
-    choice = backstack[bp[th]][DISJ_BACKSTACK][th];
-    if (choice == 0)
-	backstack[bp[th]][CHOICE_BACKSTACK][th]--;
-    return (choice);
-}
-
-int inc_disj_choice(int th)
-{
-    backstack[bp[th]][DISJ_BACKSTACK][th]++;
-    return (NIL);
-}
-
-
 int reset_disj(int th)
 {
     backstack[bp[th]][DISJ_BACKSTACK][th] = 0;
@@ -678,7 +662,7 @@ int success(int arglist, int th)
 }
 
 
-int sget_disj_choice(int th)
+int get_disj_choice(int th)
 {
     int choice;
     choice = scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th];
@@ -687,7 +671,7 @@ int sget_disj_choice(int th)
     return (choice);
 }
 
-int sinc_disj_choice(int th)
+int inc_disj_choice(int th)
 {
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th]++;
     return (NIL);
