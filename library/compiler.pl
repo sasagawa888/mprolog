@@ -507,7 +507,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,nondet),
-    write('Jpush_back(th);'),nl,
+    write('Jpush_recur(th);'),nl,
     gen_nondet_body_label([A,M,N]),
     gen_nondet_body_argument(X,A,M,N),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
