@@ -414,7 +414,7 @@ gen_a_nondet_clause((Head :- Body),A,M) :-
     gen_nondet_body(Body,A,ret,M,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Srelease(th);'),nl.
+    write('Jrelease(th);'),nl.
 
 % predicate with no arity
 gen_a_nondet_clause(P,A,M) :-
@@ -435,7 +435,7 @@ gen_a_nondet_clause(P,A,M) :-
     write('Jsuccess(arglist,th); return(YES);}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Srelease(th);'),nl.
+    write('Jrelease(th);'),nl.
 
 gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
@@ -445,7 +445,7 @@ gen_a_nondet_clause(P,_,M) :-
     write('return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Srelease(th);'),nl.
+    write('Jrelease(th);'),nl.
 
 
 
@@ -540,7 +540,7 @@ gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     L1 is L+1,
     gen_nondet_body_disj_label([A,M,N,L1]),
     write('Sinc_disj_choice(th);'),nl,
-    write('Srelease(th);'),nl,
+    write('Jrelease(th);'),nl,
     gen_nondet_body1(X2,A,M,N,B,res,L1,H),
     ifthenelse(L=:=0,gen_nondet_body_exit_label([A,M,N]),true),
     N1 is N+1,

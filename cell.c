@@ -498,14 +498,6 @@ int max_choice(int th)
 }
 
 
-int release(int th)
-{
-    unbind(backstack[bp[th]][SP_BACKSTACK][th], th);
-    ac[th] = backstack[bp[th]][AC_BACKSTACK][th];
-    return (NIL);
-}
-
-
 int discard(int th)
 {
     int i;
@@ -675,7 +667,7 @@ int smax_choice(int th)
 }
 
 
-int srelease(int th)
+int release(int th)
 {
     unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th], th);
     ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
