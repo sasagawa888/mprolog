@@ -429,45 +429,6 @@ int pop_stack(int th)
     return (localstack[--sp[th]][th]);
 }
 
-int save_arg(int arglist, int th)
-{
-    backstack[bp[th]][ARGLIST_BACKSTACK][th] = arglist;
-    return (NIL);
-}
-
-/* reuse frame with saved arglist: re-enter normal clause */
-/* reuse frame without saved arglist: jump to skip label */
-int get_back_choice(int th)
-{
-    int res;
-    proof[th]++;
-    if (backstack[bp[th] + 1][REUSE_BACKSTACK][th] == 1)
-	res = backstack[bp[th]][CHOICE_BACKSTACK][th] + 9999;
-    else if (backstack[bp[th] + 1][ARGLIST_BACKSTACK][th] != 0)
-	res = backstack[bp[th]][CHOICE_BACKSTACK][th] + 9999;
-    else if (backstack[bp[th]][REUSE_BACKSTACK][th] == 1 &&
-	     backstack[bp[th]][ARGLIST_BACKSTACK][th] != UNBIND)
-	res = backstack[bp[th]][CHOICE_BACKSTACK][th];
-    else if (backstack[bp[th]][REUSE_BACKSTACK][th] == 1 &&
-	     backstack[bp[th]][ARGLIST_BACKSTACK][th] == UNBIND)
-	res = backstack[bp[th]][CHOICE_BACKSTACK][th] + 9999;
-    else
-	res = backstack[bp[th]][CHOICE_BACKSTACK][th];
-    /* return choice+bias to skip */
-
-    //printf("clause=%d\n",res);
-    return (res);
-}
-
-
-
-int max_choice(int th)
-{
-    backstack[bp[th]][CHOICE_BACKSTACK][th] = 999999999;
-    return (NIL);
-}
-
-
 
 
 //----------SCBM--------------------------
@@ -575,7 +536,7 @@ int inc_choice(int th)
     return (NIL);
 }
 
-int smax_choice(int th)
+int max_choice(int th)
 {
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 999999999;
     return (NIL);
