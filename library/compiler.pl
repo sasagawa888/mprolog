@@ -521,7 +521,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,nondet),
-    write('Jpush_back(th);'),nl,
+    write('Jpush_conj(th);'),nl,
     gen_nondet_body_label([A,M,N]),
     gen_nondet_body_argument(X,A,M,N),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
@@ -547,7 +547,7 @@ gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     gen_nondet_body1(Y,A,M,N,B,O,L,H),
     ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
 gen_nondet_body1(!,A,M,N,[],O,L,H) :-
-    write('max_choice(th); return(YES);'),nl.    
+    write('{Jmax_choice(th); return(YES);}'),nl.    
 gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
     write('{Jsuccess(arglist,th); return(YES);}'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-

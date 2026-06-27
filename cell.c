@@ -429,29 +429,6 @@ int pop_stack(int th)
     return (localstack[--sp[th]][th]);
 }
 
-int push_back(int th)
-{
-    /* if bp+1 is already exist, restore it */
-    if (backstack[bp[th] + 1][REUSE_BACKSTACK][th] != 0) {
-	bp[th]++;
-	return (NIL);
-    }
-
-
-    bp[th]++;
-    if (bp[th] >= STACKSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("back stack size"), th);
-    backstack[bp[th]][SP_BACKSTACK][th] = sp[th];	//local sp
-    backstack[bp[th]][CHOICE_BACKSTACK][th] = 0;	//clause choice 
-    backstack[bp[th]][WP_BACKSTACK][th] = wp[th];	//working  wp
-    backstack[bp[th]][AC_BACKSTACK][th] = ac[th];	//alpha counter ac
-    backstack[bp[th]][DISJ_BACKSTACK][th] = 0;	//disjunction choice
-    backstack[bp[th]][CHOICE_BACKUP_BACKSTACK][th] = 0;	//choice backup
-    backstack[bp[th]][ARGLIST_BACKSTACK][th] = UNBIND;	//arglist backup
-    backstack[bp[th]][REUSE_BACKSTACK][th] = 0;	//reuse
-    return (NIL);
-}
-
 int pop_back(int th)
 {
     backstack[bp[th]][REUSE_BACKSTACK][th] = 1;

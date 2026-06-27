@@ -1384,8 +1384,6 @@ int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
-int push_back(int th);
-int push_forward(int th);
 int pop_back(int th);
 int push_conj(int th);
 int push_recur(int th);
