@@ -432,7 +432,7 @@ gen_a_nondet_clause(P,A,M) :-
 	gen_head(P),
     write('{'),nl,
     write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
-    write('Jsave_arg(arglist,th); return(YES);}'),nl,
+    write('Jsuccess(arglist,th); return(YES);}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Srelease(th);'),nl.
@@ -553,7 +553,7 @@ gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('res = YES;'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
-    write('Jpop_back(th);'),nl,
+    write('Jpop_recur(th);'),nl,
     write('return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).

@@ -749,7 +749,7 @@ int prove(int goal, int bindings, int rest, int th)
 
 	switch (type) {
 	case 1:		// nondet
-	    push_back(th);
+	    push_conj(th);
 	  retry:
 	    if ((GET_SUBR(pred)) (args, NIL, th) == YES) {
 		if (prove_all(rest, sp[th], th) == YES)

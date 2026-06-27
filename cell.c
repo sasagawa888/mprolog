@@ -635,7 +635,7 @@ int arity_count(int arglist)
 
 int sprepare(int arglist, int th)
 {
-    int newarg = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_BACKSTACK][th];
+    int newarg = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th];
     if (newarg != UNBIND)
 	return (newarg);
     else

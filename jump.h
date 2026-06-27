@@ -309,6 +309,10 @@ static inline int Jrelease(int th) {
 }
 
 
+static inline int Srelease(int th) {
+    return f1[SRELEASE_IDX](th);
+}
+
 
 static inline int Jpop_back(int th) {
     return f1[POP_BACK_IDX](th);
