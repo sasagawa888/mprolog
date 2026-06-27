@@ -471,13 +471,8 @@ void init_repl(void)
 	proof[i] = 0;
 	ac[i] = cell_size + 1;
 	cp[i] = 0;
-	bp[i] = 0;
-	/* old data structure it will be removed */
-	for (j = 0; j < STACKSIZE; j++) {
-	    backstack[j][REUSE_BACKSTACK][i] = 0;
-	    backstack[j][ARGLIST_BACKSTACK][i] = 0;
-	}
-	/* scbm */
+	scp[CONJ][i] = 0;
+	scp[RECUR][i] = 0;
 	for (j = 0; j < CONJSIZE; j++)
 	    for (k = 0; k < RECURSIZE; k++)
 		for (l = 0; l < SCBM_ELT_SIZE; l++)
