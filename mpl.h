@@ -170,12 +170,10 @@ enum { CHECKGBC_IDX, GBC_IDX, FRESHCELL_IDX,
 enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LENGTH_IDX,  GET_INT_IDX, INTEGER_IDX, ABS_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
-       MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
-       INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX, SMAX_CHOICE_IDX, GET_CHOICE_IDX,
-       PUSH_BACK_IDX, RELEASE_IDX,
+       MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX,
+       INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
-       SINC_DISJ_CHOICE_IDX, SRESET_DISJ_IDX,
-       COPY_BACK_IDX, DISCARD_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
+       DISCARD_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
        NUM_FN1S
 };
 
@@ -1330,7 +1328,6 @@ int makevariant(int th);
 int makevar(char *name);
 int makeanony(char *name);
 int max_choice(int th);
-int smax_choice(int th);
 int memory_variant(int x);
 int memq(int x, int y);
 int memberp(int x, int y);
@@ -1384,7 +1381,6 @@ int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
-int pop_back(int th);
 int push_conj(int th);
 int push_recur(int th);
 int pop_recur(int th);

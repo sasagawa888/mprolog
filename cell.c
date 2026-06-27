@@ -429,13 +429,6 @@ int pop_stack(int th)
     return (localstack[--sp[th]][th]);
 }
 
-int pop_back(int th)
-{
-    backstack[bp[th]][REUSE_BACKSTACK][th] = 1;
-    bp[th]--;
-    return (NIL);
-}
-
 int save_arg(int arglist, int th)
 {
     backstack[bp[th]][ARGLIST_BACKSTACK][th] = arglist;

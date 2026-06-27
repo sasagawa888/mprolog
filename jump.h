@@ -212,10 +212,6 @@ static inline int Jmax_choice(int x) {
 }
 
 
-static inline int Smax_choice(int x) {
-    return f1[SMAX_CHOICE_IDX](x);
-}
-
 static inline int Jget_choice(int x) {
     return f1[GET_CHOICE_IDX](x);
 }
@@ -264,22 +260,9 @@ static inline int Jdiscard(int th) {
     return f1[DISCARD_IDX](th);
 }
 
-
-static inline int Jcopy_back(int x) {
-    return f1[COPY_BACK_IDX](x);
-}
-
-
 static inline int Jrelease(int th) {
     return f1[RELEASE_IDX](th);
 }
-
-
-
-static inline int Jpop_back(int th) {
-    return f1[POP_BACK_IDX](th);
-}
-
 
 
 
