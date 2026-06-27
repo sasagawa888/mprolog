@@ -226,6 +226,11 @@ static inline int Jget_back_choice(int x) {
 }
 
 
+static inline int Jget_choice(int x) {
+    return f1[GET_CHOICE_IDX](x);
+}
+
+
 static inline int Jpush_back(int th) {
     return f1[PUSH_BACK_IDX](th);
 }

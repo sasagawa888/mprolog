@@ -18,21 +18,21 @@ case 10002: goto skip_1_2;
 default: goto allfail;
 }}
 clause_1_0:
-Jinc_choice(th);
+Sinc_choice(th);
 if(Junify_int(arg1,Jmakeint(1),th) == YES)
 {
 skip_1_0:;
 Jsave_arg(arglist,th); return(YES);}
 clause_1_1:
 Srelease(th);
-Jinc_choice(th);
+Sinc_choice(th);
 if(Junify_int(arg1,Jmakeint(2),th) == YES)
 {
 skip_1_1:;
 Jsave_arg(arglist,th); return(YES);}
 clause_1_2:
 Srelease(th);
-Jinc_choice(th);
+Sinc_choice(th);
 if(Junify_int(arg1,Jmakeint(3),th) == YES)
 {
 skip_1_2:;
