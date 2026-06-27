@@ -98,12 +98,10 @@ void dynamic_link(int x)
     init_f1(RESET_DISJ_IDX, (tpred) reset_disj);
     init_f1(SRESET_DISJ_IDX, (tpred) sreset_disj);
     init_f1(DISCARD_IDX, (tpred) discard);
-    init_f1(SDISCARD_IDX, (tpred) sdiscard);
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(PUSH_RECUR_IDX, (tpred) push_recur);
     init_f1(POP_RECUR_IDX, (tpred) pop_recur);
-    init_f1(SDISCARD_IDX, (tpred) sdiscard);
 
 
     //argument-2 type

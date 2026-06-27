@@ -290,11 +290,6 @@ static inline int Jdiscard(int th) {
 }
 
 
-static inline int Sdiscard(int th) {
-    return f1[SDISCARD_IDX](th);
-}
-
-
 static inline int Jcopy_back(int x) {
     return f1[COPY_BACK_IDX](x);
 }

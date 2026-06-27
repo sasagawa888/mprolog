@@ -498,22 +498,6 @@ int max_choice(int th)
 }
 
 
-int discard(int th)
-{
-    int i;
-    release(th);
-    wp[th] = backstack[bp[th]][WP_BACKSTACK][th];
-    bp[th]--;
-    i = bp[th] + 1;
-    while (backstack[i][ARGLIST_BACKSTACK][th] != 0) {
-	backstack[i][REUSE_BACKSTACK][th] = 0;
-	backstack[i][ARGLIST_BACKSTACK][th] = 0;
-	i++;
-    }
-    return (NIL);
-}
-
-
 
 int get_disj_choice(int th)
 {
@@ -619,7 +603,7 @@ int prepare(int arglist, int th)
 }
 
 
-int sdiscard(int th)
+int discard(int th)
 {
     int recur;
     scbmstack[scp[CONJ][th]][0][SP_SCBM][th] = 0;

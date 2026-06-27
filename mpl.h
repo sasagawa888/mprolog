@@ -175,7 +175,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        PUSH_BACK_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        SGET_DISJ_CHOICE_IDX, SINC_DISJ_CHOICE_IDX, SRESET_DISJ_IDX,
-       COPY_BACK_IDX, DISCARD_IDX, SDISCARD_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
+       COPY_BACK_IDX, DISCARD_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
        NUM_FN1S
 };
 
@@ -1161,7 +1161,6 @@ int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
 int discard(int th);
-int sdiscard(int th);
 int each_car(int x);
 int each_cdr(int x);
 int eqgreaterp(int x1, int x2);
