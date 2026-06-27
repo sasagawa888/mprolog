@@ -605,34 +605,20 @@ int prepare(int arglist, int th)
 
 int discard(int th)
 {
-    int recur;
-    scbmstack[scp[CONJ][th]][0][SP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][CHOICE_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][WP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][AC_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][DISJ_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][CHOICE_BACKUP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][ARGLIST_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][REUSE_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
+    scp[RECUR][th]--;
 
-    recur = 1;
-    while (recur < RECURSIZE
-	   && scbmstack[scp[CONJ][th]][recur][ARGLIST_SCBM][th]
-	   != 0) {
-	scbmstack[scp[CONJ][th]][recur][SP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][CHOICE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][WP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][AC_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][DISJ_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][CHOICE_BACKUP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][ARGLIST_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][REUSE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][recur][SUCC_SCBM][th] = 0;
-	recur++;
-    }
+    if(scp[RECUR][th] == 0)
     scp[CONJ][th]--;
-    scp[RECUR][th] = 0;
+    
     return (NIL);
 }
 
@@ -662,7 +648,12 @@ int sget_choice(int th)
 {
     int res;
     proof[th]++;
-    if (scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] == 1)
+    if (scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][REUSE_SCBM][th] == 1)
+	res =
+	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
+	    9999;
+    /* reused recursion point before success: skip */
+    else if (scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] == 1)
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* already succeeded: replay the successful choice */
     else if (scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] == 1)
