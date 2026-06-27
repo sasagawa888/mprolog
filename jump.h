@@ -494,10 +494,6 @@ static inline int Jprepare(int arglist, int th) {
 }
 
 
-static inline int Sprepare(int arglist, int th) {
-    return f2[SPREPARE_IDX](arglist, th);
-}
-
 
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);

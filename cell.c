@@ -555,15 +555,6 @@ int reset_disj(int th)
 }
 
 
-int prepare(int arglist, int th)
-{
-    int newarg = backstack[bp[th]][ARGLIST_BACKSTACK][th];
-    if (newarg != UNBIND)
-	return (newarg);
-    else
-	return (arglist);
-}
-
 
 //----------SCBM--------------------------
 
@@ -633,7 +624,7 @@ int arity_count(int arglist)
 }
 
 
-int sprepare(int arglist, int th)
+int prepare(int arglist, int th)
 {
     int newarg = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th];
     if (newarg != UNBIND)
