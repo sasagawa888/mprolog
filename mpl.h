@@ -172,9 +172,11 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX, POP_BACK_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_BACK_CHOICE_IDX,
-       PUSH_BACK_IDX, RELEASE_IDX,
+       SINC_CHOICE_IDX, SMAX_CHOICE_IDX, GET_CHOICE_IDX,
+       PUSH_BACK_IDX, RELEASE_IDX, SRELEASE_IDX, 
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
-       COPY_BACK_IDX, DISCARD_IDX,
+       SGET_DISJ_CHOICE_IDX, SINC_DISJ_CHOICE_IDX, SRESET_DISJ_IDX,
+       COPY_BACK_IDX, DISCARD_IDX, SDISCARD_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
        NUM_FN1S
 };
 
@@ -185,7 +187,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, SAVE_ARG_IDX, PREPARE_IDX,
+       COPY_WORK_IDX, SAVE_ARG_IDX, PREPARE_IDX, SPREPARE_IDX, SUCCESS_IDX,
        NUM_FN2S
 };
 
@@ -1160,6 +1162,7 @@ int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
 int discard(int th);
+int sdiscard(int th);
 int each_car(int x);
 int each_cdr(int x);
 int eqgreaterp(int x1, int x2);
@@ -1234,8 +1237,10 @@ int get_free(int x);
 int get_goal(int x);
 int get_nonfree(int x, int y, int z);
 int get_predicate(int x);
+int sget_choice(int th);
 int get_back_choice(int th);
 int get_disj_choice(int th);
+int sget_disj_choice(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
 int gettrace(int goal);
@@ -1269,7 +1274,9 @@ int isnumlis(int arg);
 int isqrt(int x);
 int isqrt1(int s, int s2, int x);
 int inc_choice(int th);
+int sinc_choice(int th);
 int inc_disj_choice(int th);
+int sinc_disj_choice(int th);
 int keysort(int x);
 int keyinsert(int x, int y);
 int last_predicate(int x);
@@ -1328,6 +1335,7 @@ int makevariant(int th);
 int makevar(char *name);
 int makeanony(char *name);
 int max_choice(int th);
+int smax_choice(int th);
 int memory_variant(int x);
 int memq(int x, int y);
 int memberp(int x, int y);
@@ -1381,9 +1389,13 @@ int propagate(int sets);
 int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
+int sprepare(int arglist, int th);
 int push_back(int th);
 int push_forward(int th);
 int pop_back(int th);
+int push_conj(int th);
+int push_recur(int th);
+int pop_recur(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);
 int readparse(int th);
@@ -1397,6 +1409,7 @@ int read_string_term(int flag);
 int receive_from_parent(void);
 int receive_from_child(int n);
 int release(int th);
+int srelease(int th);
 int remove_cut(int x);
 int remove_duplicate(int x);
 int replace(int x, int lis);
@@ -1405,6 +1418,7 @@ int repush_back(int arglist, int th);
 int resolve_all(int end, int bindings, int n);
 int resolve(int end, int bindings, int trail, int n);
 int reset_disj(int th);
+int sreset_disj(int th);
 int reset_forward(int th);
 int revderef(int x, int th);
 int revderef1(int x, int th);
@@ -1436,6 +1450,7 @@ int string_length(int addr);
 int singlep(int addr);
 int streqp(int x, int y);
 int str_to_pred(int x);
+int success(int arglist,int th);
 int symboltoken(char buf[]);
 int takeoutbug(int key);
 int termp(int addr);

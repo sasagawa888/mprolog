@@ -86,15 +86,26 @@ void dynamic_link(int x)
     init_f1(POP_BACK_IDX, (tpred) pop_back);
     init_f1(GET_BACK_CHOICE_IDX, (tpred) get_back_choice);
     init_f1(INC_CHOICE_IDX, (tpred) inc_choice);
+    init_f1(SINC_CHOICE_IDX, (tpred) sinc_choice);
     init_f1(MAX_CHOICE_IDX, (tpred) max_choice);
+    init_f1(SMAX_CHOICE_IDX, (tpred) smax_choice);
     init_f1(PUSH_BACK_IDX, (tpred) push_back);
     init_f1(ARITY_COUNT_IDX, (tpred) arity_count);
     init_f1(GET_DISJ_CHOICE_IDX, (tpred) get_disj_choice);
+    init_f1(SGET_DISJ_CHOICE_IDX, (tpred) sget_disj_choice);
     init_f1(INC_DISJ_CHOICE_IDX, (tpred) inc_disj_choice);
+    init_f1(SINC_DISJ_CHOICE_IDX, (tpred) sinc_disj_choice);
     init_f1(RESET_DISJ_IDX, (tpred) reset_disj);
+    init_f1(SRESET_DISJ_IDX, (tpred) sreset_disj);
     init_f1(DISCARD_IDX, (tpred) discard);
+    init_f1(SDISCARD_IDX, (tpred) sdiscard);
     init_f1(RELEASE_IDX, (tpred) release);
-    init_f1(POP_BACK_IDX, (tpred) pop_back);
+    init_f1(SRELEASE_IDX, (tpred) srelease);
+    init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
+    init_f1(PUSH_RECUR_IDX, (tpred) push_recur);
+    init_f1(POP_RECUR_IDX, (tpred) pop_recur);
+    init_f1(SDISCARD_IDX, (tpred) sdiscard);
+    init_f1(SRELEASE_IDX, (tpred) srelease);
 
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
@@ -137,7 +148,9 @@ void dynamic_link(int x)
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
+    init_f2(SUCCESS_IDX, (tpred) success);
     init_f2(PREPARE_IDX, (tpred) prepare);
+    init_f2(SPREPARE_IDX, (tpred) sprepare);
 
 
     //argument-3

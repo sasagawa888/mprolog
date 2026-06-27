@@ -206,10 +206,19 @@ static inline int Jinc_choice(int x) {
     return f1[INC_CHOICE_IDX](x);
 }
 
+static inline int Sinc_choice(int x) {
+    return f1[SINC_CHOICE_IDX](x);
+}
+
+
 static inline int Jmax_choice(int x) {
     return f1[MAX_CHOICE_IDX](x);
 }
 
+
+static inline int Smax_choice(int x) {
+    return f1[SMAX_CHOICE_IDX](x);
+}
 
 
 static inline int Jget_back_choice(int x) {
@@ -221,13 +230,36 @@ static inline int Jpush_back(int th) {
     return f1[PUSH_BACK_IDX](th);
 }
 
+
+static inline int Jpush_conj(int th) {
+    return f1[PUSH_CONJ_IDX](th);
+}
+
+
+static inline int Jpush_recur(int th) {
+    return f1[PUSH_RECUR_IDX](th);
+}
+
+
+static inline int Jpop_recur(int th) {
+    return f1[POP_RECUR_IDX](th);
+}
+
+
 static inline int Jarity_count(int x) {
     return f1[ARITY_COUNT_IDX](x);
 }
 
 
+
+
 static inline int Jget_disj_choice(int x) {
     return f1[GET_DISJ_CHOICE_IDX](x);
+}
+
+
+static inline int Sget_disj_choice(int x) {
+    return f1[SGET_DISJ_CHOICE_IDX](x);
 }
 
 
@@ -236,15 +268,30 @@ static inline int Jinc_disj_choice(int x) {
 }
 
 
+static inline int Sinc_disj_choice(int x) {
+    return f1[SINC_DISJ_CHOICE_IDX](x);
+}
+
+
 static inline int Jreset_disj(int x) {
     return f1[RESET_DISJ_IDX](x);
 }
+
+
+static inline int Sreset_disj(int x) {
+    return f1[SRESET_DISJ_IDX](x);
+}
+
 
 
 static inline int Jdiscard(int th) {
     return f1[DISCARD_IDX](th);
 }
 
+
+static inline int Sdiscard(int th) {
+    return f1[SDISCARD_IDX](th);
+}
 
 
 static inline int Jcopy_back(int x) {
