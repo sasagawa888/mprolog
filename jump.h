@@ -475,12 +475,19 @@ static inline int Jsave_arg(int x, int th) {
 }
 
 
+static inline int Jsuccess(int x, int th) {
+    return f2[SUCCESS_IDX](x, th);
+}
+
 
 static inline int Jprepare(int arglist, int th) {
     return f2[PREPARE_IDX](arglist, th);
 }
 
 
+static inline int Sprepare(int arglist, int th) {
+    return f2[SPREPARE_IDX](arglist, th);
+}
 
 
 static inline int Jlist3(int x, int y, int z) {
