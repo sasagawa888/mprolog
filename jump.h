@@ -259,11 +259,6 @@ static inline int Jreset_disj(int x) {
 }
 
 
-static inline int Sreset_disj(int x) {
-    return f1[SRESET_DISJ_IDX](x);
-}
-
-
 
 static inline int Jdiscard(int th) {
     return f1[DISCARD_IDX](th);

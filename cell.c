@@ -499,15 +499,6 @@ int max_choice(int th)
 
 
 
-int reset_disj(int th)
-{
-    backstack[bp[th]][DISJ_BACKSTACK][th] = 0;
-    backstack[bp[th]][CHOICE_BACKSTACK][th] =
-	backstack[bp[th]][CHOICE_BACKUP_BACKSTACK][th];
-    return (NIL);
-}
-
-
 
 //----------SCBM--------------------------
 
@@ -678,7 +669,7 @@ int inc_disj_choice(int th)
 }
 
 
-int sreset_disj(int th)
+int reset_disj(int th)
 {
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] =
