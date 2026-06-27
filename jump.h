@@ -206,10 +206,6 @@ static inline int Jinc_choice(int x) {
     return f1[INC_CHOICE_IDX](x);
 }
 
-static inline int Sinc_choice(int x) {
-    return f1[SINC_CHOICE_IDX](x);
-}
-
 
 static inline int Jmax_choice(int x) {
     return f1[MAX_CHOICE_IDX](x);

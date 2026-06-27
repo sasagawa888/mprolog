@@ -87,7 +87,6 @@ void dynamic_link(int x)
     init_f1(GET_BACK_CHOICE_IDX, (tpred) get_back_choice);
     init_f1(GET_CHOICE_IDX, (tpred) sget_choice);
     init_f1(INC_CHOICE_IDX, (tpred) inc_choice);
-    init_f1(SINC_CHOICE_IDX, (tpred) sinc_choice);
     init_f1(MAX_CHOICE_IDX, (tpred) max_choice);
     init_f1(SMAX_CHOICE_IDX, (tpred) smax_choice);
     init_f1(PUSH_BACK_IDX, (tpred) push_back);

@@ -491,13 +491,6 @@ int get_back_choice(int th)
 
 
 
-
-int inc_choice(int th)
-{
-    backstack[bp[th]][CHOICE_BACKSTACK][th]++;
-    return (NIL);
-}
-
 int max_choice(int th)
 {
     backstack[bp[th]][CHOICE_BACKSTACK][th] = 999999999;
@@ -669,7 +662,7 @@ int sdiscard(int th)
 
 
 
-int sinc_choice(int th)
+int inc_choice(int th)
 {
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]++;
     return (NIL);
