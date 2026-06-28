@@ -512,6 +512,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     gen_nondet_body_label([A,M,N]),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
+    write('Jpop_recur(th);'),nl,
     N1 is N+1,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
@@ -534,12 +535,12 @@ gen_nondet_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     write('res = NIL;'),nl,
     ifthenelse(L=:=0,gen_disj_jump_switch((X1;X2),A,M,N),true),
     gen_nondet_body_disj_label([A,M,N,L]),
-    write('Sinc_disj_choice(th);'),nl,
+    write('Jinc_disj_choice(th);'),nl,
     gen_nondet_body1(X1,A,M,N,B,res,L,H),
     write('if(res == YES) goto '),gen_nondet_body_exit([A,M,N]),nl,
     L1 is L+1,
     gen_nondet_body_disj_label([A,M,N,L1]),
-    write('Sinc_disj_choice(th);'),nl,
+    write('Jinc_disj_choice(th);'),nl,
     write('Jrelease(th);'),nl,
     gen_nondet_body1(X2,A,M,N,B,res,L1,H),
     ifthenelse(L=:=0,gen_nondet_body_exit_label([A,M,N]),true),
@@ -553,7 +554,6 @@ gen_nondet_body1(end_of_body,A,M,N,B,ret,L,H) :-
 gen_nondet_body1(end_of_body,A,M,N,B,res,L,H) :-
     write('res = YES;'),nl.
 gen_nondet_body1(end_of_body,A,M,N,B,rec,L,H) :-
-    write('Jpop_recur(th);'),nl,
     write('return(YES);'),nl.
 gen_nondet_body1(X,A,M,N,B,O,L,H) :-
     gen_nondet_body1((X,end_of_body),A,M,N,B,O,L,H).
