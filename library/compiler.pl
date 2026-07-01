@@ -2054,17 +2054,17 @@ analize_pred1(P,N,C) :-
     asserta(type(P,N,det)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
+    nondet_recursive(C,0),
+    P1 =.. [type,P,_,_],
+    (retract(P1);true),
+    asserta(type(P,N,recur)),!.
+analize_pred1(P,N,C) :-
+    not(n_dynamic_predicate(P)),
     length(C,M),
     halt_check(C,0,0,M),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
     asserta(type(P,N,halt)),!.
-analize_pred1(P,N,C) :-
-    not(n_dynamic_predicate(P)),
-    nondet_recursive(C,0),
-    P1 =.. [type,P,_,_],
-    (retract(P1);true),
-    asserta(type(P,N,recur)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     P1 =.. [type,P,_,_],
