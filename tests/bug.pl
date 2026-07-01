@@ -1,3 +1,5 @@
+woo(X) :- write(X),woo(X).
+
 
 % Partition list for quicksort
 partition([X|L], Y, [X|L1], L2) :-

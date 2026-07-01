@@ -136,6 +136,7 @@ pred_type(det,2).
 pred_type(tail,3).
 pred_type(dyn,4).
 pred_type(mut,5).
+pred_type(recur,6).
 
 % generate deftinfix for user op
 gen_def(P) :-
@@ -237,6 +238,8 @@ gen_predicate.
 % generate predicate P
 gen_a_pred(P) :- 
     type(P,_,nondet),gen_nondet_pred(P).  
+gen_a_pred(P) :- 
+    type(P,_,recur),gen_nondet_pred(P).     
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
 gen_a_pred(P) :- 
@@ -498,6 +501,22 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
      N1 is N+1,
     gen_nondet_body1(Y,A,M,N1,B,O,L,H),
+    write('}'),
+    gen_nondet_body_retry(B),nl.
+
+gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
+    n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    type(P,Arity,recur),
+    gen_nondet_body_argument(X,A,M,N),
+    write('Jpush_recur(th);'),nl,
+    gen_nondet_body_label([A,M,N]),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
+    write('Jpop_recur(th);'),nl,
+    N1 is N+1,
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
     gen_nondet_body_retry(B),nl.
 
@@ -2042,9 +2061,16 @@ analize_pred1(P,N,C) :-
     asserta(type(P,N,halt)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
+    nondet_recursive(C,0),
+    P1 =.. [type,P,_,_],
+    (retract(P1);true),
+    asserta(type(P,N,recur)),!.
+analize_pred1(P,N,C) :-
+    not(n_dynamic_predicate(P)),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
     asserta(type(P,N,nondet)),!.
+
 
 % arguments = [clauses],det_count,pred_count,halt_count,all_count
 deterministic([],D,P,H,A) :-
@@ -2235,6 +2261,33 @@ halt_check([X|Cs],D,P,A) :-
     halt_check(Cs,D,P1,A).
 halt_check([_|Cs],D,P,A) :-
     halt_check(Cs,D,P,A).
+
+
+nondet_recursive([],R) :-
+    %write(user_output,R),
+    R >= 1,!.
+nondet_recursive([],R) :-
+    %write(user_output,R),
+    R == 0,!,fail.    
+nondet_recursive([(Head :- Body)|Cs],R) :-
+    tail_body(Head,Body),
+    R1 is R + 1,
+    nondet_recursive(Cs,R1).
+nondet_recursive([(Head :- Body)|Cs],R) :-
+    nondet_recur_body(Head,Body),
+    R1 is R + 1,
+    nondet_recursive(Cs,R1).
+nondet_recursive([_|Cs],R) :-
+    nondet_recursive(Cs,R).
+
+nondet_recur_body(Head,(B1,B2)) :-
+    functor(Head,P,A),
+    functor(B1,P,A).
+nondet_recur_body(Head,(B1,B2)) :-
+    nondet_recur_body(Head,B2).
+nondet_recur_body(Head,Body) :-
+    functor(Head,P,A),
+    functor(Body,P,A).
 
 
 %---------------------------------------------------------
