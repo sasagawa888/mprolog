@@ -438,7 +438,7 @@ int push_conj(int th)
     scp[CONJ][th]++;
     scp[RECUR][th] = 0;
     if (scp[CONJ][th] >= CONJSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("SCBM stack size"), th);
+	exception(RESOURCE_ERR, NIL, makestr("push_conj SCBM stack size"), th);
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
@@ -454,7 +454,7 @@ int push_conj(int th)
 int push_recur(int th)
 {
     if (scp[RECUR][th] + 1 >= RECURSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("SCBM stack size"), th);
+	exception(RESOURCE_ERR, NIL, makestr("push_recur SCBM stack size"), th);
 
     if (scbmstack[scp[CONJ][th]][scp[RECUR][th] + 1][REUSE_SCBM][th]
 	== 1) {
@@ -479,7 +479,7 @@ int push_recur(int th)
 int pop_recur(int th)
 {
     if (scp[RECUR][th] <= 0)
-	exception(RESOURCE_ERR, NIL, makestr("SCBM stack size"), th);
+	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 1;
     scp[RECUR][th]--;
     return (NIL);
@@ -523,6 +523,27 @@ int discard_conj(int th)
 
     scp[CONJ][th]--;
     scp[RECUR][th] = 0;
+    
+    return (NIL);
+}
+
+
+int discard_recur(int th)
+{
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
+
+    scp[RECUR][th]--;
+    
+    if(scp[RECUR][th] == 0)
+    scp[CONJ][th]--;
     
     return (NIL);
 }
