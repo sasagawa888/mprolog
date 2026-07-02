@@ -23,6 +23,7 @@ compile_file(X,a) :-
     compile_file3(X).
 
 
+
 % genrate only c code 
 compile_file1(X) :-
     pass1(X),
@@ -37,7 +38,6 @@ compile_file2(X) :-
 compile_file3(X) :-
     pass1(X),
     pass2(X).
-
 
 pass1(X) :-
     assertz((type(dummy,dummy,dummy))),
@@ -361,6 +361,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
+    write('printf("'),write(P),write('->");'),
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
@@ -738,6 +739,7 @@ gen_recur_pred(P) :-
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
     write('arglist = Jprepare(arglist,th);'),nl,
+    write('printf("'),write(P),write('->");'),
     n_arity_count(P,L),
     gen_recur_pred1(P,L),
     write('}'),nl.
