@@ -239,7 +239,7 @@ gen_predicate.
 gen_a_pred(P) :- 
     type(P,_,nondet),gen_nondet_pred(P).  
 gen_a_pred(P) :- 
-    type(P,_,recur),gen_nondet_pred(P).     
+    type(P,_,recur),gen_recur_pred(P).     
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
 gen_a_pred(P) :- 
