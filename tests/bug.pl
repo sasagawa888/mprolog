@@ -1,3 +1,26 @@
+
+
+n(1). n(2). n(3). n(4). n(5).
+n(6). n(7). n(8). n(9). n(10).
+
+bench :-
+    n(X),
+    n(Y),
+    n(Z),
+    n(A),
+    n(B),
+    fail.
+bench.
+
+bench1 :-
+    n(X),
+    n(Y),
+    n(Z),
+    write([X,Y,Z]),nl,
+    fail.
+bench1.
+
+
 woo(X) :- write(X),woo(X).
 
 
@@ -73,26 +96,6 @@ cut(X) :-
     write(X).
 
 cuttest :- cut(X).
-
-n(1). n(2). n(3). n(4). n(5).
-n(6). n(7). n(8). n(9). n(10).
-
-bench :-
-    n(X),
-    n(Y),
-    n(Z),
-    n(A),
-    n(B),
-    fail.
-bench.
-
-bench1 :-
-    n(X),
-    n(Y),
-    n(Z),
-    write([X,Y,Z]),nl,
-    fail.
-bench1.
 
 
 nodiag([], _, _).
