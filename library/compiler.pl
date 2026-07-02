@@ -744,6 +744,263 @@ gen_head1([X|Xs],N) :-
     gen_head1(Xs,N1).
 
 
+/* --------------------recursion-----------------------------------
+*/
+gen_recur_pred(P) :-
+	atom_concat('compiling ',P,M),
+    write(user_output,M),
+	write('static int c_'),
+    n_atom_convert(P,P1),
+    write(P1),
+    write('(int arglist, int rest, int th){'),nl,
+    gen_var_declare(P),
+    write('n = Jarity_count(arglist);'),nl,
+    write('arglist = Jprepare(arglist,th);'),nl,
+    n_arity_count(P,L),
+    gen_recur_pred1(P,L),
+    write('}'),nl.
+
+gen_recur_pred1(P,[]) :-
+    nl,
+    write('Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("'),
+    write(P),
+    write('"),arglist);'),nl,
+	write('return(NO);').
+
+gen_recur_pred1(P,[A|As]) :-
+    write(user_output,$/$),write(user_output,A),
+    write(user_output,' recur'),nl(user_output),
+    gen_recur_arity(P,A),
+    gen_recur_pred1(P,As).
+
+gen_recur_arity(P,A) :-
+	write('if(n == '),
+    write(A),
+    write('){'),nl,
+    gen_recur_clause(P,A),
+    write('allfail:'),nl,
+    write('Jdiscard(th);'),nl,
+    write('return(NO);}'),nl,!.
+
+% select all clauses that arity is A
+gen_recur_clause(P,A) :-
+    gen_var_assign(1,A),
+    gen_jump_switch(P,A),
+    write('clause_'),write(A),write('_0:'),nl,
+	n_clause_with_arity(P,A,C),
+    gen_recur_clause1(C,A,0).
+
+% generate each clause 
+gen_recur_clause1([],_,_).
+gen_recur_clause1([C|Cs],A,M) :-
+	n_variable_convert(C,X),
+    n_generate_variable(X,V),
+    gen_var(V),
+    gen_a_recur_clause(X,A,M),
+    M1 is M+1,
+    gen_recur_clause1(Cs,A,M1).
+
+
+% N is arity , M is Mth clause from 0.
+% clause
+
+gen_a_recur_clause((Head :- Body),A,M) :-
+    write('Jinc_choice(th);'),nl,
+	gen_head(Head),write('{'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
+    gen_recur_body(Body,A,ret,M,Head),write('}'),nl,
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
+    write('Jrelease(th);'),nl.
+
+% predicate with no arity
+gen_a_recur_clause(P,A,M) :-
+	n_property(P,predicate),
+    functor(P,_,0),
+    write('Jinc_choice(th);'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
+    write('return(YES);'),nl.
+
+% nondet predicate
+gen_a_recur_clause(P,A,M) :-
+	n_property(P,predicate),
+    P =.. [P1|_],
+    write('Jinc_choice(th);'),nl,
+	gen_head(P),
+    write('{'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
+    write('Jsuccess(arglist,th); return(YES);}'),nl,
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
+    write('Jrelease(th);'),nl.
+
+gen_a_recur_clause(P,_,M) :-
+	n_property(P,userop),
+	gen_head(P),
+    write('Jinc_choice(th);'),nl,
+    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
+    write('return(YES);'),nl,
+    M1 is M+1,
+    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
+    write('Jrelease(th);'),nl.
+
+
+
+
+% varA,varB,...
+gen_all_var([]).
+gen_all_var([L|Ls]) :-
+    n_atom_convert(L,L1),
+	write(L1),
+    write(','),
+    gen_all_var(Ls).
+
+% varA = Jmakevariant(th), varB = Jmakevariant(th);
+gen_var([]).
+gen_var([L|Ls]) :-
+    n_atom_convert(L,L1),
+    write(L1),
+    write(' = Jmakevariant(th);'),nl,
+    gen_var(Ls).
+
+
+% X=body A=arity O=ret/res/rec L=disjunction-number H=Head
+gen_recur_body(X,A,O,M,H) :-
+    gen_recur_body1(X,A,M,0,[],O,0,H).
+
+% A is arith Mth clause, Nth body B-retry[A,M,N] Option L-disjuncion-num Head
+gen_recur_body1((!,Y),A,M,N,B,O,L,H) :-
+    gen_recur_body1(Y,A,M,N,[],O,L,H).
+gen_recur_body1((fail,Y),A,M,N,[],O,L,H) :-
+    gen_recur_body_fail([A,M]),nl,
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,[],O,L,H).
+gen_recur_body1((fail,Y),A,M,N,B,O,L,H) :-
+    gen_recur_body_fail_retry(B),nl,
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,B,O,L,H).
+gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
+    n_property(X,builtin),
+    X =.. [P|Args],
+    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,B,O,L,H),
+    write('}'),
+    gen_recur_body_retry(B),nl.
+gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
+     n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    type(P,Arity,det),
+    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
+     N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,B,O,L,H),
+    write('}'),
+    gen_recur_body_retry(B),nl.
+
+gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
+    n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    type(P,Arity,recur),
+    gen_recur_body_argument(X,A,M,N),
+    write('Jpush_recur(th);'),nl,
+    gen_recur_body_label([A,M,N]),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
+    write('Jpop_recur(th);'),nl,
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,[A,M,N],rec,L,H),
+    write('}'),
+    gen_recur_body_retry(B),nl.
+
+gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
+    n_property(X,predicate),
+    recur_body(X,H),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    type(P,Arity,nondet),
+    gen_recur_body_argument(X,A,M,N),
+    write('Jpush_recur(th);'),nl,
+    gen_recur_body_label([A,M,N]),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
+    write('Jpop_recur(th);'),nl,
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,[A,M,N],rec,L,H),
+    write('}'),
+    gen_recur_body_retry(B),nl.
+gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
+     n_property(X,predicate),
+    X =.. [P|Args],
+    functor(X,_,Arity),
+    type(P,Arity,nondet),
+    write('Jpush_conj(th);'),nl,
+    gen_recur_body_label([A,M,N]),
+    gen_recur_body_argument(X,A,M,N),
+    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
+    write(',NIL,th) == YES){'),nl,
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N1,[A,M,N],O,L,H),
+    write('}'),
+    gen_recur_body_retry(B),nl.
+gen_recur_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
+    write('res = NIL;'),nl,
+    ifthenelse(L=:=0,gen_disj_jump_switch((X1;X2),A,M,N),true),
+    gen_recur_body_disj_label([A,M,N,L]),
+    write('Jinc_disj_choice(th);'),nl,
+    gen_recur_body1(X1,A,M,N,B,res,L,H),
+    write('if(res == YES) goto '),gen_recur_body_exit([A,M,N]),nl,
+    L1 is L+1,
+    gen_recur_body_disj_label([A,M,N,L1]),
+    write('Jinc_disj_choice(th);'),nl,
+    write('Jrelease(th);'),nl,
+    gen_recur_body1(X2,A,M,N,B,res,L1,H),
+    ifthenelse(L=:=0,gen_recur_body_exit_label([A,M,N]),true),
+    N1 is N+1,
+    gen_recur_body1(Y,A,M,N,B,O,L,H),
+    ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
+gen_recur_body1(!,A,M,N,[],O,L,H) :-
+    write('{Jmax_choice(th); return(YES);}'),nl.    
+gen_recur_body1(end_of_body,A,M,N,B,ret,L,H) :-
+    write('{Jsuccess(arglist,th); return(YES);}'),nl.
+gen_recur_body1(end_of_body,A,M,N,B,res,L,H) :-
+    write('res = YES;'),nl.
+gen_recur_body1(end_of_body,A,M,N,B,rec,L,H) :-
+    write('return(YES);'),nl.
+gen_recur_body1(X,A,M,N,B,O,L,H) :-
+    gen_recur_body1((X,end_of_body),A,M,N,B,O,L,H).
+
+
+gen_recur_body_label([A,M,N]) :-
+    write('retry_'),write(A),write('_'),write(M),write('_'),write(N),write(':;'),nl.
+
+gen_recur_body_disj_label([A,M,N,L]) :-
+    write('disj_'),write(A),write('_'),write(M),write('_'),write(N),write('_'),write(L),write(':'),nl.
+
+gen_recur_body_exit_label([A,M,N]) :-
+    write('exit_'),write(A),write('_'),write(M),write('_'),write(N),write(':'),nl.
+
+gen_recur_body_exit([A,M,N]) :-
+    write('exit_'),write(A),write('_'),write(M),write('_'),write(N),write(';'),nl.
+
+
+gen_recur_body_retry([]).
+gen_recur_body_retry([A,M,N]) :-
+    write('else goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+
+gen_recur_body_fail_retry([A,M,N]) :-
+    write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+
+gen_recur_body_fail([A,M]) :-
+    write('goto clause_'),write(A),write('_'),write(M1),write(';').
+
+
+gen_recur_body_argument(X,A,M,N) :-
+    X =.. [_|Args],
+    write('int '),write('arg_'),write(A),write('_'),write(M),write('_'),write(N),write(' = '),
+    gen_a_argument(Args),write(';'),nl.
+
 %---------------det determinant predicate-------------------
 gen_det_pred(P) :-
 	atom_concat('compiling ',P,M),
