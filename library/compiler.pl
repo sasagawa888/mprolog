@@ -2525,10 +2525,15 @@ nondet_recur_body(Head,(B1,B2)) :-
     functor(Head,P,A),
     functor(B1,P,A).
 nondet_recur_body(Head,(B1,B2)) :-
+    functor(B1,P,A),
+    type(P,A,recur).
+nondet_recur_body(Head,(B1,B2)) :-
     nondet_recur_body(Head,B2).
 nondet_recur_body(Head,Body) :-
     functor(Head,P,A),
     functor(Body,P,A).
-
+nondet_recur_body(Head,Body) :-
+    functor(Body,P,A),
+    type(P,A,recur).
 
 %---------------------------------------------------------

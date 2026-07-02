@@ -63,6 +63,7 @@ df(s(s(M)), N) :- dnd(s(s(M)), N), df(s(M), N).
 
 prime(s(X)) :- df(X, s(X)).
 
+
 mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
