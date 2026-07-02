@@ -520,10 +520,9 @@ int discard(int th)
 	scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
-    scp[RECUR][th]--;
 
-    if(scp[RECUR][th] == 0)
     scp[CONJ][th]--;
+    scp[RECUR][th] = 0;
     
     return (NIL);
 }
