@@ -509,7 +509,7 @@ int prepare(int arglist, int th)
 }
 
 
-int discard(int th)
+int discard_conj(int th)
 {
 	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;

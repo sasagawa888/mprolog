@@ -256,8 +256,8 @@ static inline int Jreset_disj(int x) {
 
 
 
-static inline int Jdiscard(int th) {
-    return f1[DISCARD_IDX](th);
+static inline int Jdiscard_conj(int th) {
+    return f1[DISCARD_CONJ_IDX](th);
 }
 
 static inline int Jrelease(int th) {

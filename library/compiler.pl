@@ -384,7 +384,7 @@ gen_nondet_arity(P,A) :-
     write('){'),nl,
     gen_nondet_clause(P,A),
     write('allfail:'),nl,
-    write('Jdiscard(th);'),nl,
+    write('Jdiscard_conj(th);'),nl,
     write('return(NO);}'),nl,!.
 
 % select all clauses that arity is A
@@ -761,7 +761,7 @@ gen_recur_arity(P,A) :-
     write('){'),nl,
     gen_recur_clause(P,A),
     write('allfail:'),nl,
-    write('Jdiscard(th);'),nl,
+    write('Jdiscard_recur(th);'),nl,
     write('return(NO);}'),nl,!.
 
 % select all clauses that arity is A
