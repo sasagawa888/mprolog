@@ -456,14 +456,18 @@ int push_recur(int th)
     if (scp[RECUR][th] + 1 >= RECURSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("push_recur SCBM stack size"), th);
 
-    if (scbmstack[scp[CONJ][th]][scp[RECUR][th] + 1][REUSE_SCBM][th]
+    if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th] + 1][REUSE_SCBM][th]
 	== 1) {
 	scp[RECUR][th]++;
 	return (NIL);
     }
 
-
+    while(scp[RECUR][th] + 1 < RECURSIZE &&
+          scbmstack[scp[CONJ][th]][scp[RECUR][th] + 1][ARGLIST_SCBM][th] != 0){
+        scp[RECUR][th]++;
+    }
     scp[RECUR][th]++;
+
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
