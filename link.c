@@ -140,6 +140,7 @@ void dynamic_link(int x)
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
     init_f2(SUCCESS_IDX, (tpred) success);
     init_f2(PREPARE_IDX, (tpred) prepare);
+    init_f2(SET_MODE_IDX, (tpred) set_mode);
 
 
     //argument-3

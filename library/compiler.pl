@@ -362,6 +362,7 @@ gen_nondet_pred(P) :-
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
     write('printf("'),write(P),write('->");'),
+    write('Jprint(Jderef(arglist,th));'),
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
@@ -739,7 +740,8 @@ gen_recur_pred(P) :-
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
     write('arglist = Jprepare(arglist,th);'),nl,
-    write('printf("'),write(P),write('->");'),
+    write('printf("'),write(P),write('");'),
+    write('Jprint(Jderef(arglist,th));'),
     n_arity_count(P,L),
     gen_recur_pred1(P,L),
     write('}'),nl.

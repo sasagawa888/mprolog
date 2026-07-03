@@ -101,6 +101,7 @@ int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
 int bp[THREADSIZE];		// backtrack pointer 
 int scp[2][THREADSIZE];		// SCBM pointer
+int mode[THREADSIZE];       // SCBM mode 0=normal 1=retry
 
 
 // bignum pointer

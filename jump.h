@@ -445,6 +445,13 @@ static inline int Jprepare(int arglist, int th) {
 }
 
 
+static inline int Jset_mode(int x, int th) {
+    return f2[SET_MODE_IDX](x, th);
+}
+
+
+
+
 
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);

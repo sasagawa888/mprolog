@@ -565,7 +565,11 @@ int max_choice(int th)
 
 int release(int th)
 {
-    unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th], th);
+    //printf("unbind sp=%d\n",scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th]);
+    int i;
+    i = scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th];
+    if(i != UNBIND)
+    unbind(i, th);
     ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
     return (NIL);
 }
@@ -591,7 +595,7 @@ int get_choice(int th)
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* not recursion */
 
-    //printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
+    printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
     return (res);
 }
 
@@ -628,7 +632,11 @@ int reset_disj(int th)
     return (NIL);
 }
 
-
+int set_mode(int x, int th)
+{
+    mode[th] = x;
+    return(NIL);
+}
 
 //------for JUMP compiler-----
 int get_sp(int th)
