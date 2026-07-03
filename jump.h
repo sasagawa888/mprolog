@@ -4,6 +4,8 @@
 
 #define INT_FLAG    1073741824 //#b1000000000000000000000000000000
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
+#define NORMAL_MODE 0
+#define RETRY_MODE  1
 
 typedef int (*fn0)();
 typedef int (*fn1)(int);
