@@ -751,8 +751,9 @@ int prove(int goal, int bindings, int rest, int th)
 	    if ((GET_SUBR(pred)) (args, NIL, th) == YES) {
 		if (prove_all(rest, sp[th], th) == YES)
 		    return YES;
-		else
-		    goto retry;
+		else{
+			mode[th] = 1;
+		    goto retry;}
 	    }
 	    return NO;
 
