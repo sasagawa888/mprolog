@@ -515,7 +515,7 @@ int prepare(int arglist, int th)
 
 int discard_conj(int th)
 {
-    printf("discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    //printf("discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     int i;
     for(i=0;i<RECURSIZE;i++){
 	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
@@ -598,7 +598,7 @@ int get_choice(int th)
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* not recursion */
 
-    printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
+    //printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
     return (res);
 }
 
