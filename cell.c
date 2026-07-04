@@ -567,10 +567,7 @@ int max_choice(int th)
 int release(int th)
 {
     //printf("unbind sp=%d\n",scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th]);
-    int i;
-    i = scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th];
-    if(i != UNBIND)
-    unbind(i, th);
+    unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th], th);
     ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
     return (NIL);
 }

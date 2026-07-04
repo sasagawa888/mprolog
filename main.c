@@ -27,7 +27,7 @@ int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int localstack[STACKSIZE][THREADSIZE];
 int backstack[STACKSIZE][11][THREADSIZE];
-int scbmstack[CONJSIZE][RECURSIZE][9][THREADSIZE];
+int scbmstack[CONJSIZE][RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
 int record_pt = 1;		// current index of record database
 int counter[31];		// counter str_set,str_dec ... 

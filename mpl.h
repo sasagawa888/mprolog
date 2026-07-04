@@ -34,8 +34,8 @@ address
 #define PARASIZE 100
 #define THREADSIZE 10
 #define PROCSIZE 10
-#define CONJSIZE 30
-#define RECURSIZE 100
+#define CONJSIZE 300
+#define RECURSIZE 300
 #define OPERATOR_NUMBER 24
 #define FUNCTION_NUMBER 22
 #define BUILTIN_NUMBER 220
@@ -246,7 +246,7 @@ extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
 extern int backstack[STACKSIZE][11][THREADSIZE];
-extern int scbmstack[30][100][9][THREADSIZE];
+extern int scbmstack[CONJSIZE][RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
 extern jmp_buf buf1;
