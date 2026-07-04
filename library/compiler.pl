@@ -775,6 +775,7 @@ gen_recur_arity(P,A) :-
     gen_recur_clause(P,A),
     write('allfail:'),nl,
     write('Jdiscard_recur(th);'),nl,
+    write('if(rest != NIL) Jdiscard_conj(th);'),nl,
     write('return(NO);}'),nl,!.
 
 % select all clauses that arity is A

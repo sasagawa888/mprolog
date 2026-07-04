@@ -546,9 +546,6 @@ int discard_recur(int th)
 
     scp[RECUR][th]--;
     
-    if(scp[RECUR][th] == 0)
-    scp[CONJ][th]--;
-    
     return (NIL);
 }
 
