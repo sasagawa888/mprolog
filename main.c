@@ -474,6 +474,7 @@ void init_repl(void)
 	cp[i] = 0;
 	scp[CONJ][i] = 0;
 	scp[RECUR][i] = 0;
+	mode[i] = 0;
 	for (j = 0; j < CONJSIZE; j++)
 	    for (k = 0; k < RECURSIZE; k++)
 		for (l = 0; l < SCBM_ELT_SIZE; l++)

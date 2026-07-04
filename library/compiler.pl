@@ -985,7 +985,8 @@ gen_recur_body_exit([A,M,N]) :-
 
 gen_recur_body_retry([]).
 gen_recur_body_retry([A,M,N]) :-
-    write('else goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
+    write('else{Jset_mode(RETRY,th);'),nl,
+    write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';}').
 
 gen_recur_body_fail_retry([A,M,N]) :-
     write('Jset_mode(RETRY,th);'),nl,
