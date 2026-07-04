@@ -754,7 +754,7 @@ int prove(int goal, int bindings, int rest, int th)
 		if (prove_all(rest, sp[th], th) == YES)
 		    return YES;
 		else{
-			mode[th] = 1;
+			//mode[th] = 1;
 		    goto retry;}
 	    }
 	    return NO;
