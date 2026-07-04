@@ -596,7 +596,7 @@ int get_choice(int th)
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* not recursion */
 
-    printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
+    //printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
     return (res);
 }
 
