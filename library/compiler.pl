@@ -324,11 +324,10 @@ gen_var_assign(S,E) :-
 
 gen_jump_switch(P,A):-
     n_clause_count_with_arity(P,A,M),
-    write('if(rest == NIL){'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('switch(clause){'),nl,
     gen_jump_switch1(A,0,M),
-    write('}}'),nl.
+    write('}'),nl.
 
 gen_jump_switch1(A,M,M) :-
     write('default: goto allfail;'),nl.
