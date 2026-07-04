@@ -22,6 +22,9 @@ compile_file(X,o) :-
 compile_file(X,a) :-
     compile_file3(X).
 
+compile_file(X,d) :-
+    compile_file4(X).
+
 
 
 % genrate only c code 
@@ -38,6 +41,15 @@ compile_file2(X) :-
 compile_file3(X) :-
     pass1(X),
     pass2(X).
+
+% debug print 
+compile_file4(X) :-
+    assertz(option(debug,on)),
+    pass1(X),
+    pass2(X),
+    pass3(X),
+    retract(option(debug,on)),
+    invoke_gcc(X).
 
 pass1(X) :-
     assertz((type(dummy,dummy,dummy))),
@@ -361,8 +373,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
-    write('printf("'),write(P),write('->");'),
-    write('Jprint(Jderef(arglist,th));'),
+    ifthenelse(option(debug,on),gen_debug(P),true),
     n_arity_count(P,L),
     gen_nondet_pred1(P,L),
     write('}'),nl.
@@ -740,8 +751,7 @@ gen_recur_pred(P) :-
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
     write('arglist = Jprepare(arglist,th);'),nl,
-    write('printf("'),write(P),write('");'),
-    write('Jprint(Jderef(arglist,th));'),
+    ifthenelse(option(debug,on),gen_debug(P),true),
     n_arity_count(P,L),
     gen_recur_pred1(P,L),
     write('}'),nl.
@@ -831,7 +841,9 @@ gen_a_recur_clause(P,_,M) :-
     write('Jrelease(th);'),nl.
 
 
-
+gen_debug(P) :-
+    write('printf("'),write(P),write('");'),
+    write('Jprint(Jderef(arglist,th));').
 
 % varA,varB,...
 gen_all_var([]).
@@ -976,6 +988,7 @@ gen_recur_body_retry([A,M,N]) :-
     write('else goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
 
 gen_recur_body_fail_retry([A,M,N]) :-
+    write('Jset_mode(RETRY,th);'),nl,
     write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';').
 
 gen_recur_body_fail([A,M]) :-

@@ -1,4 +1,12 @@
 
+apptest :-
+    mappend(X,Y,[1,2,3]),
+    write(X),
+    write(Y),
+    fail.
+
+
+
 
 n(1). n(2). n(3). n(4). n(5).
 n(6). n(7). n(8). n(9). n(10).
@@ -67,12 +75,6 @@ prime(s(X)) :- df(X, s(X)).
 mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
-
-apptest :-
-    mappend(X,Y,[1,2,3]),
-    write(X),
-    write(Y),
-    fail.
 
 apptest1 :-
     mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
