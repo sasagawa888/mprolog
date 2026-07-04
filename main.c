@@ -747,6 +747,7 @@ int prove(int goal, int bindings, int rest, int th)
 	switch (type) {
 	case 1:		// nondet
 	case 6:     // recur
+	    mode[th] = 0;
 	    push_conj(th);
 	  retry:
 	    if ((GET_SUBR(pred)) (args, 1, th) == YES) {
