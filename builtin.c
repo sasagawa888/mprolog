@@ -620,6 +620,7 @@ int b_n_ask(int arglist, int rest, int th)
 	    return (prove_all(rest, sp[th], th));
 	} else if (c == ';' || c == ' ') {
 	    fputs(";\n", stdout);
+		if(scp[CONJ][th] == 1) mode[th] = 1;
 	    return (NO);
 	} else
 	    goto loop;
