@@ -1,11 +1,13 @@
+second([],[]).
+second([_,X|_],X).
+
+
 
 apptest :-
     mappend(X,Y,[1,2,3]),
     write(X),
     write(Y),
     fail.
-
-
 
 
 n(1). n(2). n(3). n(4). n(5).
@@ -40,11 +42,12 @@ partition([X|L], Y, L1, [X|L2]) :-
 partition([], _ , [], []) :- !.
 
 
-
 mmember(X,[X|_]).
 mmember(X,[_|Xs]) :-
     mmember(X,Xs).
 
+primetest :-
+    prime(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))).
 
 nat(0).
 nat(s(X)) :- nat(X).
