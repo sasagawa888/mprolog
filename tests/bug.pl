@@ -1,6 +1,83 @@
-second([],[]).
-second([_,X|_],X).
 
+make_list(0,X,[]).
+make_list(N,X,[X|Y]) :-
+    N1 is N-1,
+    make_list(N1,X,Y).
+
+reverse([],[]).
+reverse([X|Xs],Y) :-
+    reverse(Xs,Y1),
+    append(Y1,[X],Y).
+
+remove_at(0,[X|Xs],Xs).
+remove_at(N,[X|Xs],[X|Y]) :-
+    N1 is N-1,
+    remove_at(N1,Xs,Y).
+
+insert_at(0,X,L,[X|L]).
+insert_at(N,X,[L|Ls],[L|Y]) :-
+    N1 is N-1,
+    insert_at(N1,X,Ls,Y).
+
+qsort([], []).
+qsort([Pivot|Rest], Sorted) :-
+    partition(Pivot, Rest, Left, Right), 
+    qsort(Left, SortedLeft),          
+    qsort(Right, SortedRight),       
+    append(SortedLeft, [Pivot|SortedRight], Sorted). 
+
+partition(_, [], [], []). 
+partition(Pivot, [H|T], [H|Left], Right) :-
+    H =< Pivot,  
+    partition(Pivot, T, Left, Right).
+partition(Pivot, [H|T], Left, [H|Right]) :-
+    H > Pivot,  
+    partition(Pivot, T, Left, Right).
+
+permutation([], []).
+permutation(L, [X|L2]) :-
+    del(X, L, L1),
+    permutation(L1, L2).
+
+del(X, [X|L], L).
+del(X, [Y|L], [Y|L1]) :-
+    del(X, L, L1).
+
+flatten([],[]).
+flatten([L|Ls],[L|Y]) :-
+    atomic(L),
+    flatten(Ls,Y).
+flatten([L|Ls],Z) :-
+    list(L),
+    flatten(L,Y1),
+    flatten(Ls,Y2),
+    append(Y1,Y2,Z).
+
+min_list([L],L).
+min_list([L|Ls],L) :-
+    min_list(Ls,X),
+    L < X.
+min_list([L|Ls],X) :-
+    min_list(Ls,X),
+    L >= X.
+
+max_list([L],L).
+max_list([L|Ls],L) :-
+    max_list(Ls,X),
+    L > X.
+max_list([L|Ls],X) :-
+    max_list(Ls,X),
+    L =< X.
+
+same_set(L1,L2) :-
+    sort(L1,S1),
+    sort(L2,S2),
+    S1 = S2.
+
+
+mappend([],X,X).
+mappend([A|X],Y,[A|Z]) :-
+    mappend(X,Y,Z).
 
 
 apptest :-
@@ -10,41 +87,6 @@ apptest :-
     fail.
 
 
-n(1). n(2). n(3). n(4). n(5).
-n(6). n(7). n(8). n(9). n(10).
-
-bench :-
-    n(X),
-    n(Y),
-    n(Z),
-    n(A),
-    n(B),
-    fail.
-bench.
-
-bench1 :-
-    n(X),
-    n(Y),
-    n(Z),
-    write([X,Y,Z]),nl,
-    fail.
-bench1.
-
-
-woo(X) :- write(X),woo(X).
-
-
-% Partition list for quicksort
-partition([X|L], Y, [X|L1], L2) :-
-    X < Y, !, partition(L, Y, L1, L2).
-partition([X|L], Y, L1, [X|L2]) :-
-    !,partition(L, Y, L1, L2).
-partition([], _ , [], []) :- !.
-
-
-mmember(X,[X|_]).
-mmember(X,[_|Xs]) :-
-    mmember(X,Xs).
 
 primetest :-
     prime(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))).
@@ -74,11 +116,6 @@ df(s(s(M)), N) :- dnd(s(s(M)), N), df(s(M), N).
 
 prime(s(X)) :- df(X, s(X)).
 
-
-mappend([],X,X).
-mappend([A|X],Y,[A|Z]) :-
-    mappend(X,Y,Z).
-
 apptest1 :-
     mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
     fail.
@@ -104,15 +141,7 @@ cut(X) :-
 cuttest :- cut(X).
 
 
-nodiag([], _, _).
-nodiag([N|L], B, D) :-
-    D =\= N - B,
-    D =\= B - N,
-    D1 is D + 1,
-    nodiag(L, B, D1).
-
-bar(X) :- write(X).
-
 f(1,Y) :- Y is 2.
 f(2,Y) :- Y is 3.
+
 
