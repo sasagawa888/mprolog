@@ -1,24 +1,4 @@
 
-make_list(0,X,[]).
-make_list(N,X,[X|Y]) :-
-    N1 is N-1,
-    make_list(N1,X,Y).
-
-reverse([],[]).
-reverse([X|Xs],Y) :-
-    reverse(Xs,Y1),
-    append(Y1,[X],Y).
-
-remove_at(0,[X|Xs],Xs).
-remove_at(N,[X|Xs],[X|Y]) :-
-    N1 is N-1,
-    remove_at(N1,Xs,Y).
-
-insert_at(0,X,L,[X|L]).
-insert_at(N,X,[L|Ls],[L|Y]) :-
-    N1 is N-1,
-    insert_at(N1,X,Ls,Y).
-
 qsort([], []).
 qsort([Pivot|Rest], Sorted) :-
     partition(Pivot, Rest, Left, Right), 
@@ -88,9 +68,6 @@ apptest :-
 
 
 
-primetest :-
-    prime(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))).
-
 nat(0).
 nat(s(X)) :- nat(X).
 
@@ -119,29 +96,4 @@ prime(s(X)) :- df(X, s(X)).
 apptest1 :-
     mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
     fail.
-
-disj :-
-    write(a)
- ;
-    write(b).
-
-disjtest :-
-    disj,
-    fail.
-
-p(1).
-p(2).
-p(3).
-
-cut(X) :-
-    p(X),
-    !,
-    write(X).
-
-cuttest :- cut(X).
-
-
-f(1,Y) :- Y is 2.
-f(2,Y) :- Y is 3.
-
 
