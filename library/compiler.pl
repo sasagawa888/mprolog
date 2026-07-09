@@ -524,7 +524,7 @@ gen_nondet_body1((X,Y),A,M,N,B,O,L,H) :-
     gen_nondet_body_label([A,M,N]),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
-    write('Jpop_recur(th);'),nl,
+    ifthenelse(B==[],(write('Jpop_recur(th);'),nl),true),
     N1 is N+1,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
@@ -905,6 +905,7 @@ gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     gen_recur_body1(Y,A,M,N1,B,O,L,H),
     write('}'),
     gen_recur_body_retry(B),nl.
+
 gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     n_property(X,predicate),
     X =.. [P|Args],
@@ -915,12 +916,12 @@ gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     gen_recur_body_label([A,M,N]),
     write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
     write(',NIL,th) == YES){'),nl,
-    write('Jpop_recur(th);'),nl,
+    ifthenelse(B==[],(write('Jpop_recur(th);'),nl),true),
     N1 is N+1,
     gen_recur_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
     gen_recur_body_retry(B),nl.
-
+/*
 gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     n_property(X,predicate),
     recur_body(X,H),
@@ -937,6 +938,7 @@ gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     gen_recur_body1(Y,A,M,N1,[A,M,N],rec,L,H),
     write('}'),
     gen_recur_body_retry(B),nl.
+
 gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
      n_property(X,predicate),
     X =.. [P|Args],
@@ -951,6 +953,7 @@ gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     gen_recur_body1(Y,A,M,N1,[A,M,N],O,L,H),
     write('}'),
     gen_recur_body_retry(B),nl.
+*/
 gen_recur_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
     write('res = NIL;'),nl,
     ifthenelse(L=:=0,gen_disj_jump_switch((X1;X2),A,M,N),true),
