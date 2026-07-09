@@ -1709,7 +1709,6 @@ gen_tail_pred(P) :-
     write('save3 = Jget_ac(th);'),nl,
     write('Jinc_proof(th);'),nl,
     write('n = Jarity_count(arglist);'),nl,
-    write('arglist= Jprepare(arglist,th);'),nl,
     ifthenelse(option(debug,on),gen_debug(P),true),
     n_arity_count(P,L),
     gen_tail_pred1(P,L),
