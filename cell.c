@@ -560,16 +560,19 @@ int discard_recur(int th)
     printf("discard_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
-
+    int i;
+    for(i=scp[RECUR][th];i<RECURSIZE;i++){
+	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][CHOICE_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][AC_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][DISJ_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][CHOICE_BACKUP_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][ARGLIST_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][REUSE_SCBM][th] = 0;
+	scbmstack[scp[CONJ][th]][i][SUCC_SCBM][th] = 0;
+    }
+	
     scp[RECUR][th]--;
     
     return (NIL);
@@ -616,10 +619,12 @@ int get_choice(int th)
 	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
 	    9999;
     /* reused recursion point before success: skip */
+    /*
     else if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] == 1)
 	res =
 	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
 	    9999;
+    */
     /* reused recursion point before success: skip */
     else
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
