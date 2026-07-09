@@ -1024,6 +1024,7 @@ gen_det_pred(P) :-
     gen_var_declare(P),
     write('Jinc_proof(th);'),nl,
     write('n = Jarity_count(arglist);'),nl,
+    ifthenelse(option(debug,on),gen_debug(P),true),
     write('save1 = Jget_wp(th);'),nl,
     write('save2 = Jget_sp(th);'),nl,
     write('save3 = Jget_ac(th);'),nl,
@@ -1708,6 +1709,7 @@ gen_tail_pred(P) :-
     write('save3 = Jget_ac(th);'),nl,
     write('Jinc_proof(th);'),nl,
     write('n = Jarity_count(arglist);'),nl,
+    ifthenelse(option(debug,on),gen_debug(P),true),
     n_arity_count(P,L),
     gen_tail_pred1(P,L),
     write('}'),nl.
