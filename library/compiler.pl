@@ -2143,7 +2143,7 @@ gen_a_det_body(X is Y) :-
     eval_form(Y),
     write(','),
     write(th),
-    write(')==YES)').
+    write(')==YES)'),nl.
 
 gen_a_det_body(X = Y) :-
     write('if(Junify('),
@@ -2152,28 +2152,28 @@ gen_a_det_body(X = Y) :-
     gen_a_argument(Y),
     write(','),
     write(th),
-    write(')==YES)').
+    write(')==YES)'),nl.
 
 gen_a_det_body(X =:= Y) :-
     write('if(Jnumeqp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write('))').
+    write('))'),nl.
 
 gen_a_det_body(X =\= Y) :-
     write('if(Jnot_numeqp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write('))').
+    write('))'),nl.
 
 gen_a_det_body(X < Y) :-
     write('if(Jsmallerp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write('))').
+    write('))'),nl.
 
 gen_a_det_body(X =< Y) :-
     write('if(Jeqsmallerp('),
@@ -2187,14 +2187,14 @@ gen_a_det_body(X > Y) :-
     eval_form(X),
     write(','),
     eval_form(Y),
-    write('))').
+    write('))'),nl.
 
 gen_a_det_body(X >= Y) :-
     write('if(Jeqgreaterp('),
     eval_form(X),
     write(','),
     eval_form(Y),
-    write('))').
+    write('))'),nl.
 
 gen_a_det_body((((X->Y),Y1);Z)) :-
     case_arg((((X->Y),Y1);Z),L),
@@ -2227,12 +2227,12 @@ gen_a_det_body(use_module(X)) :-
     write(','),
     write('Jmakeconst("'),
     write(X),
-    write('"),th)').
+    write('"),th)'),nl.
 
 
 % for FCG {} compile
 gen_a_det_body(',') :-
-    write('Jmakesys("n_exec_no_operation")').
+    write('Jmakesys("n_exec_no_operation")'),nl.
 
 gen_a_det_body(X) :-
     n_property(X,builtin),
@@ -2241,7 +2241,7 @@ gen_a_det_body(X) :-
     write(P),
     write('"),'),
     gen_argument(A),
-    write(',th) == YES)').
+    write(',th) == YES)'),nl.
 
 
 gen_a_det_body(X) :-
@@ -2251,7 +2251,7 @@ gen_a_det_body(X) :-
     write(P),
     write('"),'),
     gen_argument(A),
-    write(',th) == YES)').
+    write(',th) == YES)'),nl.
 
 gen_a_det_body(X) :-
     invoke_error('illegal body ',X).
