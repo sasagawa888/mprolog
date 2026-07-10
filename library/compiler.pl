@@ -900,8 +900,10 @@ gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,tail),
+    write('Jpush_recur(th);'),nl,
     write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-     N1 is N+1,
+    write('Jpop_recur(th);'),nl,
+    N1 is N+1,
     gen_recur_body1(Y,A,M,N1,B,O,L,H),
     write('}'),
     gen_recur_body_retry(B),nl.
