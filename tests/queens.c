@@ -9,7 +9,6 @@ static int c_nodiag(int arglist, int rest, int th);
 static int c_test16(int arglist, int rest, int th){
 int varX,n,body,save1,save2,save3,goal,cont,clause,res;
 n = Jarity_count(arglist);
-arglist = Jprepare(arglist,th);
 if(n == 0){
 clause = Jget_choice(th);
 switch(clause){
@@ -23,22 +22,19 @@ Jinc_choice(th);
 {
 skip_0_0:;
 if (Jcall_det(Jmakesys("between"),Jwlistcons(Jmakeint(1),Jwlistcons(Jmakeint(16),Jwlistcons(varX,NIL,th),th),th),th) == YES){
-int arg_0_0_1 = NIL;
-Jpush_recur(th);
+Jpush_conj(th);
 retry_0_0_1:;
+int arg_0_0_1 = NIL;
 if (c_test1(arg_0_0_1,NIL,th) == YES){
-Jpop_recur(th);
-Jset_mode(RETRY,th);
 goto retry_0_0_1;
-return(YES);
+{Jsuccess(arglist,th); return(YES);}
 }
 }
 }
 clause_0_1:
 Jrelease(th);
 allfail:
-Jdiscard_recur(th);
-if(rest != NIL) Jdiscard_conj(th);
+Jdiscard_conj(th);
 return(NO);}
 
 Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("test16"),arglist);
@@ -46,7 +42,6 @@ return(NO);}
 static int c_test(int arglist, int rest, int th){
 int varX,n,body,save1,save2,save3,goal,cont,clause,res;
 n = Jarity_count(arglist);
-arglist = Jprepare(arglist,th);
 if(n == 0){
 clause = Jget_choice(th);
 switch(clause){
@@ -66,20 +61,16 @@ if (c_queen(arg_0_0_0,NIL,th) == YES){
 Jpop_recur(th);
 if (Jcall_det(Jmakesys("write"),Jwlistcons(varX,NIL,th),th) == YES){
 if (Jcall_det(Jmakesys("nl"),NIL,th) == YES){
-Jset_mode(RETRY,th);
 goto retry_0_0_0;
 return(YES);
-}else{Jset_mode(RETRY,th);
-goto retry_0_0_0;}
-}else{Jset_mode(RETRY,th);
-goto retry_0_0_0;}
+}else goto retry_0_0_0;
+}else goto retry_0_0_0;
 }
 }
 clause_0_1:
 Jrelease(th);
 allfail:
-Jdiscard_recur(th);
-if(rest != NIL) Jdiscard_conj(th);
+Jdiscard_conj(th);
 return(NO);}
 
 Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("test"),arglist);
@@ -87,7 +78,6 @@ return(NO);}
 static int c_test1(int arglist, int rest, int th){
 int varX,n,body,save1,save2,save3,goal,cont,clause,res;
 n = Jarity_count(arglist);
-arglist = Jprepare(arglist,th);
 if(n == 0){
 clause = Jget_choice(th);
 switch(clause){
@@ -105,7 +95,6 @@ Jpush_recur(th);
 retry_0_0_0:;
 if (c_queen(arg_0_0_0,NIL,th) == YES){
 Jpop_recur(th);
-Jset_mode(RETRY,th);
 goto retry_0_0_0;
 return(YES);
 }
@@ -113,8 +102,7 @@ return(YES);
 clause_0_1:
 Jrelease(th);
 allfail:
-Jdiscard_recur(th);
-if(rest != NIL) Jdiscard_conj(th);
+Jdiscard_conj(th);
 return(NO);}
 
 Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("test1"),arglist);
@@ -207,8 +195,8 @@ Jpop_recur(th);
 return(YES);
 }else{Jset_mode(RETRY,th);
 goto retry_3_1_0;}
-}else{Jset_mode(RETRY,th);
-Jpop_recur(th);
+}else{Jpop_recur(th);
+Jset_mode(RETRY,th);
 goto retry_3_1_0;}
 }
 }
@@ -310,9 +298,9 @@ goto loop3;
 else{Jset_result(NO,th); return(NO);}}
 }
 void init_tpredicate(void){
-(deftpred)("test16",c_test16,0,6);
-(deftpred)("test",c_test,0,6);
-(deftpred)("test1",c_test1,0,6);
+(deftpred)("test16",c_test16,0,1);
+(deftpred)("test",c_test,0,1);
+(deftpred)("test1",c_test1,0,1);
 (deftpred)("queen",c_queen,2,6);
 (deftpred)("queen_2",c_queen_2,3,6);
 (deftpred)("qdelete",c_qdelete,4,6);

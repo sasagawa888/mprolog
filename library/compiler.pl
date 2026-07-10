@@ -972,8 +972,8 @@ gen_recur_body_retry([A,M,N]) :-
 
 gen_recur_body_det_retry([]).
 gen_recur_body_det_retry([A,M,N]) :-
-    write('else{Jset_mode(RETRY,th);'),nl,
-    write('Jpop_recur(th);'),nl,
+    write('else{Jpop_recur(th);'),nl,
+    write('Jset_mode(RETRY,th);'),nl,
     write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';}').
 
 
