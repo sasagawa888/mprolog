@@ -1724,7 +1724,7 @@ gen_tail_pred1(P,[A|As]) :-
 gen_tail_arity(P,A) :-
 	write('if(n == '),write(A),write('){'),nl,
     gen_tail_clause(P,A),
-    write('return(NO);}'),nl,!.
+    write('else{Jset_result(NO,th); return(NO);}}'),nl,!.
 
 gen_tail_clause(P,A) :-
     gen_var_assign(1,A),
@@ -1745,7 +1745,7 @@ gen_a_tail_clause(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
 	gen_head(P),
-    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl.
+    write('{Jset_result(YES,th); return(YES);}'),nl.
 
 gen_a_tail_clause((Head :- Body),A,M) :-
     tail_body(Head,Body),
@@ -1769,9 +1769,7 @@ gen_tail_body(X,N) :-
 gen_tail_args([],_).
 gen_tail_args([A|As],N) :-
     write('arg'),write(N),write(' = '),
-    write('Jcopy_work(Jderef('),
-    gen_a_argument(A),
-    write(',th),th);'),nl,
+    write('Jcopy_work(Jderef('),gen_a_argument(A),write(',th),th);'),nl,
     N1 is N+1,
     gen_tail_args(As,N1).
 
