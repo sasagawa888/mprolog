@@ -433,7 +433,7 @@ int pop_stack(int th)
 
 //----------SCBM--------------------------
 
-#define DBG 1
+//#define DBG 1
 
 int push_conj(int th)
 {
@@ -561,7 +561,7 @@ int discard_recur(int th)
     #endif
 
     int i;
-    for(i=scp[RECUR][th];i<RECURSIZE;i++){
+    i=scp[RECUR][th];
 	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][CHOICE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = 0;
@@ -571,7 +571,6 @@ int discard_recur(int th)
 	scbmstack[scp[CONJ][th]][i][ARGLIST_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][REUSE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][SUCC_SCBM][th] = 0;
-    }
 	
     scp[RECUR][th]--;
     
@@ -619,19 +618,13 @@ int get_choice(int th)
 	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
 	    9999;
     /* reused recursion point before success: skip */
-    /*
-    else if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] == 1)
-	res =
-	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
-	    9999;
-    */
-    /* reused recursion point before success: skip */
     else
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* not recursion */
 
     #ifdef DBG
-    printf("choice=%d conj=%d recur=%d\n",res, scp[CONJ][th], scp[RECUR][th]);
+    printf("choice=%d conj=%d recur=%d reuse=%d\n",res, scp[CONJ][th], scp[RECUR][th]
+    ,scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th]);
     #endif 
     return (res);
 }
