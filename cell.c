@@ -641,6 +641,16 @@ int success(int arglist, int th)
     return (NIL);
 }
 
+int set_result(int x, int th)
+{
+     #ifdef DBG
+    printf("set_result (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = x;
+    return (NIL);
+}
+
 
 int get_disj_choice(int th)
 {

@@ -185,6 +185,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
        COPY_WORK_IDX, SAVE_ARG_IDX, PREPARE_IDX, SPREPARE_IDX, SUCCESS_IDX, SET_MODE_IDX,
+       SET_RESULT_IDX,
        NUM_FN2S
 };
 
@@ -1421,6 +1422,7 @@ int set_up(int x);
 int set_aux(int x, int y);
 int set_var(int x, int y);
 int set_mode(int x, int th);
+int set_result(int x, int th);
 int s_remainder(int x, int y, int th);
 int see_trail(void);
 int singletonp(int x);
