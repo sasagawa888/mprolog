@@ -472,6 +472,8 @@ int push_recur(int th)
 	return (NIL);
     }
 
+    int base;
+    base = scp[RECUR][th];
     while(scp[RECUR][th] + 1 < RECURSIZE &&
           scbmstack[scp[CONJ][th]][scp[RECUR][th] + 1][ARGLIST_SCBM][th] != 0){
         scp[RECUR][th]++;
@@ -487,6 +489,7 @@ int push_recur(int th)
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][BASE_SCBM][th] = base;
     return (NIL);
 }
 
@@ -561,7 +564,7 @@ int discard_recur(int th)
     #endif
 
     int i;
-    for(i=scp[RECUR][th];i<RECURSIZE;i++){
+    i=scp[RECUR][th];
 	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][CHOICE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = 0;
@@ -571,10 +574,10 @@ int discard_recur(int th)
 	scbmstack[scp[CONJ][th]][i][ARGLIST_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][REUSE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][SUCC_SCBM][th] = 0;
-    }
     
-    scp[RECUR][th]--;
     
+    scp[RECUR][th] = scbmstack[scp[CONJ][th]][i][BASE_SCBM][th];
+    scbmstack[scp[CONJ][th]][i][BASE_SCBM][th] = 0;
     return (NIL);
 }
 
