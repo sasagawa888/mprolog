@@ -221,13 +221,6 @@ enum {
 };
 
 enum {
-    SP_BACKSTACK, CHOICE_BACKSTACK, WP_BACKSTACK, AC_BACKSTACK, DISJ_BACKSTACK,
-    CHOICE_BACKUP_BACKSTACK, ARGLIST_BACKSTACK, BIAS_BACKSTACK, REUSE_BACKSTACK,
-};
-
-
-
-enum {
     SP_SCBM, CHOICE_SCBM, WP_SCBM, AC_SCBM, DISJ_SCBM,
     CHOICE_BACKUP_SCBM, ARGLIST_SCBM, REUSE_SCBM, SUCC_SCBM,
     BASE_SCBM,
@@ -246,7 +239,6 @@ extern int variant_max;
 extern int variant[VARIANTSIZE][THREADSIZE];
 extern int bigcell[BIGSIZE];
 extern int localstack[STACKSIZE][THREADSIZE];
-extern int backstack[STACKSIZE][11][THREADSIZE];
 extern int scbmstack[CONJSIZE][RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 extern token stok;
 extern jmp_buf buf;
@@ -606,7 +598,6 @@ extern int wp_min[THREADSIZE];
 extern int wp_max[THREADSIZE];
 extern int cp[THREADSIZE];
 extern int unique_num;
-extern int bp[THREADSIZE];
 extern int scp[2][THREADSIZE]; 
 extern int mode[THREADSIZE];
 

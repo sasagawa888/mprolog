@@ -26,7 +26,6 @@ int cell_hash_table[HASHTBSIZE];
 int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int localstack[STACKSIZE][THREADSIZE];
-int backstack[STACKSIZE][11][THREADSIZE];
 int scbmstack[CONJSIZE][RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
 int record_pt = 1;		// current index of record database
@@ -99,7 +98,6 @@ int wp_min[THREADSIZE];		// start wp point in each thread
 int wp_max[THREADSIZE];		// end wp point in each thread
 int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
-int bp[THREADSIZE];		// backtrack pointer 
 int scp[2][THREADSIZE];		// SCBM pointer
 int mode[THREADSIZE];       // SCBM mode 0=normal 1=retry
 
