@@ -141,7 +141,6 @@ void dynamic_link(int x)
     init_f2(SUCCESS_IDX, (tpred) success);
     init_f2(PREPARE_IDX, (tpred) prepare);
     init_f2(SET_MODE_IDX, (tpred) set_mode);
-    init_f2(SET_RESULT_IDX, (tpred) set_result);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);

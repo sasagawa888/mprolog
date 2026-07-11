@@ -452,11 +452,6 @@ static inline int Jset_mode(int x, int th) {
 
 
 
-static inline int Jset_result(int x, int th) {
-    return f2[SET_RESULT_IDX](x, th);
-}
-
-
 
 
 static inline int Jlist3(int x, int y, int z) {

@@ -1699,7 +1699,7 @@ gen_tail_pred1(P,[A|As]) :-
 gen_tail_arity(P,A) :-
 	write('if(n == '),write(A),write('){'),nl,
     gen_tail_clause(P,A),
-    write('else{Jset_result(NO,th); return(NO);}}'),nl,!.
+    write('else return(NO);}'),nl,!.
 
 gen_tail_clause(P,A) :-
     gen_var_assign(1,A),
@@ -1720,7 +1720,7 @@ gen_a_tail_clause(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
 	gen_head(P),
-    write('{Jset_result(YES,th); return(YES);}'),nl.
+    write('return(YES);'),nl.
 
 gen_a_tail_clause((Head :- Body),A,M) :-
     tail_body(Head,Body),
