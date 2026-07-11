@@ -900,12 +900,11 @@ gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,tail),
-    write('Jpush_recur(th);'),nl,
     write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
     N1 is N+1,
     gen_recur_body1(Y,A,M,N1,B,O,L,H),
     write('}'),
-    gen_recur_body_det_retry(B),nl.
+    gen_recur_body_retry(B),nl.
 
 gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
     n_property(X,predicate),
@@ -968,12 +967,6 @@ gen_recur_body_retry([]).
 gen_recur_body_retry([A,M,N]) :-
     write('else{Jset_mode(RETRY,th);'),nl,
     write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';}').
-
-gen_recur_body_det_retry([]).
-gen_recur_body_det_retry([A,M,N]) :-
-    write('else{Jdiscard_recur(th);'),nl,
-    write('goto retry_'),write(A),write('_'),write(M),write('_'),write(N),write(';}').
-
 
 gen_recur_body_fail_retry([A,M,N]) :-
     write('Jset_mode(RETRY,th);'),nl,
