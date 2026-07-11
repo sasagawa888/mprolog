@@ -20,6 +20,12 @@ qdelete(A, A, L, L).
 qdelete(X, A, [H|T], [A|R]) :-
     qdelete(X, H, T, R).
 
+%queen_2[[2,3,4],[1],v_6]
+%queen_2[[2,4],[3,1],v_16]
+%queen_2[[2,3,4],[1],[4|v_16]]
+%queen_2[[2,3],[4,1],v_36]
+%queen_2[[3],[2,4,1],v_56]
+
 
 nodiag([], _, _).
 nodiag([N|L], B, D) :-

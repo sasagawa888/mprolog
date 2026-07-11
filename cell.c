@@ -561,7 +561,7 @@ int discard_recur(int th)
     #endif
 
     int i;
-    i=scp[RECUR][th];
+    for(i=scp[RECUR][th];i<RECURSIZE;i++){
 	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][CHOICE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = 0;
@@ -571,7 +571,8 @@ int discard_recur(int th)
 	scbmstack[scp[CONJ][th]][i][ARGLIST_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][REUSE_SCBM][th] = 0;
 	scbmstack[scp[CONJ][th]][i][SUCC_SCBM][th] = 0;
-	
+    }
+    
     scp[RECUR][th]--;
     
     return (NIL);
