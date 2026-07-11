@@ -649,6 +649,7 @@ int set_result(int x, int th)
     #endif
 
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = x;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 1;
     return (NIL);
 }
 
