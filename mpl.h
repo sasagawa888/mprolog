@@ -174,6 +174,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        DISCARD_CONJ_IDX, DISCARD_RECUR_IDX, PUSH_CONJ_IDX, PUSH_RECUR_IDX, POP_RECUR_IDX,
+       PUSH_TAIL_RECUR_IDX, POP_TAIL_RECUR_IDX,
        NUM_FN1S
 };
 
@@ -1377,7 +1378,9 @@ int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
 int push_conj(int th);
 int push_recur(int th);
+int push_tail_recur(int th);
 int pop_recur(int th);
+int pop_tail_recur(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);
 int readparse(int th);
