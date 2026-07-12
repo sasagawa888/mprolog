@@ -708,6 +708,12 @@ int set_mode(int x, int th)
     return(NIL);
 }
 
+int predname(char* name)
+{
+    debug_pred_name = makeconst(name);
+    return(NIL);
+}
+
 //------for JUMP compiler-----
 int get_sp(int th)
 {

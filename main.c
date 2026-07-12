@@ -100,7 +100,7 @@ int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
 int scp[2][THREADSIZE];		// SCBM pointer
 int mode[THREADSIZE];       // SCBM mode 0=normal 1=retry
-
+int debug_pred_name;
 
 // bignum pointer
 int big_pt0 = 0;		// pointer of temporaly bignum

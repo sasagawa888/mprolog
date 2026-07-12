@@ -201,7 +201,7 @@ enum { LIST3_IDX, ERRORCOMP_IDX, WLISTCONS_IDX,UNIFY_IDX, UNIFY_PAIR_IDX,
 
 enum { MAKECONST_IDX, MAKEPRED_IDX, MAKEVAR_IDX, MAKEANONY_IDX, MAKESTRFLT_IDX, MAKECOMP_IDX,
        MAKESYS_IDX, MAKEOPE_IDX, MAKEUSER_IDX, MAKESTRLONG_IDX, MAKEBIGX_IDX,
-       MAKESTR_IDX, MAKEFUNC_IDX, 
+       MAKESTR_IDX, MAKEFUNC_IDX, PREDNAME_IDX,
        NUM_FN4S
 };
 
@@ -601,7 +601,7 @@ extern int cp[THREADSIZE];
 extern int unique_num;
 extern int scp[2][THREADSIZE]; 
 extern int mode[THREADSIZE];
-
+extern int debug_pred_name;
 
 /* module */
 extern int module_name;
@@ -1369,6 +1369,7 @@ int positivep(int x);
 int postfixp(int addr);
 int predicatep(int addr);
 int pred_to_str(int x);
+int predname(char* name);
 int prefixp(int addr);
 int prev(int x);
 int propagate_all(int sets);

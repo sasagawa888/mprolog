@@ -653,6 +653,12 @@ static inline int Jmakefun(char* x) {
 }
 
 
+static inline int Jpredname(char* x) {
+    return f4[PREDNAME_IDX](x);
+}
+
+
+
 static inline int Jcallsubr(int x, int y, int z, int th) {
     return f5[CALLSUBR_IDX](x, y, z, th);
 }

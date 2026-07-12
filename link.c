@@ -192,6 +192,7 @@ void dynamic_link(int x)
     init_f4(MAKEBIGX_IDX, (tpred) makebigx);
     init_f4(MAKESTR_IDX, (tpred) makestr);
     init_f4(MAKEFUNC_IDX, (tpred) makefunc);
+    init_f4(PREDNAME_IDX, (tpred) predname);
 
     /* argument 4 */
     init_f5(CALLSUBR_IDX, (tpred) callsubr);
