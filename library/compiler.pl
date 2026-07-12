@@ -750,6 +750,7 @@ gen_recur_pred(P) :-
     gen_var_declare(P),
     write('n = Jarity_count(arglist);'),nl,
     write('arglist = Jprepare(arglist,th);'),nl,
+    write('Jpredname("'),write(P),write('");'),nl,
     ifthenelse(option(debug,on),gen_debug(P),true),
     n_arity_count(P,L),
     gen_recur_pred1(P,L),
