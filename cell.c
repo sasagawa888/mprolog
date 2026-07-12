@@ -438,7 +438,8 @@ int pop_stack(int th)
 int push_conj(int th)
 {
     #ifdef DBG
-    printf("push_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" push_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     scp[CONJ][th]++;
@@ -460,7 +461,8 @@ int push_conj(int th)
 int push_recur(int th)
 {
     #ifdef DBG
-    printf("push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     if (scp[RECUR][th] + 1 >= RECURSIZE)
@@ -496,7 +498,8 @@ int push_recur(int th)
 int push_tail_recur(int th)
 {
     #ifdef DBG
-    printf("push_tail_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" push_tail_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     if (scp[RECUR][th] + 1 >= RECURSIZE)
@@ -511,7 +514,8 @@ int push_tail_recur(int th)
 int pop_recur(int th)
 {
     #ifdef DBG
-    printf("pop_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" pop_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     if (scp[RECUR][th] <= 0)
@@ -525,7 +529,8 @@ int pop_recur(int th)
 int pop_tail_recur(int th)
 {
     #ifdef DBG
-    printf("pop_tail_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" pop_tail_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     if (scp[RECUR][th] <= 0)
@@ -562,7 +567,8 @@ int prepare(int arglist, int th)
 int discard_conj(int th)
 {
     #ifdef DBG
-    printf("discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     int i;
@@ -588,7 +594,8 @@ int discard_conj(int th)
 int discard_recur(int th)
 {
     #ifdef DBG
-    printf("discard_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" discard_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     int i;
@@ -627,7 +634,8 @@ int max_choice(int th)
 int release(int th)
 {
     #ifdef DBG
-    printf("release (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" release (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th], th);
@@ -655,7 +663,8 @@ int get_choice(int th)
     /* not recursion */
 
     #ifdef DBG
-    printf("choice=%d conj=%d recur=%d reuse=%d\n",res, scp[CONJ][th], scp[RECUR][th]
+    print(debug_pred_name);
+    printf(" choice=%d conj=%d recur=%d reuse=%d\n",res, scp[CONJ][th], scp[RECUR][th]
     ,scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th]);
     #endif 
     return (res);
@@ -665,7 +674,8 @@ int get_choice(int th)
 int success(int arglist, int th)
 {
     #ifdef DBG
-    printf("success (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" success (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
@@ -701,7 +711,8 @@ int reset_disj(int th)
 int set_mode(int x, int th)
 {
     #ifdef DBG
-    printf("set_mode (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    print(debug_pred_name);
+    printf(" set_mode (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     mode[th] = x;
