@@ -34,74 +34,58 @@ nodiag([N|L], B, D) :-
 
 
 /*
-?- queen_2([1,2,3,4],[],X).
-[] push_conj (0,0)
-queen_2#[[1,2,3,4]|#[[]|#[X]]]queen_2 choice=0 conj=1 recur=0 reuse=0
-queen_2 release (1,0)
-[1,2,3,4]queen_2 push_recur (1,0)
-qdelete[v_5,1,[2,3,4],v_1]qdelete choice=0 conj=1 recur=1 reuse=0
-qdelete success (1,1)
-qdelete pop_recur (1,1)
-nodiag[[],1,1]qdelete push_recur (1,0)
-queen_2[[2,3,4],[1],v_6]queen_2 choice=0 conj=1 recur=2 reuse=0
-queen_2 release (1,2)
-[2,3,4]queen_2 push_recur (1,2)
-qdelete[v_15,2,[3,4],v_11]qdelete choice=0 conj=1 recur=3 reuse=0
-qdelete success (1,3)
-qdelete pop_recur (1,3)
-nodiag[[1],2,1]qdelete set_mode (1,2)
-qdelete[2,2,[3,4],[3,4]]qdelete choice=10001 conj=1 recur=2 reuse=0
-qdelete push_recur (1,2)
-qdelete[2,2,[3,4],[3,4]]qdelete choice=1 conj=1 recur=3 reuse=1
-qdelete release (1,3)
-qdelete push_recur (1,3)
-qdelete[v_17,3,[4],v_21]qdelete choice=0 conj=1 recur=4 reuse=0
-qdelete success (1,4)
-qdelete pop_recur (1,4)
-qdelete pop_recur (1,3)
-qdelete pop_recur (1,2)
-nodiag[[1],3,1]qdelete push_recur (1,1)
-queen_2[[2,4],[3,1],v_16]queen_2 choice=0 conj=1 recur=5 reuse=0
-queen_2 release (1,5)
-[2,4]queen_2 push_recur (1,5)
-qdelete[v_30,2,[4],v_26]qdelete choice=0 conj=1 recur=6 reuse=0
-qdelete success (1,6)
-qdelete pop_recur (1,6)
-nodiag[[3,1],2,1]qdelete set_mode (1,5)
-qdelete[2,2,[4],[4]]qdelete choice=10001 conj=1 recur=5 reuse=0
-qdelete push_recur (1,5)
-qdelete[2,2,[4],[4]]qdelete choice=1 conj=1 recur=6 reuse=1
-qdelete release (1,6)
-qdelete push_recur (1,6)
-qdelete[v_32,4,[],v_36]qdelete choice=0 conj=1 recur=7 reuse=0
-qdelete success (1,7)
-qdelete pop_recur (1,7)
-qdelete pop_recur (1,6)
-qdelete pop_recur (1,5)
-nodiag[[3,1],4,1]qdelete set_mode (1,4)
-qdelete[3,3,[4],[4]]qdelete choice=1 conj=1 recur=4 reuse=1
-qdelete release (1,4)
-qdelete push_recur (1,4)
-qdelete[v_22,4,[],v_26]qdelete choice=0 conj=1 recur=8 reuse=0
+X = [2,4,1,3] ;
+queen_2#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]]queen_2 choice=10001 conj=1 recur=7 reuse=0
+[[]|32000000]queen_2 push_recur (1,7)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
 qdelete success (1,8)
 qdelete pop_recur (1,8)
-qdelete pop_recur (1,7)
-nodiag[v_29,v_30,1]qdelete set_mode (1,6)
-qdelete[[],4,[],[]]qdelete choice=10001 conj=1 recur=6 reuse=1
-qdelete push_recur (1,6)
-qdelete[v_32,v_33,v_34,v_36]qdelete choice=1 conj=1 recur=7 reuse=1
-qdelete release (1,7)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
 qdelete push_recur (1,7)
-qdelete[v_37,v_38,v_39,v_41]qdelete choice=0 conj=1 recur=9 reuse=0
-qdelete success (1,9)
-qdelete pop_recur (1,9)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
 qdelete pop_recur (1,8)
-qdelete pop_recur (1,7)
-nodiag[[],[],1]qdelete push_recur (1,6)
-queen_2[[],[[]],v_31]queen_2 choice=0 conj=1 recur=10 reuse=0
-queen_2 success (1,10)
-queen_2 pop_recur (1,10)
-queen_2 pop_recur (1,9)
-queen_2 pop_recur (1,8)
-X = [1,4|v_16] .
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
+qdelete pop_recur (1,8)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
+qdelete pop_recur (1,8)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
+qdelete pop_recur (1,8)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
+qdelete pop_recur (1,8)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
+qdelete pop_recur (1,8)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]        
+qdelete choice=10000 conj=1 recur=8 reuse=1
+qdelete success (1,8)
+qdelete pop_recur (1,8)
+nodiag[525751369,#[[1,2,3,4]|#[[]|#[[2,4,1,3]]]],1]qdelete set_mode (1,7)
+qdelete push_recur (1,7)
+qdelete[1,1,[3],[3]]
+
+
 */
