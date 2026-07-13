@@ -14,6 +14,7 @@ queen(Data, Out) :-
 
 queen_2([], _, []).
 queen_2([H|T], History, [Q|M]) :-
+    write([H|T]),
     qdelete(Q, H, T, L1),
     nodiag(History, Q, 1),
     queen_2(L1, [Q|History], M).
