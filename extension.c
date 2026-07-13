@@ -1104,9 +1104,6 @@ int call_det(int pred, int arglist, int th)
 {
     proof[th]++;
 
-	if(mode[th] == 1)
-		return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
-
     arglist = deref(arglist, th);
     if (predicatep(pred)) {
 	return (prove(wcons(pred, arglist, th), sp[th], NIL, th));
