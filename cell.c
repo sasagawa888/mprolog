@@ -522,6 +522,11 @@ int pop_recur(int th)
 	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 1;
     scp[RECUR][th]--;
+    int i;
+    i = scp[RECUR][th];
+    scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = scbmstack[scp[CONJ][th]][i+1][SP_SCBM][th]; 
+	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = scbmstack[scp[CONJ][th]][i+1][WP_SCBM][th]; 
+	scbmstack[scp[CONJ][th]][i][AC_SCBM][th] = scbmstack[scp[CONJ][th]][i+1][AC_SCBM][th];
     return (NIL);
 
 }
@@ -681,6 +686,9 @@ int success(int arglist, int th)
 
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 1;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
+	scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
     return (NIL);
 }
 
