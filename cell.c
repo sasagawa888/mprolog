@@ -654,16 +654,17 @@ int get_choice(int th)
     int res;
     proof[th]++;
     
-    if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] == 1){
-	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
-    mode[th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
-    /* already succeeded: replay the successful choice */
-    } else if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][REUSE_SCBM][th] == 1)
+    if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th]+1][REUSE_SCBM][th] == 1)
 	res =
 	    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] +
 	    9999;
     /* reused recursion point before success: skip */
+    else if (mode[th] == 1 && scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] == 1){
+	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
+    mode[th] = 0;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SUCC_SCBM][th] = 0;
+    /* already succeeded: replay the successful choice */
+    } 
     else
 	res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th];
     /* not recursion */
