@@ -779,8 +779,19 @@ gen_arity_switch(P,[L|Ls]) :-
 gen_recursion2 :-
     type(P,A,recur),
     write(P),write('_'),write(A),write(':'),nl,
+    write('switch(clause){'),nl,
+    n_clause_count_with_arity(P,A,M),
+    gen_clause_switch(P,A,0,M),
+    write('}'),nl,
     fail.
 gen_recursion2.
+
+gen_clause_switch(P,A,M,M) :- !.
+gen_clause_switch(P,A,N,M) :-
+    write('case '),write(N),write(': goto '),
+    write(P),write('_'),write(A),write('_'),write(N),write(';'),nl,
+    N1 is N+1,
+    gen_clause_switch(P,A,N1,M).
 
 
 
