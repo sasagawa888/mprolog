@@ -96,8 +96,6 @@ void dynamic_link(int x)
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(PUSH_RECUR_IDX, (tpred) push_recur);
     init_f1(POP_RECUR_IDX, (tpred) pop_recur);
-    init_f1(PUSH_TAIL_RECUR_IDX, (tpred) push_tail_recur);
-    init_f1(POP_TAIL_RECUR_IDX, (tpred) pop_tail_recur);
 
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);

@@ -495,22 +495,6 @@ int push_recur(int th)
     return (NIL);
 }
 
-int push_tail_recur(int th)
-{
-    #ifdef DBG
-    print(debug_pred_name);
-    printf(" push_tail_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    if (scp[RECUR][th] + 1 >= RECURSIZE)
-	    exception(RESOURCE_ERR, NIL, makestr("push_tail recur SCBM stack size"), th);
-
-	scp[RECUR][th]++;
-	return (NIL);
-}
-
-
-
 int pop_recur(int th)
 {
     #ifdef DBG
@@ -522,29 +506,9 @@ int pop_recur(int th)
 	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][REUSE_SCBM][th] = 1;
     scp[RECUR][th]--;
-    //int i;
-    //i = scp[RECUR][th];
-    //scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = scbmstack[scp[CONJ][th]][i+1][SP_SCBM][th]; 
-	//scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = scbmstack[scp[CONJ][th]][i+1][WP_SCBM][th]; 
-	//scbmstack[scp[CONJ][th]][i][AC_SCBM][th] = scbmstack[scp[CONJ][th]][i+1][AC_SCBM][th];
     return (NIL);
 
 }
-
-int pop_tail_recur(int th)
-{
-    #ifdef DBG
-    print(debug_pred_name);
-    printf(" pop_tail_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    if (scp[RECUR][th] <= 0)
-	exception(RESOURCE_ERR, NIL, makestr("pop_tail_recur SCBM stack size"), th);
-    scp[RECUR][th]--;
-    return (NIL);
-
-}
-
 
 int arity_count(int arglist)
 {
