@@ -244,6 +244,7 @@ gen_predicate :-
     gen_clibrary(P),
     fail.
 gen_predicate :-
+    ctr_set(0,0),%pred number
     n_reconsult_predicate(P),
     gen_a_pred(P),
     fail.
@@ -747,11 +748,7 @@ gen_recur_pred(P) :-
     n_atom_convert(P,P1),
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
-    gen_var_declare(P),
-    write('n = Jarity_count(arglist);'),nl,
-    write('arglist = Jprepare(arglist,th);'),nl,
-    write('Jpredname("'),write(P),write('");'),nl,
-    ifthenelse(option(debug,on),gen_debug(P),true),
+    write('int n;'),nl,
     n_arity_count(P,L),
     gen_recur_pred1(P,L),
     write('}'),nl.
@@ -767,10 +764,11 @@ gen_recur_pred1(P,[A|As]) :-
     gen_recur_pred1(P,As).
 
 gen_recur_arity(P,A) :-
-	write('if(n == '),
-    write(A),
+    ctr_is(0,N),
+    ctr_inc(0,_),
+	write('if(n == '),write(A),
     write('){'),nl,
-    write('return(recur_scbm(0,1,arglist));'),nl,
+    write('return(recur_scbm('),write(N),write(','),write(A),write(',arglist));'),nl,
     write('}'),nl,!.
 
 % select all clauses that arity is A
