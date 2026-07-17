@@ -341,9 +341,6 @@ gen_jump_switch1(A,M,M) :-
 gen_jump_switch1(A,M,N) :-
     write('case '),write(M),write(': '),
     write('goto '),write('clause_'),write(A),write('_'),write(M),write(';'),nl,
-    S is M+10000,
-    write('case '),write(S),write(': '),
-    write('goto '),write('skip_'),write(A),write('_'),write(M),write(';'),nl,
     M1 is M+1,
     gen_jump_switch1(A,M1,N).
 
@@ -431,7 +428,6 @@ gen_nondet_clause1([C|Cs],A,M) :-
 gen_a_nondet_clause((Head :- Body),A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
     gen_nondet_body(Body,A,ret,M,Head),write('}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
@@ -442,8 +438,7 @@ gen_a_nondet_clause(P,A,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
     write('Jinc_choice(th);'),nl,
-    write('{skip_'),write(A),write('_'),write(M),write(':'),nl,
-    write('return(YES);}'),nl.
+    write('return(YES);'),nl.
 
 % nondet predicate
 gen_a_nondet_clause(P,A,M) :-
@@ -451,8 +446,7 @@ gen_a_nondet_clause(P,A,M) :-
     P =.. [P1|_],
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
-    write('{skip_'),write(A),write('_'),write(M),write(':'),nl,
-    write('return(YES);}'),nl,
+    write('return(YES);'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
     write('Jrelease(th);'),nl.
@@ -461,7 +455,6 @@ gen_a_nondet_clause(P,_,M) :-
 	n_property(P,userop),
 	gen_head(P),
     write('{Jinc_choice(th);'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
     write('return(YES);}'),nl,
     M1 is M+1,
     write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
