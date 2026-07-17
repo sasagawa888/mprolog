@@ -77,10 +77,11 @@ pass3(X) :-
     atom_concat(F,'.c',Cfile),
 	tell(Cfile),
 	write('#include "jump.h"'),nl,
-    gen_protopype,
+    gen_prototype,
     gen_predicate,
     gen_definition,
     gen_execution,
+    gen_recursion,
     n_reconsult_abolish,
     told.
 
@@ -169,7 +170,7 @@ gen_execution :-
 	write('void init_declare(void){'),nl,
     gen_dyn_exec,
     gen_det_exec,
-    write('}').
+    write('}'),nl.
 
 
 /* generate execute definition of dynamic clause*/
@@ -224,11 +225,12 @@ spec_to_c(fy_xf,'FY_XF').
 spec_to_c(fy_yf,'FY_YF').
 
 % generate all function prototype
-gen_protopype :-
+gen_prototype :-
     n_reconsult_predicate(P),
     gen_type_declare(P),
     fail.
-gen_protopype.
+gen_prototype :-
+    write('static int recur_scbm(int pred, int clause, int arglist);'),nl.
 
 % generate all predicate code
 gen_predicate :-
@@ -246,6 +248,11 @@ gen_predicate :-
     gen_a_pred(P),
     fail.
 gen_predicate.
+
+gen_recursion :-
+    write('static int recur_scbm(int preed, int clause, int arglist){'),nl,
+    write('return(YES);'),nl,
+    write('}'),nl.
 
 % generate predicate P
 gen_a_pred(P) :- 
