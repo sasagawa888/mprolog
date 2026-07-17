@@ -576,18 +576,6 @@ int discard_conj(int th)
     printf(" discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    int i;
-    for(i=0;i<RECURSIZE;i++){
-	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][CHOICE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][AC_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][DISJ_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][CHOICE_BACKUP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][ARGLIST_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][REUSE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][SUCC_SCBM][th] = 0;
-    }
     scp[CONJ][th]--;
     scp[RECUR][th] = 0;
     mode[th] = 1;
