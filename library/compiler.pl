@@ -230,7 +230,7 @@ gen_prototype :-
     gen_type_declare(P),
     fail.
 gen_prototype :-
-    write('static int recur_scbm(int pred, int clause, int arglist);'),nl.
+    write('static int recur_scbm(int pred, int arity, int clause, int arglist);'),nl.
 
 % generate all predicate code
 gen_predicate :-
@@ -251,7 +251,7 @@ gen_predicate :-
 gen_predicate.
 
 gen_recursion :-
-    write('static int recur_scbm(int preed, int clause, int arglist){'),nl,
+    write('static int recur_scbm(int preed, int arity, int clause, int arglist){'),nl,
     write('return(YES);'),nl,
     write('}'),nl.
 
@@ -768,7 +768,7 @@ gen_recur_arity(P,A) :-
     ctr_inc(0,_),
 	write('if(n == '),write(A),
     write('){'),nl,
-    write('return(recur_scbm('),write(N),write(','),write(A),write(',arglist));'),nl,
+    write('return(recur_scbm('),write(N),write(','),write(A),write(',0,arglist));'),nl,
     write('}'),nl,!.
 
 % select all clauses that arity is A
