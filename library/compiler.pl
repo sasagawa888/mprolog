@@ -752,21 +752,39 @@ gen_head1([X|Xs],N) :-
 
 /* --------------------recursion-----------------------------------
 */
-
+% --------- generate big recur funciont-----------
 
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist){'),nl,
     gen_pred_switch,
     gen_recursion1,
+    gen_recursion2,
     write('}'),nl.
 
 gen_recursion1 :-
     type(P,A,recur),
     write(P),write(':'),nl,
-    write('return(YES);'),nl,
+    write('switch(arity){'),nl,
+    n_arity_count(P,L),
+    gen_arity_switch(P,L),
+    write('}'),nl,
     fail.
 gen_recursion1.
 
+gen_arity_switch(P,[]).
+gen_arity_switch(P,[L|Ls]) :-
+    write('case '),write(L),write(': goto '),write(P),write('_'),write(L),write(';'),nl,
+    gen_arity_switch(P,Ls).
+
+gen_recursion2 :-
+    type(P,A,recur),
+    write(P),write('_'),write(A),write(':'),nl,
+    fail.
+gen_recursion2.
+
+
+
+%---------- each predicate ----------------
 gen_recur_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
