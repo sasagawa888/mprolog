@@ -251,7 +251,8 @@ gen_predicate :-
 gen_predicate.
 
 gen_recursion :-
-    write('static int recur_scbm(int preed, int arity, int clause, int arglist){'),nl,
+    write('static int recur_scbm(int pred, int arity, int clause, int arglist){'),nl,
+    gen_pred_switch,
     write('return(YES);'),nl,
     write('}'),nl.
 
@@ -364,6 +365,22 @@ gen_disj_jump_switch1(end_of_disjunction,A,M,N,L) :-
     write('goto clause_'),write(A),write('_'),write(M1),write(';'),nl.
 gen_disj_jump_switch1(X,A,M,N,L) :-
     gen_disj_jump_switch1((X;end_of_disjunction),A,M,N,L).
+
+
+
+gen_pred_switch :-
+    write('switch(pred){'),nl,
+    ctr_set(0,0),
+    gen_pred_switch1,
+    write('}'),nl.
+
+gen_pred_switch1 :-
+    type(P,_,recur),
+    ctr_is(0,N),
+    ctr_inc(0,_),
+    write('case '),write(N),write(': goto '),write(P),write(';'),nl,
+    fail.
+gen_pred_switch1.
 
 
 /* --------------------nondet-----------------------------------
