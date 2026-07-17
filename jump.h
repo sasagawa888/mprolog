@@ -6,6 +6,17 @@
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
 #define RETRY  1
 
+void *next_stack[THREADSIZE][STACKSIZE];
+int np[THREADSIZE];
+
+void push_next(void *cont, int th)
+{
+    if (++np[th] >= STACKSIZE)
+        exception(SYNTAX_ERR,NIL,makestr("push_next overflow"),th);
+
+    next_stack[th][np[th]] = cont;
+}
+
 typedef int (*fn0)();
 typedef int (*fn1)(int);
 typedef int (*fn2)(int , int);

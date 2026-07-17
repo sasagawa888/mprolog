@@ -250,12 +250,6 @@ gen_predicate :-
     fail.
 gen_predicate.
 
-gen_recursion :-
-    write('static int recur_scbm(int pred, int arity, int clause, int arglist){'),nl,
-    gen_pred_switch,
-    write('return(YES);'),nl,
-    write('}'),nl.
-
 % generate predicate P
 gen_a_pred(P) :- 
     type(P,_,nondet),gen_nondet_pred(P).  
@@ -758,6 +752,21 @@ gen_head1([X|Xs],N) :-
 
 /* --------------------recursion-----------------------------------
 */
+
+
+gen_recursion :-
+    write('static int recur_scbm(int pred, int arity, int clause, int arglist){'),nl,
+    gen_pred_switch,
+    gen_recursion1,
+    write('}'),nl.
+
+gen_recursion1 :-
+    type(P,A,recur),
+    write(P),write(':'),nl,
+    write('return(YES);'),nl,
+    fail.
+gen_recursion1.
+
 gen_recur_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
