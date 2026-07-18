@@ -462,6 +462,11 @@ int push_recur(int x, int th)
     printf(" push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
+    if (mode[th] == 1){
+        mode[th] = 0;
+        return(NIL);
+    }
+
     if (scp[RECUR][th] + 1 >= RECURSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("push_recur SCBM stack size"), th);
 

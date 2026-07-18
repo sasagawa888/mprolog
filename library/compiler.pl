@@ -833,6 +833,7 @@ gen_recursion5 :-
     write('}'),nl,
     write('else{'),nl,
     write('next = next_stack[index][scp[CONJ][th]][th];'),nl,
+    write('Jset_mode(1,th);'),nl,
     write('goto *next;}'),nl.
 
 
