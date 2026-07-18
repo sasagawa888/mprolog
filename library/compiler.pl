@@ -846,13 +846,18 @@ gen_recursion5 :-
 gen_recur_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
+    n_arity_count(P,[A|_]),
+    write(user_output,$/$),write(user_output,A),
+    write(user_output,' recur'),nl(user_output),
+    ctr_is(0,N),
+    ctr_inc(0,_),
 	write('static int c_'),
     n_atom_convert(P,P1),
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
     write('int n;'),nl,
-    n_arity_count(P,L),
-    gen_recur_pred1(P,L),
+    write('n = length(arglist);'),nl,
+    write('return(recur_scbm('),write(N),write(',n,0,arglist,th));'),nl,
     write('}'),nl.
 
 gen_recur_pred1(P,[]) :-
@@ -866,11 +871,9 @@ gen_recur_pred1(P,[A|As]) :-
     gen_recur_pred1(P,As).
 
 gen_recur_arity(P,A) :-
-    ctr_is(0,N),
-    ctr_inc(0,_),
 	write('if(n == '),write(A),
     write('){'),nl,
-    write('return(recur_scbm('),write(N),write(','),write(A),write(',0,arglist,th));'),nl,
+    
     write('}'),nl,!.
 
 % select all clauses that arity is A

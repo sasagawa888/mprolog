@@ -148,88 +148,64 @@ Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("bench"),arglist);
 return(NO);}
 static int c_mappend(int arglist, int rest, int th){
 int n;
-if(n == 3){
-return(recur_scbm(0,3,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(0,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("mappend"),arglist);
-return(NO);}
 static int c_apptest(int arglist, int rest, int th){
 int n;
-if(n == 0){
-return(recur_scbm(1,0,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(1,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("apptest"),arglist);
-return(NO);}
 static int c_nat(int arglist, int rest, int th){
 int n;
-if(n == 1){
-return(recur_scbm(2,1,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(2,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("nat"),arglist);
-return(NO);}
 static int c_plus(int arglist, int rest, int th){
 int n;
-if(n == 3){
-return(recur_scbm(3,3,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(3,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("plus"),arglist);
-return(NO);}
 static int c_times(int arglist, int rest, int th){
 int n;
-if(n == 3){
-return(recur_scbm(4,3,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(4,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("times"),arglist);
-return(NO);}
 static int c_le(int arglist, int rest, int th){
 int n;
-if(n == 2){
-return(recur_scbm(5,2,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(5,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("le"),arglist);
-return(NO);}
 static int c_lt(int arglist, int rest, int th){
 int n;
-if(n == 2){
-return(recur_scbm(6,2,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(6,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("lt"),arglist);
-return(NO);}
 static int c_quot(int arglist, int rest, int th){
 int n;
-if(n == 4){
-return(recur_scbm(7,4,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(7,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("quot"),arglist);
-return(NO);}
 static int c_dnd(int arglist, int rest, int th){
 int n;
-if(n == 2){
-return(recur_scbm(8,2,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(8,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("dnd"),arglist);
-return(NO);}
 static int c_df(int arglist, int rest, int th){
 int n;
-if(n == 2){
-return(recur_scbm(9,2,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(9,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("df"),arglist);
-return(NO);}
 static int c_prime(int arglist, int rest, int th){
 int n;
-if(n == 1){
-return(recur_scbm(10,1,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(10,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("prime"),arglist);
-return(NO);}
 static int c_apptest1(int arglist, int rest, int th){
 int n;
-if(n == 0){
-return(recur_scbm(11,0,0,arglist,th));
+n = length(arglist);
+return(recur_scbm(11,n,0,arglist,th));
 }
-Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("apptest1"),arglist);
-return(NO);}
 void init_tpredicate(void){
 (deftpred)("n",c_n,1,1);
 (deftpred)("bench",c_bench,0,1);
