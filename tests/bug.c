@@ -318,56 +318,68 @@ case 3: goto mappend_3;
 apptest1_0:
 switch(clause){
 case 0: goto apptest1_0_0;
+default: goto allfail;
 }
 prime_1:
 switch(clause){
 case 0: goto prime_1_0;
+default: goto allfail;
 }
 df_2:
 switch(clause){
 case 0: goto df_2_0;
 case 1: goto df_2_1;
+default: goto allfail;
 }
 dnd_2:
 switch(clause){
 case 0: goto dnd_2_0;
+default: goto allfail;
 }
 quot_4:
 switch(clause){
 case 0: goto quot_4_0;
 case 1: goto quot_4_1;
+default: goto allfail;
 }
 lt_2:
 switch(clause){
 case 0: goto lt_2_0;
+default: goto allfail;
 }
 le_2:
 switch(clause){
 case 0: goto le_2_0;
+default: goto allfail;
 }
 times_3:
 switch(clause){
 case 0: goto times_3_0;
 case 1: goto times_3_1;
+default: goto allfail;
 }
 plus_3:
 switch(clause){
 case 0: goto plus_3_0;
 case 1: goto plus_3_1;
+default: goto allfail;
 }
 nat_1:
 switch(clause){
 case 0: goto nat_1_0;
 case 1: goto nat_1_1;
+default: goto allfail;
 }
 apptest_0:
 switch(clause){
 case 0: goto apptest_0_0;
+default: goto allfail;
 }
 mappend_3:
 switch(clause){
 case 0: goto mappend_3_0;
 case 1: goto mappend_3_1;
+default: goto allfail;
 }
 apptest1_0_0:
 prime_1_0:

@@ -788,6 +788,7 @@ gen_recursion2 :-
     write('switch(clause){'),nl,
     n_clause_count_with_arity(P,A,M),
     gen_clause_switch(P,A,0,M),
+    write('default: goto allfail;'),nl,
     write('}'),nl,
     fail.
 gen_recursion2.
