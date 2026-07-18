@@ -247,10 +247,6 @@ static inline int Jpush_conj(int th) {
 }
 
 
-static inline int Jpush_recur(int th) {
-    return f1[PUSH_RECUR_IDX](th);
-}
-
 
 static inline int Jarity_count(int x) {
     return f1[ARITY_COUNT_IDX](x);
@@ -456,6 +452,10 @@ static inline int Jset_mode(int x, int th) {
     return f2[SET_MODE_IDX](x, th);
 }
 
+
+static inline int Jpush_recur(int x, int th) {
+    return f2[PUSH_RECUR_IDX](x,th);
+}
 
 
 
