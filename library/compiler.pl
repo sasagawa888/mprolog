@@ -757,7 +757,7 @@ gen_head1([X|Xs],N) :-
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
     write('void *next;'),nl,
-    write('int index'),
+    write('int index,arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
     gen_all_variable,
     write(';'),nl,
     write('np[scp[CONJ][th]][th] = 0;'),nl,
@@ -829,7 +829,7 @@ gen_recursion3.
 gen_recursion31(P,A,[],N) :- !.
 gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
-    %gen each clause
+    gen_a_recur_clause(C,A,N),
     N1 is N+1,
     gen_recursion31(P,A,Cs,N1).
 
@@ -879,40 +879,6 @@ gen_recur_pred(P) :-
     write('return(recur_scbm('),write(N),write(',n,0,arglist,th));'),nl,
     write('}'),nl.
 
-gen_recur_pred1(P,[]) :-
-    write('Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("'),write(P),write('"),arglist);'),nl,
-	write('return(NO);').
-
-gen_recur_pred1(P,[A|As]) :-
-    write(user_output,$/$),write(user_output,A),
-    write(user_output,' recur'),nl(user_output),
-    gen_recur_arity(P,A),
-    gen_recur_pred1(P,As).
-
-gen_recur_arity(P,A) :-
-	write('if(n == '),write(A),
-    write('){'),nl,
-    
-    write('}'),nl,!.
-
-% select all clauses that arity is A
-gen_recur_clause(P,A) :-
-    gen_var_assign(1,A),
-    gen_jump_switch(P,A),
-    write('clause_'),write(A),write('_0:'),nl,
-	n_clause_with_arity(P,A,C),
-    gen_recur_clause1(C,A,0).
-
-% generate each clause 
-gen_recur_clause1([],_,_).
-gen_recur_clause1([C|Cs],A,M) :-
-	n_variable_convert(C,X),
-    n_generate_variable(X,V),
-    gen_var(V),
-    gen_a_recur_clause(X,A,M),
-    M1 is M+1,
-    gen_recur_clause1(Cs,A,M1).
-
 
 % N is arity , M is Mth clause from 0.
 % clause
@@ -920,19 +886,17 @@ gen_recur_clause1([C|Cs],A,M) :-
 gen_a_recur_clause((Head :- Body),A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':;'),nl,
-    gen_recur_body(Body,A,ret,M,Head),write('}'),nl,
+    %gen_recur_body(Body,A,ret,M,Head),
+    write('}'),nl,
     M1 is M+1,
-    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
+    write('Jrelease(th);'),nl,!.
 
 % predicate with no arity
 gen_a_recur_clause(P,A,M) :-
 	n_property(P,predicate),
     functor(P,_,0),
     write('{Jinc_choice(th);'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
-    write('return(YES);}'),nl.
+    write('return(YES);}'),nl,!.
 
 % nondet predicate
 gen_a_recur_clause(P,A,M) :-
@@ -941,22 +905,8 @@ gen_a_recur_clause(P,A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
     write('{'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
-    write('Jsuccess(arglist,th); return(YES);}'),nl,
     M1 is M+1,
-    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
-
-gen_a_recur_clause(P,_,M) :-
-	n_property(P,userop),
-	gen_head(P),
-    write('{Jinc_choice(th);'),nl,
-    write('skip_'),write(A),write('_'),write(M),write(':'),nl,
-    write('return(YES);}'),nl,
-    M1 is M+1,
-    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
-
+    write('Jrelease(th);}'),nl,!.
 
 gen_debug(P) :-
     write('printf("'),write(P),write('");'),
