@@ -834,6 +834,7 @@ gen_recursion5 :-
     write('else{'),nl,
     write('next = next_stack[index][scp[CONJ][th]][th];'),nl,
     write('Jset_mode(1,th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto *next;}'),nl.
 
 
