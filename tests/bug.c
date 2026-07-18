@@ -391,6 +391,7 @@ success:
 if(np[scp[CONJ][th]][th] == 0) return(YES);
 else{
 next = next_stack[np[scp[CONJ][th]][th]][scp[CONJ][th]][th];
+Jpop_next(th);
 goto *next;}
 allfail:
 Jpop_recur(th);

@@ -818,6 +818,7 @@ gen_recursion4 :-
     write('if(np[scp[CONJ][th]][th] == 0) return(YES);'),nl,
     write('else{'),nl,
     write('next = next_stack[np[scp[CONJ][th]][th]][scp[CONJ][th]][th];'),nl,
+    write('Jpop_next(th);'),nl,
     write('goto *next;}'),nl.
 
 
