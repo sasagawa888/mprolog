@@ -366,4 +366,22 @@ switch(clause){
 case 0: goto mappend_3_0;
 case 1: goto mappend_3_1;
 }
+apptest1_0_0:
+prime_1_0:
+df_2_0:
+df_2_1:
+dnd_2_0:
+quot_4_0:
+quot_4_1:
+lt_2_0:
+le_2_0:
+times_3_0:
+times_3_1:
+plus_3_0:
+plus_3_1:
+nat_1_0:
+nat_1_1:
+apptest_0_0:
+mappend_3_0:
+mappend_3_1:
 }

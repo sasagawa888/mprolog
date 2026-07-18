@@ -759,6 +759,7 @@ gen_recursion :-
     gen_pred_switch,
     gen_recursion1,
     gen_recursion2,
+    gen_recursion3,
     write('}'),nl.
 
 gen_recursion1 :-
@@ -792,6 +793,20 @@ gen_clause_switch(P,A,N,M) :-
     write(P),write('_'),write(A),write('_'),write(N),write(';'),nl,
     N1 is N+1,
     gen_clause_switch(P,A,N1,M).
+
+gen_recursion3 :-
+    type(P,A,recur),
+    n_clause_with_arity(P,A,C),
+    gen_recursion4(P,A,C,0),
+    fail.
+gen_recursion3.
+
+gen_recursion4(P,A,[],N) :- !.
+gen_recursion4(P,A,[C|Cs],N) :-
+    write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
+    %gen each clause
+    N1 is N+1,
+    gen_recursion4(P,A,Cs,N1).
 
 
 
