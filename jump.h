@@ -6,15 +6,28 @@
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
 #define RETRY  1
 
-void *next_stack[THREADSIZE][STACKSIZE];
+void *next_stack[STACKSIZE][THREADSIZE];
 int np[THREADSIZE];
 
-void push_next(void *cont, int th)
+void Jpush_next(void *cont, int th)
 {
     if (++np[th] >= STACKSIZE)
         exception(SYNTAX_ERR,NIL,makestr("push_next overflow"),th);
 
-    next_stack[th][np[th]] = cont;
+    next_stack[np[th]][th] = cont;
+    return(NIL);
+}
+
+void Jpop_next(int th)
+{
+    np[th]--;
+}
+
+void Jcontinue(int th)
+{
+    void *next;
+    next = next_stack[np[th]][th];
+    goto *next;
 }
 
 typedef int (*fn0)();
