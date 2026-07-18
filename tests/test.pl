@@ -1,5 +1,12 @@
 % JUMP compiler test code
 
+test(L) :-
+    bagof(P,type(P,_,recur),L),write(L).
+
+type(a,1,recur).
+type(b,2,recur).
+type(c,3,recur).
+
 
 uoo(X) :- write(X).
 

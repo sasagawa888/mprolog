@@ -489,10 +489,12 @@ int b_bagof(int arglist, int rest, int th)
 	goal =
 	    addtail_body(list2(makesys("%bagofhelper"), arg1), goal, th);
 	bag_list = NIL;
-	nonfree_list = nonfree;
+	//nonfree_list = nonfree;  buggy
+	nonfree_list = NIL;
 	prove_all(goal, sp[th], th);
 
 	lis = reverse(bag_list);
+
 	while (!nullp(lis)) {
 	    apply_unify(caar(lis));
 	    unify(arg3, listreverse(cdar(lis)), th);
@@ -531,7 +533,8 @@ int b_setof(int arglist, int rest, int th)
 	goal =
 	    addtail_body(list2(makesys("%bagofhelper"), arg1), goal, th);
 	bag_list = NIL;
-	nonfree_list = nonfree;
+	//nonfree_list = nonfree;
+	nonfree_list = NIL;
 	prove_all(goal, sp[th], th);
 
 	lis = reverse(bag_list);

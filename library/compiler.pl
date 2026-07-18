@@ -757,7 +757,9 @@ gen_head1([X|Xs],N) :-
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
     write('void *next;'),nl,
-    write('int index;'),nl,
+    write('int index'),
+    gen_all_variable,
+    write(';'),nl,
     write('np[scp[CONJ][th]][th] = 0;'),nl,
     gen_pred_switch,
     gen_recursion1,
@@ -766,6 +768,23 @@ gen_recursion :-
     gen_recursion4,
     gen_recursion5,
     write('}'),nl.
+
+gen_all_variable :-
+    bagof(P,type(P,_,recur),L),
+    gen_all_variable1(L,V),
+    sort(V,V1),
+    gen_all_variable2(V1).
+
+gen_all_variable1([],[]).
+gen_all_variable1([P|Ps],Vars) :-
+    n_generate_all_variable(P,V),
+    gen_all_variable1(Ps,Vs),
+    append(V,Vs,Vars).
+
+gen_all_variable2([]).
+gen_all_variable2([V|Vs]) :-
+    write(','),write(V),
+    gen_all_variable2(Vs).
 
 gen_recursion1 :-
     type(P,A,recur),

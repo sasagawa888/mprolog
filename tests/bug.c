@@ -227,7 +227,7 @@ int body,th; th=0;
 }
 static int recur_scbm(int pred, int arity, int clause, int arglist, int th){
 void *next;
-int index;
+int index,ano_1,ano_2,varA,varM,varN,varQ,varR,varX,varX1,varY,varZ,varZ1;
 np[scp[CONJ][th]][th] = 0;
 switch(pred){
 case 0: goto apptest1;
