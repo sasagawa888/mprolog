@@ -452,11 +452,6 @@ static inline int Jsave_arg(int x, int th) {
 
 
 
-static inline int Jprepare(int arglist, int th) {
-    return f2[PREPARE_IDX](arglist, th);
-}
-
-
 static inline int Jset_mode(int x, int th) {
     return f2[SET_MODE_IDX](x, th);
 }
@@ -652,11 +647,6 @@ static inline int Jmakestr(char* x) {
 
 static inline int Jmakefun(char* x) {
     return f4[MAKEFUNC_IDX](x);
-}
-
-
-static inline int Jpredname(char* x) {
-    return f4[PREDNAME_IDX](x);
 }
 
 

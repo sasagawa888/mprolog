@@ -487,12 +487,6 @@ int arity_count(int arglist)
 }
 
 
-int prepare(int arglist, int th)
-{
-    
-	return (arglist);
-}
-
 
 int discard_conj(int th)
 {
@@ -578,13 +572,6 @@ int set_mode(int x, int th)
     mode[th] = x;
     return(NIL);
 }
-
-int predname(char* name)
-{
-    debug_pred_name = makeconst(name);
-    return(NIL);
-}
-
 
 
 //------for JUMP compiler-----

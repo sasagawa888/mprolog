@@ -135,7 +135,6 @@ void dynamic_link(int x)
     init_f2(COMPLEMENT_IDX, (tpred) f_complement);
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
-    init_f2(PREPARE_IDX, (tpred) prepare);
     init_f2(SET_MODE_IDX, (tpred) set_mode);
 
     //argument-3
@@ -187,7 +186,6 @@ void dynamic_link(int x)
     init_f4(MAKEBIGX_IDX, (tpred) makebigx);
     init_f4(MAKESTR_IDX, (tpred) makestr);
     init_f4(MAKEFUNC_IDX, (tpred) makefunc);
-    init_f4(PREDNAME_IDX, (tpred) predname);
 
     /* argument 4 */
     init_f5(CALLSUBR_IDX, (tpred) callsubr);
