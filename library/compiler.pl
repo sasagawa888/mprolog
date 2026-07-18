@@ -756,11 +756,13 @@ gen_head1([X|Xs],N) :-
 
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
+    write('void *next;'),nl,
     write('np[scp[CONJ][th]][th] = 0;'),nl,
     gen_pred_switch,
     gen_recursion1,
     gen_recursion2,
     gen_recursion3,
+    gen_recursion4,
     write('}'),nl.
 
 gen_recursion1 :-
@@ -798,16 +800,24 @@ gen_clause_switch(P,A,N,M) :-
 gen_recursion3 :-
     type(P,A,recur),
     n_clause_with_arity(P,A,C),
-    gen_recursion4(P,A,C,0),
+    gen_recursion31(P,A,C,0),
     fail.
 gen_recursion3.
 
-gen_recursion4(P,A,[],N) :- !.
-gen_recursion4(P,A,[C|Cs],N) :-
+gen_recursion31(P,A,[],N) :- !.
+gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     %gen each clause
     N1 is N+1,
-    gen_recursion4(P,A,Cs,N1).
+    gen_recursion31(P,A,Cs,N1).
+
+gen_recursion4 :-
+    write('success:'),nl,
+    write('if(np[scp[CONJ][th]] == 0) return(YES);'),nl,
+    write('else{'),nl,
+    write('next = next_stack[np[scp[CONJ][th]][th]];'),nl,
+    write('goto *next;}'),nl.
+
 
 
 
