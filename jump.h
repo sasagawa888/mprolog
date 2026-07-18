@@ -252,11 +252,6 @@ static inline int Jpush_recur(int th) {
 }
 
 
-static inline int Jpop_recur(int th) {
-    return f1[POP_RECUR_IDX](th);
-}
-
-
 static inline int Jarity_count(int x) {
     return f1[ARITY_COUNT_IDX](x);
 }

@@ -475,20 +475,6 @@ int push_recur(int th)
     return (NIL);
 }
 
-int pop_recur(int th)
-{
-    #ifdef DBG
-    print(debug_pred_name);
-    printf(" pop_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    if (scp[RECUR][th] <= 0)
-	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
-    scp[RECUR][th]--;
-    return (NIL);
-
-}
-
 int arity_count(int arglist)
 {
     int n;
