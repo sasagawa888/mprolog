@@ -757,12 +757,14 @@ gen_head1([X|Xs],N) :-
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
     write('void *next;'),nl,
+    write('int index;'),nl,
     write('np[scp[CONJ][th]][th] = 0;'),nl,
     gen_pred_switch,
     gen_recursion1,
     gen_recursion2,
     gen_recursion3,
     gen_recursion4,
+    gen_recursion5,
     write('}'),nl.
 
 gen_recursion1 :-
@@ -813,9 +815,23 @@ gen_recursion31(P,A,[C|Cs],N) :-
 
 gen_recursion4 :-
     write('success:'),nl,
-    write('if(np[scp[CONJ][th]] == 0) return(YES);'),nl,
+    write('if(np[scp[CONJ][th]][th] == 0) return(YES);'),nl,
     write('else{'),nl,
-    write('next = next_stack[np[scp[CONJ][th]][th]];'),nl,
+    write('next = next_stack[np[scp[CONJ][th]][th]][scp[CONJ][th]][th];'),nl,
+    write('goto *next;}'),nl.
+
+
+gen_recursion5 :-
+    write('allfail:'),nl,
+    write('Jpop_recur(th);'),nl,
+    write('Jpop_next(th);'),nl,
+    write('index = Jget_cont(th);'),nl,
+    write('if(index == 0) {'),nl,
+    write('next = next_clause[th];'),nl,
+    write('goto *next;'),nl,
+    write('}'),nl,
+    write('else{'),nl,
+    write('next = next_stack[index][scp[CONJ][th]][th];'),nl,
     write('goto *next;}'),nl.
 
 
