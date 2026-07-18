@@ -7,6 +7,7 @@
 #define RETRY  1
 
 static void *next_stack[STACKSIZE][CONJSIZE][THREADSIZE];
+static void *next_clause[THREADSIZE];
 int np[CONJSIZE][THREADSIZE];
 
 void Jpush_next(void *cont, int th)
@@ -18,17 +19,21 @@ void Jpush_next(void *cont, int th)
     return(NIL);
 }
 
+void Jset_clause(void* cont, int th)
+{
+    next_clause[th] = cont;
+}
+
 void Jpop_next(int th)
 {
     np[scp[CONJ][th]][th]--;
 }
 
-void Jcontinue(int th)
-{
+/* continue
     void *next;
     next = next_stack[np[scp[CONJ][th]][th]];
     goto *next;
-}
+*/
 
 typedef int (*fn0)();
 typedef int (*fn1)(int);
