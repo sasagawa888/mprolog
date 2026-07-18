@@ -6,27 +6,27 @@
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
 #define RETRY  1
 
-void *next_stack[STACKSIZE][THREADSIZE];
-int np[THREADSIZE];
+static void *next_stack[STACKSIZE][CONJSIZE][THREADSIZE];
+int np[CONJSIZE][THREADSIZE];
 
 void Jpush_next(void *cont, int th)
 {
-    if (++np[th] >= STACKSIZE)
+    if (++np[scp[CONJ][th]][th] >= STACKSIZE)
         exception(SYNTAX_ERR,NIL,makestr("push_next overflow"),th);
 
-    next_stack[np[th]][th] = cont;
+    next_stack[np[scp[CONJ][th]][th]][scp[CONJ][th]][th] = cont;
     return(NIL);
 }
 
 void Jpop_next(int th)
 {
-    np[th]--;
+    np[scp[CONJ][th]][th]--;
 }
 
 void Jcontinue(int th)
 {
     void *next;
-    next = next_stack[np[th]][th];
+    next = next_stack[np[scp[CONJ][th]][th]];
     goto *next;
 }
 

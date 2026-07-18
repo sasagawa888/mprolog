@@ -756,7 +756,7 @@ gen_head1([X|Xs],N) :-
 
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
-    write('np[th] = 0;'),nl,
+    write('np[scp[CONJ][th]][th] = 0;'),nl,
     gen_pred_switch,
     gen_recursion1,
     gen_recursion2,
