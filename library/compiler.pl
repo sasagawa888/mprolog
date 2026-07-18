@@ -830,6 +830,7 @@ gen_recursion5 :-
     write('index = Jget_cont(th);'),nl,
     write('if(index == 0) {'),nl,
     write('next = next_clause[th];'),nl,
+    write('if(next == NIL) return(NO);'),nl,
     write('goto *next;'),nl,
     write('}'),nl,
     write('else{'),nl,

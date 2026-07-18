@@ -411,6 +411,7 @@ Jpop_next(th);
 index = Jget_cont(th);
 if(index == 0) {
 next = next_clause[th];
+if(next == NIL) return(NO);
 goto *next;
 }
 else{
