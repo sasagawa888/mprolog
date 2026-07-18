@@ -19,7 +19,7 @@ void Jpush_next(void *cont, int th)
     return(NIL);
 }
 
-void Jset_clause(void* cont, int th)
+void Jset_next_clause(void* cont, int th)
 {
     next_clause[th] = cont;
 }
