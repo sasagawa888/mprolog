@@ -1431,7 +1431,6 @@ int string_length(int addr);
 int singlep(int addr);
 int streqp(int x, int y);
 int str_to_pred(int x);
-int success(int arglist,int th);
 int symboltoken(char buf[]);
 int takeoutbug(int key);
 int termp(int addr);

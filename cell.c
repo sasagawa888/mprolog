@@ -543,16 +543,6 @@ int get_choice(int th)
 }
 
 
-int success(int arglist, int th)
-{
-    #ifdef DBG
-    print(debug_pred_name);
-    printf(" success (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    return (NIL);
-}
-
 
 int get_disj_choice(int th)
 {

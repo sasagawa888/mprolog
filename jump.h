@@ -451,10 +451,6 @@ static inline int Jsave_arg(int x, int th) {
 }
 
 
-static inline int Jsuccess(int x, int th) {
-    return f2[SUCCESS_IDX](x, th);
-}
-
 
 static inline int Jprepare(int arglist, int th) {
     return f2[PREPARE_IDX](arglist, th);
