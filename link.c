@@ -93,6 +93,8 @@ void dynamic_link(int x)
     init_f1(DISCARD_CONJ_IDX, (tpred) discard_conj);
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
+    init_f1(POP_RECUR_IDX, (tpred) pop_recur);
+    init_f1(GET_CONT_IDX, (tpred) get_cont);
    
 
     //argument-2 type

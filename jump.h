@@ -288,6 +288,18 @@ static inline int Jrelease(int th) {
 }
 
 
+static inline int Jpop_recur(int th) {
+    return f1[POP_RECUR_IDX](th);
+}
+
+
+static inline int Jget_cont(int th) {
+    return f1[GET_CONT_IDX](th);
+}
+
+
+
+
 
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);

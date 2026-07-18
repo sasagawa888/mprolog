@@ -574,6 +574,19 @@ int set_mode(int x, int th)
     return(NIL);
 }
 
+int pop_recur(int th)
+{
+    if (scp[RECUR][th] <= 0)
+	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
+    scp[RECUR][th] --;
+    return(NIL);
+}
+
+int get_cont(int th)
+{
+    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th]);
+}
+
 
 //------for JUMP compiler-----
 int get_sp(int th)
