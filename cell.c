@@ -509,26 +509,6 @@ int discard_conj(int th)
 }
 
 
-int discard_recur(int th)
-{
-    #ifdef DBG
-    print(debug_pred_name);
-    printf(" discard_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    int i;
-    i=scp[RECUR][th];
-	scbmstack[scp[CONJ][th]][i][SP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][CHOICE_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][WP_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][AC_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][DISJ_SCBM][th] = 0;
-	scbmstack[scp[CONJ][th]][i][CHOICE_BACKUP_SCBM][th] = 0;
-    return (NIL);
-}
-
-
-
 int inc_choice(int th)
 {
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]++;

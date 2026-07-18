@@ -281,10 +281,6 @@ static inline int Jdiscard_conj(int th) {
 }
 
 
-static inline int Jdiscard_recur(int th) {
-    return f1[DISCARD_RECUR_IDX](th);
-}
-
 
 static inline int Jrelease(int th) {
     return f1[RELEASE_IDX](th);

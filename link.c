@@ -91,7 +91,6 @@ void dynamic_link(int x)
     init_f1(INC_DISJ_CHOICE_IDX, (tpred) inc_disj_choice);
     init_f1(RESET_DISJ_IDX, (tpred) reset_disj);
     init_f1(DISCARD_CONJ_IDX, (tpred) discard_conj);
-    init_f1(DISCARD_RECUR_IDX, (tpred) discard_recur);
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(PUSH_RECUR_IDX, (tpred) push_recur);
