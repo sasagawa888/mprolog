@@ -767,7 +767,6 @@ gen_recursion :-
     gen_recursion3,
     gen_recursion4,
     gen_recursion5,
-    %write('allfail:'),
     write('}'),nl.
 
 gen_all_variable :-
@@ -831,6 +830,7 @@ gen_recursion31(P,A,[],N) :-
     write('goto allfail;'),nl,nl,!.
 gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
+    gen_var_assign(1,A),!,
     gen_a_recur_clause(C,A,N),
     N1 is N+1,
     gen_recursion31(P,A,Cs,N1).
@@ -888,6 +888,7 @@ gen_recur_pred(P) :-
 gen_a_recur_clause((Head :- Body),A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
+    write('goto success;'),nl,
     %gen_recur_body(Body,A,ret,M,Head),
     write('}'),nl,
     M1 is M+1,
@@ -907,6 +908,7 @@ gen_a_recur_clause(P,A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
     write('{'),nl,
+    write('goto success;'),nl,
     write('}'),nl,
     write('Jrelease(th);'),nl,!.
 
