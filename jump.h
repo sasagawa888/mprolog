@@ -4,36 +4,7 @@
 
 #define INT_FLAG    1073741824 //#b1000000000000000000000000000000
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
-#define RETRY  1
 
-static void *next_stack[STACKSIZE][CONJSIZE][THREADSIZE];
-static void *next_clause[THREADSIZE];
-int np[CONJSIZE][THREADSIZE];
-
-void Jpush_next(void *cont, int th)
-{
-    if (++np[scp[CONJ][th]][th] >= STACKSIZE)
-        exception(SYNTAX_ERR,NIL,makestr("push_next overflow"),th);
-
-    next_stack[np[scp[CONJ][th]][th]][scp[CONJ][th]][th] = cont;
-    return(NIL);
-}
-
-void Jset_next_clause(void* cont, int th)
-{
-    next_clause[th] = cont;
-}
-
-void Jpop_next(int th)
-{
-    np[scp[CONJ][th]][th]--;
-}
-
-/* continue
-    void *next;
-    next = next_stack[np[scp[CONJ][th]][th]];
-    goto *next;
-*/
 
 typedef int (*fn0)();
 typedef int (*fn1)(int);
@@ -475,6 +446,10 @@ static inline int Jpush_recur(int x, int th) {
 }
 
 
+static inline int Jget_scp(int x, int th) {
+    return f2[GET_SCP_IDX](x,th);
+}
+
 
 
 static inline int Jlist3(int x, int y, int z) {
@@ -712,3 +687,31 @@ static void mouse_callback()
 }
 
 
+//-------------SCBM--------------------------
+
+
+static void *next_stack[1048][CONJSIZE][THREADSIZE];
+static void *next_clause[THREADSIZE];
+int np[CONJSIZE][THREADSIZE];
+
+void Jpush_next(void *cont, int th)
+{
+    next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
+    return(NIL);
+}
+
+void Jset_next_clause(void* cont, int th)
+{
+    next_clause[th] = cont;
+}
+
+void Jpop_next(int th)
+{
+    np[Jget_scp(CONJ,th)][th]--;
+}
+
+/* continue
+    void *next;
+    next = next_stack[np[scp[CONJ][th]][th]];
+    goto *next;
+*/

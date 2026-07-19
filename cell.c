@@ -539,7 +539,6 @@ int get_choice(int th)
 {
     proof[th]++;
 	return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
-    
 }
 
 
@@ -592,6 +591,10 @@ int get_cont(int th)
     return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th]);
 }
 
+int get_scp(int x, int th)
+{
+    return(scp[x][th]);
+}
 
 //------for JUMP compiler-----
 int get_sp(int th)

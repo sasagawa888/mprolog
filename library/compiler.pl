@@ -96,7 +96,7 @@ invoke_gcc(X) :-
     atom_concat(F,'.c ',Cfile),
     atom_concat(F,'.o ',Ofile),
     atom_concat(Ofile,Cfile,Files),
-    atom_concat('gcc -O3 -flto -w -shared -fPIC -I$HOME/mprolog -o ',Files,Gen1),
+    atom_concat('gcc -O3 -w -flto -shared -fPIC -I$HOME/mprolog -o ',Files,Gen1),
     (option(library,Opt1),atom_string(Opt,Opt1),atom_concat(Gen1,Opt,Gen) ; Gen = Gen1),
     shell(Gen),
     atom_concat('rm ',Cfile,Del),
@@ -109,7 +109,7 @@ invoke_gcc_not_remove(X) :-
     atom_concat(F,'.c ',Cfile),
     atom_concat(F,'.o ',Ofile),
     atom_concat(Ofile,Cfile,Files),
-    atom_concat('gcc -O3 -flto -w -shared -fPIC -I$HOME/mprolog -o ',Files,Gen),
+    atom_concat('gcc -O3 -w -flto -shared -fPIC -I$HOME/mprolog -o ',Files,Gen),
     shell(Gen).
 
 
@@ -760,13 +760,14 @@ gen_recursion :-
     write('int index,arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
     gen_all_variable,
     write(';'),nl,
-    write('np[scp[CONJ][th]][th] = 0;'),nl,
+    write('np[Jget_scp(CONJ,th)][th] = 0;'),nl,
     gen_pred_switch,
     gen_recursion1,
     gen_recursion2,
     gen_recursion3,
     gen_recursion4,
     gen_recursion5,
+    %write('allfail:'),
     write('}'),nl.
 
 gen_all_variable :-
@@ -826,7 +827,8 @@ gen_recursion3 :-
     fail.
 gen_recursion3.
 
-gen_recursion31(P,A,[],N) :- !.
+gen_recursion31(P,A,[],N) :- 
+    write('goto allfail;'),nl,nl,!.
 gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     gen_a_recur_clause(C,A,N),
@@ -835,9 +837,9 @@ gen_recursion31(P,A,[C|Cs],N) :-
 
 gen_recursion4 :-
     write('success:'),nl,
-    write('if(np[scp[CONJ][th]][th] == 0) return(YES);'),nl,
+    write('if(np[Jget_scp(CONJ,th)][th] == 0) return(YES);'),nl,
     write('else{'),nl,
-    write('next = next_stack[np[scp[CONJ][th]][th]][scp[CONJ][th]][th];'),nl,
+    write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
     write('goto *next;}'),nl.
 
@@ -853,7 +855,7 @@ gen_recursion5 :-
     write('goto *next;'),nl,
     write('}'),nl,
     write('else{'),nl,
-    write('next = next_stack[index][scp[CONJ][th]][th];'),nl,
+    write('next = next_stack[index][Jget_scp(CONJ,th)][th];'),nl,
     write('Jset_mode(1,th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto *next;}'),nl.
@@ -875,7 +877,7 @@ gen_recur_pred(P) :-
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
     write('int n;'),nl,
-    write('n = length(arglist);'),nl,
+    write('n = Jlength(arglist);'),nl,
     write('return(recur_scbm('),write(N),write(',n,0,arglist,th));'),nl,
     write('}'),nl.
 
@@ -905,8 +907,8 @@ gen_a_recur_clause(P,A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(P),
     write('{'),nl,
-    M1 is M+1,
-    write('Jrelease(th);}'),nl,!.
+    write('}'),nl,
+    write('Jrelease(th);'),nl,!.
 
 gen_debug(P) :-
     write('printf("'),write(P),write('");'),

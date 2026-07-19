@@ -37,10 +37,22 @@ void dynamic_link(int x)
     else
 	strcat(str, GET_NAME(x));
 
+    /*
     hmod = dlopen(str, RTLD_LAZY);
     if (hmod == NULL) {
 	exception(SYSTEM_ERR, makestr("load"), x, 0);
     }
+    */
+    dlerror();  /* 古いエラー状態をクリア */
+
+hmod = dlopen(str, RTLD_NOW | RTLD_LOCAL);
+
+if (hmod == NULL) {
+    const char *err = dlerror();
+    fprintf(stderr, "dlopen error: %s\n",
+            err != NULL ? err : "unknown error");
+    exception(SYSTEM_ERR, makestr("load"), x, 0);
+}
 
     init_f0 = dlsym(hmod, "init0");
     init_f1 = dlsym(hmod, "init1");
@@ -139,6 +151,7 @@ void dynamic_link(int x)
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
     init_f2(SET_MODE_IDX, (tpred) set_mode);
     init_f2(PUSH_RECUR_IDX, (tpred) push_recur);
+    init_f2(GET_SCP_IDX, (tpred) get_scp);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);

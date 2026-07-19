@@ -184,7 +184,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, SAVE_ARG_IDX, SET_MODE_IDX, PUSH_RECUR_IDX, 
+       COPY_WORK_IDX, SAVE_ARG_IDX, SET_MODE_IDX, PUSH_RECUR_IDX, GET_SCP_IDX,
        NUM_FN2S
 };
 
@@ -1227,6 +1227,7 @@ int get_predicate(int x);
 int get_choice(int th);
 int get_disj_choice(int th);
 int get_cont(int th);
+int get_scp(int x, int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
 int gettrace(int goal);
