@@ -792,6 +792,7 @@ gen_recursion1 :-
     write('switch(arity){'),nl,
     n_arity_count(P,L),
     gen_arity_switch(P,L),
+    write('default: goto allfail;'),nl,
     write('}'),nl,
     fail.
 gen_recursion1.
@@ -958,7 +959,7 @@ gen_recur_body1((X,Y),A,M,N,B,H,P) :-
               (write('Jpush_recur(NIL,th);'),nl),
               (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
     N1 is N+1,
-    write('Jget_choice(th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(A),write(';'),nl.
 
 gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
@@ -973,7 +974,7 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
               (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
-    write('Jget_choice(th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(A),write(';'),nl,
     gen_recur_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
@@ -990,10 +991,10 @@ gen_recur_body1((X,Y),A,M,N,B,H,P) :-
               (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
-    write('Jget_choice(th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(A),write(';'),nl,
     gen_recur_body1(Y,A,M,N1,[A,M,N],H,P).
-    
+
 gen_recur_body1(X,A,M,N,B,H,P) :-
     gen_recur_body1((X,end_of_body),A,M,N,B,H,P).
 
