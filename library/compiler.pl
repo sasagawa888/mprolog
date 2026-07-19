@@ -831,7 +831,10 @@ gen_recursion31(P,A,[],N) :-
 gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     gen_var_assign(1,A),!,
-    gen_a_recur_clause(C,A,N),
+    n_variable_convert(C,X),
+    n_generate_variable(X,V),
+    gen_var(V),!,
+    gen_a_recur_clause(X,A,N),
     N1 is N+1,
     gen_recursion31(P,A,Cs,N1).
 
