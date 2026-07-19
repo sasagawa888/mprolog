@@ -187,12 +187,13 @@ varZ = Jmakevariant(th);
 Jinc_choice(th);
 if(Junify_pair(arg1,Jwlistcons(varA,varX,th),th) == YES && Junify_var(arg2,varY,th) == YES && Junify_pair(arg3,Jwlistcons(varA,varZ,th),th) == YES)
 {
-goto success;
-int arg_3_1_0 = Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(varZ,NIL,th),th),th);
-retry_3_1_0:;
+arglist = Jwlistcons(varX,Jwlistcons(varY,Jwlistcons(varZ,NIL,th),th),th);
+mappend_3_1_0:
 Jpush_recur(NIL,th);
+Jpush_next(&&mappend_3_1_1,th);
 Jget_choice(th);
 goto mappend_3;
+mappend_3_1_1:
 goto success;
 }
 Jrelease(th);
