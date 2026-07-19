@@ -887,12 +887,11 @@ gen_recur_pred(P) :-
 
 % N is arity , M is Mth clause from 0.
 % clause
-
 gen_a_recur_clause((Head :- Body),A,M) :-
     write('Jinc_choice(th);'),nl,
 	gen_head(Head),write('{'),nl,
     write('goto success;'),nl,
-    %gen_recur_body(Body,A,ret,M,Head),
+    gen_recur_body(Body,A,M,Head),
     write('}'),nl,
     M1 is M+1,
     write('Jrelease(th);'),nl,!.
@@ -936,92 +935,32 @@ gen_var([L|Ls]) :-
     gen_var(Ls).
 
 
-% X=body A=arity O=ret/res/rec L=disjunction-number H=Head
-gen_recur_body(X,A,O,M,H) :-
-    gen_recur_body1(X,A,M,0,[],O,0,H).
+% X=body A=arity Mth clause H=Head
+gen_recur_body(X,A,M,H) :-
+    gen_recur_body1(X,A,M,0,[],H).
 
-% A is arith Mth clause, Nth body B-retry[A,M,N] Option L-disjuncion-num Head
-gen_recur_body1((!,Y),A,M,N,B,O,L,H) :-
-    gen_recur_body1(Y,A,M,N,[],O,L,H).
-gen_recur_body1((fail,Y),A,M,N,[],O,L,H) :-
-    gen_recur_body_fail([A,M]),nl,
-    N1 is N+1,
-    gen_recur_body1(Y,A,M,N1,[],O,L,H).
-gen_recur_body1((fail,Y),A,M,N,B,O,L,H) :-
-    gen_recur_body_fail_retry(B),nl,
-    N1 is N+1,
-    gen_recur_body1(Y,A,M,N1,B,O,L,H).
-gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
-    n_property(X,builtin),
-    X =.. [P|Args],
-    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    N1 is N+1,
-    gen_recur_body1(Y,A,M,N1,B,O,L,H),
-    write('}'),
-    gen_recur_body_retry(B),nl.
-gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
-     n_property(X,predicate),
-    X =.. [P|Args],
-    functor(X,_,Arity),
-    type(P,Arity,det),
-    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-     N1 is N+1,
-    gen_recur_body1(Y,A,M,N1,B,O,L,H),
-    write('}'),
-    gen_recur_body_retry(B),nl.
-gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
-     n_property(X,predicate),
-    X =.. [P|Args],
-    functor(X,_,Arity),
-    type(P,Arity,tail),
-    write('if (Jcall_det(Jmakecomp("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES){'),nl,
-    N1 is N+1,
-    gen_recur_body1(Y,A,M,N1,B,O,L,H),
-    write('}'),
-    gen_recur_body_retry(B),nl.
-
-gen_recur_body1((X,Y),A,M,N,B,O,L,H) :-
+% A is arith Mth clause, Nth body B-retry[A,M,N] Head
+%main 
+gen_recur_body1((X,Y),A,M,N,B,H) :-
     n_property(X,predicate),
     X =.. [P|Args],
     functor(X,_,Arity),
     type(P,Arity,recur),
     gen_recur_body_argument(X,A,M,N),
     gen_recur_body_label([A,M,N]),
-    write('Jpush_recur(th);'),nl,
-    write('if (c_'),write(P),write('(arg_'),write(A),write('_'),write(M),write('_'),write(N),
-    write(',NIL,th) == YES){'),nl,
-    write('Jpop_recur(th);'),nl,
+    ifthenelse(B==[],
+              (write('Jpush_recur(NIL,th);'),nl),
+              (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
     N1 is N+1,
-    gen_recur_body1(Y,A,M,N1,[A,M,N],rec,L,H),
-    write('}'),
-    gen_recur_body_retry(B),nl.
-
-gen_recur_body1(((X1;X2),Y),A,M,N,B,O,L,H) :-
-    write('res = NIL;'),nl,
-    ifthenelse(L=:=0,gen_disj_jump_switch((X1;X2),A,M,N),true),
-    gen_recur_body_disj_label([A,M,N,L]),
-    write('Jinc_disj_choice(th);'),nl,
-    gen_recur_body1(X1,A,M,N,B,res,L,H),
-    write('if(res == YES) goto '),gen_recur_body_exit([A,M,N]),nl,
-    L1 is L+1,
-    gen_recur_body_disj_label([A,M,N,L1]),
-    write('Jinc_disj_choice(th);'),nl,
-    write('Jrelease(th);'),nl,
-    gen_recur_body1(X2,A,M,N,B,res,L1,H),
-    ifthenelse(L=:=0,gen_recur_body_exit_label([A,M,N]),true),
-    N1 is N+1,
-    gen_recur_body1(Y,A,M,N,B,O,L,H),
-    ifthenelse(L=:=0,(write('if(rest!=NIL) Jreset_disj(th);'),nl),true).
-gen_recur_body1(!,A,M,N,[],O,L,H) :-
-    write('{Jmax_choice(th); return(YES);}'),nl.    
-gen_recur_body1(end_of_body,A,M,N,B,ret,L,H) :-
-    write('{Jsuccess(arglist,th); return(YES);}'),nl.
-gen_recur_body1(end_of_body,A,M,N,B,res,L,H) :-
-    write('res = YES;'),nl.
-gen_recur_body1(end_of_body,A,M,N,B,rec,L,H) :-
-    write('return(YES);'),nl.
-gen_recur_body1(X,A,M,N,B,O,L,H) :-
-    gen_recur_body1((X,end_of_body),A,M,N,B,O,L,H).
+    write('Jpush_next(&&'),
+    write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N1),write(',th);'),nl,
+    write('Jget_choice(th);'),nl,
+    write('goto '),write(P),write('_'),write(A),write(';'),nl,
+    gen_recur_body1(Y,A,M,N1,[A,M,N],H).
+gen_recur_body1(end_of_body,A,M,N,B,H) :-
+    write('goto success;'),nl.
+gen_recur_body1(X,A,M,N,B,H) :-
+    gen_recur_body1((X,end_of_body),A,M,N,B,H).
 
 
 gen_recur_body_label([A,M,N]) :-
