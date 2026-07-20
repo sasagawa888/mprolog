@@ -1399,7 +1399,7 @@ int repush_back(int arglist, int th);
 int resolve_all(int end, int bindings, int n);
 int resolve(int end, int bindings, int trail, int n);
 int reset_disj(int th);
-int restor_arg(int x, int th);
+int restore_arg(int x, int th);
 int sreset_disj(int th);
 int reset_forward(int th);
 int revderef(int x, int th);

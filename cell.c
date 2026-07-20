@@ -478,6 +478,7 @@ int push_recur(int x, int th)
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th] = x;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
     return (NIL);
 }
 

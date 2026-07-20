@@ -153,7 +153,7 @@ if (hmod == NULL) {
     init_f2(PUSH_RECUR_IDX, (tpred) push_recur);
     init_f2(GET_SCP_IDX, (tpred) get_scp);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
-    init_f2(RESTORE_ARG_IDX, (tpred) restor_arg);
+    init_f2(RESTORE_ARG_IDX, (tpred) restore_arg);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);
