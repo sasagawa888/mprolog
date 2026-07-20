@@ -16,13 +16,13 @@ bench :-
     fail.
 bench.
 
-/*
+
 nat(0).
 nat(s(X)) :- nat(X).
 
 plus(0, Y, Y).
 plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
-
+/*
 apptest :-
     mappend(X,Y,[1,2,3]),
     write(X),

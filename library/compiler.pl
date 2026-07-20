@@ -66,7 +66,7 @@ pass2(_) :-
 
 retype_halt :-
     retract(type(P,A,halt)),
-    asserta(type(P,A,nondet)),
+    assertz(type(P,A,nondet)),
     fail.
 retype_halt.
 
@@ -1974,7 +1974,7 @@ gen_clibrary(P) :-
 gen_clibrary1([]).
 gen_clibrary1([X|Cs]) :-
     X =.. [_,Y],
-    asserta(option(library,Y)),
+    assertz(option(library,Y)),
     gen_clibrary1(Cs).
 
 /*
@@ -2012,7 +2012,7 @@ det_body(Head,(X,Y),G) :-
     type(Pred1,Arity1,halt),
     P =.. [type,Pred1,_,_],
     (retract(P);true),
-    asserta(type(Pred1,Arity1,det)),
+    assertz(type(Pred1,Arity1,det)),
     det_body(Head,Y,G).
 det_body(_,X,G) :-
     det_builtin(X,G).
@@ -2026,7 +2026,7 @@ det_body(Head,X,_) :-
     type(Pred1,Arity1,halt),
     P =.. [type,Pred1,_,_],
     (retract(P);true),
-    asserta(type(Pred1,Arity1,det)).
+    assertz(type(Pred1,Arity1,det)).
 det_pass1(X) :-
     functor(X,P,A),
     type(P,A,det).
@@ -2301,39 +2301,39 @@ analize_pred1(P,N,C) :-
     length(C,M),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(type(P,N,dyn)),!.
+    assertz(type(P,N,dyn)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
     tail_recursive(C,0,0,0,M,N),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(type(P,N,tail)),!.
+    assertz(type(P,N,tail)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
     deterministic(C,0,0,0,M),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(type(P,N,det)),!.
+    assertz(type(P,N,det)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     nondet_recursive(C,0),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(type(P,N,recur)),!.
+    assertz(type(P,N,recur)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
     halt_check(C,0,0,M),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(type(P,N,halt)),!.
+    assertz(type(P,N,halt)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    asserta(type(P,N,nondet)),!.
+    assertz(type(P,N,nondet)),!.
 
 
 % arguments = [clauses],det_count,pred_count,halt_count,all_count

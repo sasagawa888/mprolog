@@ -433,7 +433,7 @@ int pop_stack(int th)
 
 //----------SCBM--------------------------
 
-#define DBG 1
+//#define DBG 1
 
 int push_conj(int th)
 {
@@ -577,6 +577,10 @@ int set_mode(int x, int th)
 
 int pop_recur(int th)
 {
+    #ifdef DBG
+    printf(" pop_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
     if (scp[RECUR][th] <= 0)
 	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
     scp[RECUR][th] --;
@@ -585,6 +589,10 @@ int pop_recur(int th)
 
 int get_cont(int th)
 {
+    #ifdef DBG
+    printf(" get_cont (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
     return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th]);
 }
 
@@ -595,12 +603,20 @@ int get_scp(int x, int th)
 
 int save_arg(int x, int th)
 {
+    #ifdef DBG
+    printf(" save_arg (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
     return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]) = x;
 }
 
 int restore_arg(int x, int th)
 {
     int res;
+
+    #ifdef DBG
+    printf(" restore_arg (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
     res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th];
     if(res != UNBIND)
         return(res);
