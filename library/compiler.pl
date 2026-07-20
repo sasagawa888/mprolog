@@ -833,6 +833,7 @@ gen_recursion31(P,A,[],N) :-
 gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     gen_var_assign(1,A),!,
+    write('Jrelease(th);'),nl,
     n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),!,
@@ -897,8 +898,7 @@ gen_a_recur_clause((Head :- Body),A,M,P) :-
     write(P),write('_'),write(A),write('_'),write(M1),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
     gen_recur_body(Body,A,M,Head,P),
-    write('}'),nl,
-    write('Jrelease(th);'),nl,!.
+    write('}'),nl,!.
 
 % predicate with no arity
 gen_a_recur_clause(P,A,M,_) :-
@@ -915,8 +915,7 @@ gen_a_recur_clause(P,A,M,_) :-
 	gen_head(P),
     write('{'),nl,
     write('goto success;'),nl,
-    write('}'),nl,
-    write('Jrelease(th);'),nl,!.
+    write('}'),nl,!.
 
 gen_debug(P) :-
     write('printf("'),write(P),write('");'),
