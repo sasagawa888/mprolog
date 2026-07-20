@@ -433,7 +433,7 @@ int pop_stack(int th)
 
 //----------SCBM--------------------------
 
-//#define DBG 1
+#define DBG 1
 
 int push_conj(int th)
 {
@@ -502,7 +502,6 @@ int discard_conj(int th)
 
     scp[CONJ][th]--;
     scp[RECUR][th] = 0;
-    mode[th] = 1;
     
     return (NIL);
 }
