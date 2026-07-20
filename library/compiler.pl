@@ -843,7 +843,6 @@ gen_recursion31(P,A,[C|Cs],N) :-
 gen_recursion4 :-
     write('success:'),nl,
     write('if(np[Jget_scp(CONJ,th)][th] == 0){'),nl,
-    write('Jsave_arg(arglist,th);'),nl,
     write('return(YES);'),nl,
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
@@ -884,7 +883,6 @@ gen_recur_pred(P) :-
     write(P1),
     write('(int arglist, int rest, int th){'),nl,
     write('int n;'),nl,
-    write('arglist = Jrestore_arg(arglist,th);'),nl,
     write('n = Jlength(arglist);'),nl,
     write('return(recur_scbm('),write(N),write(',n,Jget_choice(th),arglist,th));'),nl,
     write('}'),nl.
