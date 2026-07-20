@@ -449,7 +449,7 @@ static inline int Jsave_arg(int x, int th) {
     return f2[SAVE_ARG_IDX](x,th);
 }
 
-static inline int Jrestre_arg(int x, int th) {
+static inline int Jrestore_arg(int x, int th) {
     return f2[RESTORE_ARG_IDX](x,th);
 }
 
