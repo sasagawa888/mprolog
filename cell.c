@@ -433,12 +433,11 @@ int pop_stack(int th)
 
 //----------SCBM--------------------------
 
-//#define DBG 1
+#define DBG 1
 
 int push_conj(int th)
 {
     #ifdef DBG
-    print(debug_pred_name);
     printf(" push_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
@@ -459,7 +458,6 @@ int push_conj(int th)
 int push_recur(int x, int th)
 {
     #ifdef DBG
-    print(debug_pred_name);
     printf(" push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
@@ -499,7 +497,6 @@ int arity_count(int arglist)
 int discard_conj(int th)
 {
     #ifdef DBG
-    print(debug_pred_name);
     printf(" discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
@@ -528,7 +525,6 @@ int release(int th)
 {
 
     #ifdef DBG
-    print(debug_pred_name);
     printf(" release (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
@@ -572,7 +568,6 @@ int reset_disj(int th)
 int set_mode(int x, int th)
 {
     #ifdef DBG
-    print(debug_pred_name);
     printf(" set_mode (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
