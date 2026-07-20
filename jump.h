@@ -430,11 +430,6 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
-static inline int Jsave_arg(int x, int th) {
-    return f2[SAVE_ARG_IDX](x, th);
-}
-
-
 
 static inline int Jset_mode(int x, int th) {
     return f2[SET_MODE_IDX](x, th);
@@ -448,6 +443,14 @@ static inline int Jpush_recur(int x, int th) {
 
 static inline int Jget_scp(int x, int th) {
     return f2[GET_SCP_IDX](x,th);
+}
+
+static inline int Jsave_arg(int x, int th) {
+    return f2[SAVE_ARG_IDX](x,th);
+}
+
+static inline int Jrestre_arg(int x, int th) {
+    return f2[RESTORE_ARG_IDX](x,th);
 }
 
 

@@ -470,7 +470,7 @@ int b_between(int arglist, int rest, int th)
 
 int b_bagof(int arglist, int rest, int th)
 {
-    int n, ind, arg1, arg2, arg3, save1, save2, free, vars, nonfree, goal,
+    int n, ind, arg1, arg2, arg3, save1, save2, goal,
 	lis;
 
     n = length(arglist);
@@ -482,9 +482,9 @@ int b_bagof(int arglist, int rest, int th)
 
 	save1 = wp[th];
 	save2 = sp[th];
-	vars = listreverse(unique(varslist(arg2)));
-	free = get_free(arg2);
-	nonfree = get_nonfree(vars, free, arg1);
+	//vars = listreverse(unique(varslist(arg2)));
+	//free = get_free(arg2);
+	//nonfree = get_nonfree(vars, free, arg1);
 	goal = get_goal(arg2);
 	goal =
 	    addtail_body(list2(makesys("%bagofhelper"), arg1), goal, th);
@@ -514,7 +514,7 @@ int b_bagof(int arglist, int rest, int th)
 
 int b_setof(int arglist, int rest, int th)
 {
-    int n, ind, arg1, arg2, arg3, save1, save2, free, vars, nonfree, goal,
+    int n, ind, arg1, arg2, arg3, save1, save2, goal,
 	lis;
 
     n = length(arglist);
@@ -526,9 +526,9 @@ int b_setof(int arglist, int rest, int th)
 
 	save1 = wp[th];
 	save2 = sp[th];
-	vars = listreverse(unique(varslist(arg2)));
-	free = get_free(arg2);
-	nonfree = get_nonfree(vars, free, arg1);
+	//vars = listreverse(unique(varslist(arg2)));
+	//free = get_free(arg2);
+	//nonfree = get_nonfree(vars, free, arg1);
 	goal = get_goal(arg2);
 	goal =
 	    addtail_body(list2(makesys("%bagofhelper"), arg1), goal, th);

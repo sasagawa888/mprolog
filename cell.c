@@ -596,6 +596,21 @@ int get_scp(int x, int th)
     return(scp[x][th]);
 }
 
+int save_arg(int x, int th)
+{
+    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]) = x;
+}
+
+int restore_arg(int x, int th)
+{
+    int res;
+    res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th];
+    if(res != UNBIND)
+        return(res);
+    else 
+        return(x);
+}
+
 //------for JUMP compiler-----
 int get_sp(int th)
 {
