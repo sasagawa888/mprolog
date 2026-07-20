@@ -854,6 +854,7 @@ gen_recursion4 :-
 
 gen_recursion5 :-
     write('allfail:'),nl,
+    write('if(Jget_scp(RECUR,th)==0) return(NO);'),nl,
     write('Jpop_recur(th);'),nl,
     write('Jpop_next(th);'),nl,
     write('index = Jget_cont(th);'),nl,
