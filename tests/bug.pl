@@ -5,7 +5,6 @@ mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
 
 
-
 n(1). n(2). n(3). n(4). n(5).
 n(6). n(7). n(8). n(9). n(10).
 bench :-
@@ -17,15 +16,12 @@ bench :-
     fail.
 bench.
 
-
+/*
 nat(0).
 nat(s(X)) :- nat(X).
 
 plus(0, Y, Y).
 plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
-/*
-
-
 
 apptest :-
     mappend(X,Y,[1,2,3]),
