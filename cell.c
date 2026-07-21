@@ -433,7 +433,7 @@ int pop_stack(int th)
 
 //----------SCBM--------------------------
 
-//#define DBG 1
+#define DBG 1
 
 int push_conj(int th)
 {
@@ -509,6 +509,9 @@ int discard_conj(int th)
 
 int inc_choice(int th)
 {
+    #ifdef DBG
+    printf(" inc_choice (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]++;
     return (NIL);
 }
@@ -534,6 +537,11 @@ int release(int th)
 
 int get_choice(int th)
 {
+    #ifdef DBG
+    printf(" get_choice (%d,%d) ch=%d\n",scp[CONJ][th], scp[RECUR][th],
+            scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
+    #endif
+
     proof[th]++;
 	return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
 }
