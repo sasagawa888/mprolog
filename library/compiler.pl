@@ -805,6 +805,7 @@ gen_arity_switch(P,[L|Ls]) :-
 gen_recursion2 :-
     type(P,A,recur),
     write(P),write('_'),write(A),write(':'),nl,
+    ifthenelse(option(debug,on),gen_debug(P),true),
     write('switch(clause){'),nl,
     n_clause_count_with_arity(P,A,M),
     gen_clause_switch(P,A,0,M),
