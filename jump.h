@@ -702,6 +702,7 @@ void Jpush_next(void *cont, int th)
     #ifdef DBG
     printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
+    np[Jget_scp(CONJ,th)]++;
     next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
     return(NIL);
 }
