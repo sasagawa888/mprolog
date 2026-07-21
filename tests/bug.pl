@@ -23,7 +23,10 @@ nat(s(X)) :- nat(X).
 plus(0, Y, Y).
 plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
 
-foo(X,Y,Z) :- plus(X,Y,Z).
+
+le(X, Y) :- plus(X, _, Y).
+
+lt(X, Y) :- le(s(X), Y).
 /*
 apptest :-
     mappend(X,Y,[1,2,3]),
@@ -36,9 +39,6 @@ times(0, _, 0).
 times(s(X), Y, Z) :- times(X, Y, Z1), plus(Z1, Y, Z).
 
 
-le(X, Y) :- plus(X, _, Y).
-
-lt(X, Y) :- le(s(X), Y).
 
 quot(X, Y, 0, X) :- lt(X, Y).
 quot(X, Y, s(Q), R) :- plus(Y, X1, X), quot(X1, Y, Q, R).
