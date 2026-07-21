@@ -27,12 +27,6 @@ plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
 le(X, Y) :- plus(X, _, Y).
 
 lt(X, Y) :- le(s(X), Y).
-/*
-apptest :-
-    mappend(X,Y,[1,2,3]),
-    write(X),
-    write(Y),
-    fail.
 
 
 times(0, _, 0).
@@ -50,6 +44,16 @@ df(s(0), _).
 df(s(s(M)), N) :- dnd(s(s(M)), N), df(s(M), N).
 
 prime(s(X)) :- df(X, s(X)).
+
+
+/*
+apptest :-
+    mappend(X,Y,[1,2,3]),
+    write(X),
+    write(Y),
+    fail.
+
+
 
 apptest1 :-
     mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),

@@ -951,7 +951,7 @@ gen_recur_body(X,A,M,H,P) :-
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
 %main 
-gen_recur_body1((X,Y),A,M,N,B,H,P) :-
+gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
@@ -961,7 +961,7 @@ gen_recur_body1((X,Y),A,M,N,B,H,P) :-
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(B==[],
               (write('Jpush_recur(NIL,th);'),nl),
-              (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
+              (write('Jpush_recur(np[Jget_scp(RECUR,th)],th);'),nl)),
     N1 is N+1,
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl.
@@ -975,7 +975,7 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(B==[],
               (write('Jpush_recur(NIL,th);'),nl),
-              (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
+              (write('Jpush_recur(np[Jget_scp(RECUR,th)],th);'),nl)),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
