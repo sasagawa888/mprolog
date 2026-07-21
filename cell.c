@@ -501,7 +501,7 @@ int discard_conj(int th)
     #endif
 
     scp[CONJ][th]--;
-    scp[RECUR][th] = 0;
+    scp[RECUR][th] = scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th];
     
     return (NIL);
 }
@@ -614,7 +614,9 @@ int save_arg(int x, int th)
     printf(" save_arg (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]) = x;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = x;
+    scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th] = scp[RECUR][th];
+    return(NIL);
 }
 
 int restore_arg(int x, int th)
