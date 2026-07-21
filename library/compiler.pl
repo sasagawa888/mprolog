@@ -362,20 +362,6 @@ gen_disj_jump_switch1(X,A,M,N,L) :-
 
 
 
-gen_pred_switch :-
-    write('switch(pred){'),nl,
-    ctr_set(0,0),
-    gen_pred_switch1,
-    write('}'),nl.
-
-gen_pred_switch1 :-
-    type(P,_,recur),
-    ctr_is(0,N),
-    ctr_inc(0,_),
-    write('case '),write(N),write(': goto '),write(P),write(';'),nl,
-    fail.
-gen_pred_switch1.
-
 
 /* --------------------nondet-----------------------------------
 */
@@ -398,7 +384,7 @@ gen_nondet_pred1(P,[]) :-
     write('Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("'),
     write(P),
     write('"),arglist);'),nl,
-	write('return(NO);').
+	write('return(NO);'),nl,nl.
 
 gen_nondet_pred1(P,[A|As]) :-
     write(user_output,$/$),write(user_output,A),
@@ -797,6 +783,22 @@ gen_recursion1 :-
     fail.
 gen_recursion1.
 
+
+gen_pred_switch :-
+    write('switch(pred){'),nl,
+    ctr_set(0,0),
+    gen_pred_switch1,
+    write('}'),nl.
+
+gen_pred_switch1 :-
+    type(P,_,recur),
+    ctr_is(0,N),
+    ctr_inc(0,_),
+    write('case '),write(N),write(': goto '),write(P),write(';'),nl,
+    fail.
+gen_pred_switch1.
+
+
 gen_arity_switch(P,[]).
 gen_arity_switch(P,[L|Ls]) :-
     write('case '),write(L),write(': goto '),write(P),write('_'),write(L),write(';'),nl,
@@ -868,7 +870,7 @@ gen_recursion5 :-
     write('next = next_stack[index][Jget_scp(CONJ,th)][th];'),nl,
     write('Jset_mode(1,th);'),nl,
     write('clause = Jget_choice(th);'),nl,
-    write('goto *next;}'),nl.
+    write('goto *next;}').
 
 
 
@@ -890,7 +892,7 @@ gen_recur_pred(P) :-
     write('arglist = Jrestore_arg(arglist,th);'),nl,
     write('n = Jlength(arglist);'),nl,
     write('return(recur_scbm('),write(N),write(',n,Jget_choice(th),arglist,th));'),nl,
-    write('}'),nl.
+    write('}'),nl,nl.
 
 
 % N is arity , M is Mth clause from 0.
