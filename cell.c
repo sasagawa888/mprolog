@@ -433,7 +433,6 @@ int pop_stack(int th)
 
 //----------SCBM--------------------------
 
-//#define DBG 1
 
 int push_conj(int th)
 {

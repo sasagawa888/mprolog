@@ -699,17 +699,26 @@ int np[CONJSIZE][THREADSIZE];
 
 void Jpush_next(void *cont, int th)
 {
+    #ifdef DBG
+    printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
     next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
     return(NIL);
 }
 
 void Jset_next_clause(void* cont, int th)
 {
+    #ifdef DBG
+    printf(" Jset_next_clause (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
     next_clause[th] = cont;
 }
 
 void Jpop_next(int th)
 {
+    #ifdef DBG
+    printf(" Jpop_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
     np[Jget_scp(CONJ,th)][th]--;
 }
 
