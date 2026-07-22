@@ -746,7 +746,7 @@ gen_recursion :-
     write('int index,arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
     gen_all_variable,
     write(';'),nl,
-    write('np[Jget_scp(CONJ,th)][th] = 0;'),nl,
+    write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     gen_pred_switch,
     gen_recursion1,
     gen_recursion2,

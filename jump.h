@@ -695,7 +695,9 @@ static void mouse_callback()
 
 static void *next_stack[1048][CONJSIZE][THREADSIZE];
 static void *next_clause[THREADSIZE];
+static int var_stack[1048][THREADSIZE];
 int np[CONJSIZE][THREADSIZE];
+int vp[THREADSIZE];
 
 void Jpush_next(void *cont, int th)
 {
@@ -723,8 +725,25 @@ void Jpop_next(int th)
     np[Jget_scp(CONJ,th)][th]--;
 }
 
-/* continue
-    void *next;
-    next = next_stack[np[scp[CONJ][th]][th]];
-    goto *next;
-*/
+
+void Jpush_var(int x, int th)
+{
+    #ifdef DBG
+    printf(" Jpush_var (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
+
+    vp[th]++;
+    var_stack[vp[th]][th] = x;
+}
+
+
+int Jpop_var(int th)
+{
+    #ifdef DBG
+    printf(" Jpop_var (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
+    int res;
+    res = var_stack[vp[th]][th];
+    vp[th]--;
+    return(res);
+}
