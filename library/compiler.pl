@@ -840,7 +840,7 @@ gen_recursion31(P,A,[C|Cs],N) :-
     n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),!,
-    gen_a_recur_clause(X,A,N,P),
+    gen_a_recur_clause(X,A,N,P,V),
     N1 is N+1,
     gen_recursion31(P,A,Cs,N1).
 
@@ -897,24 +897,24 @@ gen_recur_pred(P) :-
 
 % N is arity , M is Mth clause from 0.
 % clause
-gen_a_recur_clause((Head :- Body),A,M,P) :-
+gen_a_recur_clause((Head :- Body),A,M,P,V) :-
     write('Jinc_choice(th);'),nl,
     M1 is M+1,
     write('Jset_next_clause(&&'),
     write(P),write('_'),write(A),write('_'),write(M1),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
-    gen_recur_body(Body,A,M,Head,P),
+    gen_recur_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.
 
 % predicate with no arity
-gen_a_recur_clause(P,A,M,_) :-
+gen_a_recur_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     functor(P,_,0),
     write('{Jinc_choice(th);'),nl,
     write('return(YES);}'),nl,!.
 
 % nondet predicate
-gen_a_recur_clause(P,A,M,_) :-
+gen_a_recur_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     P =.. [P1|_],
     write('Jinc_choice(th);'),nl,
@@ -951,7 +951,9 @@ gen_push_var([L|Ls]) :-
     gen_push_var(Ls).
 
 % varA = Jpop_var(th); varB = Jpop_var(th);
-gen_pop_var(L) :- gen_pop_var1(L,L1).
+gen_pop_var(L) :- 
+    reverse(L,L1),
+    gen_pop_var1(L1).
 gen_pop_var1([]).
 gen_pop_var1([L|Ls]) :-
     n_atom_convert(L,L1),
@@ -968,13 +970,13 @@ recursive_body(X,H) :-
     functor(X,P,A),
     functor(H,P,A).
 
-% X=body A=arity Mth clause H=Head P=predname
-gen_recur_body(X,A,M,H,P) :-
-    gen_recur_body1(X,A,M,0,[],H,P).
+% X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
+gen_recur_body(X,A,M,H,P,V,T) :-
+    gen_recur_body1(X,A,M,0,[],H,P,V,T).
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
 %main 
-gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
+gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
@@ -989,12 +991,13 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl.
 
-gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
+gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
     type(Pred,Arity,recur),
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    ifthenelse(T==recur,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
     ifthenelse(B==[],
               (write('Jpush_recur(NIL,th);'),nl),
@@ -1006,13 +1009,15 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P) :-
     gen_recur_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
 
-gen_recur_body1((X,Y),A,M,N,B,H,P) :-
+gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
     type(Pred,Arity,recur),
+    ifthenelse(T==recur,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_push_var(V),
     ifthenelse(B==[],
               (write('Jpush_recur(NIL,th);'),nl),
               (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
@@ -1020,10 +1025,10 @@ gen_recur_body1((X,Y),A,M,N,B,H,P) :-
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_recur_body1(Y,A,M,N1,[A,M,N],H,P).
+    gen_recur_body1(Y,A,M,N1,[A,M,N],H,P,V,recur).
 
-gen_recur_body1(X,A,M,N,B,H,P) :-
-    gen_recur_body1((X,end_of_body),A,M,N,B,H,P).
+gen_recur_body1(X,A,M,N,B,H,P,V,T) :-
+    gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T).
 
 
 gen_recur_body_label([P,A,M,N]) :-
