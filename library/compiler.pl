@@ -943,6 +943,27 @@ gen_var([L|Ls]) :-
     write(' = Jmakevariant(th);'),nl,
     gen_var(Ls).
 
+% Jpush_var(varA); Jpush_var(varB);
+gen_push_var([]).
+gen_push_var([L|Ls]) :-
+    n_atom_convert(L,L1),
+    write('Jpush_var('),write(L1),write(',th);'),nl,
+    gen_push_var(Ls).
+
+% varA = Jpop_var(th); varB = Jpop_var(th);
+gen_pop_var(L) :- gen_pop_var1(L,L1).
+gen_pop_var1([]).
+gen_pop_var1([L|Ls]) :-
+    n_atom_convert(L,L1),
+    write(L1),write(' = Jpop_var(th);'),nl,
+    gen_pop_var1(Ls).
+
+
+reverse([],[]).
+reverse([X|Xs],Y) :-
+    reverse(Xs,Y1),
+    append(Y1,[X],Y).
+
 recursive_body(X,H) :-
     functor(X,P,A),
     functor(H,P,A).
