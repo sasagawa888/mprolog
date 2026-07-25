@@ -154,6 +154,7 @@ if (hmod == NULL) {
     init_f2(GET_SCP_IDX, (tpred) get_scp);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
     init_f2(RESTORE_ARG_IDX, (tpred) restore_arg);
+    init_f2(PUSH_HEAD_IDX, (tpred) push_head);
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);
