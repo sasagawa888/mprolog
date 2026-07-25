@@ -270,6 +270,9 @@ static inline int Jget_cont(int th) {
 
 
 
+static inline int Jget_head(int th) {
+    return f1[GET_HEAD_IDX](th);
+}
 
 
 static inline int Jcons(int x, int y) {

@@ -107,6 +107,7 @@ if (hmod == NULL) {
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(POP_RECUR_IDX, (tpred) pop_recur);
     init_f1(GET_CONT_IDX, (tpred) get_cont);
+    init_f1(GET_HEAD_IDX, (tpred) get_head);
    
 
     //argument-2 type

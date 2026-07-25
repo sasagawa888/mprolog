@@ -569,7 +569,10 @@ int get_choice(int th)
 	return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
 }
 
-
+int get_head(int th)
+{
+    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][HEAD_SCBM][th]);
+}
 
 int get_disj_choice(int th)
 {
