@@ -852,6 +852,7 @@ gen_recursion4 :-
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
+    write('Jpop_next(th);'),nl,
     write('goto *next;}'),nl.
 
 
@@ -861,16 +862,11 @@ gen_recursion5 :-
     write('Jpop_recur(th);'),nl,
     write('Jpop_next(th);'),nl,
     write('index = Jget_cont(th);'),nl,
-    write('if(index == 0) {'),nl,
-    write('next = next_clause[th];'),nl,
-    write('if(next == NIL) {Jdiscard_conj(th); return(NO);}'),nl,
-    write('goto *next;'),nl,
-    write('}'),nl,
-    write('else{'),nl,
     write('next = next_stack[index][Jget_scp(CONJ,th)][th];'),nl,
-    write('Jset_mode(1,th);'),nl,
+    write('if(Jget_head(th) == 0) Jset_mode(1,th);'),nl,
+    write('if(Jget_head(th) == 1) Jpop_next(th);'),nl,
     write('clause = Jget_choice(th);'),nl,
-    write('goto *next;}').
+    write('goto *next;').
 
 
 
@@ -900,9 +896,9 @@ gen_recur_pred(P) :-
 gen_a_recur_clause((Head :- Body),A,M,P,V) :-
     write('Jinc_choice(th);'),nl,
     M1 is M+1,
-    write('Jset_next_clause(&&'),
-    write(P),write('_'),write(A),write('_'),write(M1),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
+    write('Jpush_next(&&'),
+    write(P),write('_'),write(A),write('_'),write(M1),write(',th);'),nl,
     gen_recur_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.
 
@@ -985,8 +981,8 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(T==recur,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
     ifthenelse(B==[],
-              (write('Jpush_recur(NIL,th);'),nl),
-              (write('Jpush_recur(np[Jget_scp(CONJ,th)],th);'),nl)),
+              (write('Jpush_head(np[Jget_scp(CONJ,th)][th],th);'),nl),
+              (write('Jpush_recur(np[Jget_scp(CONJ,th)][th],th);'),nl)),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
@@ -1004,8 +1000,8 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
     gen_push_var(V),
     ifthenelse(B==[],
-              (write('Jpush_recur(NIL,th);'),nl),
-              (write('Jpush_recur(np(get_scp(RECUR,th)),th);'),nl)),
+              (write('Jpush_head(np[Jget_scp(CONJ,th)][th],th);'),nl),
+              (write('Jpush_recur(np[Jget_scp(CONJ,th)][th],th);'),nl)),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
