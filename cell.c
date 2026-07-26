@@ -659,6 +659,14 @@ int restore_arg(int x, int th)
         return(x);
 }
 
+int get_succ(int th)
+{
+    #ifdef DBG
+    printf(" get_succ (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+    return(scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th]);
+}
+
 //------for JUMP compiler-----
 int get_sp(int th)
 {

@@ -176,6 +176,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        DISCARD_CONJ_IDX, PUSH_CONJ_IDX, POP_RECUR_IDX, GET_CONT_IDX, GET_HEAD_IDX,
+       GET_SUCC_IDX, 
        NUM_FN1S
 };
 
@@ -1233,6 +1234,7 @@ int get_disj_choice(int th);
 int get_cont(int th);
 int get_scp(int x, int th);
 int get_head(int th);
+int get_succ(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
 int gettrace(int goal);
