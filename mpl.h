@@ -10,7 +10,7 @@ written by kenichi sasagawa 2016/9~
 #include <netinet/in.h>
 #include <netdb.h>
 
-#define DBG 1 //for SCBM debug
+//#define DBG 1 //for SCBM debug
 
 /*
 memory map
