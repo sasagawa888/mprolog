@@ -275,6 +275,12 @@ static inline int Jget_head(int th) {
 }
 
 
+static inline int Jget_succ(int th) {
+    return f1[GET_SUCC_IDX](th);
+}
+
+
+
 static inline int Jcons(int x, int y) {
     return f2[CONS_IDX](x, y);
 }
