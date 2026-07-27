@@ -852,22 +852,17 @@ gen_recursion4 :-
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
-    write('Jpop_next(th);'),nl,
     write('goto *next;}'),nl.
 
 
 gen_recursion5 :-
     write('allfail:'),nl,
-    write('if(np[Jget_scp(CONJ,th)][th]==0) {Jdiscard_conj(th); return(NO);}'),nl,
-    write('Jpop_recur(th);'),nl,
-    write('Jpop_next(th);'),nl,
     write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
+    write('else {'),nl,
     write('index = Jget_cont(th);'),nl,
     write('next = next_stack[index][Jget_scp(CONJ,th)][th];'),nl,
-    write('if(Jget_head(th) == 0) Jset_mode(1,th);'),nl,
-    write('if(Jget_head(th) == 1) Jpop_next(th);'),nl,
     write('clause = Jget_choice(th);'),nl,
-    write('goto *next;').
+    write('goto *next;}').
 
 
 
@@ -898,8 +893,6 @@ gen_a_recur_clause((Head :- Body),A,M,P,V) :-
     write('Jinc_choice(th);'),nl,
     M1 is M+1,
 	gen_head(Head),write('{'),nl,
-    write('Jpush_next(&&'),
-    write(P),write('_'),write(A),write('_'),write(M1),write(',th);'),nl,
     gen_recur_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.
 
