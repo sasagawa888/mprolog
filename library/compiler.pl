@@ -860,8 +860,8 @@ gen_recursion5 :-
     write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
     write('else {'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
-    write('Jpop_recur(th);'),nl,
     write('clause = Jget_choice(th);'),nl,
+    write('Jpop_recur(th);'),nl,
     write('goto *next;}').
 
 
