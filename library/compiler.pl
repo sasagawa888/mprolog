@@ -743,7 +743,7 @@ gen_head1([X|Xs],N) :-
 gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
     write('void *next;'),nl,
-    write('int index,arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
+    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
     gen_all_variable,
     write(';'),nl,
     write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
@@ -859,8 +859,7 @@ gen_recursion5 :-
     write('allfail:'),nl,
     write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
     write('else {'),nl,
-    write('index = Jget_cont(th);'),nl,
-    write('next = next_stack[index][Jget_scp(CONJ,th)][th];'),nl,
+    write('next = next_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto *next;}').
 
