@@ -4,7 +4,7 @@ mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
 
-/*
+
 n(1). n(2). n(3). n(4). n(5).
 n(6). n(7). n(8). n(9). n(10).
 bench :-
@@ -46,7 +46,7 @@ df(s(s(M)), N) :- dnd(s(s(M)), N), df(s(M), N).
 prime(s(X)) :- df(X, s(X)).
 
 foo(X,Y,Z) :- plus(X,Y,Z).
-
+/*
 apptest :-
     mappend(X,Y,[1,2,3]),
     write(X),
