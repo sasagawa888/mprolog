@@ -439,12 +439,6 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
-
-static inline int Jset_mode(int x, int th) {
-    return f2[SET_MODE_IDX](x, th);
-}
-
-
 static inline int Jpush_recur(int x, int th) {
     return f2[PUSH_RECUR_IDX](x,th);
 }

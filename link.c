@@ -150,7 +150,6 @@ if (hmod == NULL) {
     init_f2(COMPLEMENT_IDX, (tpred) f_complement);
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
-    init_f2(SET_MODE_IDX, (tpred) set_mode);
     init_f2(PUSH_RECUR_IDX, (tpred) push_recur);
     init_f2(GET_SCP_IDX, (tpred) get_scp);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
