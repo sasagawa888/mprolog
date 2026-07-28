@@ -188,7 +188,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
        COPY_WORK_IDX, GET_SCP_IDX,
-       SAVE_ARG_IDX, RESTORE_ARG_IDX, PUSH_HEAD_IDX,
+       SAVE_ARG_IDX, RESTORE_ARG_IDX,
        NUM_FN2S
 };
 
@@ -1381,7 +1381,6 @@ int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
 int push_conj(int th);
 int push_recur(int th);
-int push_head(int x, int th);
 int pop_recur(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);

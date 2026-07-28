@@ -474,29 +474,6 @@ int push_recur(int th)
     return (NIL);
 }
 
-
-int push_head(int x, int th)
-{
-    #ifdef DBG
-    printf(" push_head (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    if (scp[RECUR][th] + 1 >= RECURSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("push_head SCBM stack size"), th);
-
-    scp[RECUR][th]++;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th] = x;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][HEAD_SCBM][th] = 1;
-    return (NIL);
-}
-
 int arity_count(int arglist)
 {
     int n;
@@ -560,11 +537,6 @@ int get_choice(int th)
 
     proof[th]++;
 	return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
-}
-
-int get_head(int th)
-{
-    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][HEAD_SCBM][th]);
 }
 
 int get_disj_choice(int th)

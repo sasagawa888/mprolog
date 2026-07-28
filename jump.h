@@ -444,11 +444,6 @@ static inline int Jrestore_arg(int x, int th) {
     return f2[RESTORE_ARG_IDX](x,th);
 }
 
-static inline int Jpush_head(int x, int th) {
-    return f2[PUSH_HEAD_IDX](x,th);
-}
-
-
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
 }
