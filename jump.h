@@ -263,22 +263,8 @@ static inline int Jpop_recur(int th) {
     return f1[POP_RECUR_IDX](th);
 }
 
-
-static inline int Jget_cont(int th) {
-    return f1[GET_CONT_IDX](th);
-}
-
-
 static inline int Jpush_recur(int th) {
     return f1[PUSH_RECUR_IDX](th);
-}
-
-
-
-
-
-static inline int Jget_head(int th) {
-    return f1[GET_HEAD_IDX](th);
 }
 
 
