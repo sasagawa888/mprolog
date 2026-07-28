@@ -974,9 +974,11 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==recur,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
+    M1 is M+1,
     ifthenelse(B==[],
-              (write('Jpush_recur(th);'),nl),
-              (write('Jpush_recur(th);'),nl)),
+              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',th);'),nl),
+              (write('Jpush_back(&&'),gen_recur_body_label([P,A,M,N]),write(',th);'),nl)),
+    gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
@@ -991,11 +993,12 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,recur),
     ifthenelse(T==recur,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
     gen_push_var(V),
+    M1 is M+1,
     ifthenelse(B==[],
-              (write('Jpush_recur(th);'),nl),
-              (write('Jpush_recur(th);'),nl)),
+              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',th);'),nl),
+              (write('Jpush_back(&&'),gen_recur_body_label([P,A,M,N]),write(',th);'),nl)),
+    gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
@@ -1005,6 +1008,8 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
 gen_recur_body1(X,A,M,N,B,H,P,V,T) :-
     gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T).
 
+gen_recur_clause_label([P,A,M]) :-
+    write(P),write('_'),write(A),write('_'),write(M).
 
 gen_recur_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
