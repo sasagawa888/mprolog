@@ -713,7 +713,7 @@ void Jpush_back(void *cont, int th)
     printf(" Jpush_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
     Jpush_recur(th);
-    next_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
+    back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
     return(NIL);
 }
 
