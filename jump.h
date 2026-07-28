@@ -269,6 +269,13 @@ static inline int Jget_cont(int th) {
 }
 
 
+static inline int Jpush_recur(int th) {
+    return f1[PUSH_RECUR_IDX](th);
+}
+
+
+
+
 
 static inline int Jget_head(int th) {
     return f1[GET_HEAD_IDX](th);
@@ -438,11 +445,6 @@ static inline int Junify_nil(int x, int th) {
 static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
-
-static inline int Jpush_recur(int x, int th) {
-    return f2[PUSH_RECUR_IDX](x,th);
-}
-
 
 static inline int Jget_scp(int x, int th) {
     return f2[GET_SCP_IDX](x,th);
@@ -723,6 +725,16 @@ void Jpop_next(int th)
     np[Jget_scp(CONJ,th)][th]--;
 }
 
+
+void Jpush_back(void *cont, int th)
+{
+    #ifdef DBG
+    printf(" Jpush_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
+    Jpush_recur(th);
+    next_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
+    return(NIL);
+}
 
 void Jpush_var(int x, int th)
 {

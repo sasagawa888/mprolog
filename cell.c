@@ -454,16 +454,11 @@ int push_conj(int th)
     return (NIL);
 }
 
-int push_recur(int x, int th)
+int push_recur(int th)
 {
     #ifdef DBG
     printf(" push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
-
-    if (mode[th] == 1){
-        mode[th] = 0;
-        return(NIL);
-    }
 
     if (scp[RECUR][th] + 1 >= RECURSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("push_recur SCBM stack size"), th);
@@ -475,9 +470,7 @@ int push_recur(int x, int th)
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th] = x;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][HEAD_SCBM][th] = 0;
     return (NIL);
 }
 

@@ -176,7 +176,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, GET_DISJ_CHOICE_IDX, INC_DISJ_CHOICE_IDX, RESET_DISJ_IDX,
        DISCARD_CONJ_IDX, PUSH_CONJ_IDX, POP_RECUR_IDX, GET_CONT_IDX, GET_HEAD_IDX,
-       GET_SUCC_IDX, 
+       GET_SUCC_IDX, PUSH_RECUR_IDX, 
        NUM_FN1S
 };
 
@@ -187,7 +187,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        UNBIND_IDX, SET_SP_IDX, SET_WP_IDX, SET_AC_IDX, DEREF_IDX, WLIST1_IDX, 
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
-       COPY_WORK_IDX, PUSH_RECUR_IDX, GET_SCP_IDX,
+       COPY_WORK_IDX, GET_SCP_IDX,
        SAVE_ARG_IDX, RESTORE_ARG_IDX, PUSH_HEAD_IDX,
        NUM_FN2S
 };
@@ -1382,7 +1382,7 @@ int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
 int push_conj(int th);
-int push_recur(int x, int th);
+int push_recur(int th);
 int push_head(int x, int th);
 int pop_recur(int th);
 int quoted_option_p(int x);
