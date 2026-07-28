@@ -613,14 +613,6 @@ int pop_recur(int th)
     return(NIL);
 }
 
-int get_cont(int th)
-{
-    #ifdef DBG
-    printf(" get_cont (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CONT_SCBM][th]);
-}
 
 int get_scp(int x, int th)
 {
