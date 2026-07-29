@@ -847,8 +847,8 @@ gen_recursion31(P,A,[C|Cs],N) :-
 gen_recursion4 :-
     write('success:'),nl,
     write('if(np[Jget_scp(CONJ,th)][th] == 0){'),nl,
-    write('Jsave_arg(arglist,th);'),nl,
-    write('return(YES);'),nl,
+    write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
+    write('else goto allfail1;'),nl,
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
@@ -858,12 +858,14 @@ gen_recursion4 :-
 gen_recursion5 :-
     write('allfail:'),nl,
     write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
-    write('else {'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('Jpop_recur(th);'),nl,
     write('Jpop_next(th);'),nl,
-    write('goto *next;}').
+    write('goto *next;'),
+    write('allfail1:'),nl,
+    write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
+    write('goto *next;').
 
 
 
@@ -892,7 +894,9 @@ gen_recur_pred(P) :-
 % clause
 gen_a_recur_clause((Head :- Body),A,M,P,V) :-
     write('Jinc_choice(th);'),nl,
+    P =.. [P1|_],
     M1 is M+1,
+    write('Jset_back(&&'),gen_recur_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
     gen_recur_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.

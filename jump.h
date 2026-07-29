@@ -725,8 +725,7 @@ void Jset_back(void *cont, int th)
     #endif
     int i;
     i = Jget_scp(RECUR,th);
-    if(i==0)
-        back_stack[i][Jget_scp(CONJ,th)][th] = cont;
+    back_stack[i][Jget_scp(CONJ,th)][th] = cont;
     return(NIL);
 }
 
