@@ -230,7 +230,7 @@ gen_prototype :-
     gen_type_declare(P),
     fail.
 gen_prototype :-
-    write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th);'),nl.
+    write('static int recur_scbm(int pred, int arity, int clause, int arglist, int rest, int th);'),nl.
 
 % generate all predicate code
 gen_predicate :-
@@ -741,7 +741,7 @@ gen_head1([X|Xs],N) :-
 % --------- generate big recur funciont-----------
 
 gen_recursion :-
-    write('static int recur_scbm(int pred, int arity, int clause, int arglist, int th){'),nl,
+    write('static int recur_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
     write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
     gen_all_variable,
@@ -884,7 +884,7 @@ gen_recur_pred(P) :-
     write('int n;'),nl,
     write('arglist = Jrestore_arg(arglist,th);'),nl,
     write('n = Jlength(arglist);'),nl,
-    write('return(recur_scbm('),write(N),write(',n,Jget_choice(th),arglist,th));'),nl,
+    write('return(recur_scbm('),write(N),write(',n,Jget_choice(th),arglist,rest,th));'),nl,
     write('}'),nl,nl.
 
 
