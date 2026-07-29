@@ -717,6 +717,16 @@ void Jpush_back(void *cont, int th)
     return(NIL);
 }
 
+
+void Jset_back(void *cont, int th)
+{
+    #ifdef DBG
+    printf(" Jset_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
+    back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
+    return(NIL);
+}
+
 void Jpush_var(int x, int th)
 {
     #ifdef DBG
