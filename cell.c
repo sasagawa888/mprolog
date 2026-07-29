@@ -563,15 +563,6 @@ int reset_disj(int th)
     return (NIL);
 }
 
-int set_mode(int x, int th)
-{
-    #ifdef DBG
-    printf(" set_mode (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    mode[th] = x;
-    return(NIL);
-}
 
 int pop_recur(int th)
 {

@@ -602,7 +602,6 @@ extern int wp_max[THREADSIZE];
 extern int cp[THREADSIZE];
 extern int unique_num;
 extern int scp[2][THREADSIZE]; 
-extern int mode[THREADSIZE];
 
 /* module */
 extern int module_name;

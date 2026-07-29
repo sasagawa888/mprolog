@@ -99,7 +99,7 @@ int wp_max[THREADSIZE];		// end wp point in each thread
 int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
 int scp[2][THREADSIZE];		// SCBM pointer
-int mode[THREADSIZE];       // SCBM mode 0=normal 1=retry
+
 
 // bignum pointer
 int big_pt0 = 0;		// pointer of temporaly bignum
@@ -471,7 +471,6 @@ void init_repl(void)
 	cp[i] = 0;
 	scp[CONJ][i] = 0;
 	scp[RECUR][i] = 0;
-	mode[i] = 0;
 	for (j = 0; j < CONJSIZE; j++)
 	    for (k = 0; k < RECURSIZE; k++)
 		for (l = 0; l < SCBM_ELT_SIZE; l++)
@@ -744,14 +743,12 @@ int prove(int goal, int bindings, int rest, int th)
 	switch (type) {
 	case 1:		// nondet
 	case 6:     // recur
-	    mode[th] = 0;
 	    push_conj(th);
 	  retry:
 	    if ((GET_SUBR(pred)) (args, 1, th) == YES) {
 		if (prove_all(rest, sp[th], th) == YES)
 		    return YES;
 		else{
-			//mode[th] = 1;
 		    goto retry;}
 	    }
 	    return NO;
