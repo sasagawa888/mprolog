@@ -909,6 +909,8 @@ gen_a_recur_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     P =.. [P1|_],
     write('Jinc_choice(th);'),nl,
+    M1 is M+1,
+    write('Jset_back(&&'),gen_recur_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(P),
     write('{'),nl,
     write('goto success;'),nl,
