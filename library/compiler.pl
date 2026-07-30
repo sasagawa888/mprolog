@@ -985,7 +985,6 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
               true),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
-    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_recur_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
@@ -1008,7 +1007,6 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
               true),
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
-    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_recur_body1(Y,A,M,N1,[A,M,N],H,P,V,recur).
 
