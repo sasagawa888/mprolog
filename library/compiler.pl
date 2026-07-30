@@ -832,6 +832,7 @@ gen_recursion3.
 
 gen_recursion31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
+    write('Jpop_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
 gen_recursion31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
@@ -979,10 +980,8 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     M1 is M+1,
     ifthenelse(B==[],
               (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',th);'),nl),
-              (write('Jpush_back(&&'),gen_recur_body_label([P,A,M,N]),write('back,th);'),nl)),
-    ifthenelse(B\=[],
-              (gen_recur_body_label([P,A,M,N]),write('back:'),nl),
-              true),
+              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,th);'),nl)),
+    gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
@@ -1001,10 +1000,8 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     M1 is M+1,
     ifthenelse(B==[],
               (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',th);'),nl),
-              (write('Jpush_back(&&'),gen_recur_body_label([P,A,M,N]),write('back,th);'),nl)),
-    ifthenelse(B\=[],
-              (gen_recur_body_label([P,A,M,N]),write('back:'),nl),
-              true),
+              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,th);'),nl)),
+    gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
