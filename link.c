@@ -107,8 +107,7 @@ if (hmod == NULL) {
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(POP_RECUR_IDX, (tpred) pop_recur);
     init_f1(GET_SUCC_IDX, (tpred) get_succ);
-    init_f1(PUSH_RECUR_IDX, (tpred) push_recur);
-
+    
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
     init_f2(EQP_IDX, (tpred) eqp);
@@ -152,6 +151,8 @@ if (hmod == NULL) {
     init_f2(GET_SCP_IDX, (tpred) get_scp);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
     init_f2(RESTORE_ARG_IDX, (tpred) restore_arg);
+    init_f2(PUSH_RECUR_IDX, (tpred) push_recur);
+
 
     //argument-3
     init_f3(LIST3_IDX, (tpred) list3);

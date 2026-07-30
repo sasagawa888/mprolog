@@ -454,7 +454,7 @@ int push_conj(int th)
     return (NIL);
 }
 
-int push_recur(int th)
+int push_recur(int arglist, int th)
 {
     #ifdef DBG
     printf(" push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
@@ -470,7 +470,7 @@ int push_recur(int th)
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
     return (NIL);
 }
 
