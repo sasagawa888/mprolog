@@ -684,6 +684,7 @@ static void mouse_callback()
 
 static void *next_stack[1048][CONJSIZE][THREADSIZE];
 static void *back_stack[1048][CONJSIZE][THREADSIZE];
+static void *back_stack1[1048][CONJSIZE][THREADSIZE];
 static int var_stack[1048][THREADSIZE];
 int np[CONJSIZE][THREADSIZE];
 int vp[THREADSIZE];
@@ -714,7 +715,17 @@ void Jpush_back(void *cont, int th)
     #endif
     Jpush_recur(th);
     back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
-    return(NIL);
+    back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
+}
+
+void Jpop_back(int th)
+{
+    #ifdef DBG
+    printf(" Jpop_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    #endif
+
+    back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = 
+        back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];
 }
 
 
