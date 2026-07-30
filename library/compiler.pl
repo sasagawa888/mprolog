@@ -853,6 +853,7 @@ gen_recursion4 :-
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto *next;}'),nl.
 
 
@@ -862,9 +863,11 @@ gen_recursion5 :-
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_recur(th);'),nl,
     write('Jpop_next(th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto *next;'),
     write('allfail1:'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto *next;').
 
 
@@ -987,6 +990,7 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_recur_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
@@ -1007,6 +1011,7 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_recur_body1(Y,A,M,N1,[A,M,N],H,P,V,recur).
 
