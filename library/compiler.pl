@@ -893,7 +893,7 @@ gen_recur_pred(P) :-
 % N is arity , M is Mth clause from 0.
 % clause
 gen_a_recur_clause((Head :- Body),A,M,P,V) :-
-    write('Jinc_choice(th);'),nl,
+    %write('Jinc_choice(th);'),nl,
     P =.. [P1|_],
     M1 is M+1,
     write('Jset_back(&&'),gen_recur_clause_label([P1,A,M1]),write(',th);'),nl,
@@ -905,14 +905,14 @@ gen_a_recur_clause((Head :- Body),A,M,P,V) :-
 gen_a_recur_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     functor(P,_,0),
-    write('{Jinc_choice(th);'),nl,
+    %write('{Jinc_choice(th);'),nl,
     write('return(YES);}'),nl,!.
 
 % nondet predicate
 gen_a_recur_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     P =.. [P1|_],
-    write('Jinc_choice(th);'),nl,
+    %write('Jinc_choice(th);'),nl,
     M1 is M+1,
     write('Jset_back(&&'),gen_recur_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(P),
