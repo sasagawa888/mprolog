@@ -884,7 +884,7 @@ gen_recur_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     write('int n;'),nl,
     write('n = Jlength(arglist);'),nl,
-    write('return(recur_scbm('),write(N),write(',n,Jget_choice(th),arglist,rest,th));'),nl,
+    write('return(recur_scbm('),write(N),write(',n,0,arglist,rest,th));'),nl,
     write('}'),nl,nl.
 
 
