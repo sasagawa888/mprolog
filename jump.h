@@ -447,10 +447,6 @@ static inline int Jrestore_arg(int x, int th) {
 }
 
 
-static inline int Jpush_recur(int x, int th) {
-    return f2[PUSH_RECUR_IDX](x,th);
-}
-
 
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
@@ -588,6 +584,12 @@ static inline int Jcall_det(int x, int y, int th) {
     return f3[CALL_DET_IDX](x, y, th);
 }
 
+
+static inline int Jpush_recur(int x, int y, int th) {
+    return f3[PUSH_RECUR_IDX](x, y, th);
+}
+
+
 static inline int Jmakeconst(char* x) {
     return f4[MAKECONST_IDX](x);
 }
@@ -716,12 +718,12 @@ void Jpop_next(int th)
 }
 
 
-void Jpush_back(void *cont, int arglist, int th)
+void Jpush_back(void *cont, int arglist, int vp, int th)
 {
     #ifdef DBG
     printf(" Jpush_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
-    Jpush_recur(arglist,th);
+    Jpush_recur(arglist,vp,th);
     back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
     back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
 }

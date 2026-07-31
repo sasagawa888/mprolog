@@ -188,7 +188,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
        COPY_WORK_IDX, GET_SCP_IDX,
-       SAVE_ARG_IDX, RESTORE_ARG_IDX,  PUSH_RECUR_IDX, 
+       SAVE_ARG_IDX, RESTORE_ARG_IDX,   
        NUM_FN2S
 };
 
@@ -198,7 +198,7 @@ enum { LIST3_IDX, ERRORCOMP_IDX, WLISTCONS_IDX,UNIFY_IDX, UNIFY_PAIR_IDX,
        WLIST2_IDX, ADDTAIL_BODY_IDX, PLUS_IDX, MINUS_IDX, MULT_IDX, DIVIDE_IDX, REMAINDER_IDX,
        QUOTIENT_IDX,  MOD_IDX, EXPT_IDX, DIV_IDX, XOR_IDX,
        LEFTSHIFT_IDX, RIGHTSHIFT_IDX, LOGICALAND_IDX, LOGICALOR_IDX, ROUND_IDX,
-       CALL_NONDET_IDX, CALL_DET_IDX,
+       CALL_NONDET_IDX, CALL_DET_IDX, PUSH_RECUR_IDX,
        NUM_FN3S,
 };
 
@@ -1379,7 +1379,7 @@ int prove(int goal, int bindings, int rest, int th);
 int prove_all(int goals, int bindings, int th);
 int prepare(int arglist, int th);
 int push_conj(int th);
-int push_recur(int x,int th);
+int push_recur(int arglist, int vp, int th);
 int pop_recur(int th);
 int quoted_option_p(int x);
 int quotient(int x, int y, int th);

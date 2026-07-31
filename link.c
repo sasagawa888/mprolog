@@ -152,7 +152,7 @@ if (hmod == NULL) {
     init_f2(GET_SCP_IDX, (tpred) get_scp);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
     init_f2(RESTORE_ARG_IDX, (tpred) restore_arg);
-    init_f2(PUSH_RECUR_IDX, (tpred) push_recur);
+    
 
 
     //argument-3
@@ -188,7 +188,7 @@ if (hmod == NULL) {
     init_f3(DIV_IDX, (tpred) f_div);
     init_f3(CALL_NONDET_IDX, (tpred) call_nondet);
     init_f3(CALL_DET_IDX, (tpred) call_det);
-
+    init_f3(PUSH_RECUR_IDX, (tpred) push_recur);
 
     //argument-1 string type
     init_f4(MAKECONST_IDX, (tpred) makeconst);
