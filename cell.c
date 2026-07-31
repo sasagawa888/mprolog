@@ -561,6 +561,16 @@ int get_vp(int th)
 }
 
 
+int get_np(int th)
+{
+    #ifdef DBG
+    printf(" get_np (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
+    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][NP_SCBM][th]);
+}
+
+
 int get_disj_choice(int th)
 {
     int choice;

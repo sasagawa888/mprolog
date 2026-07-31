@@ -109,6 +109,7 @@ if (hmod == NULL) {
     init_f1(GET_SUCC_IDX, (tpred) get_succ);
     init_f1(GET_ARG_IDX, (tpred) get_arg);
     init_f1(GET_VP_IDX, (tpred) get_vp);
+    init_f1(GET_NP_IDX, (tpred) get_np);
     
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
