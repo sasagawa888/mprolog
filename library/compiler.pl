@@ -870,6 +870,8 @@ gen_recursion5 :-
     write('clause = Jget_choice(th);'),nl,
     write('arglist = Jget_arg(th);'),nl,
     write('vp[th] = Jget_vp(th);'),nl,
+    write('np[Jget_scp(CONJ,th)][th] = Jget_np(th);'),nl,
+    write('printf("--%d--",Jget_np(th));'),
     write('goto *next;'),nl.
    
 
@@ -988,8 +990,8 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_recur_body_argument(Args),
     M1 is M+1,
     ifthenelse(B==[],
-              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',arglist,vp[th],np[th],th);'),nl),
-              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,arglist,vp[th],np[th],th);'),nl)),
+              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)),
     gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
@@ -1009,8 +1011,8 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_push_var(V),
     M1 is M+1,
     ifthenelse(B==[],
-              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',arglist,vp[th],np[th],th);'),nl),
-              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,arglist,vp[th],np[th],th);'),nl)),
+              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)),
     gen_recur_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
