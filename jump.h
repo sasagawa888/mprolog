@@ -274,6 +274,10 @@ static inline int Jget_arg(int th) {
 }
 
 
+static inline int Jget_vp(int th) {
+    return f1[GET_VP_IDX](th);
+}
+
 
 
 static inline int Jcons(int x, int y) {

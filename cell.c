@@ -471,7 +471,7 @@ int push_recur(int arglist, int vp, int th)
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][NP_SCBM][th] = vp;
+    scbmstack[scp[CONJ][th]][scp[RECUR][th]][VP_SCBM][th] = vp;
     return (NIL);
 }
 
@@ -542,12 +542,23 @@ int get_choice(int th)
 
 int get_arg(int th)
 {
-     #ifdef DBG
+    #ifdef DBG
     printf(" get_arg (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
     return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]);
 }
+
+
+int get_vp(int th)
+{
+    #ifdef DBG
+    printf(" get_vp (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
+    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][VP_SCBM][th]);
+}
+
 
 int get_disj_choice(int th)
 {
