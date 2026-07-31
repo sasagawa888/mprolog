@@ -849,7 +849,11 @@ gen_recursion4 :-
     write('success:'),nl,
     write('if(np[Jget_scp(CONJ,th)][th] == 0){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
-    write('else goto allfail1;'),nl,
+    write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
+    write('clause = Jget_choice(th);'),nl,
+    write('arglist = Jget_arg(th);'),nl,
+    write('vp[th] = Jget_vp(th);'),nl,
+    write('goto *next;'),nl,
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
@@ -865,11 +869,9 @@ gen_recursion5 :-
     write('Jpop_next(th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('arglist = Jget_arg(th);'),nl,
-    write('goto *next;'),
-    write('allfail1:'),nl,
-    write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
-    write('clause = Jget_choice(th);'),nl,
-    write('goto *next;').
+    write('vp[th] = Jget_vp(th);'),nl,
+    write('goto *next;'),nl.
+   
 
 
 
