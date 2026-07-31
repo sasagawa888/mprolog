@@ -539,6 +539,15 @@ int get_choice(int th)
 	return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
 }
 
+int get_arg(int th)
+{
+     #ifdef DBG
+    printf(" get_arg (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+
+    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]);
+}
+
 int get_disj_choice(int th)
 {
     int choice;
