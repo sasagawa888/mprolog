@@ -589,10 +589,6 @@ static inline int Jcall_det(int x, int y, int th) {
 }
 
 
-static inline int Jpush_recur(int x, int y, int th) {
-    return f3[PUSH_RECUR_IDX](x, y, th);
-}
-
 
 static inline int Jmakeconst(char* x) {
     return f4[MAKECONST_IDX](x);
@@ -655,6 +651,11 @@ static inline int Jcallsubr(int x, int y, int z, int th) {
 
 static inline int Jwlist3(int x, int y, int z, int th) {
     return f5[WLIST3_IDX](x, y, z, th);
+}
+
+
+static inline int Jpush_recur(int x, int y, int z, int th) {
+    return f5[PUSH_RECUR_IDX](x, y, z, th);
 }
 
 
@@ -727,7 +728,7 @@ void Jpush_back(void *cont, int arglist, int vp, int th)
     #ifdef DBG
     printf(" Jpush_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
-    Jpush_recur(arglist,vp,th);
+    Jpush_recur(arglist,vp,0,th);
     back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
     back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
 }
