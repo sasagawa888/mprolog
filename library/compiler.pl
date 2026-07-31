@@ -851,7 +851,6 @@ gen_recursion4 :-
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('clause = Jget_choice(th);'),nl,
-    write('arglist = Jget_arg(th);'),nl,
     write('vp[th] = Jget_vp(th);'),nl,
     write('goto *next;'),nl,
     write('}else{'),nl,
