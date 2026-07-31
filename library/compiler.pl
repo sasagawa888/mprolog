@@ -832,6 +832,7 @@ gen_recursion3.
 
 gen_recursion31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
+    gen_debug(P),
     write('Jpop_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
 gen_recursion31(P,A,[C|Cs],N) :-
