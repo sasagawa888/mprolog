@@ -832,7 +832,6 @@ gen_recursion3.
 
 gen_recursion31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
-    gen_debug(P),
     write('Jpop_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
 gen_recursion31(P,A,[C|Cs],N) :-
@@ -871,7 +870,6 @@ gen_recursion5 :-
     write('arglist = Jget_arg(th);'),nl,
     write('vp[th] = Jget_vp(th);'),nl,
     write('np[Jget_scp(CONJ,th)][th] = Jget_np(th);'),nl,
-    write('printf("--%d--",Jget_np(th));'),
     write('goto *next;'),nl.
    
 

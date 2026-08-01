@@ -754,7 +754,10 @@ int prove(int goal, int bindings, int rest, int th)
 
 	case 6:     // recur
 	    push_conj(th);
-	    return ((GET_SUBR(pred)) (args, rest, th) == YES);
+	    if((GET_SUBR(pred)) (args, rest, th) ==YES)
+			return YES;
+		else 
+			return NO;
 
 	case 2:		// det
 	case 3:		// tail
