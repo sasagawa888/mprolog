@@ -52,6 +52,7 @@ compile_file4(X) :-
     invoke_gcc(X).
 
 pass1(X) :-
+    retractall(type(_,_,_)),
     assertz((type(dummy,dummy,dummy))),
 	write(user_output,'phase pass1'),
     nl(user_output),
