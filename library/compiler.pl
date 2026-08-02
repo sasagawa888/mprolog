@@ -974,7 +974,7 @@ gen_recur_body(X,A,M,H,P,V,T) :-
     gen_recur_body1(X,A,M,0,[],H,P,V,T).
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
-%last body
+%last recur body
 gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
@@ -994,6 +994,17 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_recur_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
+
+% last builtin body
+gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+    n_property(X,builtin),
+    X =.. [Pred|Args],
+    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    ifthenelse(T==recur,gen_pop_var(V),true),
+    N1 is N+1,
+    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
+    write('goto success;'),nl,
+    write('else goto allfail;'),nl.
 
 % recur predicate
 gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
