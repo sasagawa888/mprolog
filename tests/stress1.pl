@@ -129,16 +129,15 @@ copy_count(X) :-
 % 成功継続の復元確認
 % --------------------------------
 
-
+zero(0).
 
 strip(0,0).
 strip(s(X),Y) :-
     strip(X,Z),
-    %zero(Z).
+    %zero(Z),
     Y = s(X).
 
-zero(0).
-zero(1).
+
 
 % ?- strip(s(s(0)),X).
 % X = s(s(0)).
