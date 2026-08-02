@@ -7,7 +7,7 @@ plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
 times(0, _, 0).
 times(s(X), Y, Z) :- times(X, Y, Z1), plus(Z1, Y, Z).
 
-/*
+
 mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
@@ -47,17 +47,17 @@ prime(s(X)) :- df(X, s(X)).
 
 foo(X,Y,Z) :- plus(X,Y,Z).
 
-apptest :-
-    mappend(X,Y,[1,2,3]),
-    write(X),
-    write(Y),
-    fail.
+%apptest :-
+%    mappend(X,Y,[1,2,3]),
+%    write(X),
+%    write(Y),
+%    fail.
 
 
 
-apptest1 :-
-    mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
-    fail.
+%apptest1 :-
+%    mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
+%    fail.
 
 
 color(red).
@@ -71,4 +71,3 @@ likes(robin,cats).
 likes(sandy,X) :- likes(X,cats).
 likes(kim,X) :- likes(X,lee),likes(X,kim).
 likes(X,X).
-*/
