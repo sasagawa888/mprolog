@@ -1,5 +1,5 @@
 # SCBM
-Sasagawa & Chat backtracking Mecanism
+Success Continuation and Backtracking Machine
 
 # SCBM API Specification
 
