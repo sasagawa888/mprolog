@@ -1,4 +1,4 @@
-% 1. 単純な自然数生成
+% 1. 単純な自然数生成 OK
 nat(0).
 nat(s(X)) :-
     nat(X).
@@ -10,7 +10,7 @@ nat(s(X)) :-
 % ...
 
 
-% 2. 入力を一段ずつ削るだけ
+% 2. 入力を一段ずつ削るだけ OK
 down(0).
 down(s(X)) :-
     down(X).
@@ -19,7 +19,7 @@ down(s(X)) :-
 % yes.
 
 
-% 3. Peano数のコピー
+% 3. Peano数のコピー OK
 copy_nat(0, 0).
 copy_nat(s(X), s(Y)) :-
     copy_nat(X, Y).
@@ -31,7 +31,7 @@ copy_nat(s(X), s(Y)) :-
 % X = s(s(0)).
 
 
-% 4. リストの長さ
+% 4. リストの長さ OK
 len([], 0).
 len([_|Xs], s(N)) :-
     len(Xs, N).
@@ -43,7 +43,7 @@ len([_|Xs], s(N)) :-
 % X = [_A,_B].
 
 
-% 5. リストの最後までたどる
+% 5. リストの最後までたどる OK
 listp([]).
 listp([_|Xs]) :-
     listp(Xs).
@@ -58,7 +58,7 @@ listp([_|Xs]) :-
 % ...
 
 
-% 6. 単純な member
+% 6. 単純な member  OK
 mem(X, [X|_]).
 mem(X, [_|Xs]) :-
     mem(X, Xs).
