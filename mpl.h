@@ -188,7 +188,7 @@ enum { CONS_IDX, EQP_IDX, EQUALP_IDX, NUMEQP_IDX, SMALLERP_IDX, EQSMALLERP_IDX,
        SIN_IDX, ASIN_IDX, COS_IDX, ACOS_IDX, TAN_IDX, ATAN_IDX, EXP_IDX, LOG_IDX,
        LN_IDX, LIST1_IDX, RANDOM_IDX, RANDI_IDX, UNIFY_NIL_IDX, SQRT_IDX, COMPLEMENT_IDX,
        COPY_WORK_IDX, GET_SCP_IDX,
-       SAVE_ARG_IDX, RESTORE_ARG_IDX,   
+       SAVE_ARG_IDX, RESTORE_ARG_IDX, SUCCESS_IDX,  
        NUM_FN2S
 };
 
@@ -1438,6 +1438,7 @@ int string_length(int addr);
 int singlep(int addr);
 int streqp(int x, int y);
 int str_to_pred(int x);
+int success(int arglist, int th);
 int symboltoken(char buf[]);
 int takeoutbug(int key);
 int termp(int addr);

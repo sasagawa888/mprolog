@@ -646,6 +646,16 @@ int get_succ(int th)
     return(scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th]);
 }
 
+int success(int arglist, int th)
+{
+    #ifdef DBG
+    printf(" success (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    #endif
+    scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th] = 1;
+    scbmstack[scp[CONJ][th]][0][ARGLIST_SCBM][th] = arglist;
+    return(NIL);
+}
+
 //------for JUMP compiler-----
 int get_sp(int th)
 {

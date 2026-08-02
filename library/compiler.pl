@@ -744,8 +744,7 @@ gen_recursion :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
     write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
-    gen_all_variable,
-    write(';'),nl,
+    gen_all_variable,write(';'),nl,
     write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     write('Jpush_next(&&success,th);'),nl,
     gen_pred_switch,
@@ -761,6 +760,7 @@ gen_all_variable :-
     gen_all_variable1(L,V),
     sort(V,V1),
     gen_all_variable2(V1).
+gen_all_variable.
 
 gen_all_variable1([],[]).
 gen_all_variable1([P|Ps],Vars) :-

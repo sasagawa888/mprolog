@@ -60,7 +60,9 @@ apptest1 :-
     fail.
 
 */
-
+color(red).
+color(green).
+color(blue).
 
 likes(kim,robin).
 likes(sandy,lee).
