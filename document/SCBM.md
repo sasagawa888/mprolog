@@ -1,3 +1,6 @@
+# SCBM
+Sasagawa & Chat backtracking Mecanism
+
 ## SCBM API
 
 - Jpush_conj(th);
@@ -48,4 +51,8 @@ SUCC_SCBMを１とする。
 
 - Jreset_disj(th)
 選言のためのchoiceポイントから１を減算する。
+
+
+## 生成コード
+
 

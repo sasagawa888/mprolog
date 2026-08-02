@@ -597,9 +597,10 @@ int b_n_ask(int arglist, int rest, int th)
 	    printstr(" = ");
 	    printanswer(deref(car(x2), th));
 	    if (child_flag)
-		printc(',');
+			printc(',');
 	    if (!nullp(cdr(x2)))
-		printf("\n");
+			printf("\n");
+
 	    x2 = cdr(x2);
 	}
 	

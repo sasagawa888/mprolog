@@ -621,7 +621,6 @@ int save_arg(int x, int th)
     #endif
 
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = x;
-    scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th] = scp[RECUR][th];
     return(NIL);
 }
 

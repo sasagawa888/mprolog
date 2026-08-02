@@ -852,6 +852,7 @@ gen_recursion4 :-
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_next(th);'),nl,
     write('clause = Jget_choice(th);'),nl,
+    write('arglist = Jget_arg(th);'),nl,
     write('goto *next;'),nl,
     write('}else{'),nl,
     write('next = next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th];'),nl,
@@ -891,6 +892,7 @@ gen_recur_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     write('int n;'),nl,
     write('n = Jlength(arglist);'),nl,
+    write('Jsave_arg(arglist,th);'),nl,
     write('return(recur_scbm('),write(N),write(',n,0,arglist,rest,th));'),nl,
     write('}'),nl,nl.
 
@@ -905,13 +907,6 @@ gen_a_recur_clause((Head :- Body),A,M,P,V) :-
 	gen_head(Head),write('{'),nl,
     gen_recur_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.
-
-% predicate with no arity
-gen_a_recur_clause(P,A,M,_,_) :-
-	n_property(P,predicate),
-    functor(P,_,0),
-    write('Jinc_choice(th);'),nl,
-    write('return(YES);}'),nl,!.
 
 % nondet predicate
 gen_a_recur_clause(P,A,M,_,_) :-
