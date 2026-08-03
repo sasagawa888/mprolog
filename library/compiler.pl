@@ -67,7 +67,7 @@ pass2(_) :-
 
 retype_halt :-
     retract(type(P,A,halt)),
-    assertz(type(P,A,recur)),
+    assertz(type(P,A,nondet)),
     fail.
 retype_halt.
 
@@ -145,7 +145,7 @@ gen_pred_def(P) :-
 	write('(deftpred)("'),write(P),write('",'),write('c_'),write(P1),
     write(','),write(A),write(','),write(T1),write(');'),nl,!.
 
-pred_type(nondet,1).
+pred_type(nondet,6).
 pred_type(det,2).
 pred_type(tail,3).
 pred_type(dyn,4).
@@ -253,7 +253,7 @@ gen_predicate.
 
 % generate predicate P
 gen_a_pred(P) :- 
-    type(P,_,recur),gen_recur_pred(P).     
+    type(P,_,nondet),gen_recur_pred(P).     
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
 gen_a_pred(P) :- 
@@ -534,7 +534,7 @@ gen_recursion :-
     write('}'),nl.
 
 gen_all_variable :-
-    bagof(P,type(P,_,recur),L),
+    bagof(P,type(P,_,nondet),L),
     gen_all_variable1(L,V),
     sort(V,V1),
     gen_all_variable2(V1).
@@ -552,7 +552,7 @@ gen_all_variable2([V|Vs]) :-
     gen_all_variable2(Vs).
 
 gen_recursion1 :-
-    type(P,A,recur),
+    type(P,A,nondet),
     write(P),write(':'),nl,
     write('switch(arity){'),nl,
     n_arity_count(P,L),
@@ -570,7 +570,7 @@ gen_pred_switch :-
     write('}'),nl.
 
 gen_pred_switch1 :-
-    type(P,_,recur),
+    type(P,_,nondet),
     ctr_is(0,N),
     ctr_inc(0,_),
     write('case '),write(N),write(': goto '),write(P),write(';'),nl,
@@ -584,7 +584,7 @@ gen_arity_switch(P,[L|Ls]) :-
     gen_arity_switch(P,Ls).
 
 gen_recursion2 :-
-    type(P,A,recur),
+    type(P,A,nondet),
     write(P),write('_'),write(A),write(':'),nl,
     ifthenelse(option(debug,on),gen_debug(P),true),
     write('switch(clause){'),nl,
@@ -603,7 +603,7 @@ gen_clause_switch(P,A,N,M) :-
     gen_clause_switch(P,A,N1,M).
 
 gen_recursion3 :-
-    type(P,A,recur),
+    type(P,A,nondet),
     n_clause_with_arity(P,A,C),
     gen_recursion31(P,A,C,0),
     fail.
@@ -662,7 +662,7 @@ gen_recur_pred(P) :-
     write(user_output,M),
     n_arity_count(P,[A|_]),
     write(user_output,$/$),write(user_output,A),
-    write(user_output,' recur'),nl(user_output),
+    write(user_output,' nondet'),nl(user_output),
     ctr_is(0,N),
     ctr_inc(0,_),
 	write('static int c_'),
@@ -756,9 +756,9 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
-    type(Pred,Arity,recur),
+    type(Pred,Arity,nondet),
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
-    ifthenelse(T==recur,gen_pop_var(V),true),
+    ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
     M1 is M+1,
     ifthenelse(B==[],
@@ -777,7 +777,7 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
-    ifthenelse(T==recur,gen_pop_var(V),true),
+    ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto success;'),nl,
@@ -788,7 +788,7 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     (n_property(X,compiled_det);n_property(X,compiled_tail)),
     X =.. [Pred|Args],
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
-    ifthenelse(T==recur,gen_pop_var(V),true),
+    ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto success;'),nl,
@@ -800,9 +800,9 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
-    type(Pred,Arity,recur),
+    type(Pred,Arity,nondet),
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
-    ifthenelse(T==recur,gen_pop_var(V),true),
+    ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_recur_body_argument(Args),
     gen_push_var(V),
     M1 is M+1,
@@ -814,14 +814,14 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_recur_body1(Y,A,M,N1,[A,M,N],H,P,V,recur).
+    gen_recur_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
 
 % builtin
 gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
-    ifthenelse(T==recur,gen_pop_var(V),true),
+    ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
@@ -833,7 +833,7 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     (n_property(X,compiled_det);n_property(X,compiled_tail)),
     X =.. [Pred|Args],
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
-    ifthenelse(T==recur,gen_pop_var(V),true),
+    ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
@@ -2167,7 +2167,7 @@ analize_pred1(P,N,C) :-
     nondet_recursive(C,0),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    assertz(type(P,N,recur)),!.
+    assertz(type(P,N,nondet)),!.
 analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     length(C,M),
@@ -2179,7 +2179,7 @@ analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    assertz(type(P,N,recur)),!.
+    assertz(type(P,N,nondet)),!.
 
 
 % arguments = [clauses],det_count,pred_count,halt_count,all_count
@@ -2395,14 +2395,14 @@ nondet_recur_body(Head,(B1,B2)) :-
     functor(B1,P,A).
 nondet_recur_body(Head,(B1,B2)) :-
     functor(B1,P,A),
-    type(P,A,recur).
+    type(P,A,nondet).
 nondet_recur_body(Head,(B1,B2)) :-
-    nondet_recur_body(Head,B2).
+    nondet_nondet_body(Head,B2).
 nondet_recur_body(Head,Body) :-
     functor(Head,P,A),
     functor(Body,P,A).
 nondet_recur_body(Head,Body) :-
     functor(Body,P,A),
-    type(P,A,recur).
+    type(P,A,nondet).
 
 %---------------------------------------------------------
