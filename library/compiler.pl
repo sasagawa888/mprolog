@@ -1002,7 +1002,7 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==recur,gen_pop_var(V),true),
     N1 is N+1,
-    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
+    write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto success;'),nl,
     write('else goto allfail;'),nl.
 
@@ -1034,7 +1034,7 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_recur_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==recur,gen_pop_var(V),true),
     N1 is N+1,
-    write('if (Jcall_det(Jmakesys("'),write(P),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
+    write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
     write('else goto allfail;'),nl,
     gen_recur_body1(Y,A,M,N1,B,H,P,V,non).
