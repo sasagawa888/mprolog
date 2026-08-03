@@ -230,7 +230,7 @@ gen_prototype :-
     gen_type_declare(P),
     fail.
 gen_prototype :-
-    write('static int recur_scbm(int pred, int arity, int clause, int arglist, int rest, int th);'),nl.
+    write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th);'),nl.
 
 % generate all predicate code
 gen_predicate :-
@@ -516,7 +516,7 @@ gen_head1([X|Xs],N) :-
 % --------- generate big SCBM function-----------
 
 gen_SCBM_function :-
-    write('static int recur_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
+    write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
     write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
     gen_all_variable,write(';'),nl,
@@ -669,7 +669,7 @@ gen_recur_pred(P) :-
     write('int n;'),nl,
     write('n = Jlength(arglist);'),nl,
     write('Jsave_arg(arglist,th);'),nl,
-    write('return(recur_scbm('),write(N),write(',n,0,arglist,rest,th));'),nl,
+    write('return(user_scbm('),write(N),write(',n,0,arglist,rest,th));'),nl,
     write('}'),nl,nl.
 
 
