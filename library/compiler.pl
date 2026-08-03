@@ -2394,7 +2394,7 @@ nondet_recur_body(Head,(B1,B2)) :-
     functor(B1,P,A),
     type(P,A,nondet).
 nondet_recur_body(Head,(B1,B2)) :-
-    nondet_nondet_body(Head,B2).
+    nondet_recur_body(Head,B2).
 nondet_recur_body(Head,Body) :-
     functor(Head,P,A),
     functor(Body,P,A).
