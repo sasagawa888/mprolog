@@ -82,7 +82,7 @@ pass3(X) :-
     gen_predicate,
     gen_definition,
     gen_execution,
-    gen_recursion,
+    gen_SCBM_function,
     n_reconsult_abolish,
     told.
 
@@ -513,11 +513,9 @@ gen_head1([X|Xs],N) :-
     gen_head1(Xs,N1).
 
 
-/* --------------------recursion-----------------------------------
-*/
-% --------- generate big recur funciont-----------
+% --------- generate big SCBM function-----------
 
-gen_recursion :-
+gen_SCBM_function :-
     write('static int recur_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
     write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
@@ -525,11 +523,11 @@ gen_recursion :-
     write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     write('Jpush_next(&&success,th);'),nl,
     gen_pred_switch,
-    gen_recursion1,
-    gen_recursion2,
-    gen_recursion3,
-    gen_recursion4,
-    gen_recursion5,
+    gen_SCBM_function1,
+    gen_SCBM_function2,
+    gen_SCBM_function3,
+    gen_SCBM_function4,
+    gen_SCBM_function5,
     write('}'),nl.
 
 gen_all_variable :-
@@ -550,7 +548,7 @@ gen_all_variable2([V|Vs]) :-
     write(','),write(V),
     gen_all_variable2(Vs).
 
-gen_recursion1 :-
+gen_SCBM_function1 :-
     type(P,A,nondet),
     write(P),write(':'),nl,
     write('switch(arity){'),nl,
@@ -559,7 +557,7 @@ gen_recursion1 :-
     write('default: goto allfail;'),nl,
     write('}'),nl,
     fail.
-gen_recursion1.
+gen_SCBM_function1.
 
 
 gen_pred_switch :-
@@ -582,7 +580,7 @@ gen_arity_switch(P,[L|Ls]) :-
     write('case '),write(L),write(': goto '),write(P),write('_'),write(L),write(';'),nl,
     gen_arity_switch(P,Ls).
 
-gen_recursion2 :-
+gen_SCBM_function2 :-
     type(P,A,nondet),
     write(P),write('_'),write(A),write(':'),nl,
     ifthenelse(option(debug,on),gen_debug(P),true),
@@ -592,7 +590,7 @@ gen_recursion2 :-
     write('default: goto allfail;'),nl,
     write('}'),nl,
     fail.
-gen_recursion2.
+gen_SCBM_function2.
 
 gen_clause_switch(P,A,M,M) :- !.
 gen_clause_switch(P,A,N,M) :-
@@ -601,18 +599,18 @@ gen_clause_switch(P,A,N,M) :-
     N1 is N+1,
     gen_clause_switch(P,A,N1,M).
 
-gen_recursion3 :-
+gen_SCBM_function3 :-
     type(P,A,nondet),
     n_clause_with_arity(P,A,C),
-    gen_recursion31(P,A,C,0),
+    gen_SCBM_function31(P,A,C,0),
     fail.
-gen_recursion3.
+gen_SCBM_function3.
 
-gen_recursion31(P,A,[],N) :- 
+gen_SCBM_function31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     write('Jpop_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
-gen_recursion31(P,A,[C|Cs],N) :-
+gen_SCBM_function31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     gen_var_assign(1,A),!,
     write('Jrelease(th);'),nl,
@@ -621,9 +619,9 @@ gen_recursion31(P,A,[C|Cs],N) :-
     gen_var(V),!,
     gen_a_recur_clause(X,A,N,P,V),
     N1 is N+1,
-    gen_recursion31(P,A,Cs,N1).
+    gen_SCBM_function31(P,A,Cs,N1).
 
-gen_recursion4 :-
+gen_SCBM_function4 :-
     write('success:'),nl,
     write('if(np[Jget_scp(CONJ,th)][th] == 0){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
@@ -639,7 +637,7 @@ gen_recursion4 :-
     write('goto *next;}'),nl.
 
 
-gen_recursion5 :-
+gen_SCBM_function5 :-
     write('allfail:'),nl,
     write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
