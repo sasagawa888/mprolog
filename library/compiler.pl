@@ -1006,6 +1006,18 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl,
     write('else goto allfail;'),nl.
 
+% last det or tail body
+gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+    (n_property(X,compiled_det);n_property(X,compiled_tail)),
+    X =.. [Pred|Args],
+    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    ifthenelse(T==recur,gen_pop_var(V),true),
+    N1 is N+1,
+    write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
+    write('goto success;'),nl,
+    write('else goto allfail;'),nl.
+
+
 % recur predicate
 gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
@@ -1038,6 +1050,19 @@ gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
     write('else goto allfail;'),nl,
     gen_recur_body1(Y,A,M,N1,B,H,P,V,non).
+
+% det tail
+gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
+    (n_property(X,compiled_det);n_property(X,compiled_tail)),
+    X =.. [Pred|Args],
+    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    ifthenelse(T==recur,gen_pop_var(V),true),
+    N1 is N+1,
+    write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
+    write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
+    write('else goto allfail;'),nl,
+    gen_recur_body1(Y,A,M,N1,B,H,P,V,non).
+
 
 
 gen_recur_body1(X,A,M,N,B,H,P,V,T) :-

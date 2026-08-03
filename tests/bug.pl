@@ -47,17 +47,17 @@ prime(s(X)) :- df(X, s(X)).
 
 foo(X,Y,Z) :- plus(X,Y,Z).
 
-%apptest :-
-%    mappend(X,Y,[1,2,3]),
-%    write(X),
-%    write(Y),
-%    fail.
+apptest :-
+    mappend(X,Y,[1,2,3]),
+    write(X),
+    write(Y),
+    fail.
 
 
 
-%apptest1 :-
-%    mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
-%    fail.
+apptest1 :-
+    mappend(X,Y,[1,2,3,4,5,6,7,8,9,0]),
+    fail.
 
 
 color(red).
@@ -71,3 +71,13 @@ likes(robin,cats).
 likes(sandy,X) :- likes(X,cats).
 likes(kim,X) :- likes(X,lee),likes(X,kim).
 likes(X,X).
+
+
+
+nodiag([], _, _).
+nodiag([N|L], B, D) :-
+    D =\= N - B,
+    D =\= B - N,
+    D1 is D + 1,
+    nodiag(L, B, D1).
+
