@@ -253,8 +253,6 @@ gen_predicate.
 
 % generate predicate P
 gen_a_pred(P) :- 
-    type(P,_,nondet),gen_nondet_pred(P).  
-gen_a_pred(P) :- 
     type(P,_,recur),gen_recur_pred(P).     
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
@@ -366,101 +364,6 @@ gen_disj_jump_switch1(X,A,M,N,L) :-
 
 /* --------------------nondet-----------------------------------
 */
-gen_nondet_pred(P) :-
-	atom_concat('compiling ',P,M),
-    write(user_output,M),
-	write('static int c_'),
-    n_atom_convert(P,P1),
-    write(P1),
-    write('(int arglist, int rest, int th){'),nl,
-    gen_var_declare(P),
-    write('n = Jarity_count(arglist);'),nl,
-    ifthenelse(option(debug,on),gen_debug(P),true),
-    n_arity_count(P,L),
-    gen_nondet_pred1(P,L),
-    write('}'),nl.
-
-gen_nondet_pred1(P,[]) :-
-    nl,
-    write('Jerrorcomp(Jmakeint(ARITY_ERR),Jmakecomp("'),
-    write(P),
-    write('"),arglist);'),nl,
-	write('return(NO);'),nl,nl.
-
-gen_nondet_pred1(P,[A|As]) :-
-    write(user_output,$/$),write(user_output,A),
-    write(user_output,' nondet'),nl(user_output),
-    gen_nondet_arity(P,A),
-    gen_nondet_pred1(P,As).
-
-gen_nondet_arity(P,A) :-
-	write('if(n == '),
-    write(A),
-    write('){'),nl,
-    gen_nondet_clause(P,A),
-    write('allfail:'),nl,
-    write('Jdiscard_conj(th);'),nl,
-    write('return(NO);}'),nl,!.
-
-% select all clauses that arity is A
-gen_nondet_clause(P,A) :-
-    gen_var_assign(1,A),
-    gen_jump_switch(P,A),
-    write('clause_'),write(A),write('_0:'),nl,
-	n_clause_with_arity(P,A,C),
-    gen_nondet_clause1(C,A,0).
-
-% generate each clause 
-gen_nondet_clause1([],_,_).
-gen_nondet_clause1([C|Cs],A,M) :-
-	n_variable_convert(C,X),
-    n_generate_variable(X,V),
-    gen_var(V),
-    gen_a_nondet_clause(X,A,M),
-    M1 is M+1,
-    gen_nondet_clause1(Cs,A,M1).
-
-
-% N is arity , M is Mth clause from 0.
-% clause
-
-gen_a_nondet_clause((Head :- Body),A,M) :-
-    write('Jinc_choice(th);'),nl,
-	gen_head(Head),write('{'),nl,
-    gen_nondet_body(Body,A,ret,M,Head),write('}'),nl,
-    M1 is M+1,
-    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
-
-% predicate with no arity
-gen_a_nondet_clause(P,A,M) :-
-	n_property(P,predicate),
-    functor(P,_,0),
-    write('Jinc_choice(th);'),nl,
-    write('return(YES);'),nl.
-
-% nondet predicate
-gen_a_nondet_clause(P,A,M) :-
-	n_property(P,predicate),
-    P =.. [P1|_],
-    write('Jinc_choice(th);'),nl,
-	gen_head(P),
-    write('return(YES);'),nl,
-    M1 is M+1,
-    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
-
-gen_a_nondet_clause(P,_,M) :-
-	n_property(P,userop),
-	gen_head(P),
-    write('{Jinc_choice(th);'),nl,
-    write('return(YES);}'),nl,
-    M1 is M+1,
-    write('clause_'),write(A),write('_'),write(M1),write(':'),nl,
-    write('Jrelease(th);'),nl.
-
-
-
 
 % varA,varB,...
 gen_all_var([]).
