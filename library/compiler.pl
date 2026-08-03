@@ -145,12 +145,11 @@ gen_pred_def(P) :-
 	write('(deftpred)("'),write(P),write('",'),write('c_'),write(P1),
     write(','),write(A),write(','),write(T1),write(');'),nl,!.
 
-pred_type(nondet,6).
+pred_type(nondet,1).
 pred_type(det,2).
 pred_type(tail,3).
 pred_type(dyn,4).
 pred_type(mut,5).
-pred_type(recur,6).
 
 % generate deftinfix for user op
 gen_def(P) :-
