@@ -252,7 +252,7 @@ gen_predicate.
 
 % generate predicate P
 gen_a_pred(P) :- 
-    type(P,_,nondet),gen_recur_pred(P).     
+    type(P,_,nondet),gen_nondet_pred(P).     
 gen_a_pred(P) :- 
     type(P,_,det),gen_det_pred(P).
 gen_a_pred(P) :- 
@@ -617,7 +617,7 @@ gen_SCBM_function31(P,A,[C|Cs],N) :-
     n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),!,
-    gen_a_recur_clause(X,A,N,P,V),
+    gen_a_nondet_clause(X,A,N,P,V),
     N1 is N+1,
     gen_SCBM_function31(P,A,Cs,N1).
 
@@ -654,7 +654,7 @@ gen_SCBM_function5 :-
 
 
 %---------- each predicate ----------------
-gen_recur_pred(P) :-
+gen_nondet_pred(P) :-
 	atom_concat('compiling ',P,M),
     write(user_output,M),
     n_arity_count(P,[A|_]),
@@ -675,22 +675,22 @@ gen_recur_pred(P) :-
 
 % N is arity , M is Mth clause from 0.
 % clause
-gen_a_recur_clause((Head :- Body),A,M,P,V) :-
+gen_a_nondet_clause((Head :- Body),A,M,P,V) :-
     write('Jinc_choice(th);'),nl,
     P =.. [P1|_],
     M1 is M+1,
-    write('Jset_back(&&'),gen_recur_clause_label([P1,A,M1]),write(',th);'),nl,
+    write('Jset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
-    gen_recur_body(Body,A,M,Head,P,V,nil),
+    gen_nondet_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.
 
 % nondet predicate
-gen_a_recur_clause(P,A,M,_,_) :-
+gen_a_nondet_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     write('Jinc_choice(th);'),nl,
     P =.. [P1|_],
     M1 is M+1,
-    write('Jset_back(&&'),gen_recur_clause_label([P1,A,M1]),write(',th);'),nl,
+    write('Jset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(P),
     write('{'),nl,
     write('goto success;'),nl,
@@ -744,36 +744,36 @@ recursive_body(X,H) :-
     functor(H,P,A).
 
 % X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
-gen_recur_body(X,A,M,H,P,V,T) :-
-    gen_recur_body1(X,A,M,0,[],H,P,V,T).
+gen_nondet_body(X,A,M,H,P,V,T) :-
+    gen_nondet_body1(X,A,M,0,[],H,P,V,T).
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
 %last recur body
-gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
     type(Pred,Arity,nondet),
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_recur_body_argument(Args),
+    gen_nondet_body_argument(Args),
     M1 is M+1,
     ifthenelse(B==[],
-              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
-              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)),
-    gen_recur_body_label([P,A,M,N]),write('back:'),nl,
+              (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+              (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)),
+    gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
-    write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_recur_body_label([P,A,M,N1]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
 
 % last builtin body
-gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
@@ -781,10 +781,10 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('else goto allfail;'),nl.
 
 % last det or tail body
-gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     (n_property(X,compiled_det);n_property(X,compiled_tail)),
     X =.. [Pred|Args],
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
@@ -793,62 +793,62 @@ gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
 
 
 % recur predicate
-gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
     type(Pred,Arity,nondet),
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_recur_body_argument(Args),
+    gen_nondet_body_argument(Args),
     gen_push_var(V),
     M1 is M+1,
     ifthenelse(B==[],
-              (write('Jpush_back(&&'),gen_recur_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
-              (write('Jpush_back(&&'),gen_recur_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)),
-    gen_recur_body_label([P,A,M,N]),write('back:'),nl,
+              (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+              (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)),
+    gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
-    write('Jpush_next(&&'),gen_recur_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_recur_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
 
 % builtin
-gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
-    write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
+    write('goto '),gen_nondet_body_label([P,A,M,N1]),write(';'),nl,
     write('else goto allfail;'),nl,
-    gen_recur_body1(Y,A,M,N1,B,H,P,V,non).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,non).
 
 % det tail
-gen_recur_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     (n_property(X,compiled_det);n_property(X,compiled_tail)),
     X =.. [Pred|Args],
-    gen_recur_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     N1 is N+1,
     write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
-    write('goto '),gen_recur_body_label([P,A,M,N1]),write(';'),nl,
+    write('goto '),gen_nondet_body_label([P,A,M,N1]),write(';'),nl,
     write('else goto allfail;'),nl,
-    gen_recur_body1(Y,A,M,N1,B,H,P,V,non).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,non).
 
 
 
-gen_recur_body1(X,A,M,N,B,H,P,V,T) :-
-    gen_recur_body1((X,end_of_body),A,M,N,B,H,P,V,T).
+gen_nondet_body1(X,A,M,N,B,H,P,V,T) :-
+    gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T).
 
-gen_recur_clause_label([P,A,M]) :-
+gen_nondet_clause_label([P,A,M]) :-
     write(P),write('_'),write(A),write('_'),write(M).
 
-gen_recur_body_label([P,A,M,N]) :-
+gen_nondet_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
 
-gen_recur_body_argument(Args) :-
+gen_nondet_body_argument(Args) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 %---------------det determinant predicate-------------------
