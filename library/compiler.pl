@@ -67,7 +67,7 @@ pass2(_) :-
 
 retype_halt :-
     retract(type(P,A,halt)),
-    assertz(type(P,A,nondet)),
+    assertz(type(P,A,recur)),
     fail.
 retype_halt.
 
@@ -2377,7 +2377,7 @@ analize_pred1(P,N,C) :-
     not(n_dynamic_predicate(P)),
     P1 =.. [type,P,_,_],
     (retract(P1);true),
-    assertz(type(P,N,nondet)),!.
+    assertz(type(P,N,recur)),!.
 
 
 % arguments = [clauses],det_count,pred_count,halt_count,all_count
