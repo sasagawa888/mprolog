@@ -8,7 +8,7 @@ plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
 times(0, _, 0).
 times(s(X), Y, Z) :- times(X, Y, Z1), plus(Z1, Y, Z).
 
-/*
+
 
 color(red).
 color(green).
@@ -85,4 +85,3 @@ nodiag([N|L], B, D) :-
     D1 is D + 1,
     nodiag(L, B, D1).
 
-*/
