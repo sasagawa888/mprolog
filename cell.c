@@ -624,19 +624,6 @@ int save_arg(int x, int th)
     return(NIL);
 }
 
-int restore_arg(int x, int th)
-{
-    int res;
-
-    #ifdef DBG
-    printf(" restore_arg (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-    res = scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th];
-    if(res != UNBIND)
-        return(res);
-    else 
-        return(x);
-}
 
 int get_succ(int th)
 {
