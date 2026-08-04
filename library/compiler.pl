@@ -769,6 +769,13 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
 
+% last cut operator
+gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
+    write('Jset_back(&&allfail,th);'),
+    write('goto success;'),nl.
+
+
 % last builtin body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
@@ -791,11 +798,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl,
     write('else goto allfail;'),nl.
 
-% last cut operator
-gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
-    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    write('Jset_back(&&allfail,th);'),nl,
-    write('goto success;'),nl.
 
 % recur predicate
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
