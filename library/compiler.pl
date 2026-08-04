@@ -518,7 +518,7 @@ gen_head1([X|Xs],N) :-
 gen_SCBM_function :-
     write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
-    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10'),
+    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number'),
     gen_all_variable,write(';'),nl,
     write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     write('Jpush_next(&&success,th);'),nl,
@@ -528,6 +528,7 @@ gen_SCBM_function :-
     gen_SCBM_function3,
     gen_SCBM_function4,
     gen_SCBM_function5,
+    gen_SCBM_function6,
     write('}'),nl.
 
 gen_all_variable :-
@@ -650,6 +651,12 @@ gen_SCBM_function5 :-
     write('goto *next;'),nl.
    
 
+gen_SCBM_function6 :-
+    write('builtin_call:'),nl,
+    write('if(Jcall_subr(subr_number,arglist,NIL,th) == YES)'),nl,
+    write('goto success;'),nl,
+    write('Jpop_back(th); goto allfail;'),nl.
+   
 
 
 
