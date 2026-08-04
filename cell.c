@@ -571,30 +571,6 @@ int get_np(int th)
 }
 
 
-int get_disj_choice(int th)
-{
-    int choice;
-    choice = scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th];
-    if (choice == 0)
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]--;
-    return (choice);
-}
-
-int inc_disj_choice(int th)
-{
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th]++;
-    return (NIL);
-}
-
-
-int reset_disj(int th)
-{
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] =
-	scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th];
-    return (NIL);
-}
-
 
 int pop_recur(int th)
 {

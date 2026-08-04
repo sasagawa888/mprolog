@@ -207,11 +207,11 @@ static inline int Jinc_choice(int x) {
     return f1[INC_CHOICE_IDX](x);
 }
 
-
+/*
 static inline int Jmax_choice(int x) {
     return f1[MAX_CHOICE_IDX](x);
 }
-
+*/
 
 static inline int Jget_choice(int x) {
     return f1[GET_CHOICE_IDX](x);
@@ -228,23 +228,6 @@ static inline int Jarity_count(int x) {
     return f1[ARITY_COUNT_IDX](x);
 }
 
-
-
-
-static inline int Jget_disj_choice(int x) {
-    return f1[GET_DISJ_CHOICE_IDX](x);
-}
-
-
-
-static inline int Jinc_disj_choice(int x) {
-    return f1[INC_DISJ_CHOICE_IDX](x);
-}
-
-
-static inline int Jreset_disj(int x) {
-    return f1[RESET_DISJ_IDX](x);
-}
 
 
 
