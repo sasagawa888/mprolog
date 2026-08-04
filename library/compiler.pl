@@ -758,7 +758,8 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_nondet_body_argument(Args),
     M1 is M+1,
-    case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+    case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           | (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
@@ -790,6 +791,11 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl,
     write('else goto allfail;'),nl.
 
+% last cut operator
+gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
+    write('Jset_back(&&allfail,th);'),nl,
+    write('goto success;'),nl.
 
 % recur predicate
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
@@ -802,7 +808,8 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args),
     gen_push_var(V),
     M1 is M+1,
-    case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+    case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
@@ -810,6 +817,10 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
+
+% cut operator
+gen_nondet_body1((!,Y),A,M,N,B,H,P,V,T) :-
+    gen_nondet_body1(Y,A,M,N,cut,H,P,V,nil).
 
 % builtin
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
