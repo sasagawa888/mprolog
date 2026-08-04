@@ -823,7 +823,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto '),gen_nondet_body_label([P,A,M,N1]),write(';'),nl,
     write('else goto allfail;'),nl,
-    gen_nondet_body1(Y,A,M,N1,B,H,P,V,non).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,nil).
 
 % det tail
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
@@ -835,7 +835,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
     write('goto '),gen_nondet_body_label([P,A,M,N1]),write(';'),nl,
     write('else goto allfail;'),nl,
-    gen_nondet_body1(Y,A,M,N1,B,H,P,V,non).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,nil).
 
 
 
