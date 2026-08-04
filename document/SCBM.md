@@ -1,110 +1,77 @@
-# SCBM
-Success Continuation and Backtracking Machine
-
 # SCBM API Specification
 
 ## 1. Overview
 
-SCBM is a stack mechanism for managing the execution state required for Prolog recursion, conjunctions, clause selection, disjunctions, and backtracking.
+SCBM (**Success Continuation and Backtracking Machine**) manages the execution state required for Prolog conjunctions, recursion, clause selection, disjunctions, success continuations, and backtracking.
 
-Conceptually, the SCBM stack has the following two-dimensional structure:
+The main SCBM frame is addressed by conjunction depth, recursion depth, and thread:
 
 ```text
-SCBM[CONJ][RECUR]
+scbmstack[CONJ][RECUR][FIELD][THREAD]
 ```
 
-- `CONJ`
-  - Depth of conjunctions or predicate-call frames.
-- `RECUR`
-  - Depth of recursive calls within the current conjunction frame.
-- `th`
-  - Execution thread number.
-
-Each SCBM frame stores the following information required for backtracking:
-
-| Field | Description |
-|---|---|
-| `SP_SCBM` | Position of the variable-binding stack |
-| `CHOICE_SCBM` | Current clause-selection number |
-| `WP_SCBM` | Work-area pointer |
-| `AC_SCBM` | Argument or temporary-area counter |
-| `DISJ_SCBM` | Choice number inside a disjunction |
-| `CHOICE_BACKUP_SCBM` | Saved clause-selection number from before entering a disjunction |
-| `ARGLIST_SCBM` | Argument list at the time of the call |
-| `VP_SCBM` | Variable-area pointer |
-| `NP_SCBM` | Saved continuation or next execution position |
-| `SUCC_SCBM` | Success state of the conjunction frame |
-
-Most state-changing functions return `NIL` on normal completion. Getter functions return the stored value.
-
----
-
-## 2. Underlying Data
-
-### 2.1 SCBM Stack Position
+The current positions are held in:
 
 ```c
 scp[CONJ][th]
 scp[RECUR][th]
 ```
 
-The current SCBM frame is addressed as follows:
+SCBM also uses three auxiliary stacks:
 
 ```c
-scbmstack[scp[CONJ][th]][scp[RECUR][th]][field][th]
+next_stack[success_depth][conjunction][thread]
+back_stack[recursion_depth][conjunction][thread]
+var_stack[variable_depth][thread]
 ```
 
-### 2.2 Stack Size Limits
-
-```c
-CONJSIZE
-RECURSIZE
-```
-
-- `CONJSIZE`
-  - Maximum conjunction-stack depth.
-- `RECURSIZE`
-  - Maximum recursion-stack depth.
-
-If either limit is exceeded, a `RESOURCE_ERR` exception is raised.
-
-### 2.3 Uninitialized Value
-
-```c
-UNBIND
-```
-
-`UNBIND` indicates that a field such as `ARGLIST_SCBM` has not yet been assigned a valid value.
+- `next_stack` stores success continuations.
+- `back_stack` stores active failure continuations.
+- `back_stack1` preserves the original failure continuation of each recursion frame.
+- `var_stack` preserves generated variables across continuation jumps.
 
 ---
 
-## 3. Frame Management API
+## 2. SCBM Frame Fields
 
-### 3.1 `push_conj`
+| Field | Description |
+|---|---|
+| `SP_SCBM` | Saved variable-binding stack position |
+| `CHOICE_SCBM` | Current clause-selection number |
+| `WP_SCBM` | Saved work-area pointer |
+| `AC_SCBM` | Saved argument or temporary-area counter |
+| `DISJ_SCBM` | Choice number inside a disjunction |
+| `CHOICE_BACKUP_SCBM` | Clause-selection number saved before entering a disjunction |
+| `ARGLIST_SCBM` | Saved argument list |
+| `VP_SCBM` | Saved variable-stack position |
+| `NP_SCBM` | Saved success-continuation stack position |
+| `SUCC_SCBM` | Success state of the conjunction frame |
+
+`UNBIND` indicates that a field has not yet been assigned a valid value.
+
+---
+
+## 3. Frame Management
+
+### `push_conj`
 
 ```c
 int push_conj(int th);
 ```
 
-#### Purpose
+Creates a new conjunction frame.
 
-Creates a new conjunction frame on the SCBM stack.
+It increments `scp[CONJ][th]`, resets `scp[RECUR][th]` to zero, saves the current execution state, and initializes clause and disjunction fields.
 
-#### Parameters
+Saved values:
 
-| Parameter | Description |
-|---|---|
-| `th` | Execution thread number |
+```c
+SP_SCBM = sp[th]
+WP_SCBM = wp[th]
+AC_SCBM = ac[th]
+```
 
-#### Behavior
-
-1. Increments the `CONJ` position.
-2. Resets the `RECUR` position to zero.
-3. Checks the conjunction-stack limit.
-4. Saves the current execution state in the new frame.
-5. Initializes clause-selection and disjunction-related fields.
-
-#### Initialized Fields
+Initialized values:
 
 ```c
 CHOICE_SCBM = 0
@@ -113,101 +80,38 @@ CHOICE_BACKUP_SCBM = 0
 ARGLIST_SCBM = UNBIND
 ```
 
-#### Saved Fields
-
-```c
-SP_SCBM = sp[th]
-WP_SCBM = wp[th]
-AC_SCBM = ac[th]
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Exceptions
-
-Raises `RESOURCE_ERR` if:
-
-```c
-scp[CONJ][th] >= CONJSIZE
-```
-
-#### Example
-
-```c
-push_conj(th);
-```
+Raises `RESOURCE_ERR` if the conjunction depth reaches `CONJSIZE`.
 
 ---
 
-### 3.2 `discard_conj`
+### `discard_conj`
 
 ```c
 int discard_conj(int th);
 ```
 
-#### Purpose
+Discards the current conjunction frame and returns to the enclosing frame.
 
-Discards the current conjunction frame and returns to the enclosing conjunction frame.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `th` | Execution thread number |
-
-#### Behavior
-
-1. Decrements the `CONJ` position.
-2. Restores the `RECUR` position from the success state stored in the base frame of the enclosing conjunction.
+After decrementing the conjunction depth, it restores the recursion depth from the enclosing frame:
 
 ```c
 scp[RECUR][th] =
     scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th];
 ```
 
-#### Return Value
-
-```c
-NIL
-```
-
-#### Notes
-
-This function does not check whether the `CONJ` position becomes negative. The caller must ensure that a valid enclosing conjunction frame exists.
+The caller must ensure that an enclosing conjunction frame exists.
 
 ---
 
-### 3.3 `push_recur`
+### `push_recur`
 
 ```c
 int push_recur(int arglist, int vp, int np, int th);
 ```
 
-#### Purpose
+Creates a recursion or choice-point frame within the current conjunction.
 
-Creates a new recursion frame within the current conjunction frame.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `arglist` | Argument list of the recursive call |
-| `vp` | Variable-area pointer to save |
-| `np` | Continuation or next execution position to save |
-| `th` | Execution thread number |
-
-#### Behavior
-
-1. Checks the recursion-stack limit.
-2. Increments the `RECUR` position.
-3. Saves the current execution state in the new recursion frame.
-4. Initializes clause-selection and disjunction-related fields.
-
-#### Saved Fields
+Saved values:
 
 ```c
 SP_SCBM = sp[th]
@@ -218,7 +122,7 @@ VP_SCBM = vp
 NP_SCBM = np
 ```
 
-#### Initialized Fields
+Initialized values:
 
 ```c
 CHOICE_SCBM = 0
@@ -226,611 +130,571 @@ DISJ_SCBM = 0
 CHOICE_BACKUP_SCBM = 0
 ```
 
-#### Return Value
-
-```c
-NIL
-```
-
-#### Exceptions
-
-Raises `RESOURCE_ERR` if:
-
-```c
-scp[RECUR][th] + 1 >= RECURSIZE
-```
-
-#### Example
-
-```c
-push_recur(arglist, vp, np, th);
-```
+Raises `RESOURCE_ERR` if the recursion depth reaches `RECURSIZE`.
 
 ---
 
-### 3.4 `pop_recur`
+### `pop_recur`
 
 ```c
 int pop_recur(int th);
 ```
 
-#### Purpose
+Removes the current recursion frame by decrementing `scp[RECUR][th]`.
 
-Discards the current recursion frame and returns to the preceding recursion frame.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `th` | Execution thread number |
-
-#### Behavior
-
-```c
-scp[RECUR][th]--;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Exceptions
-
-Raises `RESOURCE_ERR` if:
-
-```c
-scp[RECUR][th] <= 0
-```
-
-#### Notes
-
-Recursion depth zero is treated as the base frame of the conjunction and cannot be removed by `pop_recur`.
+Recursion depth zero is the base frame and cannot be removed. A `RESOURCE_ERR` is raised if no removable recursion frame exists.
 
 ---
 
-## 4. Clause-Choice Management API
+## 4. Clause Choice and State Restoration
 
-### 4.1 `inc_choice`
+### `inc_choice`
 
 ```c
 int inc_choice(int th);
 ```
 
-#### Purpose
-
-Increments the clause-selection number in the current SCBM frame.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `th` | Execution thread number |
-
-#### Behavior
-
-```c
-CHOICE_SCBM++;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Intended Use
-
-Used to advance to the next clause after the current clause fails.
+Increments `CHOICE_SCBM` in the current frame. It is normally called before installing the next clause as a failure continuation.
 
 ---
 
-### 4.2 `max_choice`
-
-```c
-int max_choice(int th);
-```
-
-#### Purpose
-
-Sets the current clause-selection number to a very large value.
-
-#### Behavior
-
-```c
-CHOICE_SCBM = 999999999;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Intended Use
-
-Used to represent a state in which no further clause choices are available.
-
-#### Notes
-
-The value `999999999` is used directly as a sentinel value. For readability and maintainability, defining it as a named constant would be preferable.
-
-```c
-#define MAX_CHOICE 999999999
-```
-
----
-
-### 4.3 `get_choice`
+### `get_choice`
 
 ```c
 int get_choice(int th);
 ```
 
-#### Purpose
+Returns `CHOICE_SCBM` from the current frame.
 
-Returns the clause-selection number stored in the current SCBM frame.
-
-#### Side Effects
-
-```c
-proof[th]++;
-```
-
-Each call increments the proof-attempt counter.
-
-#### Return Value
-
-The current value of `CHOICE_SCBM`.
-
-#### Example
-
-```c
-switch (get_choice(th)) {
-case 0:
-    /* First clause */
-    break;
-case 1:
-    /* Second clause */
-    break;
-}
-```
-
-#### Notes
-
-This is not a pure getter because it modifies `proof[th]`.
+This function also increments `proof[th]`, so it is not a pure getter.
 
 ---
 
-## 5. Disjunction Management API
-
-### 5.1 `inc_disj_choice`
-
-```c
-int inc_disj_choice(int th);
-```
-
-#### Purpose
-
-Increments the current choice number inside a disjunction.
-
-#### Behavior
-
-```c
-DISJ_SCBM++;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
----
-
-### 5.2 `get_disj_choice`
-
-```c
-int get_disj_choice(int th);
-```
-
-#### Purpose
-
-Returns the current choice number inside a disjunction.
-
-#### Behavior
-
-The function reads the current value of `DISJ_SCBM`.
-
-If the value is zero, it decrements the normal clause-selection number:
-
-```c
-if (choice == 0)
-    CHOICE_SCBM--;
-```
-
-#### Return Value
-
-The current value of `DISJ_SCBM`.
-
-#### Notes
-
-This function is not a pure getter because it conditionally modifies `CHOICE_SCBM`.
-
-The adjustment appears to prevent the first branch of a disjunction from being counted as an ordinary clause choice.
-
----
-
-### 5.3 `reset_disj`
-
-```c
-int reset_disj(int th);
-```
-
-#### Purpose
-
-Resets the execution state of the current disjunction.
-
-#### Behavior
-
-```c
-DISJ_SCBM = 0;
-CHOICE_SCBM = CHOICE_BACKUP_SCBM;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Intended Use
-
-Used when retrying an entire disjunction. It resets the internal disjunction choice and restores the clause-selection number saved before entering the disjunction.
-
-#### Notes
-
-The supplied code does not include a function that stores a value in `CHOICE_BACKUP_SCBM`. Such a value must therefore be written elsewhere.
-
----
-
-## 6. State Restoration API
-
-### 6.1 `release`
+### `release`
 
 ```c
 int release(int th);
 ```
 
-#### Purpose
-
-Rolls variable bindings back to the state recorded when the current SCBM frame was created.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `th` | Execution thread number |
-
-#### Behavior
+Restores the variable-binding and temporary-area state saved in the current frame:
 
 ```c
 unbind(SP_SCBM, th);
 ac[th] = AC_SCBM;
 ```
 
-More specifically, it:
-
-1. Removes variable bindings created after the saved `SP_SCBM` position.
-2. Restores `ac[th]` from the saved `AC_SCBM` value.
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Notes
-
-`WP_SCBM` is saved by both `push_conj` and `push_recur`, but this function does not restore `wp[th]`.
-
-The supplied code alone does not show whether this is intentional or whether `wp[th]` is restored elsewhere.
+Although `WP_SCBM` is saved, the supplied implementation does not restore `wp[th]` in this function.
 
 ---
 
-## 7. Argument-List Management API
+## 5. Argument and Saved-State Access
 
-### 7.1 `get_arg`
+### `save_arg`
+
+```c
+int save_arg(int arglist, int th);
+```
+
+Stores `arglist` in `ARGLIST_SCBM` of the current frame.
+
+---
+
+### `get_arg`
 
 ```c
 int get_arg(int th);
 ```
 
-#### Purpose
-
-Returns the argument list stored in the current SCBM frame.
-
-#### Return Value
-
-```c
-ARGLIST_SCBM
-```
-
-If no argument list has been stored, the function returns `UNBIND`.
+Returns `ARGLIST_SCBM` from the current frame. It returns `UNBIND` if no argument list has been stored.
 
 ---
 
-### 7.2 `save_arg`
-
-```c
-int save_arg(int x, int th);
-```
-
-#### Purpose
-
-Stores an argument list in the current SCBM frame.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `x` | Argument list to store |
-| `th` | Execution thread number |
-
-#### Behavior
-
-```c
-ARGLIST_SCBM = x;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
----
-
-### 7.3 `restore_arg`
-
-```c
-int restore_arg(int x, int th);
-```
-
-#### Purpose
-
-Returns the argument list stored in the current SCBM frame if one exists. Otherwise, it returns the argument list supplied by the caller.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `x` | Default argument list to use when no saved value exists |
-| `th` | Execution thread number |
-
-#### Return Value
-
-If the saved value is not `UNBIND`:
-
-```c
-ARGLIST_SCBM
-```
-
-If the saved value is `UNBIND`:
-
-```c
-x
-```
-
-#### Example
-
-```c
-arglist = restore_arg(arglist, th);
-```
-
-#### Meaning
-
-When execution returns through backtracking, the saved argument list is used. During the initial execution, the current argument list is left unchanged.
-
----
-
-### 7.4 `arity_count`
-
-```c
-int arity_count(int arglist);
-```
-
-#### Purpose
-
-Returns the arity of an argument list.
-
-If the arity has not yet been computed, the function calculates the list length and caches the result in the argument-list object.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `arglist` | Argument list whose arity is required |
-
-#### Behavior
-
-If the arity is uninitialized:
-
-```c
-n = length(arglist);
-SET_ARITY(arglist, n);
-return n;
-```
-
-If the arity has already been cached:
-
-```c
-return GET_ARITY(arglist);
-```
-
-#### Return Value
-
-The number of elements in the argument list.
-
-#### Side Effects
-
-If the arity has not yet been computed, the result is stored in `arglist`.
-
-#### Notes
-
-This function does not directly manipulate an SCBM frame, but it is a helper API for argument lists stored in SCBM.
-
----
-
-## 8. Saved-Pointer Access API
-
-### 8.1 `get_vp`
+### `get_vp`
 
 ```c
 int get_vp(int th);
 ```
 
-#### Purpose
-
-Returns the variable-area pointer stored in the current recursion frame.
-
-#### Return Value
-
-```c
-VP_SCBM
-```
+Returns the saved `VP_SCBM` value from the current recursion frame.
 
 ---
 
-### 8.2 `get_np`
+### `get_np`
 
 ```c
 int get_np(int th);
 ```
 
-#### Purpose
-
-Returns the `np` value stored in the current recursion frame.
-
-#### Return Value
-
-```c
-NP_SCBM
-```
-
-#### Inferred Meaning
-
-`np` may represent a success continuation, the next execution position, or a continuation identifier used by the code generator.
-
-Its exact meaning depends on the calling code.
+Returns the saved `NP_SCBM` value from the current recursion frame.
 
 ---
 
-### 8.3 `get_scp`
+### `get_scp`
 
 ```c
-int get_scp(int x, int th);
+int get_scp(int type, int th);
 ```
 
-#### Purpose
-
-Returns the requested SCBM stack position.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `x` | Stack-position type, such as `CONJ` or `RECUR` |
-| `th` | Execution thread number |
-
-#### Return Value
+Returns the requested SCBM stack position:
 
 ```c
-scp[x][th]
+scp[type][th]
 ```
 
-#### Example
-
-```c
-int conj_depth = get_scp(CONJ, th);
-int recur_depth = get_scp(RECUR, th);
-```
+`type` is normally `CONJ` or `RECUR`.
 
 ---
 
-## 9. Success-State Management API
-
-### 9.1 `success`
-
-```c
-int success(int arglist, int th);
-```
-
-#### Purpose
-
-Records the current conjunction frame as successful.
-
-#### Parameters
-
-| Parameter | Description |
-|---|---|
-| `arglist` | Argument list at the time of success |
-| `th` | Execution thread number |
-
-#### Behavior
-
-The following values are stored in the recursion-depth-zero base frame:
-
-```c
-SUCC_SCBM = 1;
-ARGLIST_SCBM = arglist;
-```
-
-#### Return Value
-
-```c
-NIL
-```
-
-#### Notes
-
-The success state is stored at recursion depth zero rather than at the current `RECUR` position:
-
-```c
-scbmstack[scp[CONJ][th]][0]
-```
-
-Therefore, success is managed per conjunction frame rather than per recursion frame.
-
----
-
-### 9.2 `get_succ`
+### `get_succ`
 
 ```c
 int get_succ(int th);
 ```
 
-#### Purpose
-
-Returns the success state of the current conjunction frame.
-
-#### Return Value
+Returns the success state stored in the base recursion frame of the current conjunction:
 
 ```c
 scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th]
 ```
 
-#### Notes
+---
 
-Like `success`, this function accesses the recursion-depth-zero base frame.
+### `arity_count`
 
+```c
+int arity_count(int arglist);
+```
+
+Returns the arity of an argument list. If the arity has not yet been cached, the function computes the list length and stores it in the argument-list object.
+
+---
+
+## 6. Success Continuation API
+
+### `Jpush_next`
+
+```c
+void Jpush_next(void *cont, int th);
+```
+
+Pushes a success-continuation address onto `next_stack` for the current conjunction frame.
+
+```c
+np[Jget_scp(CONJ, th)][th]++;
+next_stack
+    [np[Jget_scp(CONJ, th)][th]]
+    [Jget_scp(CONJ, th)]
+    [th] = cont;
+```
+
+The continuation is normally the address of a GCC computed-goto label.
+
+---
+
+### `Jpop_next`
+
+```c
+void Jpop_next(int th);
+```
+
+Removes the top success continuation by decrementing the current `np` value.
+
+```c
+np[Jget_scp(CONJ, th)][th]--;
+```
+
+The caller must ensure that the stack is not empty.
+
+---
+
+## 7. Failure Continuation API
+
+### `Jpush_back`
+
+```c
+void Jpush_back(
+    void *cont,
+    int arglist,
+    int vp,
+    int np,
+    int th
+);
+```
+
+Creates a recursion or choice-point frame and installs its failure continuation.
+
+It first calls:
+
+```c
+Jpush_recur(arglist, vp, np, th);
+```
+
+It then stores `cont` in both continuation stacks:
+
+```c
+back_stack[RECUR][CONJ][th]  = cont;
+back_stack1[RECUR][CONJ][th] = cont;
+```
+
+`back_stack` is the active failure continuation. `back_stack1` preserves the original continuation of the frame.
+
+---
+
+### `Jset_back`
+
+```c
+void Jset_back(void *cont, int th);
+```
+
+Replaces the active failure continuation of the current recursion frame.
+
+It does not create or remove a frame.
+
+Typical use:
+
+```c
+Jset_back(&&next_clause, th);
+```
+
+If the current clause fails, execution continues at `next_clause`.
+
+---
+
+### `Jpop_back`
+
+```c
+void Jpop_back(int th);
+```
+
+Restores the active failure continuation from `back_stack1`.
+
+```c
+back_stack[RECUR][CONJ][th] =
+    back_stack1[RECUR][CONJ][th];
+```
+
+Despite its name, this function does not remove a recursion frame. Frame removal is performed by `pop_recur` or `Jpop_recur`.
+
+---
+
+## 8. Temporary Variable Stack
+
+### `Jpush_var`
+
+```c
+void Jpush_var(int value, int th);
+```
+
+Pushes a generated variable or temporary value onto `var_stack`.
+
+```c
+vp[th]++;
+var_stack[vp[th]][th] = value;
+```
+
+---
+
+### `Jpop_var`
+
+```c
+int Jpop_var(int th);
+```
+
+Returns and removes the most recently saved value.
+
+```c
+int value = var_stack[vp[th]][th];
+vp[th]--;
+return value;
+```
+
+Values must be restored in reverse order because `var_stack` is a LIFO stack.
+
+---
+
+## 9. Typical Control Sequences
+
+### Success continuation
+
+```c
+Jpush_next(&&next_goal, th);
+goto called_predicate;
+
+next_goal:
+    /* continue after success */
+```
+
+The common `success` handler retrieves the top entry from `next_stack`, calls `Jpop_next`, and jumps to the saved label.
+
+### Clause backtracking
+
+```c
+Jpush_back(&&outer_failure, arglist, vp[th], np_value, th);
+
+clause_1:
+Jset_back(&&clause_2, th);
+/* try clause 1 */
+
+clause_2:
+Jset_back(&&clause_3, th);
+/* try clause 2 */
+
+clause_3:
+Jpop_back(th);
+goto allfail;
+```
+
+`Jset_back` installs clause-local alternatives. `Jpop_back` restores the enclosing failure continuation after all local alternatives have been exhausted.
+
+### Variable preservation
+
+```c
+Jpush_var(varX, th);
+Jpush_var(varY, th);
+Jpush_next(&&continuation, th);
+goto called_predicate;
+
+continuation:
+varY = Jpop_var(th);
+varX = Jpop_var(th);
+```
+
+---
+
+## 10. API Summary
+
+| Function | Purpose |
+|---|---|
+| `push_conj` | Creates a conjunction frame |
+| `discard_conj` | Discards the current conjunction frame |
+| `push_recur` | Creates a recursion or choice-point frame |
+| `pop_recur` | Removes the current recursion frame |
+| `inc_choice` | Advances the clause-selection number |
+| `get_choice` | Returns the current clause-selection number |
+| `release` | Restores bindings and temporary-area state |
+| `save_arg` / `get_arg` | Stores and retrieves the current argument list |
+| `get_vp` / `get_np` | Retrieves saved stack positions |
+| `get_scp` | Returns a conjunction or recursion depth |
+| `get_succ` | Returns the conjunction success state |
+| `arity_count` | Returns and caches argument-list arity |
+| `Jpush_next` / `Jpop_next` | Manages success continuations |
+| `Jpush_back` | Creates a backtracking frame and installs its continuation |
+| `Jset_back` | Replaces the active failure continuation |
+| `Jpop_back` | Restores the original failure continuation |
+| `Jpush_var` / `Jpop_var` | Preserves temporary variables across jumps |
+
+SCBM separates forward execution from backtracking: `next_stack` controls execution after success, while `back_stack` and the SCBM frames control restoration and transfer after failure or forced backtracking.
 
 # Code Generation for `nondet` Predicates
 
-## 1. Prolog Source Code
+## 1. Predicate Classification in M-Prolog
 
-The following Prolog predicate is used to explain code generation for the `nondet` predicate type.
+M-Prolog classifies predicates according to their characteristics and generates different C code for each type.
+
+The current predicate types are as follows:
+
+| Type     | Description                                                                                |
+| -------- | ------------------------------------------------------------------------------------------ |
+| `nondet` | A nondeterministic predicate that may produce multiple solutions and requires backtracking |
+| `det`    | A deterministic predicate that produces at most one solution                               |
+| `tail`   | A predicate that can be optimized using tail recursion                                     |
+| `dyn`    | A dynamic predicate that may be added or removed at runtime                                |
+
+In the future, M-Prolog will introduce an additional predicate type whose input and output modes can be inferred through mode analysis.
+
+This type is provisionally called `mut`, meaning **mutant type**.
+
+This document explains code generation for `nondet` predicates using SCBM, one of the main distinguishing features of M-Prolog.
+
+The `nondet` category includes both predicates with multiple clauses and recursive predicates that create multiple choice points during execution.
+
+---
+
+## 2. Overview of SCBM
+
+SCBM is an execution mechanism for explicitly managing two kinds of control information required by Prolog:
+
+1. The location to continue execution after a predicate succeeds
+2. The location to resume execution after a predicate fails
+
+The former is called the **success continuation**, and the latter is called the **failure continuation**.
+
+M-Prolog stores these two continuations in separate stacks.
+
+| Continuation         | Storage                      |
+| -------------------- | ---------------------------- |
+| Success continuation | `next_stack`                 |
+| Failure continuation | `SCBM_stack` or `back_stack` |
+
+Predicate execution is controlled not only through ordinary C function calls, but also through direct jumps between generated labels using `goto`.
+
+---
+
+## 3. One Large C Function
+
+The bodies of `nondet` predicates are generated inside one large C function.
+
+For user-defined predicates, the function has the following general form:
+
+```c
+static int user_scbm(
+    int pred,
+    int arity,
+    int clause,
+    int arglist,
+    int rest,
+    int th
+);
+```
+
+The arguments have the following meanings:
+
+| Argument  | Description                                     |
+| --------- | ----------------------------------------------- |
+| `pred`    | Predicate number                                |
+| `arity`   | Number of predicate arguments                   |
+| `clause`  | Clause number from which execution begins       |
+| `arglist` | List of actual arguments                        |
+| `rest`    | Remaining Prolog goals after the predicate call |
+| `th`      | Prolog execution thread number                  |
+
+Each predicate and clause is represented as a label inside the large function rather than as an independent C function.
+
+For example:
+
+```c
+color:
+color_1:
+color_1_0:
+color_1_1:
+color_1_2:
+success:
+allfail:
+```
+
+The initial execution position is selected by `switch` statements that inspect `pred`, `arity`, and `clause`.
+
+```c
+switch(pred){
+case 0: goto color;
+}
+```
+
+The arity is then selected:
+
+```c
+color:
+switch(arity){
+case 1: goto color_1;
+default: goto allfail;
+}
+```
+
+Finally, the clause is selected:
+
+```c
+color_1:
+switch(clause){
+case 0: goto color_1_0;
+case 1: goto color_1_1;
+case 2: goto color_1_2;
+default: goto allfail;
+}
+```
+
+This structure expresses predicate calls, clause selection, and re-execution after backtracking as jumps between labels.
+
+---
+
+## 4. Computed Goto
+
+SCBM uses computed goto, a GCC extension.
+
+A label address is obtained using the following syntax:
+
+```c
+&&success
+&&color_1_1
+```
+
+Execution can jump to a stored label address using:
+
+```c
+goto *next;
+```
+
+Instead of reconstructing every backtracking destination through a `switch` statement, SCBM can jump directly to a label address saved at runtime.
+
+This makes it possible to store success and failure continuations as actual C execution positions.
+
+---
+
+## 5. Success and Failure Continuations
+
+A Prolog predicate call must maintain at least two possible destinations.
+
+### 5.1 Success Continuation
+
+The success continuation indicates where execution should continue when the current goal succeeds.
+
+Success continuations are stored in `next_stack`, which is managed by the stack pointer `np`.
+
+```c
+Jpush_next(&&success, th);
+```
+
+In this example, the `success` label is registered as the initial success continuation.
+
+When unification or execution of a clause body succeeds, control normally moves to the success handler:
+
+```c
+goto success;
+```
+
+### 5.2 Failure Continuation
+
+The failure continuation indicates where execution should resume when the current clause or goal fails.
+
+Before executing `color(red).`, for example, the label for the next clause, `color(green).`, is registered as its failure continuation.
+
+```c
+Jset_back(&&color_1_1, th);
+```
+
+If the first clause fails, execution can therefore continue at `color_1_1`.
+
+A failure continuation contains not only the jump destination, but also the execution state required to resume processing from that position.
+
+---
+
+## 6. Data Stored in the SCBM Stack
+
+Backtracking requires more than returning to a previous code position.
+
+Variable bindings, work areas, arguments, clause numbers, success continuations, and other state modified during execution must be restored to the values they had when the choice point was created.
+
+The SCBM stack stores the following information:
+
+| Field                | Description                                                 |
+| -------------------- | ----------------------------------------------------------- |
+| `SP_SCBM`            | Position of the variable-binding stack                      |
+| `CHOICE_SCBM`        | Current clause-selection number                             |
+| `WP_SCBM`            | Work-area pointer                                           |
+| `AC_SCBM`            | Argument-area or temporary-area counter                     |
+| `DISJ_SCBM`          | Choice number inside a disjunction                          |
+| `CHOICE_BACKUP_SCBM` | Clause-selection number saved before entering a disjunction |
+| `ARGLIST_SCBM`       | Argument list at the time of the call                       |
+| `VP_SCBM`            | Variable-area pointer                                       |
+| `NP_SCBM`            | Saved success-continuation position                         |
+| `SUCC_SCBM`          | Success state of the conjunction frame                      |
+
+By restoring these values, M-Prolog can resume execution from an earlier choice point.
+
+---
+
+## 7. A Simple Nondeterministic Predicate
+
+Consider the following predicate:
 
 ```prolog
 color(red).
@@ -838,2058 +702,206 @@ color(green).
 color(blue).
 ```
 
-The predicate `color/1` consists of three clauses.
+This predicate contains three clauses.
 
-```prolog
-color(red).
-color(green).
-color(blue).
-```
-
-When called with a variable, it returns three solutions in sequence.
+For the following query:
 
 ```prolog
 ?- color(X).
+```
+
+the first result is:
+
+```text
+X = red
+```
+
+When the user enters a semicolon to request another solution, forced backtracking occurs, producing the remaining results:
+
+```text
 X = red ;
 X = green ;
 X = blue ;
 no
 ```
 
-A predicate that can return multiple solutions from multiple clauses is compiled as a `nondet` predicate.
-
 ---
 
-## 2. Relationship Between `nondet` and the Large Function
+## 8. Entry Function
 
-A `nondet` predicate is generated as an independent C function for each predicate.
-
-For `color/1`, the following function is generated:
-
-```c
-static int c_color(int arglist, int rest, int th);
-```
-
-All processing for `color/1` is generated inside this `c_color` function.
-
-In contrast, the following function appearing later in the generated code is the large function used to execute `recur` predicates:
-
-```c
-static int recur_scbm(
-    int pred,
-    int arity,
-    int clause,
-    int arglist,
-    int rest,
-    int th);
-```
-
-`recur_scbm` is used only for predicates classified as `recur`, that is, predicates involving recursive control handled by SCBM.
-
-Because `color/1` is a `nondet` predicate, it is not incorporated into `recur_scbm`, and `recur_scbm` is not used when `color/1` is executed.
-
-Therefore, the relevant part for explaining `nondet` code generation is only:
+The generated entry function saves the Prolog argument list and calls the large SCBM function.
 
 ```c
 static int c_color(int arglist, int rest, int th)
-```
-
----
-
-## 3. Generated Function
-
-The following C function is generated from `color/1`.
-
-```c
-static int c_color(int arglist, int rest, int th){
-    int arg1,n,body,save1,save2,save3,goal,cont,clause,res;
-
-    n = Jarity_count(arglist);
-
-    if(n == 1){
-        arg1 = Jcar(arglist);
-        clause = Jget_choice(th);
-
-        switch(clause){
-        case 0: goto clause_1_0;
-        case 1: goto clause_1_1;
-        case 2: goto clause_1_2;
-        default: goto allfail;
-        }
-
-    clause_1_0:
-        Jinc_choice(th);
-        if(Junify_atom(arg1,Jmakeconst("red"),th) == YES)
-            return(YES);
-
-    clause_1_1:
-        Jrelease(th);
-        Jinc_choice(th);
-        if(Junify_atom(arg1,Jmakeconst("green"),th) == YES)
-            return(YES);
-
-    clause_1_2:
-        Jrelease(th);
-        Jinc_choice(th);
-        if(Junify_atom(arg1,Jmakeconst("blue"),th) == YES)
-            return(YES);
-
-    clause_1_3:
-        Jrelease(th);
-
-    allfail:
-        Jdiscard_conj(th);
-        return(NO);
-    }
-
-    Jerrorcomp(
-        Jmakeint(ARITY_ERR),
-        Jmakecomp("color"),
-        arglist
-    );
-
-    return(NO);
-}
-```
-
-This function returns one solution per invocation.
-
-When another solution is requested, the function uses the saved `choice` value and resumes execution from the next clause.
-
----
-
-## 4. Function Arguments
-
-The function declaration is:
-
-```c
-static int c_color(int arglist, int rest, int th);
-```
-
-The arguments have the following roles.
-
-| Argument | Meaning |
-|---|---|
-| `arglist` | The argument list passed to the Prolog predicate |
-| `rest` | The remaining goals |
-| `th` | The execution thread number |
-
-Because `color/1` consists only of simple facts, the function mainly uses `arglist` and `th`.
-
----
-
-## 5. Arity Check
-
-The function first obtains the number of arguments.
-
-```c
-n = Jarity_count(arglist);
-```
-
-Because `color/1` has arity 1, the predicate body is executed only when the number of arguments is one.
-
-```c
-if(n == 1){
-```
-
-If the number of arguments is not one, an arity error is raised at the end of the function.
-
-```c
-Jerrorcomp(
-    Jmakeint(ARITY_ERR),
-    Jmakecomp("color"),
-    arglist
-);
-```
-
----
-
-## 6. Retrieving the First Argument
-
-When the arity is correct, the first argument is retrieved.
-
-```c
-arg1 = Jcar(arglist);
-```
-
-For example, in the following query:
-
-```prolog
-color(X).
-```
-
-`arg1` contains the Prolog variable `X`.
-
-In the following query:
-
-```prolog
-color(green).
-```
-
-`arg1` contains the atom `green`.
-
----
-
-## 7. Retrieving the Choice Value
-
-The current clause selection value is then obtained.
-
-```c
-clause = Jget_choice(th);
-```
-
-The `choice` value indicates the clause from which execution should begin.
-
-On the first invocation, `choice` is normally 0.
-
-When the same predicate is invoked again to request another solution, `choice` contains the number of the next clause to be tried.
-
----
-
-## 8. Selecting the Starting Clause
-
-The function jumps to the appropriate clause label according to the value of `choice`.
-
-```c
-switch(clause){
-case 0: goto clause_1_0;
-case 1: goto clause_1_1;
-case 2: goto clause_1_2;
-default: goto allfail;
-}
-```
-
-This `switch` is not used to select a predicate in the large SCBM function.
-
-It is only a local dispatch inside `c_color`, used to determine the clause from which execution resumes.
-
-The mapping is:
-
-| `choice` | Destination | Corresponding Prolog Clause |
-|---:|---|---|
-| 0 | `clause_1_0` | `color(red).` |
-| 1 | `clause_1_1` | `color(green).` |
-| 2 | `clause_1_2` | `color(blue).` |
-| 3 or greater | `allfail` | No remaining clause |
-
----
-
-## 9. Code for the First Clause
-
-The first Prolog clause is:
-
-```prolog
-color(red).
-```
-
-The corresponding C code is:
-
-```c
-clause_1_0:
-Jinc_choice(th);
-
-if(Junify_atom(
-       arg1,
-       Jmakeconst("red"),
-       th) == YES)
-    return(YES);
-```
-
-### 9.1 Advancing the Choice Value
-
-```c
-Jinc_choice(th);
-```
-
-Before trying the first clause, the `choice` value is incremented.
-
-On the first invocation, `choice` is 0, so it becomes 1.
-
-This allows execution to resume from the second clause when another solution is requested after the first clause succeeds.
-
-### 9.2 Unification with `red`
-
-```c
-Junify_atom(
-    arg1,
-    Jmakeconst("red"),
-    th)
-```
-
-`Jmakeconst("red")` creates the Prolog atom `red`.
-
-`Junify_atom` unifies the first argument with `red`.
-
-For the query:
-
-```prolog
-color(X).
-```
-
-the variable `X` is bound to `red`.
-
-```prolog
-X = red
-```
-
-If unification succeeds, the function immediately returns `YES`.
-
-```c
-return(YES);
-```
-
----
-
-## 10. Failure of the First Clause
-
-If the first argument cannot be unified with `red`, the `return` statement is not executed.
-
-Control then falls through to the next label.
-
-```c
-clause_1_1:
-```
-
-Thus, when a clause fails, the next clause is tried within the same invocation of the C function.
-
-For example, with:
-
-```prolog
-color(green).
-```
-
-the first attempted unification is:
-
-```text
-green = red
-```
-
-This fails, so execution continues with the second clause.
-
----
-
-## 11. Code for the Second Clause
-
-The second clause is:
-
-```prolog
-color(green).
-```
-
-The corresponding code is:
-
-```c
-clause_1_1:
-Jrelease(th);
-Jinc_choice(th);
-
-if(Junify_atom(
-       arg1,
-       Jmakeconst("green"),
-       th) == YES)
-    return(YES);
-```
-
-### 11.1 Releasing Bindings from the Previous Clause
-
-```c
-Jrelease(th);
-```
-
-Bindings created while trying the previous clause are undone.
-
-In Prolog, when one clause fails and the next clause is tried, the effects of unification performed by the failed clause must be rolled back.
-
-For that reason, `Jrelease` is called at the beginning of the second and subsequent clauses.
-
-### 11.2 Advancing the Choice Value
-
-```c
-Jinc_choice(th);
-```
-
-When the second clause is entered, `choice` is 1.
-
-It is incremented to 2, so that execution can resume from the third clause if another solution is requested after the second clause succeeds.
-
-### 11.3 Unification with `green`
-
-```c
-Junify_atom(
-    arg1,
-    Jmakeconst("green"),
-    th)
-```
-
-The first argument is unified with `green`.
-
-If the unification succeeds, the function returns `YES`.
-
----
-
-## 12. Code for the Third Clause
-
-The third clause is:
-
-```prolog
-color(blue).
-```
-
-The corresponding code is:
-
-```c
-clause_1_2:
-Jrelease(th);
-Jinc_choice(th);
-
-if(Junify_atom(
-       arg1,
-       Jmakeconst("blue"),
-       th) == YES)
-    return(YES);
-```
-
-The processing is the same as for the second clause.
-
-1. `Jrelease` removes the bindings created by the previous clause.
-2. `Jinc_choice` advances the clause number for the next invocation.
-3. The first argument is unified with `blue`.
-4. If unification succeeds, the function returns `YES`.
-
-Before the third clause is tried, `choice` is 2.
-
-After `Jinc_choice`, it becomes 3.
-
-Therefore, if another solution is requested after the third clause succeeds, no corresponding clause remains.
-
----
-
-## 13. Failure of All Clauses
-
-If unification also fails in the third clause, control continues to:
-
-```c
-clause_1_3:
-Jrelease(th);
-```
-
-The bindings created while trying the final clause are released, after which execution continues to `allfail`.
-
-```c
-allfail:
-Jdiscard_conj(th);
-return(NO);
-```
-
-### 13.1 Discarding the Nondeterministic State
-
-```c
-Jdiscard_conj(th);
-```
-
-The conjunction or nondeterministic state associated with the current predicate call is discarded.
-
-At this point, no clause of `color/1` remains to be tried.
-
-### 13.2 Returning `NO`
-
-```c
-return(NO);
-```
-
-The function informs the caller that no further solution exists.
-
----
-
-## 14. Execution of `color(X)`
-
-Consider the query:
-
-```prolog
-?- color(X).
-```
-
-### 14.1 First Invocation
-
-Execution begins with:
-
-```text
-choice = 0
-```
-
-The local `switch` transfers control to the first clause.
-
-```c
-goto clause_1_0;
-```
-
-`Jinc_choice` changes the value to:
-
-```text
-choice = 1
-```
-
-The variable `X` is then unified with `red`.
-
-```text
-X = red
-```
-
-The function returns `YES`.
-
-```prolog
-X = red
-```
-
-### 14.2 Second Solution
-
-When the user requests another solution, `c_color` is invoked again.
-
-The saved value is now:
-
-```text
-choice = 1
-```
-
-Execution therefore resumes from the second clause.
-
-```c
-goto clause_1_1;
-```
-
-`Jrelease` removes the previous binding:
-
-```text
-X = red
-```
-
-The choice value is incremented to 2, and `X` is unified with `green`.
-
-```text
-X = green
-```
-
-The function returns `YES`.
-
-```prolog
-X = green
-```
-
-### 14.3 Third Solution
-
-When another solution is requested, the saved value is:
-
-```text
-choice = 2
-```
-
-Execution resumes from the third clause.
-
-```c
-goto clause_1_2;
-```
-
-The previous binding is released, and `X` is unified with `blue`.
-
-```text
-X = blue
-```
-
-The function returns `YES`.
-
-```prolog
-X = blue
-```
-
-### 14.4 No More Solutions
-
-When another solution is requested, the saved value is:
-
-```text
-choice = 3
-```
-
-No corresponding clause exists, so the `default` branch transfers control to `allfail`.
-
-```c
-default: goto allfail;
-```
-
-The nondeterministic state is discarded, and the function returns `NO`.
-
-```prolog
-no
-```
-
----
-
-## 15. Execution of `color(green)`
-
-Consider:
-
-```prolog
-?- color(green).
-```
-
-The first clause attempts:
-
-```text
-green = red
-```
-
-This fails.
-
-Execution continues to the second clause, where `Jrelease` rolls back the first unification attempt.
-
-The next unification is:
-
-```text
-green = green
-```
-
-This succeeds, so the function returns `YES`.
-
-```prolog
-yes
-```
-
-If another solution is requested, the third clause attempts:
-
-```text
-green = blue
-```
-
-This fails, and the predicate eventually returns `NO`.
-
----
-
-## 16. Execution of `color(yellow)`
-
-In the following query, none of the clauses match:
-
-```prolog
-?- color(yellow).
-```
-
-The clauses are tried in sequence.
-
-```text
-yellow = red
-yellow = green
-yellow = blue
-```
-
-All unifications fail.
-
-The function then calls `Jdiscard_conj` and returns `NO`.
-
-```prolog
-no
-```
-
----
-
-## 17. Predicate Registration
-
-The generated `c_color` function is registered with the Prolog system by the initialization function.
-
-```c
-void init_tpredicate(void){
-    (deftpred)("color",c_color,1,1);
-}
-```
-
-This registration causes the C function `c_color` to be called when Prolog invokes `color/1`.
-
-The main registration arguments are:
-
-| Argument | Meaning |
-|---|---|
-| `"color"` | The Prolog predicate name |
-| `c_color` | The generated C function |
-| `1` | The arity |
-| `1` | A predicate registration attribute |
-
----
-
-## 18. General Form of `nondet` Code
-
-A `nondet` predicate consisting of multiple facts is generally generated in the following form.
-
-```c
-static int c_predicate(int arglist, int rest, int th)
 {
-    int arg1;
-    int clause;
-
-    arg1 = Jcar(arglist);
-    clause = Jget_choice(th);
-
-    switch(clause){
-    case 0: goto clause_0;
-    case 1: goto clause_1;
-    default: goto allfail;
-    }
-
-clause_0:
-    Jinc_choice(th);
-
-    if(/* unification for the first clause */)
-        return(YES);
-
-clause_1:
-    Jrelease(th);
-    Jinc_choice(th);
-
-    if(/* unification for the second clause */)
-        return(YES);
-
-    Jrelease(th);
-
-allfail:
-    Jdiscard_conj(th);
-    return(NO);
-}
-```
-
-This structure implements the following behavior:
-
-- The first invocation starts from the first clause.
-- If a clause fails, execution continues to the next clause inside the same C function.
-- If a clause succeeds, the next clause number is saved and the function returns `YES`.
-- When another solution is requested, execution resumes from the saved clause number.
-- Bindings created by the previous clause are removed by `Jrelease`.
-- When all clauses have been exhausted, the function returns `NO`.
-
----
-
-## 19. Summary
-
-Because `color/1` contains multiple non-recursive clauses, it is compiled as a `nondet` predicate.
-
-A `nondet` predicate is generated as an independent C function for each predicate.
-
-For this example, the generated function is:
-
-```c
-static int c_color(int arglist, int rest, int th)
-```
-
-The function uses the `choice` value to manage the next clause to be tried.
-
-The main APIs are:
-
-| API | Role |
-|---|---|
-| `Jarity_count` | Obtains the number of arguments |
-| `Jcar` | Retrieves the first argument |
-| `Jget_choice` | Obtains the number of the next clause to try |
-| `Jinc_choice` | Advances the saved clause number |
-| `Junify_atom` | Unifies an argument with an atom |
-| `Jrelease` | Removes bindings created by the previous clause |
-| `Jdiscard_conj` | Discards the nondeterministic state |
-
-When one clause succeeds, the function returns `YES`.
-
-When another solution is requested, the same C function is invoked again and resumes from the clause indicated by the saved `choice` value.
-
-This mechanism is independent of the large `recur_scbm` function.
-
-`recur_scbm` is used only for `recur` predicates and is not involved in the execution of the `nondet` predicate `color/1`.
-
-
-# Code Generation for `recur` Predicates
-
-## 1. Prolog Source Code
-
-The following two predicates are used to explain code generation for the `recur` predicate type.
-
-```prolog
-plus(0, Y, Y).
-plus(s(X), Y, s(Z)) :-
-    plus(X, Y, Z).
-
-
-times(0, _, 0).
-times(s(X), Y, Z) :-
-    times(X, Y, Z1),
-    plus(Z1, Y, Z).
-```
-
-`plus/3` defines addition using Peano numbers.
-
-```prolog
-plus(0, Y, Y).
-plus(s(X), Y, s(Z)) :-
-    plus(X, Y, Z).
-```
-
-`times/3` defines multiplication of Peano numbers using `plus/3`.
-
-```prolog
-times(0, _, 0).
-times(s(X), Y, Z) :-
-    times(X, Y, Z1),
-    plus(Z1, Y, Z).
-```
-
-Because both predicates contain recursive calls, they are compiled as `recur` predicates.
-
----
-
-## 2. The `recur` Type and the Large Function
-
-For `recur` predicates, the compiler does not generate a separate large recursive C function for each predicate.
-
-Instead, multiple `recur` predicates are combined into a single large function.
-
-```c
-static int recur_scbm(
-    int pred,
-    int arity,
-    int clause,
-    int arglist,
-    int rest,
-    int th);
-```
-
-In this example, the following two predicates are incorporated into `recur_scbm`.
-
-```text
-pred = 0    plus/3
-pred = 1    times/3
-```
-
-Inside `recur_scbm`, C labels are generated for predicates, arities, clauses, and positions within clause bodies.
-
-```text
-plus
-plus_3
-plus_3_0
-plus_3_1
-plus_3_1_0
-plus_3_1_1
-
-times
-times_3
-times_3_0
-times_3_1
-times_3_1_0
-times_3_1_1
-times_3_1_2
-```
-
-Recursive calls and backtracking are performed by `goto` statements to these labels, rather than by recursive C function calls.
-
----
-
-## 3. Entry Functions
-
-When Prolog calls `plus/3` or `times/3`, a small entry function is executed first.
-
-```c
-static int c_plus(int arglist, int rest, int th){
     int n;
 
     n = Jlength(arglist);
-    Jsave_arg(arglist,th);
+    Jsave_arg(arglist, th);
 
-    return(recur_scbm(
-        0,
-        n,
-        0,
-        arglist,
-        rest,
-        th));
+    return user_scbm(0, n, 0, arglist, rest, th);
 }
 ```
 
+In this call:
+
+* The predicate number is `0`
+* The initial clause number is `0`
+* The actual arguments are passed through `arglist`
+
+`Jsave_arg` saves the original argument list so that it can be restored during backtracking.
+
+---
+
+## 9. Predicate Registration
+
+The generated C function is registered with the Prolog system during initialization.
+
 ```c
-static int c_times(int arglist, int rest, int th){
-    int n;
-
-    n = Jlength(arglist);
-    Jsave_arg(arglist,th);
-
-    return(recur_scbm(
-        1,
-        n,
-        0,
-        arglist,
-        rest,
-        th));
+void init_tpredicate(void)
+{
+    (deftpred)("color", c_color, 1, 1);
 }
 ```
 
-The role of each entry function is limited to the following operations:
-
-1. Obtain the number of arguments.
-2. Save the initial argument list.
-3. Call `recur_scbm` with the appropriate predicate number.
-
-Clause selection, unification, recursive calls, success continuations, and failure continuations are all handled inside `recur_scbm`.
+This associates the Prolog predicate `color/1` with the C function `c_color`.
 
 ---
 
-## 4. Entry Function Arguments
+## 10. Clause Dispatch
 
-An entry function has the following form:
-
-```c
-static int c_plus(int arglist, int rest, int th);
-```
-
-| Argument  | Meaning                                                 |
-| --------- | ------------------------------------------------------- |
-| `arglist` | The argument list passed to the Prolog predicate        |
-| `rest`    | The remaining goals to execute after the predicate call |
-| `th`      | The execution thread number                             |
-
-`Jlength` obtains the length of the argument list.
+At the beginning of `user_scbm`, the success-continuation stack and variable area are initialized, and the top-level success continuation is registered.
 
 ```c
-n = Jlength(arglist);
-```
-
-For `plus/3` and `times/3`, the value is normally:
-
-```text
-n = 3
-```
-
----
-
-## 5. Saving the Initial Argument List
-
-Before calling `recur_scbm`, the entry function saves the argument list.
-
-```c
-Jsave_arg(arglist,th);
-```
-
-During recursive execution, `arglist` is repeatedly replaced with the arguments of the predicate currently being called.
-
-For example, in the following call:
-
-```prolog
-plus(s(s(0)), Y, Z).
-```
-
-`arglist` changes conceptually as follows:
-
-```text
-plus(s(s(0)), Y, Z)
-plus(s(0),    Y, Z1)
-plus(0,       Y, Z2)
-```
-
-After the top-level call succeeds, the original argument information may be required to execute the remaining goals or to resume backtracking.
-
-For that reason, the initial `arglist` is saved at the entry point.
-
----
-
-## 6. Predicate Registration
-
-The generated entry functions are registered with the Prolog system by an initialization function.
-
-```c
-void init_tpredicate(void){
-    (deftpred)("plus",c_plus,3,6);
-    (deftpred)("times",c_times,3,6);
-}
-```
-
-The main registration information is as follows:
-
-| Registration item        | `plus/3` | `times/3` |
-| ------------------------ | -------- | --------- |
-| Prolog predicate name    | `"plus"` | `"times"` |
-| Entry C function         | `c_plus` | `c_times` |
-| Arity                    | `3`      | `3`       |
-| Predicate type attribute | `6`      | `6`       |
-
-The final value, `6`, is the registration attribute used for the `recur` predicate type in this implementation.
-
----
-
-## 7. Arguments of `recur_scbm`
-
-The large function has the following form:
-
-```c
-static int recur_scbm(
-    int pred,
-    int arity,
-    int clause,
-    int arglist,
-    int rest,
-    int th)
-```
-
-The arguments have the following meanings:
-
-| Argument  | Meaning                                                     |
-| --------- | ----------------------------------------------------------- |
-| `pred`    | The predicate number to execute                             |
-| `arity`   | The predicate arity                                         |
-| `clause`  | The clause number from which execution begins               |
-| `arglist` | The argument list of the predicate currently being executed |
-| `rest`    | The remaining goals following the top-level call            |
-| `th`      | The execution thread number                                 |
-
-In this example, predicate numbers are assigned as follows:
-
-| `pred` | Predicate |
-| -----: | --------- |
-|      0 | `plus/3`  |
-|      1 | `times/3` |
-
----
-
-## 8. Initializing the Execution State
-
-At the beginning of `recur_scbm`, the success-continuation stack position and variable-stack position are initialized.
-
-```c
-np[Jget_scp(CONJ,th)][th] = 0;
+np[Jget_scp(CONJ, th)][th] = 0;
 vp[th] = 0;
+
+Jpush_next(&&success, th);
 ```
 
-`np` indicates the current position in the success-continuation stack.
-
-```text
-np = next pointer
-```
-
-`vp` indicates the position used to save logical variables that must survive across predicate calls.
-
-```text
-vp = variable pointer
-```
-
-The top-level `success` label is then registered as the initial success continuation.
-
-```c
-Jpush_next(&&success,th);
-```
-
-This causes control to move to the common `success` processing when the top-level predicate succeeds.
-
----
-
-## 9. Predicate Selection
-
-The first `switch` in the large function selects the predicate to execute.
+The execution position is then selected in the order of predicate number, arity, and clause number.
 
 ```c
 switch(pred){
-case 0: goto plus;
-case 1: goto times;
+case 0: goto color;
 }
 ```
 
-This `switch` does not select a clause.
-
-It selects one of the `recur` predicates incorporated into the large function.
-
-```text
-pred = 0 → plus
-pred = 1 → times
-```
-
-The entry function `c_plus` passes `pred = 0`.
-
 ```c
-return(recur_scbm(0,n,0,arglist,rest,th));
-```
-
-The entry function `c_times` passes `pred = 1`.
-
-```c
-return(recur_scbm(1,n,0,arglist,rest,th));
-```
-
----
-
-## 10. Arity Selection
-
-After control reaches a predicate label, the appropriate arity label is selected.
-
-```c
-plus:
+color:
 switch(arity){
-case 3: goto plus_3;
+case 1: goto color_1;
 default: goto allfail;
 }
 ```
 
 ```c
-times:
-switch(arity){
-case 3: goto times_3;
+color_1:
+switch(clause){
+case 0: goto color_1_0;
+case 1: goto color_1_1;
+case 2: goto color_1_2;
 default: goto allfail;
 }
 ```
-
-Because both predicates have arity 3, execution moves to:
-
-```text
-plus_3
-times_3
-```
-
-If the arity does not match, control moves to the common failure handler, `allfail`.
 
 ---
 
-## 11. Clause Selection
+## 11. Execution of Individual Clauses
 
-At each arity-specific label, the value of `clause` determines the clause from which execution begins.
-
-```c
-plus_3:
-switch(clause){
-case 0: goto plus_3_0;
-case 1: goto plus_3_1;
-default: goto allfail;
-}
-```
+The first clause is generated as follows:
 
 ```c
-times_3:
-switch(clause){
-case 0: goto times_3_0;
-case 1: goto times_3_1;
-default: goto allfail;
-}
-```
-
-The mappings are as follows.
-
-### `plus/3`
-
-| `clause` | Label      | Prolog clause                       |
-| -------: | ---------- | ----------------------------------- |
-|        0 | `plus_3_0` | `plus(0,Y,Y).`                      |
-|        1 | `plus_3_1` | `plus(s(X),Y,s(Z)) :- plus(X,Y,Z).` |
-
-### `times/3`
-
-| `clause` | Label       | Prolog clause                                     |
-| -------: | ----------- | ------------------------------------------------- |
-|        0 | `times_3_0` | `times(0,_,0).`                                   |
-|        1 | `times_3_1` | `times(s(X),Y,Z) :- times(X,Y,Z1), plus(Z1,Y,Z).` |
-
----
-
-# Code Generation for `plus/3`
-
-## 12. The First Clause of `plus/3`
-
-The first Prolog clause is:
-
-```prolog
-plus(0, Y, Y).
-```
-
-The generated code is:
-
-```c
-plus_3_0:
+color_1_0:
 arg1 = Jcar(arglist);
-arg2 = Jnth(arglist,2);
-arg3 = Jnth(arglist,3);
-
 Jrelease(th);
-
-varY = Jmakevariant(th);
-
 Jinc_choice(th);
-Jset_back(&&plus_3_1,th);
+Jset_back(&&color_1_1, th);
 
-if(Junify_int(arg1,Jmakeint(0),th) == YES &&
-   Junify_var(arg2,varY,th) == YES &&
-   Junify_var(arg3,varY,th) == YES)
+if(Junify_atom(arg1, Jmakeconst("red"), th) == YES)
 {
     goto success;
 }
 ```
 
----
+The operations are performed in the following order:
 
-## 13. Retrieving the Arguments
+1. Extract the first argument from `arglist`
+2. Release temporary areas created by the previous clause
+3. Advance the current clause-selection number
+4. Register the next clause as the failure continuation
+5. Unify the argument with the atom `red`
+6. Jump to `success` if unification succeeds
 
-The three arguments are retrieved from `arglist`.
+The second clause has the same structure:
 
 ```c
+color_1_1:
 arg1 = Jcar(arglist);
-arg2 = Jnth(arglist,2);
-arg3 = Jnth(arglist,3);
-```
-
-For example, in the following call:
-
-```prolog
-plus(0, s(0), Z).
-```
-
-the variables conceptually contain:
-
-```text
-arg1 = 0
-arg2 = s(0)
-arg3 = Z
-```
-
----
-
-## 14. Releasing the Working State
-
-Before beginning unification for a clause, the temporary state created by the previous clause attempt is released.
-
-```c
 Jrelease(th);
-```
-
-When backtracking causes another clause of the same predicate to be tried, bindings and working data created by the previous clause cannot remain active.
-
-`Jrelease` restores the state required to begin trying the current clause.
-
----
-
-## 15. Creating Clause Variables
-
-An internal variable corresponding to the clause variable `Y` is created.
-
-```c
-varY = Jmakevariant(th);
-```
-
-In the Prolog clause, the same `Y` occurs in two positions.
-
-```prolog
-plus(0, Y, Y).
-        ^  ^
-```
-
-Therefore, the second and third arguments are unified with the same internal variable, `varY`.
-
-```c
-Junify_var(arg2,varY,th)
-Junify_var(arg3,varY,th)
-```
-
-This implements the condition that the second and third arguments must be equal.
-
----
-
-## 16. Failure Continuation to the Next Clause
-
-Before attempting the first clause, the next clause is registered as the failure continuation.
-
-```c
 Jinc_choice(th);
-Jset_back(&&plus_3_1,th);
-```
+Jset_back(&&color_1_2, th);
 
-`Jinc_choice` advances the current clause number.
-
-```text
-0 → 1
-```
-
-`Jset_back` sets the second clause label as the destination to use if the first clause fails.
-
-```text
-failure continuation = plus_3_1
-```
-
-This failure continuation is used not only when the clause head immediately fails, but also when execution later backtracks into this predicate.
-
----
-
-## 17. Unification for the First Clause
-
-The head of the first clause is generated as three unification operations.
-
-```c
-Junify_int(arg1,Jmakeint(0),th)
-```
-
-This unifies the first argument with `0`.
-
-```c
-Junify_var(arg2,varY,th)
-```
-
-This unifies the second argument with the clause variable `Y`.
-
-```c
-Junify_var(arg3,varY,th)
-```
-
-This also unifies the third argument with the same `Y`.
-
-If all three unifications succeed, the clause succeeds.
-
-```c
-goto success;
-```
-
-Because the first clause has no body, execution moves directly to the common success handler after successful head unification.
-
----
-
-## 18. The Second Clause of `plus/3`
-
-The second Prolog clause is:
-
-```prolog
-plus(s(X), Y, s(Z)) :-
-    plus(X, Y, Z).
-```
-
-The generated code begins as follows:
-
-```c
-plus_3_1:
-arg1 = Jcar(arglist);
-arg2 = Jnth(arglist,2);
-arg3 = Jnth(arglist,3);
-
-Jrelease(th);
-
-varX = Jmakevariant(th);
-varY = Jmakevariant(th);
-varZ = Jmakevariant(th);
-
-Jinc_choice(th);
-Jset_back(&&plus_3_2,th);
-
-if(Junify(
-       arg1,
-       Jwcons(
-           Jmakepred("s"),
-           Jwcons(varX,NIL,th),
-           th),
-       th) == YES &&
-   Junify_var(arg2,varY,th) == YES &&
-   Junify(
-       arg3,
-       Jwcons(
-           Jmakepred("s"),
-           Jwcons(varZ,NIL,th),
-           th),
-       th) == YES)
-{
-    ...
-}
-```
-
----
-
-## 19. Constructing the Structure `s(X)`
-
-The Prolog term
-
-```prolog
-s(X)
-```
-
-is constructed by the following code:
-
-```c
-Jwcons(
-    Jmakepred("s"),
-    Jwcons(varX,NIL,th),
-    th)
-```
-
-Conceptually, this creates the following structure:
-
-```text
-functor = s
-arguments = [varX]
-```
-
-The first argument is unified with this structure.
-
-```c
-Junify(arg1, s(varX), th)
-```
-
-Similarly, the third argument is unified with `s(varZ)`.
-
-```c
-Junify(arg3, s(varZ), th)
-```
-
----
-
-## 20. Final Failure Continuation of the Second Clause
-
-Before attempting the second clause, the next failure continuation is set.
-
-```c
-Jinc_choice(th);
-Jset_back(&&plus_3_2,th);
-```
-
-There is no clause after the second clause of `plus/3`.
-
-Therefore, `plus_3_2` represents complete failure of `plus/3`.
-
-```c
-plus_3_2:
-Jpop_back(th);
-goto allfail;
-```
-
----
-
-## 21. Constructing Arguments for the Recursive Call
-
-The body of the second clause is:
-
-```prolog
-plus(X, Y, Z).
-```
-
-A new argument list is constructed for this call.
-
-```c
-arglist =
-    Jwlistcons(
-        varX,
-        Jwlistcons(
-            varY,
-            Jwlistcons(
-                varZ,
-                NIL,
-                th),
-            th),
-        th);
-```
-
-The resulting argument list is:
-
-```text
-[varX, varY, varZ]
-```
-
-At this point, `arglist` no longer represents the arguments of the outer `plus/3` call. It represents the arguments of the recursive inner call.
-
----
-
-## 22. Saving the Failure State for the Recursive Call
-
-Before the recursive call, the state required for backtracking is saved in SCBM.
-
-```c
-Jpush_back(
-    &&plus_3_2,
-    arglist,
-    vp[th],
-    np[Jget_scp(CONJ,th)][th],
-    th);
-```
-
-The main saved values are:
-
-| Saved value  | Meaning                                        |
-| ------------ | ---------------------------------------------- |
-| `&&plus_3_2` | Continuation if the entire clause fails        |
-| `arglist`    | Argument list required when resuming execution |
-| `vp[th]`     | Variable-stack position                        |
-| `np[...]`    | Success-continuation-stack position            |
-
-In the second clause of `plus/3`, no `Jpush_var` operation is required.
-
-After the recursive call succeeds, no clause variable is needed by another body goal. The success of the recursive call immediately makes the entire clause succeed.
-
----
-
-## 23. Registering the Success Continuation
-
-The position to execute after the recursive call succeeds is registered on the success-continuation stack.
-
-```c
-Jpush_next(&&plus_3_1_1,th);
-```
-
-The registered label is:
-
-```text
-plus_3_1_1
-```
-
-This is the position executed after the recursive call
-
-```prolog
-plus(X, Y, Z)
-```
-
-succeeds.
-
-Because there is no later goal in the second clause, `plus_3_1_1` simply succeeds.
-
-```c
-plus_3_1_1:
-goto success;
-```
-
----
-
-## 24. No Recursive C Function Call
-
-The recursive call to `plus/3` is performed as follows:
-
-```c
-clause = Jget_choice(th);
-goto plus_3;
-```
-
-With ordinary C recursion, the compiler might generate a function call such as:
-
-```c
-c_plus(new_arglist, rest, th);
-```
-
-However, the generated code does not recursively call a C function.
-
-Instead, it jumps directly to the arity-specific label inside the same large function.
-
-```text
-goto plus_3
-```
-
-This is the central feature of `recur` code generation.
-
-Recursion is managed using SCBM and labeled `goto` statements rather than the C call stack.
-
----
-
-## 25. The `plus_3_1_0back` Label
-
-Immediately before the recursive call, the following label is generated:
-
-```c
-plus_3_1_0back:
-Jpush_next(&&plus_3_1_1,th);
-clause = Jget_choice(th);
-goto plus_3;
-```
-
-This label is used as a restart point when backtracking into the inner recursive call.
-
-During the first execution, control reaches `plus_3_1_0back` by falling through from the preceding code.
-
-During backtracking, a stored failure continuation can return control to this area so that the next clause or next solution of the inner `plus/3` call can be tried.
-
----
-
-# Code Generation for `times/3`
-
-## 26. The First Clause of `times/3`
-
-The first Prolog clause is:
-
-```prolog
-times(0, _, 0).
-```
-
-The generated code is:
-
-```c
-times_3_0:
-arg1 = Jcar(arglist);
-arg2 = Jnth(arglist,2);
-arg3 = Jnth(arglist,3);
-
-Jrelease(th);
-
-ano_1 = Jmakevariant(th);
-
-Jinc_choice(th);
-Jset_back(&&times_3_1,th);
-
-if(Junify_int(arg1,Jmakeint(0),th) == YES &&
-   Junify_var(arg2,ano_1,th) == YES &&
-   Junify_int(arg3,Jmakeint(0),th) == YES)
+if(Junify_atom(arg1, Jmakeconst("green"), th) == YES)
 {
     goto success;
 }
 ```
 
----
-
-## 27. Creating an Anonymous Variable
-
-The second argument of the first clause is an anonymous variable.
-
-```prolog
-times(0, _, 0).
-         ^
-```
-
-The generated code still creates an internal variable for it.
+For the third clause, there is no ordinary clause following it. Therefore, a terminal label is registered as the failure continuation.
 
 ```c
-ano_1 = Jmakevariant(th);
-```
-
-The second argument is unified with this internal variable.
-
-```c
-Junify_var(arg2,ano_1,th)
-```
-
-However, the anonymous variable is not referenced from any other position in the clause.
-
-Therefore, it may match any value.
-
----
-
-## 28. The Second Clause of `times/3`
-
-The second Prolog clause is:
-
-```prolog
-times(s(X), Y, Z) :-
-    times(X, Y, Z1),
-    plus(Z1, Y, Z).
-```
-
-This clause contains two body goals.
-
-```text
-First goal:  times(X, Y, Z1)
-Second goal: plus(Z1, Y, Z)
-```
-
-The generated code contains labels and success continuations corresponding to each body goal.
-
-```text
-times_3_1_0    Preparation for the first goal
-times_3_1_1    After the first goal succeeds
-times_3_1_2    After the second goal succeeds
-```
-
----
-
-## 29. Head Unification for the Second Clause
-
-The head processing for the second clause begins as follows:
-
-```c
-times_3_1:
+color_1_2:
 arg1 = Jcar(arglist);
-arg2 = Jnth(arglist,2);
-arg3 = Jnth(arglist,3);
-
 Jrelease(th);
-
-varZ1 = Jmakevariant(th);
-varX  = Jmakevariant(th);
-varY  = Jmakevariant(th);
-varZ  = Jmakevariant(th);
-
 Jinc_choice(th);
-Jset_back(&&times_3_2,th);
-```
+Jset_back(&&color_1_3, th);
 
-The clause uses four variables:
-
-```prolog
-X
-Y
-Z
-Z1
-```
-
-An internal variable is allocated for each one.
-
-```c
-varZ1 = Jmakevariant(th);
-varX  = Jmakevariant(th);
-varY  = Jmakevariant(th);
-varZ  = Jmakevariant(th);
-```
-
-The head is unified as follows:
-
-```c
-if(Junify(
-       arg1,
-       Jwcons(
-           Jmakepred("s"),
-           Jwcons(varX,NIL,th),
-           th),
-       th) == YES &&
-   Junify_var(arg2,varY,th) == YES &&
-   Junify_var(arg3,varZ,th) == YES)
+if(Junify_atom(arg1, Jmakeconst("blue"), th) == YES)
 {
-    ...
+    goto success;
 }
 ```
 
-This corresponds to the following Prolog head:
-
-```prolog
-times(s(X), Y, Z)
-```
-
----
-
-## 30. The First Body Goal
-
-The first body goal is:
-
-```prolog
-times(X, Y, Z1)
-```
-
-The corresponding argument list is constructed.
+When every clause has been tried, execution reaches:
 
 ```c
-times_3_1_0:
-arglist =
-    Jwlistcons(
-        varX,
-        Jwlistcons(
-            varY,
-            Jwlistcons(
-                varZ1,
-                NIL,
-                th),
-            th),
-        th);
-```
-
-The new `arglist` contains:
-
-```text
-[varX, varY, varZ1]
-```
-
----
-
-## 31. Saving Clause Variables
-
-In the second clause of `times/3`, clause variables are still required after the first recursive call succeeds.
-
-The following goal must be executed afterward:
-
-```prolog
-plus(Z1, Y, Z)
-```
-
-Therefore, the variables are saved before entering the recursive call.
-
-```c
-Jpush_var(varZ1,th);
-Jpush_var(varX,th);
-Jpush_var(varY,th);
-Jpush_var(varZ,th);
-```
-
-This is necessary because the same C local variable names are reused inside recursive calls.
-
-When control enters an inner `times/3` call, the following code is executed again:
-
-```c
-varZ1 = Jmakevariant(th);
-varX  = Jmakevariant(th);
-varY  = Jmakevariant(th);
-varZ  = Jmakevariant(th);
-```
-
-Without saving the outer variables, the values required by the outer clause would be overwritten.
-
-The outer clause variables are therefore stored on a dedicated variable stack.
-
----
-
-## 32. Variable Save and Restore Order
-
-The variables are saved in the following order:
-
-```c
-Jpush_var(varZ1,th);
-Jpush_var(varX,th);
-Jpush_var(varY,th);
-Jpush_var(varZ,th);
-```
-
-Because the stack is LIFO, they are restored in reverse order.
-
-```c
-varZ  = Jpop_var(th);
-varY  = Jpop_var(th);
-varX  = Jpop_var(th);
-varZ1 = Jpop_var(th);
-```
-
-The correspondence is:
-
-| Save order | Saved variable | Restore order |
-| ---------: | -------------- | ------------: |
-|          1 | `varZ1`        |             4 |
-|          2 | `varX`         |             3 |
-|          3 | `varY`         |             2 |
-|          4 | `varZ`         |             1 |
-
----
-
-## 33. Saving the Failure Continuation for the First Goal
-
-Before entering the recursive call, the failure state is saved.
-
-```c
-Jpush_back(
-    &&times_3_2,
-    arglist,
-    vp[th],
-    np[Jget_scp(CONJ,th)][th],
-    th);
-```
-
-The final failure destination is:
-
-```text
-times_3_2
-```
-
-This label handles failure of the entire second clause of `times/3`.
-
-```c
-times_3_2:
+color_1_3:
 Jpop_back(th);
 goto allfail;
 ```
 
-The following state is also saved:
-
-```text
-The argument list for the first goal
-The variable-stack position, vp
-The success-continuation-stack position, np
-```
+The failure continuation created for this predicate is removed, and control moves to the outer failure handler.
 
 ---
 
-## 34. Success Continuation for the First Goal
+## 12. Processing at `success`
 
-The position to execute after the first goal succeeds is registered.
-
-```c
-Jpush_next(&&times_3_1_1,th);
-```
-
-The current clause number is then obtained, and control jumps to the same `times/3` predicate entry.
-
-```c
-clause = Jget_choice(th);
-goto times_3;
-```
-
-This executes the following Prolog call:
-
-```prolog
-times(X, Y, Z1)
-```
-
----
-
-## 35. After the First Goal Succeeds
-
-When the recursive call `times(X,Y,Z1)` succeeds, the success continuation returns control to:
-
-```c
-times_3_1_1:
-```
-
-The saved clause variables are first restored.
-
-```c
-varZ  = Jpop_var(th);
-varY  = Jpop_var(th);
-varX  = Jpop_var(th);
-varZ1 = Jpop_var(th);
-```
-
-This restores the C local variables that belonged to the outer clause and were overwritten by the recursive call.
-
-An important point is that the logical variable referenced by `varZ1` contains the binding produced by the recursive call.
-
-What is restored is the value that identifies the logical variable.
-
-The binding made to that logical variable remains intact.
-
----
-
-## 36. The Second Body Goal
-
-The next goal is:
-
-```prolog
-plus(Z1, Y, Z)
-```
-
-A new argument list is constructed using the restored variables.
-
-```c
-arglist =
-    Jwlistcons(
-        varZ1,
-        Jwlistcons(
-            varY,
-            Jwlistcons(
-                varZ,
-                NIL,
-                th),
-            th),
-        th);
-```
-
-The resulting argument list is:
-
-```text
-[varZ1, varY, varZ]
-```
-
----
-
-## 37. Backtracking from the Second Goal to the First Goal
-
-Before calling the second goal, the following failure continuation is saved:
-
-```c
-Jpush_back(
-    &&times_3_1_0back,
-    arglist,
-    vp[th],
-    np[Jget_scp(CONJ,th)][th],
-    th);
-```
-
-The failure continuation label is:
-
-```text
-times_3_1_0back
-```
-
-If the second goal
-
-```prolog
-plus(Z1,Y,Z)
-```
-
-fails, or if all of its solutions are exhausted, control must return to the first goal
-
-```prolog
-times(X,Y,Z1)
-```
-
-to request another solution.
-
-For a Prolog conjunction
-
-```prolog
-A, B
-```
-
-if `B` fails, the system must search for another solution of `A`.
-
-In this clause:
-
-```text
-A = times(X,Y,Z1)
-B = plus(Z1,Y,Z)
-```
-
-Therefore, after failure of `plus/3`, execution must backtrack into the recursive `times/3` call.
-
-The continuation `&&times_3_1_0back` represents this control flow.
-
----
-
-## 38. Success Continuation for the Second Goal
-
-The position to execute after the second goal succeeds is registered.
-
-```c
-Jpush_next(&&times_3_1_2,th);
-```
-
-Control then jumps directly to the clause selector for `plus/3`.
-
-```c
-clause = Jget_choice(th);
-goto plus_3;
-```
-
-Again, the C entry function `c_plus` is not called.
-
-Execution jumps directly to the `plus_3` label inside the large function.
-
-```text
-goto plus_3
-```
-
-Calls between `recur` predicates are therefore also implemented as jumps between labels within the same large function.
-
----
-
-## 39. After the Second Goal Succeeds
-
-When `plus(Z1,Y,Z)` succeeds, control returns to:
-
-```c
-times_3_1_2:
-goto success;
-```
-
-The second goal is the final goal of the clause.
-
-Therefore, its success means that the entire second clause of `times/3` has succeeded.
-
-Control moves to the common success handler.
-
----
-
-# Success Processing
-
-## 40. The Common `success` Label
-
-Success of all `recur` predicates is handled by the common `success` label.
+When a predicate or clause succeeds, control moves to the `success` label.
 
 ```c
 success:
-if(np[Jget_scp(CONJ,th)][th] == 0){
-    if(Jprove_all(
-           rest,
-           Jget_sp(th),
-           th) == YES)
-        return(YES);
+if(np[Jget_scp(CONJ, th)][th] == 0){
+    if(Jprove_all(rest, Jget_sp(th), th) == YES)
+        return YES;
 
     next =
         back_stack
-        [Jget_scp(RECUR,th)]
-        [Jget_scp(CONJ,th)]
+        [Jget_scp(RECUR, th)]
+        [Jget_scp(CONJ, th)]
         [th];
 
     clause = Jget_choice(th);
     arglist = Jget_arg(th);
 
-    Jpush_next(&&success,th);
+    Jpush_next(&&success, th);
     goto *next;
-}else{
+}
+else{
     next =
         next_stack
-        [np[Jget_scp(CONJ,th)][th]]
-        [Jget_scp(CONJ,th)]
+        [np[Jget_scp(CONJ, th)][th]]
+        [Jget_scp(CONJ, th)]
         [th];
 
     Jpop_next(th);
@@ -2899,139 +911,138 @@ if(np[Jget_scp(CONJ,th)][th] == 0){
 }
 ```
 
-The processing depends on whether another success continuation remains.
+The `success` handler has two main cases.
 
----
+### 12.1 A Success Continuation Remains
 
-## 41. Success of an Internal Goal
-
-If `np` is not zero, another body goal remains to be executed.
-
-```c
-}else{
-```
-
-The next label is obtained from the success-continuation stack.
+If a success continuation remains in `next_stack`, its destination is retrieved.
 
 ```c
 next =
     next_stack
-    [np[Jget_scp(CONJ,th)][th]]
-    [Jget_scp(CONJ,th)]
+    [np[Jget_scp(CONJ, th)][th]]
+    [Jget_scp(CONJ, th)]
     [th];
 ```
 
-The continuation is then removed from the stack.
+The used continuation is then removed from the stack.
 
 ```c
 Jpop_next(th);
 ```
 
-The clause number is restored, and control jumps to the retrieved label.
+Finally, execution jumps to the stored continuation.
 
 ```c
-clause = Jget_choice(th);
 goto *next;
 ```
 
-For example, in the second clause of `times/3`, control moves as follows:
+This moves execution to the next generated goal, such as the following goal in a conjunction.
 
-```text
-times(X,Y,Z1) succeeds
-    ↓
-times_3_1_1
+Consider:
 
-plus(Z1,Y,Z) succeeds
-    ↓
-times_3_1_2
+```prolog
+p(X) :- q(X), r(X).
 ```
+
+When `q(X)` succeeds, the starting position of `r(X)` is stored as its success continuation.
+
+Execution therefore jumps directly to the label for `r(X)` instead of returning through an ordinary C function call.
+
+### 12.2 No Success Continuation Remains
+
+If `np` is zero, there is no remaining success continuation in the current SCBM frame.
+
+```c
+if(np[Jget_scp(CONJ, th)][th] == 0)
+```
+
+The remaining Prolog goals stored in `rest` are then executed.
+
+```c
+if(Jprove_all(rest, Jget_sp(th), th) == YES)
+    return YES;
+```
+
+If every remaining goal succeeds, `YES` is returned as the result of the entire query.
 
 ---
 
-## 42. Success of the Top-Level Predicate
+## 13. Forced Backtracking after Success
 
-If `np` is zero, no success continuation remains inside the large function.
+In Prolog, another solution may be requested even after a solution has already been found.
 
-```c
-if(np[Jget_scp(CONJ,th)][th] == 0){
+For example:
+
+```prolog
+?- color(X).
+X = red ;
 ```
 
-This means that execution of the top-level predicate body has completed.
+When the user enters a semicolon, the current solution is valid, but the system must search for another one.
 
-The remaining goals are then executed.
+This differs from ordinary failure.
 
-```c
-if(Jprove_all(
-       rest,
-       Jget_sp(th),
-       th) == YES)
-    return(YES);
-```
+`color(red)` has already succeeded. However, the system intentionally follows the saved failure continuation to explore another branch. This operation is called **forced backtracking**.
 
-If the remaining goals also succeed, the entire Prolog call succeeds.
-
-```c
-return(YES);
-```
-
----
-
-## 43. Failure of the Remaining Goals
-
-Even if the top-level `recur` predicate succeeds, a later goal contained in `rest` may fail.
-
-In that case, execution must return to the `recur` predicate and search for another solution.
-
-The restart position is obtained from the failure-continuation stack.
+When `Jprove_all` reports a solution and another solution is requested, the current success is not treated as the final result. Instead, the saved backtracking destination is obtained.
 
 ```c
 next =
     back_stack
-    [Jget_scp(RECUR,th)]
-    [Jget_scp(CONJ,th)]
+    [Jget_scp(RECUR, th)]
+    [Jget_scp(CONJ, th)]
     [th];
 ```
 
-The clause number and argument list are restored.
+The clause number and original argument list are restored.
 
 ```c
 clause = Jget_choice(th);
 arglist = Jget_arg(th);
 ```
 
-The common `success` label is registered again so that a later successful alternative can return to top-level success processing.
+A success continuation is registered again so that a later solution can return to `success`.
 
 ```c
-Jpush_next(&&success,th);
+Jpush_next(&&success, th);
 ```
 
-Finally, control moves to the saved failure continuation.
+Execution then jumps to the saved failure continuation.
 
 ```c
 goto *next;
 ```
 
-This connects failure of the remaining goals to backtracking inside the `recur` predicate.
+After `color(red)` succeeds, the saved failure continuation is:
+
+```c
+&&color_1_1
+```
+
+Forced backtracking therefore transfers control to `color_1_1`, where unification with `green` is attempted.
+
+Forced backtracking is not an error-handling operation.
+
+It is a normal control operation that moves from an already successful execution path to another saved alternative.
 
 ---
 
-# Failure Processing
+## 14. Processing at `allfail`
 
-## 44. The Common `allfail` Label
-
-When all applicable clauses fail, control moves to the common `allfail` label.
+When the current clause, predicate, or conjunction fails, control moves to the `allfail` label.
 
 ```c
 allfail:
-if(Jget_scp(RECUR,th)==0) {
+if(Jget_scp(RECUR, th) == 0){
     Jdiscard_conj(th);
-    return(NO);
+    return NO;
 }
 
 next =
     back_stack
-    [Jget_scp(RECUR,th)]
-    [Jget_scp(CONJ,th)]
+    [Jget_scp(RECUR, th)]
+    [Jget_scp(CONJ, th)]
     [th];
 
 Jpop_recur(th);
@@ -3039,626 +1050,487 @@ Jpop_next(th);
 
 clause = Jget_choice(th);
 arglist = Jget_arg(th);
-
 vp[th] = Jget_vp(th);
-np[Jget_scp(CONJ,th)][th] = Jget_np(th);
+np[Jget_scp(CONJ, th)][th] = Jget_np(th);
 
 goto *next;
 ```
 
----
+### 14.1 No Outer Choice Point Exists
 
-## 45. Complete Failure at the Top Level
-
-If the recursive stack is empty,
+If no recursive or backtracking frame exists, there are no remaining alternatives.
 
 ```c
-Jget_scp(RECUR,th) == 0
+if(Jget_scp(RECUR, th) == 0)
 ```
 
-there is no caller to which execution can return.
+The current conjunction frame is discarded, and `NO` is returned as the final result.
 
 ```c
 Jdiscard_conj(th);
-return(NO);
+return NO;
 ```
 
-The current conjunction state is discarded, and `NO` is returned to indicate complete failure of the Prolog call.
+### 14.2 An Outer Choice Point Exists
 
----
-
-## 46. Backtracking to the Caller
-
-If the recursive stack is not empty, execution must return to a caller.
-
-First, the saved failure-continuation label is obtained.
+If a failure continuation exists, its destination is retrieved from the SCBM stack.
 
 ```c
 next =
     back_stack
-    [Jget_scp(RECUR,th)]
-    [Jget_scp(CONJ,th)]
+    [Jget_scp(RECUR, th)]
+    [Jget_scp(CONJ, th)]
     [th];
 ```
 
-The current recursive frame and success continuation are then removed.
+The completed recursion frame and success continuation are then removed.
 
 ```c
 Jpop_recur(th);
 Jpop_next(th);
 ```
 
-The clause number and argument list required for backtracking are restored.
+The state required by the backtracking destination is restored.
 
 ```c
 clause = Jget_choice(th);
 arglist = Jget_arg(th);
-```
-
-The variable-stack position and success-continuation-stack position are also restored.
-
-```c
 vp[th] = Jget_vp(th);
-np[Jget_scp(CONJ,th)][th] = Jget_np(th);
+np[Jget_scp(CONJ, th)][th] = Jget_np(th);
 ```
 
-Finally, execution jumps to the saved failure continuation.
+The restored information includes:
+
+* The next clause number
+* The argument list at the time of the call
+* The variable-area position
+* The success-continuation stack position
+
+Execution finally jumps to the saved failure continuation.
 
 ```c
 goto *next;
 ```
 
-This allows execution to resume from the correct position in the calling clause.
+This allows execution to resume from a caller predicate or an earlier choice point.
 
 ---
 
-## 47. `Jpush_next` and `Jpush_back`
+## 15. Ordinary Failure and Forced Backtracking
 
-In `recur` code, success continuations and failure continuations are managed separately.
+Ordinary failure and forced backtracking both use failure continuations, but they occur for different reasons.
 
-### Success Continuations
-
-A success continuation specifies the next goal to execute after the current goal succeeds.
-
-```c
-Jpush_next(&&label,th);
-```
-
-It is stored in `next_stack`.
+| Operation           | Meaning                                                            |
+| ------------------- | ------------------------------------------------------------------ |
+| Ordinary failure    | Unification or execution of a body goal actually failed            |
+| Forced backtracking | The current solution succeeded, but another solution was requested |
+| Final failure       | Every saved alternative has been exhausted                         |
 
 For example:
-
-```c
-Jpush_next(&&times_3_1_1,th);
-```
-
-This means:
-
-```text
-When times(X,Y,Z1) succeeds,
-continue at times_3_1_1.
-```
-
-### Failure Continuations
-
-A failure continuation specifies where execution should return if the current goal fails or if another solution is requested.
-
-```c
-Jpush_back(
-    &&label,
-    arglist,
-    vp,
-    np,
-    th);
-```
-
-It is stored in `back_stack` together with the SCBM state.
-
-For example:
-
-```c
-Jpush_back(
-    &&times_3_1_0back,
-    arglist,
-    vp[th],
-    np[Jget_scp(CONJ,th)][th],
-    th);
-```
-
-This means:
-
-```text
-If plus(Z1,Y,Z) fails,
-return to the search for another solution of times(X,Y,Z1).
-```
-
----
-
-## 48. Relationship Between Success and Failure Continuations
-
-Consider the following Prolog clause:
 
 ```prolog
-times(s(X),Y,Z) :-
-    times(X,Y,Z1),
-    plus(Z1,Y,Z).
+?- color(white).
 ```
 
-The forward execution flow is:
+Unification with `red`, `green`, and `blue` all fails. This is ordinary failure.
+
+In contrast:
+
+```prolog
+?- color(X).
+X = red ;
+```
+
+unification with `red` succeeded. However, the user requested another solution, so execution intentionally follows the next failure continuation. This is forced backtracking.
+
+When another solution is requested after `blue`, every clause has already been exhausted, and the final result is `no`.
+
+---
+
+# Recursive `nondet` Predicates
+
+## 16. Recursion Uses the Same SCBM Mechanism
+
+Consider the following recursive predicates:
+
+```prolog
+plus(0, Y, Y).
+plus(s(X), Y, s(Z)) :-
+    plus(X, Y, Z).
+```
+
+```prolog
+times(0, _, 0).
+times(s(X), Y, Z) :-
+    times(X, Y, Z1),
+    plus(Z1, Y, Z).
+```
+
+These predicates require both clause selection and recursive calls inside clause bodies.
+
+SCBM does not need a fundamentally different execution mechanism for recursive predicates.
+
+Both nonrecursive and recursive predicates can be expressed using:
+
+* The location to continue after success
+* The location to return to after failure
+
+Recursive calls are therefore handled by stacking success and failure continuations.
+
+---
+
+## 17. Entry Functions for Recursive Predicates
+
+An ordinary entry function is generated for each predicate.
+
+```c
+static int c_plus(int arglist, int rest, int th)
+{
+    int n;
+
+    n = Jlength(arglist);
+    Jsave_arg(arglist, th);
+
+    return user_scbm(0, n, 0, arglist, rest, th);
+}
+```
+
+```c
+static int c_times(int arglist, int rest, int th)
+{
+    int n;
+
+    n = Jlength(arglist);
+    Jsave_arg(arglist, th);
+
+    return user_scbm(1, n, 0, arglist, rest, th);
+}
+```
+
+Rather than generating a separate recursive C function for each predicate, the predicate number selects a different label inside the same `user_scbm` function.
+
+---
+
+## 18. Base Clause of `plus/3`
+
+The base clause is:
+
+```prolog
+plus(0, Y, Y).
+```
+
+Its generated code has the following general structure:
+
+```c
+plus_3_0:
+arg1 = Jcar(arglist);
+arg2 = Jnth(arglist, 2);
+arg3 = Jnth(arglist, 3);
+
+Jrelease(th);
+
+varY = Jmakevariant(th);
+
+Jinc_choice(th);
+Jset_back(&&plus_3_1, th);
+
+if(
+    Junify_int(arg1, Jmakeint(0), th) == YES &&
+    Junify_var(arg2, varY, th) == YES &&
+    Junify_var(arg3, varY, th) == YES
+){
+    goto success;
+}
+```
+
+In this clause, the second and third arguments correspond to the same Prolog variable, `Y`.
+
+The generated code therefore creates one internal variable, `varY`, and unifies both arguments with it.
+
+```c
+Junify_var(arg2, varY, th)
+Junify_var(arg3, varY, th)
+```
+
+The recursive clause label `plus_3_1` is registered as the failure continuation so that it can be attempted if the base clause fails.
+
+```c
+Jset_back(&&plus_3_1, th);
+```
+
+---
+
+## 19. Recursive Clause of `plus/3`
+
+The recursive clause is:
+
+```prolog
+plus(s(X), Y, s(Z)) :-
+    plus(X, Y, Z).
+```
+
+Head unification requires the following operations:
+
+1. Unify the first argument with `s(X)`
+2. Unify the second argument with `Y`
+3. Unify the third argument with `s(Z)`
+4. Invoke the body goal `plus(X,Y,Z)`
+
+Before the recursive call, M-Prolog saves both:
+
+* The success continuation used when the recursive call succeeds
+* The failure continuation used when the recursive call fails
+
+Conceptually, execution proceeds as follows:
+
+```text
+plus(s(X),Y,s(Z))
+        |
+        | head unification succeeds
+        v
+save success continuation
+save failure continuation
+        |
+        v
+plus(X,Y,Z)
+```
+
+If the recursive call succeeds, execution returns through the saved success continuation.
+
+If it fails, the saved failure continuation is used, and the caller's variable area, arguments, clause number, and other execution state are restored.
+
+---
+
+## 20. Conjunction in `times/3`
+
+The recursive clause of `times/3` contains two body goals.
+
+```prolog
+times(s(X), Y, Z) :-
+    times(X, Y, Z1),
+    plus(Z1, Y, Z).
+```
+
+The first goal is:
+
+```prolog
+times(X, Y, Z1)
+```
+
+After this goal succeeds, execution must continue with:
+
+```prolog
+plus(Z1, Y, Z)
+```
+
+Before calling `times(X,Y,Z1)`, the starting position of `plus(Z1,Y,Z)` is therefore saved in `next_stack` as a success continuation.
+
+Conceptually:
 
 ```text
 times(X,Y,Z1)
-    │
-    │ success
-    ▼
+      |
+      | success
+      v
 plus(Z1,Y,Z)
-    │
-    │ success
-    ▼
-success of the entire clause
+      |
+      | success
+      v
+success continuation of caller
 ```
 
-Success continuations represent this forward flow.
+If `plus(Z1,Y,Z)` fails, M-Prolog must search for another solution of `times(X,Y,Z1)`.
 
-```text
-times → plus → success
-```
+The failure continuation created by `times(X,Y,Z1)` must therefore remain available even after that call initially succeeds.
 
-Failure continuations represent search in the opposite direction.
-
-```text
-plus fails
-    ↓
-try another solution of times
-
-all solutions of times fail
-    ↓
-return to another clause or to the caller
-```
-
-SCBM manages these two directions of control using separate stacks.
+This allows execution to backtrack from the later `plus/3` call into the earlier `times/3` call.
 
 ---
 
-## 49. Difference Between `plus/3` and `times/3`
+## 21. Backtracking across a Conjunction
 
-Both predicates are classified as `recur`, but their generated code has different levels of complexity.
-
-### `plus/3`
+Consider the conjunction:
 
 ```prolog
-plus(s(X),Y,s(Z)) :-
-    plus(X,Y,Z).
+A, B
 ```
 
-The body contains only one goal.
+Its basic SCBM execution is as follows.
 
-There is no later goal requiring clause variables after the recursive call succeeds.
+### Step 1: Execute `A`
 
-Therefore, clause variables do not need to be saved.
+Before calling `A`, the starting position of `B` is saved as a success continuation.
 
 ```text
-recursive call
-    ↓
-immediate success of the clause
+next_stack <- address of B
 ```
 
-### `times/3`
+### Step 2: `A` Succeeds
 
-```prolog
-times(s(X),Y,Z) :-
-    times(X,Y,Z1),
-    plus(Z1,Y,Z).
-```
+When `A` succeeds, control moves to `success`.
 
-The body contains two goals.
+The `success` handler retrieves the starting position of `B` from `next_stack` and jumps to it.
 
-After the first recursive call succeeds, the outer clause variables are required to execute `plus/3`.
+### Step 3: Execute `B`
 
-The following additional processing is therefore necessary:
+If `B` succeeds, the conjunction succeeds.
 
-```text
-save clause variables
-perform recursive call
-restore clause variables
-execute the next goal
-```
+### Step 4: `B` Fails
 
-This is implemented using `Jpush_var` and `Jpop_var`.
+If `B` fails, execution returns to the failure continuation saved by `A`.
+
+The system then searches for the next clause or next solution of `A`.
+
+### Step 5: Re-execute `B`
+
+If another solution of `A` is found, `B` is executed again using the new variable bindings.
+
+Thus, success continuations control left-to-right execution of a conjunction, while failure continuations control right-to-left backtracking.
 
 ---
 
-## 50. Execution Example: `plus(s(s(0)),Y,Z)`
+## 22. Recursive Frames
 
-Consider the following query:
+SCBM creates a recursion frame for each recursive call.
 
-```prolog
-?- plus(s(s(0)),Y,Z).
-```
+Each recursion frame must preserve at least the following information:
 
-In the first call, the first argument is not `0`, so the first clause fails.
+* Arguments at the time of the call
+* Clause number at the time of the call
+* Variable-binding stack position
+* Work-area position
+* Success-continuation stack position
+* Jump destination used on failure
 
-The second clause performs the following unifications:
+When a recursive call succeeds, the success continuation stored in its frame is used.
 
-```text
-X = s(0)
-Z = s(Z1)
-```
+When it fails, the frame state is restored, and execution moves to its failure continuation.
 
-The recursive body call becomes:
-
-```prolog
-plus(s(0),Y,Z1)
-```
-
-The second clause is selected again.
-
-```text
-X = 0
-Z1 = s(Z2)
-```
-
-The next recursive call becomes:
-
-```prolog
-plus(0,Y,Z2)
-```
-
-The first clause now succeeds.
-
-```text
-Z2 = Y
-```
-
-As the success continuations are followed back outward, the surrounding structures become determined.
-
-```text
-Z1 = s(Y)
-Z  = s(s(Y))
-```
-
-The result is:
-
-```prolog
-Z = s(s(Y))
-```
-
-The entire recursive process is implemented without recursive C calls, using transitions among labels such as:
-
-```text
-plus_3
-plus_3_1
-plus_3_1_0back
-plus_3
-...
-success
-plus_3_1_1
-success
-plus_3_1_1
-success
-```
+As a result, Prolog recursion and backtracking can be managed on the SCBM stack without depending on the ordinary C call stack.
 
 ---
 
-## 51. Execution Example: `times(s(s(0)),Y,Z)`
+## 23. Clause Choice and Recursion
 
-Consider the following query:
+The `clause` variable indicates the clause from which execution should begin.
 
-```prolog
-?- times(s(s(0)),Y,Z).
-```
-
-In the second clause of the outer `times/3` call:
-
-```text
-X = s(0)
-```
-
-The following recursive call is made:
-
-```prolog
-times(s(0),Y,Z1)
-```
-
-The second clause is selected again.
-
-```text
-X = 0
-```
-
-The next recursive call is:
-
-```prolog
-times(0,Y,Z2)
-```
-
-The first clause produces:
-
-```text
-Z2 = 0
-```
-
-The success continuation then advances to the second goal of the inner clause.
-
-```prolog
-plus(0,Y,Z1)
-```
-
-Therefore:
-
-```text
-Z1 = Y
-```
-
-Execution then returns to the outer success continuation and performs:
-
-```prolog
-plus(Z1,Y,Z)
-```
-
-Because `Z1 = Y`, this is conceptually:
-
-```prolog
-plus(Y,Y,Z)
-```
-
-In this way, `times/3` receives the recursive multiplication result in `Z1` and passes it to the following `plus/3` call.
-
-Because `Z1`, `Y`, and `Z` must remain available after the recursive call, the variable stack is required.
-
----
-
-## 52. Label Naming Rules
-
-The generated label names indicate their positions in the compiled control flow.
-
-### Predicate Labels
-
-```text
-plus
-times
-```
-
-### Arity Labels
-
-```text
-plus_3
-times_3
-```
-
-### Clause Labels
-
-```text
-plus_3_0
-plus_3_1
-times_3_0
-times_3_1
-```
-
-The general form is:
-
-```text
-predicate-name_arity_clause-number
-```
-
-### Body Goal Labels
-
-```text
-plus_3_1_0
-times_3_1_0
-times_3_1_1
-```
-
-These indicate positions of goals within a clause body.
-
-### Post-Success Labels
-
-```text
-plus_3_1_1
-times_3_1_1
-times_3_1_2
-```
-
-These indicate positions executed after individual goals succeed.
-
-### Backtracking Restart Labels
-
-```text
-plus_3_1_0back
-times_3_1_0back
-times_3_1_1back
-```
-
-These indicate positions from which execution resumes when backtracking into a particular goal.
-
----
-
-## 53. Main SCBM APIs
-
-The main APIs used by generated `recur` code are as follows:
-
-| API             | Role                                                                 |
-| --------------- | -------------------------------------------------------------------- |
-| `Jsave_arg`     | Saves the top-level argument list                                    |
-| `Jget_arg`      | Retrieves a saved argument list                                      |
-| `Jpush_next`    | Saves a success continuation                                         |
-| `Jpop_next`     | Removes a success continuation                                       |
-| `Jpush_back`    | Saves a failure continuation and restart state                       |
-| `Jpop_back`     | Removes a saved failure-continuation state                           |
-| `Jset_back`     | Sets the next clause of the same predicate as a failure continuation |
-| `Jpush_var`     | Saves a variable required after a predicate call                     |
-| `Jpop_var`      | Restores a saved variable                                            |
-| `Jget_choice`   | Obtains the clause number from which execution resumes               |
-| `Jinc_choice`   | Advances to the next clause number                                   |
-| `Jrelease`      | Releases the state created by the previous clause attempt            |
-| `Jpush_recur`   | Participates in pushing recursive state onto SCBM                    |
-| `Jpop_recur`    | Removes recursive state from SCBM                                    |
-| `Jget_vp`       | Retrieves the saved variable-stack position                          |
-| `Jget_np`       | Retrieves the saved success-continuation-stack position              |
-| `Jdiscard_conj` | Discards the current conjunction state                               |
-| `Jprove_all`    | Executes the remaining goals after the top-level predicate           |
-
----
-
-## 54. General Form of Generated `recur` Code
-
-A predicate containing a single recursive body goal is generally generated in the following form:
+For an initial call, its value is normally:
 
 ```c
-predicate_clause:
-    /* Retrieve arguments */
-    /* Create clause variables */
-    /* Perform head unification */
-
-    arglist = /* arguments for the recursive call */;
-
-    Jpush_back(
-        &&clause_fail,
-        arglist,
-        vp[th],
-        np[conj][th],
-        th);
-
-recursive_call_back:
-    Jpush_next(&&after_recursive_call,th);
-
-    clause = Jget_choice(th);
-    goto predicate_arity;
-
-after_recursive_call:
-    goto success;
-
-clause_fail:
-    Jpop_back(th);
-    goto allfail;
+clause = 0;
 ```
 
-For a predicate containing multiple body goals, variable preservation between goals is added.
+Before executing a clause, the clause-selection number is advanced.
 
 ```c
-first_goal:
-    arglist = /* arguments for the first goal */;
+Jinc_choice(th);
+```
 
-    Jpush_var(/* variables required by later goals */);
+During backtracking, the saved clause number is restored.
 
-    Jpush_back(
-        &&clause_fail,
-        arglist,
-        vp[th],
-        np[conj][th],
-        th);
+```c
+clause = Jget_choice(th);
+```
 
-first_goal_back:
-    Jpush_next(&&after_first_goal,th);
-    goto first_predicate;
+Execution then jumps to the saved label.
 
-after_first_goal:
-    /* Restore variables */
+```c
+goto *next;
+```
 
-    arglist = /* arguments for the second goal */;
+This allows each recursive call to preserve the next clause that should be attempted, regardless of recursion depth.
 
-    Jpush_back(
-        &&first_goal_back,
-        arglist,
-        vp[th],
-        np[conj][th],
-        th);
+---
 
-second_goal_back:
-    Jpush_next(&&after_second_goal,th);
-    goto second_predicate;
+## 24. Why Recursive and Nonrecursive Predicates Can Be Unified
 
-after_second_goal:
-    goto success;
+A simple predicate such as `color/1` and recursive predicates such as `plus/3` and `times/3` appear to perform very different operations.
+
+However, they require the same fundamental control information.
+
+| Requirement                      | `color/1` | `plus/3`, `times/3` |
+| -------------------------------- | --------: | ------------------: |
+| Selection of the next clause     |       Yes |                 Yes |
+| Restoration of unification state |       Yes |                 Yes |
+| Success continuation             |       Yes |                 Yes |
+| Failure continuation             |       Yes |                 Yes |
+| Argument restoration             |       Yes |                 Yes |
+| Nested recursion frames          |        No |                 Yes |
+
+Recursive predicates merely introduce nested frames. Their fundamental success and failure control mechanisms remain the same.
+
+M-Prolog can therefore generate both ordinary nondeterministic predicates and recursive nondeterministic predicates using the unified `nondet` code-generation model.
+
+---
+
+## 25. Overall Control Flow
+
+The overall execution flow of an SCBM-generated `nondet` predicate can be summarized as follows:
+
+```text
+predicate entry
+      |
+      v
+select predicate
+      |
+      v
+select arity
+      |
+      v
+select clause
+      |
+      v
+save failure continuation
+      |
+      v
+head unification
+      |
+      +---------------- failure ----------------+
+      |                                         |
+      v                                         v
+execute body                              next clause
+      |
+      +---------------- failure ----------------+
+      |                                         |
+      v                                         v
+success continuation                 restore SCBM state
+      |                                         |
+      v                                         v
+next goal                      jump to failure continuation
+      |
+      v
+return solution
+      |
+      v
+forced backtracking
+      |
+      v
+restore saved choice point
+      |
+      v
+search for another solution
 ```
 
 ---
 
-## 55. Difference from the `nondet` Type
+## 26. Summary
 
-A `nondet` predicate is generated as an independent C function for each predicate.
+Code generation for `nondet` predicates in M-Prolog has the following characteristics:
 
-```c
-static int c_color(int arglist, int rest, int th);
-```
+* User-defined predicates are generated inside one large C function
+* Predicates, arities, clauses, and body goals are represented as labels
+* GCC computed goto is used for control transfer
+* Success continuations are stored in `next_stack`
+* Failure continuations are stored in the SCBM stack
+* Variables, arguments, clause numbers, and continuation positions are restored during backtracking
+* Ordinary failure and forced backtracking are treated as distinct operations
+* Following goals in a conjunction are represented as success continuations
+* Recursive calls use the same success- and failure-continuation mechanism
+* Simple nondeterministic predicates and recursive predicates are handled uniformly as `nondet` predicates
 
-For a `recur` predicate, the small entry function is separate from the actual implementation, which is incorporated into the large function.
+SCBM does not delegate Prolog search control to the implicit C function-call mechanism.
 
-```c
-static int recur_scbm(...);
-```
+Instead, it explicitly saves the destination to use after success and the destination to use after failure, and transfers control directly to those continuations using `goto`.
 
-The main differences are:
+This structure expresses Prolog clause selection, conjunction, recursion, failure, backtracking, and next-solution search as relatively straightforward generated C code.
 
-| Item                         | `nondet` type                          | `recur` type                            |
-| ---------------------------- | -------------------------------------- | --------------------------------------- |
-| Execution body               | Separate C function for each predicate | Shared large function                   |
-| Recursion                    | Normally not applicable                | Implemented using labels and SCBM       |
-| Clause selection             | Local clause selection                 | Clause labels inside the large function |
-| Success continuation         | Mainly ordinary function return        | `next_stack`                            |
-| Failure continuation         | `choice` and local clause control      | `back_stack` and SCBM                   |
-| Clause-variable preservation | Normally unnecessary                   | Required when later goals use variables |
-| Movement between predicates  | C function calls                       | `goto` within the large function        |
-
----
-
-## 56. Summary
-
-Because `plus/3` and `times/3` contain recursion, they are compiled as `recur` predicates.
-
-The entry functions called from Prolog are small.
-
-```c
-c_plus(...)
-c_times(...)
-```
-
-Each entry function passes the predicate number, arity, initial clause number, and argument list to the large function.
-
-```c
-recur_scbm(...)
-```
-
-Inside the large function, the execution position is selected through the following hierarchy:
-
-```text
-predicate
-  ↓
-arity
-  ↓
-clause
-  ↓
-goal within the clause body
-```
-
-Recursive calls are implemented not as recursive C function calls, but as `goto` statements to labels within the same large function.
-
-```c
-goto plus_3;
-goto times_3;
-```
-
-The position to execute after success is saved as a success continuation.
-
-```c
-Jpush_next(...)
-```
-
-The position to execute after failure or when searching for another solution is saved as a failure continuation in SCBM.
-
-```c
-Jpush_back(...)
-```
-
-Clause variables required after a recursive call are saved on the variable stack.
-
-```c
-Jpush_var(...)
-Jpop_var(...)
-```
-
-The body of `plus/3` contains only one goal, so the entire clause succeeds immediately after the recursive call succeeds.
-
-The body of `times/3` contains two goals. It therefore saves clause variables before the first recursive call, restores them after that call succeeds, and then executes `plus/3`.
-
-Through this mechanism, the generated code represents Prolog recursion, conjunction, success continuations, failure continuations, and backtracking using a large C function, labeled `goto` statements, and SCBM stacks.
