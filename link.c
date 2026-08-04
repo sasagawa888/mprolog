@@ -154,7 +154,6 @@ if (hmod == NULL) {
     init_f2(GET_SCP_IDX, (tpred) get_scp);
     init_f2(SAVE_ARG_IDX, (tpred) save_arg);
     init_f2(RESTORE_ARG_IDX, (tpred) restore_arg);
-    init_f2(SUCCESS_IDX, (tpred) success);
     
 
 
