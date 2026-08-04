@@ -789,14 +789,20 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
+    gen_nondet_body_argument(Args),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
+    gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
-    write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
-    write('goto success;'),nl,
-    write('else goto allfail;'),nl.
+    n_findatom(Pred,builtin,Num),
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
+    n_findatom(Pred,builtin,Num),
+    write('subr_number = '),write(Num),write(';'),nl,
+    write('goto builtin_call;'),nl,
+    gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
+    write('goto success;'),nl.
 
 % last det or tail body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
@@ -845,15 +851,18 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
+    gen_nondet_body_argument(Args),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
+    gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     N1 is N+1,
-    write('if (Jcall_det(Jmakesys("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
-    write('goto '),gen_nondet_body_label([P,A,M,N1]),write(';'),nl,
-    write('else goto allfail;'),nl,
-    gen_nondet_body1(Y,A,M,N1,B,H,P,V,nil).
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
+    n_findatom(Pred,builtin,Num),
+    write('subr_number = '),write(Num),write(';'),nl,
+    write('goto builtin_call;'),nl,
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nil).
 
 % det tail
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
