@@ -587,7 +587,8 @@ gen_SCBM_function2 :-
     ifthenelse(option(debug,on),gen_debug(P),true),
     write('switch(clause){'),nl,
     n_clause_count_with_arity(P,A,M),
-    gen_clause_switch(P,A,0,M),
+    M1 is M+1,
+    gen_clause_switch(P,A,0,M1),
     write('default: goto allfail;'),nl,
     write('}'),nl,
     fail.
