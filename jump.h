@@ -683,10 +683,10 @@ static void *next_stack[1048][CONJSIZE][THREADSIZE];
 static void *back_stack[1048][CONJSIZE][THREADSIZE];
 static void *back_stack1[1048][CONJSIZE][THREADSIZE];
 static int var_stack[1048][THREADSIZE];
-int np[CONJSIZE][THREADSIZE];
-int vp[THREADSIZE];
+static int np[CONJSIZE][THREADSIZE];
+static int vp[THREADSIZE];
 
-void Jpush_next(void *cont, int th)
+static inline void Jpush_next(void *cont, int th)
 {
     #ifdef DBG
     printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
@@ -696,7 +696,7 @@ void Jpush_next(void *cont, int th)
     return(NIL);
 }
 
-void Jpop_next(int th)
+static inline void Jpop_next(int th)
 {
     #ifdef DBG
     printf(" Jpop_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
@@ -705,7 +705,7 @@ void Jpop_next(int th)
 }
 
 
-void Jpush_back(void *cont, int arglist, int vp, int np, int th)
+static inline void Jpush_back(void *cont, int arglist, int vp, int np, int th)
 {
     #ifdef DBG
     printf(" Jpush_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
@@ -715,7 +715,7 @@ void Jpush_back(void *cont, int arglist, int vp, int np, int th)
     back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
 }
 
-void Jpop_back(int th)
+static inline void Jpop_back(int th)
 {
     #ifdef DBG
     printf(" Jpop_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
@@ -726,7 +726,7 @@ void Jpop_back(int th)
 }
 
 
-void Jset_back(void *cont, int th)
+static inline void Jset_back(void *cont, int th)
 {
     #ifdef DBG
     printf(" Jset_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
@@ -737,7 +737,7 @@ void Jset_back(void *cont, int th)
     return(NIL);
 }
 
-void Jpush_var(int x, int th)
+static inline void Jpush_var(int x, int th)
 {
     #ifdef DBG
     printf(" Jpush_var (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
@@ -748,7 +748,7 @@ void Jpush_var(int x, int th)
 }
 
 
-int Jpop_var(int th)
+static inline int Jpop_var(int th)
 {
     #ifdef DBG
     printf(" Jpop_var (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
