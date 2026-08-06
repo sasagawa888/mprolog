@@ -19,6 +19,17 @@ mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
 
+reverse([],[]).
+reverse([X|Xs],Y) :-
+    reverse(Xs,Y1),
+    mappend(Y1,[X],Y).
+
+
+% List of 30 elements for testing
+list30([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 14, 15, 16, 17, 18, 19, 20, 
+        21, 22, 25, 24, 25, 26, 27, 28, 29, 30]).
+
+bench1 :- list30(X),reverse(X,Y).
 
 n(1). n(2). n(3). n(4). n(5).
 n(6). n(7). n(8). n(9). n(10).

@@ -765,6 +765,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_nondet_body_argument(Args),
+    gen_push_var(V),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -775,6 +776,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
+    gen_pop_var(V),
     write('goto success;'),nl.
 
 % last cut operator
