@@ -645,7 +645,6 @@ gen_SCBM_function5 :-
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_recur(th);'),nl,
     write('Jpop_next(th);'),nl,
-    write('clause = Jget_choice(th);'),nl,
     write('arglist = Jget_arg(th);'),nl,
     write('vp[th] = Jget_vp(th);'),nl,
     write('np[Jget_scp(CONJ,th)][th] = Jget_np(th);'),nl,
