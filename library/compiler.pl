@@ -785,6 +785,17 @@ gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl.
 
 
+% last fail body
+gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T) :-
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
+    ifthenelse(T==nondet,gen_pop_var(V),true),
+    M1 is M+1,
+    case([B==[] -> true,
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
+    write('goto allfail;'),nl.
+
+
 % last builtin body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
