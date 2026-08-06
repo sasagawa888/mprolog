@@ -1,5 +1,5 @@
 
-%:- module(jump,[compile_file/1,compile_file1/1,compile_file/2,type/2,mode/3]).
+:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
 
 %type(f,a,t).  (functor,arity,type) nondet det tail dyn mut
 %mode(f,1,[+]).  (functor,arity,modelist)
