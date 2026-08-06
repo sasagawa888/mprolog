@@ -9,3 +9,8 @@ bench_count :-
     nl,
     fail.
 bench_count.
+
+
+foo(X) :- write(X).
+
+bar(X) :- n(X),foo(X),foo(X).

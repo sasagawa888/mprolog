@@ -797,7 +797,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
-    n_findatom(Pred,builtin,Num),
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
@@ -807,19 +806,22 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
 
 % last det or tail body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
-    (n_property(X,compiled_det);n_property(X,compiled_tail)),
+    functor(X,Pred,Arity),
+    (type(Pred,Arity,det);type(Pred,Arity,tail)),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
+    gen_nondet_body_argument(Args),
     M1 is M+1,
-    case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+    case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
-    write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
-    write('goto success;'),nl,
-    write('else goto allfail;'),nl.
-
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
+    write('goto builtin_call;'),nl,
+    gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
+    write('goto success;'),nl.
 
 % recur predicate
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
@@ -866,16 +868,22 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
 
 % det tail
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
-    (n_property(X,compiled_det);n_property(X,compiled_tail)),
+    functor(X,Pred,Arity),
+    (type(Pred,Arity,det);type(Pred,Arity,tail)),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
+    gen_nondet_body_argument(Args),
+    M1 is M+1,
+    case([B==[] -> true,
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
-    write('if (Jcall_det(Jmakecomp("'),write(Pred),write('"),'),gen_a_argument(Args),write(',th) == YES)'),nl,
-    write('goto '),gen_nondet_body_label([P,A,M,N1]),write(';'),nl,
-    write('else goto allfail;'),nl,
-    gen_nondet_body1(Y,A,M,N1,B,H,P,V,nil).
-
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
+    n_findatom(Pred,builtin,Num),
+    write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
+    write('goto builtin_call;'),nl,
+    gen_nondet_body1(Y,A,M,N1,[],H,P,V,nil).
 
 
 gen_nondet_body1(X,A,M,N,B,H,P,V,T) :-
