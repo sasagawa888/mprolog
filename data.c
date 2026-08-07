@@ -1873,42 +1873,53 @@ int unify(int x, int y, int th)
 //typed unify. y is a pair list e.g. [L|Ls]
 int unify_pair(int x, int y, int th)
 {
-
+    /*
+     * x が通常の変数
+     */
     if (IS_ALPHA(x)) {
-	if (variant[x - cell_size][th] == UNBIND) {
-	    variant[x - cell_size][th] = y;
-	    push_stack(x, th);
-	    return (YES);
-	} else {
-	    int v = variant[x - cell_size][th];
-	    if (v == NIL)
-		return NO;
-	    int save = sp[th];
-	    if (unify(car(v), car(y), th) == YES &&
-		unify(cdr(v), cdr(y), th) == YES)
-		return (YES);
+        if (variant[x - cell_size][th] == UNBIND) {
+            variant[x - cell_size][th] = y;
+            push_stack(x, th);
+            return YES;
+        }
 
-	    unbind(save, th);
-	    return (NO);
-	}
-    } else if (anonymousp(x)) {
-	return (YES);
-    } else if (atom_variable_p(x)) {
-	bindsym(x, y, th);
-	return (YES);
-    } else if (listp(x) && x != NIL) {
-	int save = sp[th];
-
-	if (unify(car(x), car(y), th) == YES &&
-	    unify(cdr(x), cdr(y), th) == YES)
-	    return YES;
-
-	unbind(save, th);
-	return (NO);
+        /*
+         * 束縛済みの場合、その束縛先が pair とは限らない。
+         * 汎用 unify に任せる。
+         */
+        return unify(variant[x - cell_size][th], y, th);
     }
-    return (NO);
-}
 
+    /*
+     * anonymous variable
+     */
+    if (anonymousp(x))
+        return YES;
+
+    /*
+     * atom-variable
+     */
+    if (atom_variable_p(x)) {
+        bindsym(x, y, th);
+        return YES;
+    }
+
+    /*
+     * x 自身が pair
+     */
+    if (listp(x) && x != NIL) {
+        int save = sp[th];
+
+        if (unify(car(x), car(y), th) == YES &&
+            unify(cdr(x), cdr(y), th) == YES)
+            return YES;
+
+        unbind(save, th);
+        return NO;
+    }
+
+    return NO;
+}
 
 //typed unify. y is a small integer
 int unify_int(int x, int y, int th)
@@ -2066,34 +2077,45 @@ int unify_var(int x, int y, int th)
     int x1;
 
     if (anonymousp(x) || anonymousp(y))
-	return YES;
+        return YES;
 
+    /* x が既に束縛されていたら、束縛先の型は不明なので
+       汎用 unify に戻す */
     if (IS_ALPHA(x) && variant[x - cell_size][th] != UNBIND)
-	return unify_var(variant[x - cell_size][th], y, th);
+        return unify(variant[x - cell_size][th], y, th);
 
+    /* y が既に束縛されていた場合も同様 */
     if (IS_ALPHA(y) && variant[y - cell_size][th] != UNBIND)
-	return unify(x, variant[y - cell_size][th], th);
+        return unify(x, variant[y - cell_size][th], th);
 
+    /* x が未束縛変数 */
     if (IS_ALPHA(x)) {
-	variant[x - cell_size][th] = y;
-	push_stack(x, th);
-	return YES;
+        variant[x - cell_size][th] = y;
+        push_stack(x, th);
+        return YES;
     }
 
+    /*
+     * atom-variable の場合。
+     * 元の処理をそのまま残す。
+     */
     if (atom_variable_p(x)) {
-	x1 = deref1(x, th);
-	if (variablep(x1)) {
-	    SET_CAR(x, y);
-	    return YES;
-	} else {
-	    variant[y - cell_size][th] = x1;
-	    push_stack(y, th);
-	    return YES;
-	}
+        x1 = deref1(x, th);
+
+        if (variablep(x1)) {
+            SET_CAR(x, y);
+            return YES;
+        } else {
+            variant[y - cell_size][th] = x1;
+            push_stack(y, th);
+            return YES;
+        }
     }
 
+    /* この時点では y が未束縛変数 */
     variant[y - cell_size][th] = x;
     push_stack(y, th);
+
     return YES;
 }
 
