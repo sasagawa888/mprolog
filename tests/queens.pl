@@ -7,13 +7,13 @@ test1 :- queen([1,2,3,4,5,6,7,8,9],X),fail.
 
 
 queen(Data, Out) :-
-    queen_2(Data, [], Out).
+    queen2(Data, [], Out).
 
-queen_2([], _, []).
-queen_2([H|T], History, [Q|M]) :-
+queen2([], _, []).
+queen2([H|T], History, [Q|M]) :-
     qdelete(Q, H, T, L1),
     nodiag(History, Q, 1),
-    queen_2(L1, [Q|History], M).
+    queen2(L1, [Q|History], M).
 
 
 qdelete(A, A, L, L).
