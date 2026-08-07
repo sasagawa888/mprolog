@@ -802,9 +802,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_nondet_body_argument(Args),
     M1 is M+1,
-    case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
-          |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     n_findatom(Pred,builtin,Num),
@@ -821,10 +818,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_nondet_body_argument(Args),
-    M1 is M+1,
-    case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
-          |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
@@ -864,10 +857,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_nondet_body_argument(Args),
-    M1 is M+1,
-    case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
-          |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     n_findatom(Pred,builtin,Num),
@@ -883,10 +872,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
     gen_nondet_body_argument(Args),
-    M1 is M+1,
-    case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
-          |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     n_findatom(Pred,builtin,Num),

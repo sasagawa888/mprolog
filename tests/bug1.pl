@@ -13,7 +13,7 @@ bench_count.
 
 foo(X) :- write(X).
 
-bar(X) :- n(X),write(X).
+bar(X) :- n(X),foo(X).
 
 last([],[]).
 last([X],X).
