@@ -43,6 +43,10 @@ bench :-
     fail.
 bench.
 
+test2(X) :-
+    n(X),
+    write(X),
+    X = 2.
 
 nat(0).
 nat(s(X)) :- nat(X).
