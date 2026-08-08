@@ -685,6 +685,7 @@ static void *back_stack1[1048][CONJSIZE][THREADSIZE];
 static int var_stack[1048][THREADSIZE];
 static int np[CONJSIZE][THREADSIZE];
 static int vp[THREADSIZE];
+static int mode[THREADSIZE];
 
 static inline void Jpush_next(void *cont, int th)
 {
