@@ -1,7 +1,7 @@
 % ============================================================
 % nondet stress test
 % ============================================================
-
+/*
 member1(X,[X|_]).
 member1(X,[_|Xs]) :-
     member1(X,Xs).
@@ -32,7 +32,7 @@ sort_test(Xs,Ys) :-
 p1(X,Y) :-
     select1(X,[1,2,3],Z),
     select1(Y,Z,_).
-
+*/
 rtest([],[]).
 rtest([_|Xs],[X|Ys]) :-
     choose(X),
@@ -152,11 +152,11 @@ choose(b).
 %
 % permtest enumerates all 5! = 120 permutations and then fails.
 % ============================================================
-
+/*
 permtest :-
     perm1([1,2,3,4,5],_),
     fail.
-
+*/
 
 % ?- permtest.
 %

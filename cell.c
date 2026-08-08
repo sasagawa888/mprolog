@@ -457,7 +457,8 @@ int push_conj(int th)
 int push_recur(int arglist, int vp, int np ,int th)
 {
     #ifdef DBG
-    printf(" push_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
+    printf(" push_recur (%d,%d) SP=%d AC=%d\n",scp[CONJ][th], scp[RECUR][th],
+            sp[th],ac[th]);
     #endif
 
     if (scp[RECUR][th] + 1 >= RECURSIZE)
@@ -521,12 +522,21 @@ int max_choice(int th)
 int release(int th)
 {
 
-    #ifdef DBG
-    printf(" release (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
     unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th], th);
     ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
+    #ifdef DBG
+    printf(" release (%d,%d) SP=%d AC=%d\n",scp[CONJ][th], scp[RECUR][th],
+             sp[th], ac[th]);
+    int i;
+    for(i=0;i<sp[th];i++){
+        printf("\n%d ",i);
+        print(localstack[i][th]);
+    }
+    for(i=0;i<ac[th]-cell_size;i++){
+        printf("\nvar_%d ",i);
+        print(variant[i][th]);
+    }
+    #endif
     return (NIL);
 }
 

@@ -625,6 +625,7 @@ gen_SCBM_function31(P,A,[C|Cs],N) :-
 
 gen_SCBM_function4 :-
     write('success:'),nl,
+    ifthenelse(option(debug,on),write('printf("success");'),true),
     write('if(np[Jget_scp(CONJ,th)][th] == 0){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
@@ -641,6 +642,7 @@ gen_SCBM_function4 :-
 
 gen_SCBM_function5 :-
     write('allfail:'),nl,
+    ifthenelse(option(debug,on),write('printf("allfail");'),true),
     write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('Jpop_recur(th);'),nl,
@@ -706,7 +708,8 @@ gen_a_nondet_clause(P,A,M,_,_) :-
 
 gen_debug(P) :-
     write('printf("'),write(P),write('");'),
-    write('Jprint(Jderef(arglist,th));').
+    write('Jprint(arglist); Jprint(Jderef(arglist,th));').
+
 
 % varA,varB,...
 gen_all_var([]).
@@ -770,7 +773,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           | (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    gen_nondet_backtrack(V),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
@@ -849,7 +851,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    gen_nondet_backtrack(V),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
