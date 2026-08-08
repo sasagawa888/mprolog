@@ -520,7 +520,7 @@ gen_SCBM_function :-
     write('void *next;'),nl,
     write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number'),
     gen_all_variable,write(';'),nl,
-    write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0; mode[th] = 0;'),nl,
+    write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     write('Jpush_next(&&success,th);'),nl,
     gen_pred_switch,
     gen_SCBM_function1,
@@ -650,7 +650,6 @@ gen_SCBM_function5 :-
     write('arglist = Jget_arg(th);'),nl,
     write('vp[th] = Jget_vp(th);'),nl,
     write('np[Jget_scp(CONJ,th)][th] = Jget_np(th);'),nl,
-    write('mode[th] = 1;'),nl,
     write('goto *next;'),nl.
    
 
@@ -910,12 +909,6 @@ gen_nondet_body_label([P,A,M,N]) :-
 
 gen_nondet_body_argument(Args) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
-
-gen_nondet_backtrack(V) :-
-    write('if(mode[th] == 1){'),nl,
-    gen_pop_var(V),
-    gen_push_var(V),
-    write('mode[th] = 0;}'),nl.
 
 %---------------det determinant predicate-------------------
 gen_det_pred(P) :-
