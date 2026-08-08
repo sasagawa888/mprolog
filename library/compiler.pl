@@ -648,6 +648,7 @@ gen_SCBM_function5 :-
     write('arglist = Jget_arg(th);'),nl,
     write('vp[th] = Jget_vp(th);'),nl,
     write('np[Jget_scp(CONJ,th)][th] = Jget_np(th);'),nl,
+    write('mode[th] = 1;'),nl,
     write('goto *next;'),nl.
    
 
@@ -769,6 +770,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           | (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
+    gen_nondet_backtrack(V),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
@@ -847,6 +849,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
+    gen_nondet_backtrack(V),
     N1 is N+1,
     write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Jget_choice(th);'),nl,
@@ -906,6 +909,12 @@ gen_nondet_body_label([P,A,M,N]) :-
 
 gen_nondet_body_argument(Args) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
+
+gen_nondet_backtrack(V) :-
+    write('if(mode[th] == 1){'),nl,
+    gen_pop_var(V),
+    gen_push_var(V),
+    write('mode[th] = 0;}'),nl.
 
 %---------------det determinant predicate-------------------
 gen_det_pred(P) :-
