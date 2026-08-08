@@ -4,7 +4,7 @@
 
 #define INT_FLAG    1073741824 //#b1000000000000000000000000000000
 #define INT_MASK    1073741823 //#b0111111111111111111111111111111
-
+static int mode[THREADSIZE];
 
 typedef int (*fn0)();
 typedef int (*fn1)(int);
@@ -238,6 +238,7 @@ static inline int Jdiscard_conj(int th) {
 
 
 static inline int Jrelease(int th) {
+    mode[th] = 0;
     return f1[RELEASE_IDX](th);
 }
 
@@ -685,7 +686,7 @@ static void *back_stack1[1048][CONJSIZE][THREADSIZE];
 static int var_stack[1048][THREADSIZE];
 static int np[CONJSIZE][THREADSIZE];
 static int vp[THREADSIZE];
-static int mode[THREADSIZE];
+
 
 static inline void Jpush_next(void *cont, int th)
 {
