@@ -1416,6 +1416,26 @@ gen_a_nondet_argument(X,V) :-
     write('Jmakestr("'),
     write(X),
     write('")').
+gen_a_nondet_argument(X,V) :-
+	atom(X),
+    write('Jmakeconst("'),
+    write(X),
+    write('")').
+gen_a_nondet_argument(X,V) :-
+	list(X),
+    gen_nondet_argument_list(X,V).
+gen_a_nondet_argument(X,V) :-
+    invoke_error('nondet argument illegal argument ',X).
+
+gen_nondet_argument_list([X|Xs],V) :-
+	write('Jwlistcons('),
+    gen_a_nondet_argument(X,V),
+    write(','),
+    gen_a_nondet_argument(Xs,V),
+    write(','),
+    write(th),
+    write(')').
+
 
 /*
 generate arguments for pred ope fun.
