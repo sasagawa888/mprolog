@@ -1,5 +1,5 @@
 
-%:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
+:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
 
 %type(f,a,t).  (functor,arity,type) nondet det tail dyn mut
 %mode(f,1,[+]).  (functor,arity,modelist)
@@ -518,7 +518,7 @@ gen_head1([X|Xs],N) :-
 gen_SCBM_function :-
     write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
-    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number'),
+    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number,base'),
     gen_all_variable,write(';'),nl,
     write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     write('Jpush_next(&&success,th);'),nl,
@@ -908,6 +908,7 @@ gen_nondet_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
 
 gen_nondet_body_argument(Args) :-
+    write('base = next_stack1[np[Jget_scp(CONJ,th)][th]][th];'),nl,
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 %---------------det determinant predicate-------------------
