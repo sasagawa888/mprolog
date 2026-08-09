@@ -694,6 +694,7 @@ static inline void Jpush_next(void *cont, int th)
     #endif
     np[Jget_scp(CONJ,th)][th]++;
     next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
+    next_stack1[np[Jget_scp(CONJ,th)][th]][th] = Jget_ac(th);
     return(NIL);
 }
 
