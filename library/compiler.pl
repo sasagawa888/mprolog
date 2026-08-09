@@ -1,5 +1,5 @@
 
-:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
+%:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
 
 %type(f,a,t).  (functor,arity,type) nondet det tail dyn mut
 %mode(f,1,[+]).  (functor,arity,modelist)
@@ -1360,6 +1360,62 @@ gen_form(round(X,Y)) :-
     gen_form(Y),
     write(',th)').
 
+
+/*
+generate arguments for nondet predicate
+variable is transform 'next_stack1[np[Jget_scp(CONJ,th)][th] - N)'
+next_stack1 has AC when generated success continuation
+*/
+gen_nondet_argument([],V) :-
+    write('NIL').
+gen_nondet_argument([X|Xs],V) :-
+	write('Jwcons('),
+    gen_a_nondet_argument(X,V),
+    write(','),
+    gen_nondet_argument(Xs,V),
+    write(',th)').
+
+nth_var(X,[X|Xs],1).
+nth_var(X,[_|Xs],N) :-
+    nth_var(X,Xs,N1),
+    N is N1+1.
+
+gen_a_nondet_argument([],_) :-
+	write('NIL').
+gen_a_nondet_argument(X,V) :-
+    n_compiler_anonymous(X),
+    write(X).
+gen_a_nondet_argument(X,V) :-
+	n_compiler_variable(X),
+    nth_var(X,V,N),
+    write('(next_stack1[np[Jget_scp(CONJ,th)][th] - '),write(N),write(')').
+gen_a_nondet_argument(pi,V) :-
+	write('Jmakestrflt("3.14159265358979")').
+gen_a_nondet_argument(X,V) :-
+	n_bignum(X),
+    write('Jmakebig("'),
+    write(X),
+    write('")').
+gen_a_nondet_argument(X,V) :-
+	n_longnum(X),
+    write('Jmakestrlong("'),
+    write(X),
+    write('")').
+gen_a_nondet_argument(X,V) :-
+	integer(X),
+    write('Jmakeint('),
+    write(X),
+    write(')').
+gen_a_nondet_argument(X,V) :-
+	float(X),
+    write('Jmakestrflt("'),
+    write(X),
+    write('")').
+gen_a_nondet_argument(X,V) :-
+	string(X),
+    write('Jmakestr("'),
+    write(X),
+    write('")').
 
 /*
 generate arguments for pred ope fun.

@@ -681,6 +681,7 @@ static void mouse_callback()
 static void *next_stack[1048][CONJSIZE][THREADSIZE];
 static void *back_stack[1048][CONJSIZE][THREADSIZE];
 static void *back_stack1[1048][CONJSIZE][THREADSIZE];
+static int next_stack1[1048][THREADSIZE];
 static int var_stack[1048][THREADSIZE];
 static int np[CONJSIZE][THREADSIZE];
 static int vp[THREADSIZE];
