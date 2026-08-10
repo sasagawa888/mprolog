@@ -864,7 +864,7 @@ gen_nondet_body_argument(Args,Vars,0) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument(Args,Vars,_) :-
-    write('base = next_stack1[np[Jget_scp(CONJ,th)][th]][th];'),nl,
+    write('base = next_stack1[np[Jget_scp(CONJ,th)][th]+1][th];'),nl,
     reverse(Vars,Vars1),
     gen_nondet_body_argument1(Vars,Vars1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
