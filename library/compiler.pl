@@ -726,7 +726,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     functor(X,_,Arity),
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    gen_nondet_body_argument(Args,V),
+    gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -761,7 +761,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    gen_nondet_body_argument(Args,V),
+    gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -780,7 +780,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     (type(Pred,Arity,det);type(Pred,Arity,tail)),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    gen_nondet_body_argument(Args,V),
+    gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -799,7 +799,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     functor(X,_,Arity),
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    gen_nondet_body_argument(Args,V),
+    gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -820,7 +820,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    gen_nondet_body_argument(Args,V),
+    gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -838,7 +838,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     (type(Pred,Arity,det);type(Pred,Arity,tail)),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    gen_nondet_body_argument(Args,V),
+    gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -860,10 +860,13 @@ gen_nondet_clause_label([P,A,M]) :-
 gen_nondet_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
 
-gen_nondet_body_argument(Args,Vars) :-
+gen_nondet_body_argument(Args,Vars,0) :-
+    write('arglist = '),gen_a_argument(Args),write(';'),nl.
+
+gen_nondet_body_argument(Args,Vars,_) :-
     write('base = next_stack1[np[Jget_scp(CONJ,th)][th]][th];'),nl,
     reverse(Vars,Vars1),
-    %gen_nondet_body_argument1(Vars,Vars1),
+    gen_nondet_body_argument1(Vars,Vars1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument1([],_).
