@@ -339,27 +339,6 @@ gen_jump_switch1(A,M,N) :-
     gen_jump_switch1(A,M1,N).
 
 
-gen_disj_jump_switch(X,A,M,N):-
-    write('int disj = Jget_disj_choice(th);'),nl,
-    write('switch(disj){'),nl,
-    gen_disj_jump_switch1(X,A,M,N,0),
-    write('}'),nl.
-
-gen_disj_jump_switch1((X;Y),A,M,N,L) :-
-    write('case '),write(L),write(': '),
-    write('goto '),write('disj_'),write(A),write('_'),
-    write(M),write('_'),write(N),write('_'),write(L),write(';'),nl,
-    L1 is L+1,
-    gen_disj_jump_switch1(Y,A,M,N,L1).
-gen_disj_jump_switch1(end_of_disjunction,A,M,N,L) :-
-    M1 is M+1,
-    write('default: Jreset_disj_choice(th);'),nl,
-    write('goto clause_'),write(A),write('_'),write(M1),write(';'),nl.
-gen_disj_jump_switch1(X,A,M,N,L) :-
-    gen_disj_jump_switch1((X;end_of_disjunction),A,M,N,L).
-
-
-
 
 /* --------------------nondet-----------------------------------
 */
@@ -766,7 +745,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_nondet_body_argument(Args),
+    gen_nondet_body_argument(Args,V),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -803,7 +782,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_nondet_body_argument(Args),
+    gen_nondet_body_argument(Args,V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -823,7 +802,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_nondet_body_argument(Args),
+    gen_nondet_body_argument(Args,V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -843,7 +822,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_nondet_body_argument(Args),
+    gen_nondet_body_argument(Args,V),
     gen_push_var(V),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
@@ -866,7 +845,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_nondet_body_argument(Args),
+    gen_nondet_body_argument(Args,V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -885,7 +864,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     ifthenelse(T==nondet,gen_pop_var(V),true),
-    gen_nondet_body_argument(Args),
+    gen_nondet_body_argument(Args,V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
@@ -907,7 +886,7 @@ gen_nondet_clause_label([P,A,M]) :-
 gen_nondet_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
 
-gen_nondet_body_argument(Args) :-
+gen_nondet_body_argument(Args,Vars) :-
     write('base = next_stack1[np[Jget_scp(CONJ,th)][th]][th];'),nl,
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
@@ -1361,81 +1340,6 @@ gen_form(round(X,Y)) :-
     gen_form(Y),
     write(',th)').
 
-
-/*
-generate arguments for nondet predicate
-variable is transform 'next_stack1[np[Jget_scp(CONJ,th)][th] - N)'
-next_stack1 has AC when generated success continuation
-*/
-gen_nondet_argument([],V) :-
-    write('NIL').
-gen_nondet_argument([X|Xs],V) :-
-	write('Jwcons('),
-    gen_a_nondet_argument(X,V),
-    write(','),
-    gen_nondet_argument(Xs,V),
-    write(',th)').
-
-nth_var(X,[X|Xs],1).
-nth_var(X,[_|Xs],N) :-
-    nth_var(X,Xs,N1),
-    N is N1+1.
-
-gen_a_nondet_argument([],_) :-
-	write('NIL').
-gen_a_nondet_argument(X,V) :-
-    n_compiler_anonymous(X),
-    write(X).
-gen_a_nondet_argument(X,V) :-
-	n_compiler_variable(X),
-    nth_var(X,V,N),
-    write('(next_stack1[np[Jget_scp(CONJ,th)][th] - '),write(N),write(')').
-gen_a_nondet_argument(pi,V) :-
-	write('Jmakestrflt("3.14159265358979")').
-gen_a_nondet_argument(X,V) :-
-	n_bignum(X),
-    write('Jmakebig("'),
-    write(X),
-    write('")').
-gen_a_nondet_argument(X,V) :-
-	n_longnum(X),
-    write('Jmakestrlong("'),
-    write(X),
-    write('")').
-gen_a_nondet_argument(X,V) :-
-	integer(X),
-    write('Jmakeint('),
-    write(X),
-    write(')').
-gen_a_nondet_argument(X,V) :-
-	float(X),
-    write('Jmakestrflt("'),
-    write(X),
-    write('")').
-gen_a_nondet_argument(X,V) :-
-	string(X),
-    write('Jmakestr("'),
-    write(X),
-    write('")').
-gen_a_nondet_argument(X,V) :-
-	atom(X),
-    write('Jmakeconst("'),
-    write(X),
-    write('")').
-gen_a_nondet_argument(X,V) :-
-	list(X),
-    gen_nondet_argument_list(X,V).
-gen_a_nondet_argument(X,V) :-
-    invoke_error('nondet argument illegal argument ',X).
-
-gen_nondet_argument_list([X|Xs],V) :-
-	write('Jwlistcons('),
-    gen_a_nondet_argument(X,V),
-    write(','),
-    gen_a_nondet_argument(Xs,V),
-    write(','),
-    write(th),
-    write(')').
 
 
 /*
