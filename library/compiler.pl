@@ -888,7 +888,21 @@ gen_nondet_body_label([P,A,M,N]) :-
 
 gen_nondet_body_argument(Args,Vars) :-
     write('base = next_stack1[np[Jget_scp(CONJ,th)][th]][th];'),nl,
+    reverse(Vars,Vars1),
+    %gen_nondet_body_argument1(Vars,Vars1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
+
+gen_nondet_body_argument1([],_).
+gen_nondet_body_argument1([V|Vs],Vars1) :-
+    nth_var(V,Vars1,N),
+    write(V),write(' = base - '),write(N),write(';'),nl,
+    gen_nondet_body_argument1(Vs,Vars1).
+
+nth_var(X,[X|_],1).
+nth_var(X,[_|Xs],N) :-
+    nth_var(X,Xs,N1),
+    N is N1+1.
+
 
 %---------------det determinant predicate-------------------
 gen_det_pred(P) :-
