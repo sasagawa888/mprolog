@@ -41,6 +41,13 @@ rtest([_|Xs],[X|Ys]) :-
 choose(a).
 choose(b).
 
+rtest2([],[]).
+rtest2([_|Xs],[X|Ys]) :-
+    choose(X),
+    write(X),
+    rtest2(Xs,Ys).
+
+
 % ============================================================
 % Test 1: simple nondet recursion
 %
