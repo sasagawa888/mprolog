@@ -17,6 +17,25 @@ perm1(Xs,[X|Ys]) :-
     select1(X,Xs,Zs),
     perm1(Zs,Ys).
 
+ptest(X,Y) :-
+    select1(X,[a,b],_),
+    select1(Y,[1,2],_).
+
+ptest2([],[]).
+ptest2([_|Xs],[X|Ys]) :-
+    choose(X),
+    ptest2(Xs,Ys).
+
+gen([1]).
+gen([2]).
+
+ptest3(X) :-
+    gen(Z),
+    ptest2(Z,X).
+
+ptest4(X,Y) :-
+    select1(X,[1,2,3],Z),
+    ptest2(Z,Y).
 
 ordered([]).
 ordered([_]).

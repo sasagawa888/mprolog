@@ -1614,7 +1614,9 @@ gen_a_tail_clause(P,A,M) :-
 	n_property(P,predicate),
     P =.. [P1|_],
 	gen_head(P),
-    write('return(YES);'),nl.
+    write('{Junbind(save2,th);'),nl,
+    write('Jset_ac(save3,th);'),nl,
+    write('return(YES);}'),nl.
 
 gen_a_tail_clause((Head :- Body),A,M) :-
     tail_body(Head,Body),
