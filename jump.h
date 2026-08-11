@@ -687,14 +687,14 @@ static int np[CONJSIZE][THREADSIZE];
 static int vp[THREADSIZE];
 
 
-static inline void Jpush_next(void *cont, int th)
+static inline void Jpush_next(void *cont,int ac, int th)
 {
     #ifdef DBG
     printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
     np[Jget_scp(CONJ,th)][th]++;
     next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
-    next_stack1[np[Jget_scp(CONJ,th)][th]][th] = Jget_ac(th);
+    next_stack1[np[Jget_scp(CONJ,th)][th]][th] = ac;
     return(NIL);
 }
 
