@@ -591,6 +591,7 @@ int pop_recur(int th)
     if (scp[RECUR][th] <= 0)
 	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
     scp[RECUR][th] --;
+    ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
     return(NIL);
 }
 
