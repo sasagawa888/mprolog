@@ -729,7 +729,8 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           | (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
@@ -756,7 +757,8 @@ gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     M1 is M+1,
     case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     write('goto allfail;'),nl.
 
@@ -769,7 +771,8 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     ifthenelse(N==0,
@@ -790,7 +793,8 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     ifthenelse(N==0,
@@ -811,7 +815,8 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
@@ -837,7 +842,8 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     ifthenelse(N==0,
@@ -857,7 +863,8 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_argument(Args,V,N),
     M1 is M+1,
     case([B==[] -> true,
-          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)
+          B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
+          B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     N1 is N+1,
     ifthenelse(N==0,
