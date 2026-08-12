@@ -527,6 +527,7 @@ int release(int th)
     #ifdef DBG
     printf(" release (%d,%d) SP=%d AC=%d\n",scp[CONJ][th], scp[RECUR][th],
              sp[th], ac[th]);
+    /*
     int i;
     for(i=0;i<sp[th];i++){
         printf("\n%d ",i);
@@ -536,6 +537,7 @@ int release(int th)
         printf("\nvar_%d ",i);
         print(variant[i][th]);
     }
+    */
     #endif
     return (NIL);
 }
