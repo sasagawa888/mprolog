@@ -852,7 +852,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,[],H,P,V,nil).
+    gen_nondet_body1(Y,A,M,N1,nil,H,P,V,nil).
 
 % det tail
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
@@ -873,7 +873,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,[],H,P,V,nil).
+    gen_nondet_body1(Y,A,M,N1,nil,H,P,V,nil).
 
 
 gen_nondet_body1(X,A,M,N,B,H,P,V,T) :-
