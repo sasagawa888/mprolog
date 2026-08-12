@@ -775,9 +775,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    ifthenelse(N==0,
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',next_stack1[np[Jget_scp(CONJ,th)][th]+1][th],th);'),nl)),
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',base,th);'),
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
@@ -798,9 +796,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    ifthenelse(N==0,
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',next_stack1[np[Jget_scp(CONJ,th)][th]+1][th],th);'),nl)),
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',base,th);'),nl,
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
     gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
@@ -822,13 +818,10 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('Jrelease(th);'),nl,
-    gen_nondet_body_argument_back(Args,V,N),
+    write('base = Jget_ac(th);'),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
     N1 is N+1,
-    ifthenelse(N==0,
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',next_stack1[np[Jget_scp(CONJ,th)][th]+1][th],th);'),nl)),
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',base,th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
@@ -850,9 +843,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    ifthenelse(N==0,
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',next_stack1[np[Jget_scp(CONJ,th)][th]+1][th],th);'),nl)),
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',base,th);'),nl,
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
@@ -872,9 +863,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    ifthenelse(N==0,
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
-               (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',next_stack1[np[Jget_scp(CONJ,th)][th]+1][th],th);'),nl)),
+    write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',base,th);'),nl,
     n_findatom(Pred,builtin,Num),
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
@@ -891,17 +880,11 @@ gen_nondet_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
 
 gen_nondet_body_argument(Args,Vars,0) :-
+    write('base = Jget_ac(th);'),nl,
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument(Args,Vars,_) :-
     write('base = next_stack1[np[Jget_scp(CONJ,th)][th]+1][th];'),nl,
-    reverse(Vars,Vars1),
-    gen_nondet_body_argument1(Vars,Vars1),
-    write('arglist = '),gen_a_argument(Args),write(';'),nl.
-
-
-gen_nondet_body_argument_back(Args,Vars,_) :-
-    write('base = Jget_ac(th);'),nl,
     reverse(Vars,Vars1),
     gen_nondet_body_argument1(Vars,Vars1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
