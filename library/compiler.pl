@@ -1,5 +1,5 @@
 
-:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
+%:- module(jump,[compile_file/1,compile_file/2,type/2,mode/3]).
 
 %type(f,a,t).  (functor,arity,type) nondet det tail dyn mut
 %mode(f,1,[+]).  (functor,arity,modelist)
@@ -732,7 +732,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==nil -> true
           | (write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,P,A,M1),true),
+    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_nondet_body_argument_back(Args,V,N),
@@ -775,7 +775,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0,0,0),true),
+    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     ifthenelse(N==0,
                (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
@@ -798,7 +798,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0,0,0),true),
+    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     ifthenelse(N==0,
                (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
@@ -821,7 +821,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,P,A,M1),true),
+    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_nondet_body_argument_back(Args,V,N),
@@ -849,7 +849,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0,0,0),true),
+    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     ifthenelse(N==0,
                (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
@@ -871,7 +871,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Jpush_back(&&allfail,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==nil -> true
           |(write('Jpush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,vp[th],np[Jget_scp(CONJ,th)][th],th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0,0,0),true),
+    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     ifthenelse(N==0,
                (write('Jpush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',Jget_ac(th),th);'),nl),
@@ -919,11 +919,11 @@ nth_var(X,[_|Xs],N) :-
     nth_var(X,Xs,N1),
     N is N1+1.
 
-gen_back_debug(B,P,A,M1) :-
-    case([B==[] -> (write('printf("Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write('\n");'),nl),
-          B==cut -> (write('printf("Jpush_back(&&allfail");'),nl),
+gen_back_debug(B,P) :-
+    case([B==[] -> (write('printf("Jpush_back next clause'),write(P),write('");'),nl),
+          B==cut -> (write('printf("Jpush_back allfail");'),nl),
           B==nil -> true
-          | (write('printf(Jpush_back(&&'),gen_nondet_body_label([P|B]),write('\n");'),nl)]).
+          | (write('printf("Jpush_back before'),write(P),write('");'),nl)]).
 
 
 %---------------det determinant predicate-------------------
