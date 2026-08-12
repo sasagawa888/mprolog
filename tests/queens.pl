@@ -13,6 +13,7 @@ queen2([], _, []).
 queen2([H|T], History, [Q|M]) :-
     qdelete(Q, H, T, L1),
     nodiag(History, Q, 1),
+    write(L1),
     queen2(L1, [Q|History], M).
 
 
