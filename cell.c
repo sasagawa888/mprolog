@@ -617,6 +617,7 @@ int get_sp(int th)
 
 int callsubr(int x, int arglist, int rest, int th)
 {
+    proof[th]++;
     return ((GET_SUBR(x) (arglist, rest, th)));
 }
 
