@@ -726,7 +726,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    gen_pack_pointer(V),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,np[Jget_scp(CONJ,th)][th],th);'),nl),
