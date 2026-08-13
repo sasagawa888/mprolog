@@ -881,21 +881,12 @@ gen_nondet_body_label([P,A,M,N]) :-
     write(P),write('_'),write(A),write('_'),write(M),write('_'),write(N).
 
 gen_nondet_body_argument(Args,Vars,0) :-
-    write('base = Jget_ac(th);'),nl,
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument(Args,Vars,_) :-
-    write('base = next_stack1[np[Jget_scp(CONJ,th)][th]+1][th];'),nl,
-    reverse(Vars,Vars1),
-    gen_nondet_body_argument1(Vars,Vars1),
+    write('pointer = next_stack1[np[Jget_scp(CONJ,th)][th]+1][th];'),nl,
+    gen_unpack_pointer(Vars,1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
-
-
-gen_nondet_body_argument1([],_).
-gen_nondet_body_argument1([V|Vs],Vars1) :-
-    nth_var(V,Vars1,N),
-    write(V),write(' = base - '),write(N),write(';'),nl,
-    gen_nondet_body_argument1(Vs,Vars1).
 
 
 
