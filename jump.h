@@ -256,11 +256,6 @@ static inline int Jget_arg(int th) {
 }
 
 
-static inline int Jget_vp(int th) {
-    return f1[GET_VP_IDX](th);
-}
-
-
 static inline int Jget_np(int th) {
     return f1[GET_NP_IDX](th);
 }
@@ -570,6 +565,10 @@ static inline int Jcall_det(int x, int y, int th) {
 }
 
 
+static inline int Jpush_recur(int x, int y, int th) {
+    return f3[PUSH_RECUR_IDX](x, y, th);
+}
+
 
 static inline int Jmakeconst(char* x) {
     return f4[MAKECONST_IDX](x);
@@ -635,10 +634,6 @@ static inline int Jwlist3(int x, int y, int z, int th) {
 }
 
 
-static inline int Jpush_recur(int x, int y, int z, int th) {
-    return f5[PUSH_RECUR_IDX](x, y, z, th);
-}
-
 
 static inline char *Jgetname(int x)
 {
@@ -690,7 +685,7 @@ static int vp[THREADSIZE];
 static inline void Jpush_next(void *cont,int ac, int th)
 {
     #ifdef DBG
-    printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),ac);
     #endif
     np[Jget_scp(CONJ,th)][th]++;
     next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
@@ -707,12 +702,12 @@ static inline void Jpop_next(int th)
 }
 
 
-static inline void Jpush_back(void *cont, int arglist, int vp, int np, int th)
+static inline void Jpush_back(void *cont, int arglist, int np, int th)
 {
     #ifdef DBG
     printf(" Jpush_back (%d,%d) %d\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),cont);
     #endif
-    Jpush_recur(arglist,vp,np,th);
+    Jpush_recur(arglist,np,th);
     back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
     back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
 }

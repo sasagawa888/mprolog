@@ -186,6 +186,7 @@ if (hmod == NULL) {
     init_f3(DIV_IDX, (tpred) f_div);
     init_f3(CALL_NONDET_IDX, (tpred) call_nondet);
     init_f3(CALL_DET_IDX, (tpred) call_det);
+    init_f3(PUSH_RECUR_IDX, (tpred) push_recur);
     
 
     //argument-1 string type
@@ -206,7 +207,7 @@ if (hmod == NULL) {
     /* argument 4 */
     init_f5(CALLSUBR_IDX, (tpred) callsubr);
     init_f5(WLIST3_IDX, (tpred) wlist3);
-    init_f5(PUSH_RECUR_IDX, (tpred) push_recur);
+    
 
     /* argument-1 return char* */
     init_f6(GETNAME_IDX, (tpred) get_name);
