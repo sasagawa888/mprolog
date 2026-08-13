@@ -497,7 +497,7 @@ gen_head1([X|Xs],N) :-
 gen_SCBM_function :-
     write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
-    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number,base'),
+    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number,base,pointer'),
     gen_all_variable,write(';'),nl,
     write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
     write('Jpush_next(&&success,Jget_ac(th),th);'),nl,
@@ -894,6 +894,13 @@ gen_nondet_body_argument1([V|Vs],Vars1) :-
     nth_var(V,Vars1,N),
     write(V),write(' = base - '),write(N),write(';'),nl,
     gen_nondet_body_argument1(Vs,Vars1).
+
+gen_pointer_list([]) :-
+    write('NIL').
+gen_pointer_list([L|Ls]) :-
+    write('Jcons('),write(L),write(','),
+    gen_pointer_list(Ls),
+    write(')').
 
 nth_var(X,[X|_],1).
 nth_var(X,[_|Xs],N) :-
