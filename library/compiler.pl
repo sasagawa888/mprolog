@@ -726,6 +726,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
+    gen_pack_pointer(V),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,np[Jget_scp(CONJ,th)][th],th);'),nl),
@@ -809,6 +810,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
+    gen_pack_pointer(V),
     M1 is M+1,
     case([B==[] -> (write('Jpush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,np[Jget_scp(CONJ,th)][th],th);'),nl),
           B==cut -> (write('Jpush_back(&&allfail,arglist,np[Jget_scp(CONJ,th)][th],th);'),nl),
@@ -895,12 +897,23 @@ gen_nondet_body_argument1([V|Vs],Vars1) :-
     write(V),write(' = base - '),write(N),write(';'),nl,
     gen_nondet_body_argument1(Vs,Vars1).
 
-gen_pointer_list([]) :-
+
+
+gen_pack_pointer(V) :-
+    write('pointer = '),gen_pack_pointer1(V),write(';'),nl.
+
+gen_pack_pointer1([]) :-
     write('NIL').
-gen_pointer_list([L|Ls]) :-
+gen_pack_pointer1([L|Ls]) :-
     write('Jcons('),write(L),write(','),
-    gen_pointer_list(Ls),
+    gen_pack_pointer1(Ls),
     write(')').
+
+gen_unpack_pointer([],_).
+gen_unpack_pointer([L|Ls],N) :-
+    write(L),write(' = '),write('Jnth(pointer,'),write(N),write(');'),nl,
+    N1 is N+1,
+    gen_unpack_pointer(Ls,N1).
 
 nth_var(X,[X|_],1).
 nth_var(X,[_|Xs],N) :-
