@@ -734,25 +734,13 @@ static inline void Jset_back(void *cont, int th)
     return(NIL);
 }
 
-static inline void Jpush_var(int x, int th)
+Jprint_next(int th)
 {
-    #ifdef DBG
-    printf(" Jpush_var (%d,%d) %d\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th), x);
-    #endif
+    int i,j;
+    j = np[Jget_scp(CONJ,th)][th] + 5;
 
-    vp[th]++;
-    var_stack[vp[th]][th] = x;
-}
-
-
-static inline int Jpop_var(int th)
-{
-    
-    int res;
-    res = var_stack[vp[th]][th];
-    vp[th]--;
-    #ifdef DBG
-    printf(" Jpop_var (%d,%d) %d\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th), res);
-    #endif
-    return(res);
+    for(i=0;i<j;i++){
+        Jprint(next_stack1[i][th]);
+        printf("\n");
+    }
 }
