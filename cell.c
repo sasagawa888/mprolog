@@ -448,7 +448,6 @@ int push_conj(int th)
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][DISJ_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
     return (NIL);
@@ -559,15 +558,6 @@ int get_arg(int th)
     return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]);
 }
 
-
-int get_vp(int th)
-{
-    #ifdef DBG
-    printf(" get_vp (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][VP_SCBM][th]);
-}
 
 
 int get_np(int th)

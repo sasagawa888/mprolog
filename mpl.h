@@ -175,7 +175,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, DISCARD_CONJ_IDX, PUSH_CONJ_IDX, POP_RECUR_IDX,
-       GET_SUCC_IDX, GET_ARG_IDX, GET_VP_IDX, GET_NP_IDX,
+       GET_SUCC_IDX, GET_ARG_IDX, GET_NP_IDX,
        NUM_FN1S
 };
 
@@ -223,8 +223,8 @@ enum {
 };
 
 enum {
-    SP_SCBM, CHOICE_SCBM, WP_SCBM, AC_SCBM, DISJ_SCBM,
-    CHOICE_BACKUP_SCBM, ARGLIST_SCBM, SUCC_SCBM, VP_SCBM, NP_SCBM,
+    SP_SCBM, CHOICE_SCBM, WP_SCBM, AC_SCBM,
+    CHOICE_BACKUP_SCBM, ARGLIST_SCBM, SUCC_SCBM, NP_SCBM,
     SCBM_ELT_SIZE,
 };
 
@@ -1230,7 +1230,6 @@ int get_disj_choice(int th);
 int get_scp(int x, int th);
 int get_succ(int th);
 int get_arg(int th);
-int get_vp(int th);
 int get_np(int th);
 int getatom(char *name, int property, int index);
 int getsym(char *name, int index);
