@@ -923,6 +923,11 @@ gen_back_debug(B,P) :-
           B==nil -> true
           | (write('printf("Jpush_back before'),write(P),write('");'),nl)]).
 
+gen_debug_pointer([]).
+gen_debug_pointer([V|Vs]) :-
+    write('printf("'),write(V),write(' = %d ",'),write(V),write(';'),nl,
+    gen_debug_pointer(Vs).
+
 
 %---------------det determinant predicate-------------------
 gen_det_pred(P) :-
