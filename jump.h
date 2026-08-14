@@ -660,6 +660,7 @@ static void *next_goto[1048][THREADSIZE];
 static void *back_goto[1048][THREADSIZE];
 static void *back_goto1[1048][THREADSIZE];
 static int next_stack[1048][THREADSIZE];
+static int back_stack[1048][SCBM_ELT_SIZE][THREADSIZE];
 static int np[THREADSIZE];
 
 
@@ -667,7 +668,7 @@ static int np[THREADSIZE];
 static inline void Jpush_next(void *cont,int ac, int th)
 {
     #ifdef DBG
-    printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),ac);
+    printf(" Jpush_next (%d)\n",Jget_scp(RECUR,th));
     #endif
     np[th]++;
     next_goto[np[th]][th] = cont;
@@ -678,7 +679,7 @@ static inline void Jpush_next(void *cont,int ac, int th)
 static inline void Jpop_next(int th)
 {
     #ifdef DBG
-    printf(" Jpop_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    printf(" Jpop_next (%d)\n",Jget_scp(CONJ,th));
     #endif
     np[th]--;
 }
@@ -687,7 +688,7 @@ static inline void Jpop_next(int th)
 static inline void Jpush_back(void *cont, int arglist, int np, int th)
 {
     #ifdef DBG
-    printf(" Jpush_back (%d,%d) %d\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),cont);
+    printf(" Jpush_back (%d) %d\n",Jget_scp(CONJ,th),cont);
     #endif
     Jpush_recur(arglist,np,th);
     back_goto[Jget_scp(RECUR,th)][th] = cont;
@@ -697,7 +698,7 @@ static inline void Jpush_back(void *cont, int arglist, int np, int th)
 static inline void Jreset_back(int th)
 {
     #ifdef DBG
-    printf(" Jreset_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    printf(" Jreset_back (%d)\n",Jget_scp(RECUR,th));
     #endif
 
     back_goto[Jget_scp(RECUR,th)][th] = 
@@ -708,7 +709,7 @@ static inline void Jreset_back(int th)
 static inline void Jset_back(void *cont, int th)
 {
     #ifdef DBG
-    printf(" Jset_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    printf(" Jset_back (%d)\n",Jget_scp(RECUR,th));
     #endif
     int i;
     i = Jget_scp(RECUR,th);
