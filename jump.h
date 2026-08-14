@@ -206,12 +206,6 @@ static inline int Jinc_choice(int x) {
     return f1[INC_CHOICE_IDX](x);
 }
 
-/*
-static inline int Jmax_choice(int x) {
-    return f1[MAX_CHOICE_IDX](x);
-}
-*/
-
 static inline int Jget_choice(int x) {
     return f1[GET_CHOICE_IDX](x);
 }
@@ -663,8 +657,8 @@ static void mouse_callback()
 
 
 static void *next_stack[1048][1][THREADSIZE];
-static void *back_stack[1048][1][THREADSIZE];
-static void *back_stack1[1048][1][THREADSIZE];
+static void *back_goto[1048][THREADSIZE];
+static void *back_goto1[1048][THREADSIZE];
 static int next_stack1[1048][THREADSIZE];
 static int np[THREADSIZE];
 
@@ -696,8 +690,8 @@ static inline void Jpush_back(void *cont, int arglist, int np, int th)
     printf(" Jpush_back (%d,%d) %d\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),cont);
     #endif
     Jpush_recur(arglist,np,th);
-    back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
-    back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
+    back_goto[Jget_scp(RECUR,th)][th] = cont;
+    back_goto1[Jget_scp(RECUR,th)][th] = cont;
 }
 
 static inline void Jreset_back(int th)
@@ -706,8 +700,8 @@ static inline void Jreset_back(int th)
     printf(" Jreset_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
 
-    back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = 
-        back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];
+    back_goto[Jget_scp(RECUR,th)][th] = 
+        back_goto1[Jget_scp(RECUR,th)][th];
 }
 
 
@@ -718,6 +712,6 @@ static inline void Jset_back(void *cont, int th)
     #endif
     int i;
     i = Jget_scp(RECUR,th);
-    back_stack[i][Jget_scp(CONJ,th)][th] = cont;
+    back_goto[i][th] = cont;
     return(NIL);
 }
