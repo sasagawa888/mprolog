@@ -440,16 +440,8 @@ int push_conj(int th)
     printf(" push_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    //scp[CONJ][th]++;
     scp[RECUR][th] = 0;
-    if (scp[CONJ][th] >= CONJSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("push_conj SCBM stack size"), th);
-    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
-    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
-    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
-    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
+    scbmstack[0][scp[RECUR][th]][AC_SCBM][th] = ac[th];
     return (NIL);
 }
 
@@ -464,12 +456,12 @@ int push_recur(int arglist, int np ,int th)
 	exception(RESOURCE_ERR, NIL, makestr("push_recur SCBM stack size"), th);
 
     scp[RECUR][th]++;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][NP_SCBM][th] = np;
+    scbmstack[0][scp[RECUR][th]][SP_SCBM][th] = sp[th];
+    scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
+    scbmstack[0][scp[RECUR][th]][WP_SCBM][th] = wp[th];
+    scbmstack[0][scp[RECUR][th]][AC_SCBM][th] = ac[th];
+    scbmstack[0][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
+    scbmstack[0][scp[RECUR][th]][NP_SCBM][th] = np;
     return (NIL);
 }
 
@@ -491,7 +483,7 @@ int inc_choice(int th)
     #ifdef DBG
     printf(" inc_choice (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]++;
+    scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th]++;
     return (NIL);
 }
 
@@ -499,22 +491,11 @@ int inc_choice(int th)
 int release(int th)
 {
 
-    unbind(scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th], th);
-    ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
+    unbind(scbmstack[0][scp[RECUR][th]][SP_SCBM][th], th);
+    ac[th] = scbmstack[0][scp[RECUR][th]][AC_SCBM][th];
     #ifdef DBG
     printf(" release (%d,%d) SP=%d AC=%d\n",scp[CONJ][th], scp[RECUR][th],
              sp[th], ac[th]);
-    /*
-    int i;
-    for(i=0;i<sp[th];i++){
-        printf("\n%d ",i);
-        print(localstack[i][th]);
-    }
-    for(i=0;i<ac[th]-cell_size;i++){
-        printf("\nvar_%d ",i);
-        print(variant[i][th]);
-    }
-    */
     #endif
     return (NIL);
 }
@@ -523,11 +504,11 @@ int get_choice(int th)
 {
     #ifdef DBG
     printf(" get_choice (%d,%d) ch=%d\n",scp[CONJ][th], scp[RECUR][th],
-            scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
+            scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th]);
     #endif
 
     proof[th]++;
-	return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th]);
+	return(scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th]);
 }
 
 int get_arg(int th)
@@ -536,7 +517,7 @@ int get_arg(int th)
     printf(" get_arg (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th]);
+    return(scbmstack[0][scp[RECUR][th]][ARGLIST_SCBM][th]);
 }
 
 
@@ -547,7 +528,7 @@ int get_np(int th)
     printf(" get_np (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    return(scbmstack[scp[CONJ][th]][scp[RECUR][th]][NP_SCBM][th]);
+    return(scbmstack[0][scp[RECUR][th]][NP_SCBM][th]);
 }
 
 
@@ -561,7 +542,7 @@ int pop_recur(int th)
     if (scp[RECUR][th] <= 0)
 	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
     scp[RECUR][th] --;
-    ac[th] = scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th];
+    ac[th] = scbmstack[0][scp[RECUR][th]][AC_SCBM][th];
     return(NIL);
 }
 
@@ -577,7 +558,7 @@ int save_arg(int x, int th)
     printf(" save_arg (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = x;
+    scbmstack[0][scp[RECUR][th]][ARGLIST_SCBM][th] = x;
     return(NIL);
 }
 
