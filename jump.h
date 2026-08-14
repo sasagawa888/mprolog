@@ -662,11 +662,11 @@ static void mouse_callback()
 //-------------SCBM--------------------------
 
 
-static void *next_stack[1048][CONJSIZE][THREADSIZE];
-static void *back_stack[1048][CONJSIZE][THREADSIZE];
-static void *back_stack1[1048][CONJSIZE][THREADSIZE];
+static void *next_stack[1048][1][THREADSIZE];
+static void *back_stack[1048][1][THREADSIZE];
+static void *back_stack1[1048][1][THREADSIZE];
 static int next_stack1[1048][THREADSIZE];
-static int np[CONJSIZE][THREADSIZE];
+static int np[THREADSIZE];
 
 
 
@@ -675,9 +675,9 @@ static inline void Jpush_next(void *cont,int ac, int th)
     #ifdef DBG
     printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),ac);
     #endif
-    np[Jget_scp(CONJ,th)][th]++;
-    next_stack[np[Jget_scp(CONJ,th)][th]][Jget_scp(CONJ,th)][th] = cont;
-    next_stack1[np[Jget_scp(CONJ,th)][th]][th] = ac;
+    np[th]++;
+    next_stack[np[th]][Jget_scp(CONJ,th)][th] = cont;
+    next_stack1[np[th]][th] = ac;
     return(NIL);
 }
 
@@ -686,7 +686,7 @@ static inline void Jpop_next(int th)
     #ifdef DBG
     printf(" Jpop_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
-    np[Jget_scp(CONJ,th)][th]--;
+    np[th]--;
 }
 
 
@@ -720,15 +720,4 @@ static inline void Jset_back(void *cont, int th)
     i = Jget_scp(RECUR,th);
     back_stack[i][Jget_scp(CONJ,th)][th] = cont;
     return(NIL);
-}
-
-Jprint_next(int th)
-{
-    int i,j;
-    j = np[Jget_scp(CONJ,th)][th] + 5;
-
-    for(i=0;i<j;i++){
-        Jprint(next_stack1[i][th]);
-        printf("\n");
-    }
 }
