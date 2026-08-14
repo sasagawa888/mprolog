@@ -440,7 +440,7 @@ int push_conj(int th)
     printf(" push_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
     #endif
 
-    scp[CONJ][th]++;
+    //scp[CONJ][th]++;
     scp[RECUR][th] = 0;
     if (scp[CONJ][th] >= CONJSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("push_conj SCBM stack size"), th);

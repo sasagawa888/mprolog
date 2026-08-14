@@ -589,7 +589,7 @@ gen_SCBM_function3.
 
 gen_SCBM_function31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
-    write('Jpop_back(th);'),nl,
+    write('Jreset_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
 gen_SCBM_function31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,

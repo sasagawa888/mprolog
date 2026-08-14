@@ -711,10 +711,10 @@ static inline void Jpush_back(void *cont, int arglist, int np, int th)
     back_stack1[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = cont;
 }
 
-static inline void Jpop_back(int th)
+static inline void Jreset_back(int th)
 {
     #ifdef DBG
-    printf(" Jpop_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
+    printf(" Jreset_back (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th));
     #endif
 
     back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th] = 
