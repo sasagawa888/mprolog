@@ -656,10 +656,10 @@ static void mouse_callback()
 //-------------SCBM--------------------------
 
 
-static void *next_stack[1048][1][THREADSIZE];
+static void *next_goto[1048][THREADSIZE];
 static void *back_goto[1048][THREADSIZE];
 static void *back_goto1[1048][THREADSIZE];
-static int next_stack1[1048][THREADSIZE];
+static int next_stack[1048][THREADSIZE];
 static int np[THREADSIZE];
 
 
@@ -670,8 +670,8 @@ static inline void Jpush_next(void *cont,int ac, int th)
     printf(" Jpush_next (%d,%d)\n",Jget_scp(CONJ,th), Jget_scp(RECUR,th),ac);
     #endif
     np[th]++;
-    next_stack[np[th]][Jget_scp(CONJ,th)][th] = cont;
-    next_stack1[np[th]][th] = ac;
+    next_goto[np[th]][th] = cont;
+    next_stack[np[th]][th] = ac;
     return(NIL);
 }
 

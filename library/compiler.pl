@@ -613,7 +613,7 @@ gen_SCBM_function4 :-
     write('Jpush_next(&&success,Jget_ac(th),th);'),nl,
     write('goto *next;'),nl,
     write('}else{'),nl,
-    write('next = next_stack[np[th]][Jget_scp(CONJ,th)][th];'),nl,
+    write('next = next_goto[np[th]][th];'),nl,
     write('Jpop_next(th);'),nl,
     write('clause = Jget_choice(th);'),nl,
     write('goto *next;}'),nl.
@@ -734,7 +734,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('pointer = next_stack1[np[th]+1][th];'),nl,
+    write('pointer = next_stack[np[th]+1][th];'),nl,
     %write('printf("back"); Jprint_next(th);'),
     gen_unpack_pointer(V,1),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
@@ -828,7 +828,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('pointer = next_stack1[np[th]+1][th];'),nl,
+    write('pointer = next_stack[np[th]+1][th];'),nl,
     gen_unpack_pointer(V,1),
     %write('printf("back"); Jprint_next(th);'),gen_debug_pointer(V),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
@@ -901,7 +901,7 @@ gen_nondet_body_argument(Args,Vars,0) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument(Args,Vars,_) :-
-    write('pointer = next_stack1[np[th]+1][th];'),nl,
+    write('pointer = next_stack[np[th]+1][th];'),nl,
     gen_unpack_pointer(Vars,1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
