@@ -499,7 +499,7 @@ gen_SCBM_function :-
     write('void *next;'),nl,
     write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number,pointer'),
     gen_all_variable,write(';'),nl,
-    write('np[Jget_scp(CONJ,th)][th] = 0; vp[th] = 0;'),nl,
+    write('np[Jget_scp(CONJ,th)][th] = 0;'),nl,
     write('Jpush_next(&&success,Jget_ac(th),th);'),nl,
     gen_pred_switch,
     gen_SCBM_function1,
