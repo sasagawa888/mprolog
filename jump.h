@@ -230,12 +230,6 @@ static inline int Jarity_count(int x) {
 
 
 
-static inline int Jdiscard_conj(int th) {
-    return f1[DISCARD_CONJ_IDX](th);
-}
-
-
-
 static inline int Jrelease(int th) {
     return f1[RELEASE_IDX](th);
 }

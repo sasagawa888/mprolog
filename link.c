@@ -99,7 +99,6 @@ if (hmod == NULL) {
     init_f1(INC_CHOICE_IDX, (tpred) inc_choice);
     init_f1(MAX_CHOICE_IDX, (tpred) max_choice);
     init_f1(ARITY_COUNT_IDX, (tpred) arity_count);
-    init_f1(DISCARD_CONJ_IDX, (tpred) discard_conj);
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(POP_RECUR_IDX, (tpred) pop_recur);

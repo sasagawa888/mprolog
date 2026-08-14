@@ -175,7 +175,7 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX,
        INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
        ARITY_COUNT_IDX, DISCARD_CONJ_IDX, PUSH_CONJ_IDX, POP_RECUR_IDX,
-       GET_SUCC_IDX, GET_ARG_IDX, GET_NP_IDX,
+       GET_ARG_IDX, GET_NP_IDX,
        NUM_FN1S
 };
 
@@ -224,7 +224,7 @@ enum {
 
 enum {
     SP_SCBM, CHOICE_SCBM, WP_SCBM, AC_SCBM,
-    ARGLIST_SCBM, SUCC_SCBM, NP_SCBM,
+    ARGLIST_SCBM, NP_SCBM,
     SCBM_ELT_SIZE,
 };
 
@@ -1150,7 +1150,6 @@ int deref(int x, int th);
 int deref1(int x, int th);
 int disjunctionp(int addr);
 int divide(int arg1, int arg2, int th);
-int discard_conj(int th);
 int each_car(int x);
 int each_cdr(int x);
 int eqgreaterp(int x1, int x2);

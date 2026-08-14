@@ -622,7 +622,7 @@ gen_SCBM_function4 :-
 gen_SCBM_function5 :-
     write('allfail:'),nl,
     ifthenelse(option(debug,on),write('printf("allfail");'),true),
-    write('if(Jget_scp(RECUR,th)==0) {Jdiscard_conj(th); return(NO);}'),nl,
+    write('if(Jget_scp(RECUR,th)==0) {return(NO);}'),nl,
     write('next = back_stack[Jget_scp(RECUR,th)][Jget_scp(CONJ,th)][th];'),nl,
     write('np[Jget_scp(CONJ,th)][th] = Jget_np(th);'),nl,
     write('Jpop_recur(th);'),nl,

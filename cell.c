@@ -486,19 +486,6 @@ int arity_count(int arglist)
 
 
 
-int discard_conj(int th)
-{
-    #ifdef DBG
-    printf(" discard_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    scp[CONJ][th]--;
-    scp[RECUR][th] = scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th];
-    
-    return (NIL);
-}
-
-
 int inc_choice(int th)
 {
     #ifdef DBG
