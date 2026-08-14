@@ -97,7 +97,6 @@ if (hmod == NULL) {
     init_f1(BIGX_TO_PARMANENT_IDX, (tpred) bigx_to_parmanent);
     init_f1(GET_CHOICE_IDX, (tpred) get_choice);
     init_f1(INC_CHOICE_IDX, (tpred) inc_choice);
-    init_f1(MAX_CHOICE_IDX, (tpred) max_choice);
     init_f1(ARITY_COUNT_IDX, (tpred) arity_count);
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);

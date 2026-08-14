@@ -173,8 +173,8 @@ enum { CAR_IDX, CDR_IDX, CADR_IDX, CADDR_IDX, CAAR_IDX, CADAR_IDX, PRINT_IDX,
        LENGTH_IDX,  GET_INT_IDX, INTEGER_IDX, ABS_IDX,
        LISTP_IDX,  STRUCTUREP_IDX, VARIABLEP_IDX, GET_SP_IDX, GET_WP_IDX, GET_AC_IDX, INC_PROOF_IDX,
        MAKEVARIANT_IDX, ADD_DYNAMIC_IDX, BIGX_TO_PARMANENT_IDX,
-       INC_CHOICE_IDX, MAX_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
-       ARITY_COUNT_IDX, DISCARD_CONJ_IDX, PUSH_CONJ_IDX, POP_RECUR_IDX,
+       INC_CHOICE_IDX, GET_CHOICE_IDX, RELEASE_IDX,
+       ARITY_COUNT_IDX, PUSH_CONJ_IDX, POP_RECUR_IDX,
        GET_ARG_IDX, GET_NP_IDX,
        NUM_FN1S
 };
@@ -1320,7 +1320,6 @@ int makeuser(char *name);
 int makevariant(int th);
 int makevar(char *name);
 int makeanony(char *name);
-int max_choice(int th);
 int memory_variant(int x);
 int memq(int x, int y);
 int memberp(int x, int y);

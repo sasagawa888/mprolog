@@ -495,12 +495,6 @@ int inc_choice(int th)
     return (NIL);
 }
 
-int max_choice(int th)
-{
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 999999999;
-    return (NIL);
-}
-
 
 int release(int th)
 {
