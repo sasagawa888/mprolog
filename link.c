@@ -103,7 +103,6 @@ if (hmod == NULL) {
     init_f1(RELEASE_IDX, (tpred) release);
     init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
     init_f1(POP_RECUR_IDX, (tpred) pop_recur);
-    init_f1(GET_SUCC_IDX, (tpred) get_succ);
     init_f1(GET_ARG_IDX, (tpred) get_arg);
     init_f1(GET_NP_IDX, (tpred) get_np);
     

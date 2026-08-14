@@ -246,11 +246,6 @@ static inline int Jpop_recur(int th) {
 }
 
 
-static inline int Jget_succ(int th) {
-    return f1[GET_SUCC_IDX](th);
-}
-
-
 static inline int Jget_arg(int th) {
     return f1[GET_ARG_IDX](th);
 }

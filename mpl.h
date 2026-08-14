@@ -224,7 +224,7 @@ enum {
 
 enum {
     SP_SCBM, CHOICE_SCBM, WP_SCBM, AC_SCBM,
-    CHOICE_BACKUP_SCBM, ARGLIST_SCBM, SUCC_SCBM, NP_SCBM,
+    ARGLIST_SCBM, SUCC_SCBM, NP_SCBM,
     SCBM_ELT_SIZE,
 };
 
@@ -1226,9 +1226,7 @@ int get_goal(int x);
 int get_nonfree(int x, int y, int z);
 int get_predicate(int x);
 int get_choice(int th);
-int get_disj_choice(int th);
 int get_scp(int x, int th);
-int get_succ(int th);
 int get_arg(int th);
 int get_np(int th);
 int getatom(char *name, int property, int index);

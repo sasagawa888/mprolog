@@ -444,12 +444,12 @@ int push_conj(int th)
     scp[RECUR][th] = 0;
     if (scp[CONJ][th] >= CONJSIZE)
 	exception(RESOURCE_ERR, NIL, makestr("push_conj SCBM stack size"), th);
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
+    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][SP_SCBM][th] = sp[th];
+    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
+    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][WP_SCBM][th] = wp[th];
     scbmstack[scp[CONJ][th]][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
-    scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
+    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][CHOICE_BACKUP_SCBM][th] = 0;
+    //scbmstack[scp[CONJ][th]][scp[RECUR][th]][ARGLIST_SCBM][th] = UNBIND;
     return (NIL);
 }
 
@@ -600,14 +600,6 @@ int save_arg(int x, int th)
     return(NIL);
 }
 
-
-int get_succ(int th)
-{
-    #ifdef DBG
-    printf(" get_succ (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-    return(scbmstack[scp[CONJ][th]][0][SUCC_SCBM][th]);
-}
 
 //------for JUMP compiler-----
 int get_sp(int th)
