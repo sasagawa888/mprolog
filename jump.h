@@ -670,6 +670,9 @@ static inline void Spush_next(void *cont,int pointer, int th)
     #ifdef DBG
     printf(" Spush_next (%d)\n",rp[th]);
     #endif
+
+    if (np[th] + 1 >= RECURSIZE)
+	Jerrorcomp(RESOURCE_ERR, makestr("Spush_next SCBM3 stack size"), NIL);
     np[th]++;
     next_goto[np[th]][th] = cont;
     next_stack[np[th]][th] = pointer;
@@ -681,6 +684,10 @@ static inline void Spop_next(int th)
     #ifdef DBG
     printf(" Spop_next (%d)\n",rp[th]);
     #endif
+
+    if (np[th] <= 0)
+	Jerrorcomp(RESOURCE_ERR, makestr("Spop_next SCBM3 stack size"), NIL);
+
     np[th]--;
 }
 
@@ -693,7 +700,7 @@ static inline void Spush_back(void *cont, int arglist, int np, int th)
    
 
     if (rp[th] + 1 >= RECURSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("Spush_recur SCBM3 stack size"), th);
+	Jerrorcomp(RESOURCE_ERR, makestr("Spush_back SCBM3 stack size"), arglist);
 
     rp[th]++;
     back_stack[rp[th]][SP_SCBM][th] = Jget_sp(th);
@@ -727,6 +734,86 @@ static inline void Sset_back(void *cont, int th)
     back_goto[rp[th]][th] = cont;
     return(NIL);
 }
+
+
+static inline int Sarity_count(int arglist)
+{
+	return(Jlength(arglist));
+}
+
+
+static inline void Sinc_choice(int th)
+{
+    #ifdef DBG
+    printf(" Sinc_choice (%d)\n",rp[th]);
+    #endif
+    back_stack[rp[th]][CHOICE_SCBM][th]++;
+}
+
+
+static inline void Srelease(int th)
+{
+    Junbind(back_stack[rp[th]][SP_SCBM][th], th);
+    Jset_ac(back_stack[rp[th]][AC_SCBM][th] ,th);
+    #ifdef DBG
+    printf(" Srelease (%d) \n",rp[th]);
+    #endif
+    return (NIL);
+}
+
+static inline int Sget_choice(int th)
+{
+    #ifdef DBG
+    printf(" Sget_choice (%d) ch=%d\n", rp[th], back_stack[rp[th]][CHOICE_SCBM][th]);
+    #endif
+
+    Jinc_proof(th);
+	return(back_stack[rp[th]][CHOICE_SCBM][th]);
+}
+
+
+static inline int Sget_arg(int th)
+{
+    #ifdef DBG
+    printf(" Sget_arg (%d) \n", rp[th]);
+    #endif
+
+    return(back_stack[sp[th]][ARGLIST_SCBM][th]);
+}
+
+
+static inline int Sget_np(int th)
+{
+    #ifdef DBG
+    printf(" Sget_np (%d) \n", rp[th]);
+    #endif
+
+    return(back_stack[rp[th]][NP_SCBM][th]);
+}
+
+static inline void Spop_back(int th)
+{
+    #ifdef DBG
+    printf(" Spop_back (%d)\n", rp[th]);
+    #endif
+
+    if (rp[th] <= 0)
+	Jerrorcomp(RESOURCE_ERR, makestr("Spop_recur SCBM3 stack size"), NIL);
+    rp[th] --;
+    Jset_ac(back_stack[rp[th]][AC_SCBM][th],th);
+}
+
+
+static inline void Ssave_arg(int x, int th)
+{
+    #ifdef DBG
+    printf(" Ssave_arg (%d)\n", rp[th]);
+    #endif
+
+    back_stack[rp[th]][ARGLIST_SCBM][th] = x;
+}
+
+
 
 
 
