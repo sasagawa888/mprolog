@@ -665,15 +665,14 @@ static int np[THREADSIZE]; // next pointer
 static int rp[THREADSIZE]; // recur pointer
 
 //----------------SCBM3-------------------------------
-static inline void Spush_next(void *cont,int ac, int th)
+static inline void Spush_next(void *cont,int pointer, int th)
 {
     #ifdef DBG
     printf(" Spush_next (%d)\n",rp[th]);
     #endif
     np[th]++;
     next_goto[np[th]][th] = cont;
-    next_stack[np[th]][th] = ac;
-    return(NIL);
+    next_stack[np[th]][th] = pointer;
 }
 
 
@@ -706,6 +705,29 @@ static inline void Spush_back(void *cont, int arglist, int np, int th)
     back_goto[Jget_scp(RECUR,th)][th] = cont;
     back_goto1[Jget_scp(RECUR,th)][th] = cont;
 }
+
+
+static inline void Sreset_back(int th)
+{
+    #ifdef DBG
+    printf(" Sreset_back (%d)\n", rp[th]);
+    #endif
+
+    back_goto[rp[th]][th] = 
+        back_goto1[rp[th]][th];
+}
+
+
+static inline void Sset_back(void *cont, int th)
+{
+    #ifdef DBG
+    printf(" Sset_back (%d)\n",rp[th]);
+    #endif
+    
+    back_goto[rp[th]][th] = cont;
+    return(NIL);
+}
+
 
 
 //----------------SCBM2--------------------------------
