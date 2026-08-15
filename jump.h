@@ -659,7 +659,7 @@ static void mouse_callback()
 static void *next_goto[RECURSIZE][THREADSIZE];
 static void *back_goto[RECURSIZE][THREADSIZE];
 static void *back_goto1[RECURSIZE][THREADSIZE];
-static int next_stack[RECURSIZE][THREADSIZE];
+static int next_stack[RECURSIZE][256][THREADSIZE];
 static int back_stack[RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 static int np[THREADSIZE]; // next pointer
 static int rp[THREADSIZE]; // recur pointer
@@ -676,7 +676,7 @@ static inline void Spush_next(void *cont,int pointer, int th)
 
     np[th]++;
     next_goto[np[th]][th] = cont;
-    next_stack[np[th]][th] = pointer;
+    next_stack[np[th]][0][th] = pointer;
 }
 
 
@@ -819,7 +819,7 @@ static inline void Jpush_next(void *cont,int ac, int th)
     #endif
     np[th]++;
     next_goto[np[th]][th] = cont;
-    next_stack[np[th]][th] = ac;
+    next_stack[np[th]][0][th] = ac;
     return(NIL);
 }
 

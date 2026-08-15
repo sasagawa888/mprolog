@@ -734,7 +734,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('pointer = next_stack[np[th]+1][th];'),nl,
+    write('pointer = next_stack[np[th]+1][0][th];'),nl,
     %write('printf("back"); Jprint_next(th);'),
     gen_unpack_pointer(V,1),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
@@ -828,7 +828,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('pointer = next_stack[np[th]+1][th];'),nl,
+    write('pointer = next_stack[np[th]+1][0][th];'),nl,
     gen_unpack_pointer(V,1),
     %write('printf("back"); Jprint_next(th);'),gen_debug_pointer(V),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
@@ -901,7 +901,7 @@ gen_nondet_body_argument(Args,Vars,0) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument(Args,Vars,_) :-
-    write('pointer = next_stack[np[th]+1][th];'),nl,
+    write('pointer = next_stack[np[th]+1][0][th];'),nl,
     gen_unpack_pointer(Vars,1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
