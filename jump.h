@@ -193,7 +193,6 @@ static inline int Jmakevariant(int x) {
 }
 
 
-
 static inline int Jadd_dynamic(int x) {
     return f1[ADD_DYNAMIC_IDX](x);
 }
@@ -202,45 +201,8 @@ static inline int Jbigx_to_parmanent(int x) {
     return f1[BIGX_TO_PARMANENT_IDX](x);
 }
 
-static inline int Jinc_choice(int x) {
-    return f1[INC_CHOICE_IDX](x);
-}
-
-static inline int Jget_choice(int x) {
-    return f1[GET_CHOICE_IDX](x);
-}
-
-
-static inline int Jpush_conj(int th) {
-    return f1[PUSH_CONJ_IDX](th);
-}
-
-
-
 static inline int Jarity_count(int x) {
     return f1[ARITY_COUNT_IDX](x);
-}
-
-
-
-
-static inline int Jrelease(int th) {
-    return f1[RELEASE_IDX](th);
-}
-
-
-static inline int Jpop_recur(int th) {
-    return f1[POP_RECUR_IDX](th);
-}
-
-
-static inline int Jget_arg(int th) {
-    return f1[GET_ARG_IDX](th);
-}
-
-
-static inline int Jget_np(int th) {
-    return f1[GET_NP_IDX](th);
 }
 
 
@@ -402,14 +364,6 @@ static inline int Jcopy_work(int x, int th) {
     return f2[COPY_WORK_IDX](x, th);
 }
 
-static inline int Jget_scp(int x, int th) {
-    return f2[GET_SCP_IDX](x,th);
-}
-
-static inline int Jsave_arg(int x, int th) {
-    return f2[SAVE_ARG_IDX](x,th);
-}
-
 
 static inline int Jlist3(int x, int y, int z) {
     return f3[LIST3_IDX](x, y, z);
@@ -547,10 +501,6 @@ static inline int Jcall_det(int x, int y, int th) {
     return f3[CALL_DET_IDX](x, y, th);
 }
 
-
-static inline int Jpush_recur(int x, int y, int th) {
-    return f3[PUSH_RECUR_IDX](x, y, th);
-}
 
 
 static inline int Jmakeconst(char* x) {

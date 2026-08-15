@@ -430,41 +430,6 @@ int pop_stack(int th)
 }
 
 
-
-//----------SCBM--------------------------
-
-
-int push_conj(int th)
-{
-    #ifdef DBG
-    printf(" push_conj (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    scp[RECUR][th] = 0;
-    scbmstack[0][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    return (NIL);
-}
-
-int push_recur(int arglist, int np ,int th)
-{
-    #ifdef DBG
-    printf(" push_recur (%d,%d) SP=%d AC=%d\n",scp[CONJ][th], scp[RECUR][th],
-            sp[th],ac[th]);
-    #endif
-
-    if (scp[RECUR][th] + 1 >= RECURSIZE)
-	exception(RESOURCE_ERR, NIL, makestr("push_recur SCBM stack size"), th);
-
-    scp[RECUR][th]++;
-    scbmstack[0][scp[RECUR][th]][SP_SCBM][th] = sp[th];
-    scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th] = 0;
-    scbmstack[0][scp[RECUR][th]][WP_SCBM][th] = wp[th];
-    scbmstack[0][scp[RECUR][th]][AC_SCBM][th] = ac[th];
-    scbmstack[0][scp[RECUR][th]][ARGLIST_SCBM][th] = arglist;
-    scbmstack[0][scp[RECUR][th]][NP_SCBM][th] = np;
-    return (NIL);
-}
-
 int arity_count(int arglist)
 {
     int n;
@@ -478,89 +443,7 @@ int arity_count(int arglist)
 
 
 
-int inc_choice(int th)
-{
-    #ifdef DBG
-    printf(" inc_choice (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-    scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th]++;
-    return (NIL);
-}
 
-
-int release(int th)
-{
-
-    unbind(scbmstack[0][scp[RECUR][th]][SP_SCBM][th], th);
-    ac[th] = scbmstack[0][scp[RECUR][th]][AC_SCBM][th];
-    #ifdef DBG
-    printf(" release (%d,%d) SP=%d AC=%d\n",scp[CONJ][th], scp[RECUR][th],
-             sp[th], ac[th]);
-    #endif
-    return (NIL);
-}
-
-int get_choice(int th)
-{
-    #ifdef DBG
-    printf(" get_choice (%d,%d) ch=%d\n",scp[CONJ][th], scp[RECUR][th],
-            scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th]);
-    #endif
-
-    proof[th]++;
-	return(scbmstack[0][scp[RECUR][th]][CHOICE_SCBM][th]);
-}
-
-int get_arg(int th)
-{
-    #ifdef DBG
-    printf(" get_arg (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    return(scbmstack[0][scp[RECUR][th]][ARGLIST_SCBM][th]);
-}
-
-
-
-int get_np(int th)
-{
-    #ifdef DBG
-    printf(" get_np (%d,%d) \n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    return(scbmstack[0][scp[RECUR][th]][NP_SCBM][th]);
-}
-
-
-
-int pop_recur(int th)
-{
-    #ifdef DBG
-    printf(" pop_recur (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    if (scp[RECUR][th] <= 0)
-	exception(RESOURCE_ERR, NIL, makestr("pop_recur SCBM stack size"), th);
-    scp[RECUR][th] --;
-    ac[th] = scbmstack[0][scp[RECUR][th]][AC_SCBM][th];
-    return(NIL);
-}
-
-
-int get_scp(int x, int th)
-{
-    return(scp[x][th]);
-}
-
-int save_arg(int x, int th)
-{
-    #ifdef DBG
-    printf(" save_arg (%d,%d)\n",scp[CONJ][th], scp[RECUR][th]);
-    #endif
-
-    scbmstack[0][scp[RECUR][th]][ARGLIST_SCBM][th] = x;
-    return(NIL);
-}
 
 
 //------for JUMP compiler-----

@@ -95,14 +95,8 @@ if (hmod == NULL) {
     init_f1(RANDOM_IDX, (tpred) f_random);
     init_f1(ADD_DYNAMIC_IDX, (tpred) add_dynamic);
     init_f1(BIGX_TO_PARMANENT_IDX, (tpred) bigx_to_parmanent);
-    init_f1(GET_CHOICE_IDX, (tpred) get_choice);
-    init_f1(INC_CHOICE_IDX, (tpred) inc_choice);
     init_f1(ARITY_COUNT_IDX, (tpred) arity_count);
-    init_f1(RELEASE_IDX, (tpred) release);
-    init_f1(PUSH_CONJ_IDX, (tpred) push_conj);
-    init_f1(POP_RECUR_IDX, (tpred) pop_recur);
-    init_f1(GET_ARG_IDX, (tpred) get_arg);
-    init_f1(GET_NP_IDX, (tpred) get_np);
+
     
     //argument-2 type
     init_f2(CONS_IDX, (tpred) cons);
@@ -144,8 +138,6 @@ if (hmod == NULL) {
     init_f2(COMPLEMENT_IDX, (tpred) f_complement);
     init_f2(UNIFY_NIL_IDX, (tpred) unify_nil);
     init_f2(COPY_WORK_IDX, (tpred) copy_work);
-    init_f2(GET_SCP_IDX, (tpred) get_scp);
-    init_f2(SAVE_ARG_IDX, (tpred) save_arg);
     
 
 
@@ -182,7 +174,6 @@ if (hmod == NULL) {
     init_f3(DIV_IDX, (tpred) f_div);
     init_f3(CALL_NONDET_IDX, (tpred) call_nondet);
     init_f3(CALL_DET_IDX, (tpred) call_det);
-    init_f3(PUSH_RECUR_IDX, (tpred) push_recur);
     
 
     //argument-1 string type

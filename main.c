@@ -743,7 +743,6 @@ int prove(int goal, int bindings, int rest, int th)
 	switch (type) {
 	
 	case 1:     // nondet
-	    push_conj(th);
 	    if((GET_SUBR(pred)) (args, rest, th) ==YES)
 			return YES;
 		else 
