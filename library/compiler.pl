@@ -124,6 +124,7 @@ void init_tpredicate(void){
 gen_definition :-
 	write('void init_tpredicate(void){'),nl,
     gen_definition1,
+    write('(deftpred)("append",c_append,3,1);'),nl,
     write('}'),nl.
 
 gen_definition1 :-
@@ -497,7 +498,7 @@ gen_head1([X|Xs],N) :-
 gen_SCBM_function :-
     write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
-    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number'),
+    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number,varX_,varY_,varZ_,varA_'),
     gen_all_variable,write(';'),nl,
     write('np[th] = 0; rp[th] = 0; back_stack[0][AC_SCBM][th] = Jget_ac(th);'),nl,
     write('Spush_next(&&success,th);'),nl,
@@ -508,6 +509,7 @@ gen_SCBM_function :-
     gen_SCBM_function4,
     gen_SCBM_function5,
     gen_SCBM_function6,
+    write('#include "scbm.h"'),nl,
     write('}'),nl.
 
 gen_all_variable :-
@@ -543,6 +545,7 @@ gen_SCBM_function1.
 gen_pred_switch :-
     write('switch(pred){'),nl,
     ctr_set(0,0),
+    write('case 20000 : goto append;'),nl,
     gen_pred_switch1,
     write('}'),nl.
 

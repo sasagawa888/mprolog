@@ -4,7 +4,7 @@ mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
 
-/*
+
 plus(0, Y, Y).
 plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
 
@@ -96,4 +96,3 @@ likes(X,X).
 
 
 
-*/
