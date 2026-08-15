@@ -124,7 +124,6 @@ void init_tpredicate(void){
 gen_definition :-
 	write('void init_tpredicate(void){'),nl,
     gen_definition1,
-    write('(deftpred)("append",c_append,3,1);'),nl,
     write('}'),nl.
 
 gen_definition1 :-

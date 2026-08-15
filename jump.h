@@ -754,13 +754,3 @@ static inline void Ssave_arg(int x, int th)
 }
 
 
-//-------------builtin nondet predicate-----------
-static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th);
-static int c_append(int arglist, int rest, int th){
-int n;
-n = Jlength(arglist);
-Ssave_arg(arglist,th);
-return(user_scbm(20000,n,0,arglist,rest,th));
-}
-
-
