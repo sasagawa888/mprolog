@@ -614,7 +614,7 @@ static int back_stack[RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 static int np[THREADSIZE]; // next pointer
 static int rp[THREADSIZE]; // recur pointer
 
-//----------------SCBM3-------------------------------
+//----------------SCBM-------------------------------
 static inline void Spush_next(void *cont,int th)
 {
     #ifdef DBG
@@ -622,7 +622,7 @@ static inline void Spush_next(void *cont,int th)
     #endif
 
     if (np[th] + 1 >= RECURSIZE)
-	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spush_next SCBM3 stack size"), NIL);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spush_next SCBM stack size"), NIL);
 
     np[th]++;
     next_goto[np[th]][th] = cont;
@@ -636,7 +636,7 @@ static inline void Spop_next(int th)
     #endif
 
     if (np[th] <= 0)
-	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spop_next SCBM3 stack size"), NIL);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spop_next SCBM stack size"), NIL);
 
     np[th]--;
 }
@@ -650,7 +650,7 @@ static inline void Spush_back(void *cont, int arglist, int th)
    
 
     if (rp[th] + 1 >= RECURSIZE)
-	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spush_back SCBM3 stack size"), arglist);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spush_back SCBM stack size"), arglist);
 
     rp[th]++;
     back_stack[rp[th]][SP_SCBM][th] = Jget_sp(th);
@@ -698,9 +698,7 @@ static inline void Srelease(int th)
 {
     Junbind(back_stack[rp[th]][SP_SCBM][th], th);
     Jset_ac(back_stack[rp[th]][AC_SCBM][th] ,th);
-    /* WP will be restored here in the final version. */
-    // Jset_wp(back_stack[rp[th]][WP_SCBM][th], th);
-
+    
     #ifdef DBG
     printf(" Srelease (%d) \n",rp[th]);
     #endif
@@ -742,7 +740,7 @@ static inline void Spop_back(int th)
     #endif
 
     if (rp[th] <= 0)
-	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spop_back SCBM3 stack size"), NIL);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spop_back SCBM stack size"), NIL);
     rp[th] --;
 }
 
@@ -759,56 +757,3 @@ static inline void Ssave_arg(int x, int th)
 
 
 
-
-//----------------SCBM2--------------------------------
-static inline void Jpush_next(void *cont,int ac, int th)
-{
-    #ifdef DBG
-    printf(" Jpush_next (%d)\n",Jget_scp(RECUR,th));
-    #endif
-    np[th]++;
-    next_goto[np[th]][th] = cont;
-    next_stack[np[th]][255][th] = ac;
-    return(NIL);
-}
-
-static inline void Jpop_next(int th)
-{
-    #ifdef DBG
-    printf(" Jpop_next (%d)\n",Jget_scp(CONJ,th));
-    #endif
-    np[th]--;
-}
-
-
-static inline void Jpush_back(void *cont, int arglist, int np, int th)
-{
-    #ifdef DBG
-    printf(" Jpush_back (%d) %d\n",Jget_scp(CONJ,th),cont);
-    #endif
-    Jpush_recur(arglist,np,th);
-    back_goto[Jget_scp(RECUR,th)][th] = cont;
-    back_goto1[Jget_scp(RECUR,th)][th] = cont;
-}
-
-static inline void Jreset_back(int th)
-{
-    #ifdef DBG
-    printf(" Jreset_back (%d)\n",Jget_scp(RECUR,th));
-    #endif
-
-    back_goto[Jget_scp(RECUR,th)][th] = 
-        back_goto1[Jget_scp(RECUR,th)][th];
-}
-
-
-static inline void Jset_back(void *cont, int th)
-{
-    #ifdef DBG
-    printf(" Jset_back (%d)\n",Jget_scp(RECUR,th));
-    #endif
-    int i;
-    i = Jget_scp(RECUR,th);
-    back_goto[i][th] = cont;
-    return(NIL);
-}
