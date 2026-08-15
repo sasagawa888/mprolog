@@ -747,6 +747,33 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
 
+% append,between,length ...
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+    n_property(X,builtin),
+    X =.. [Pred|Args],
+    functor(X,_,Arity),
+    member(Pred/Arity,[append/3,between/3,length/2]),
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_argument(Args,V,N),
+    M1 is M+1,
+    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
+          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
+          B==nil -> true
+          | (write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
+    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
+    write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
+    gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
+    gen_unpack_pointer(V,1),
+    gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
+    N1 is N+1,
+    gen_pack_pointer(V,1),
+    write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
+    write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
+    gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
+    write('goto success;'),nl.
+
+
 % last cut operator
 gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
@@ -831,6 +858,34 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
+
+% append between length
+
+% recur predicate
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
+    n_property(X,builtin),
+    X =.. [Pred|Args],
+    functor(X,_,Arity),
+    member(Pred/Arity,[append/3,between/3,length/2]),
+    gen_nondet_body_label([P,A,M,N]),write(':'),nl,
+    gen_nondet_body_argument(Args,V,N),
+    M1 is M+1,
+    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
+          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
+          B==nil -> true
+          |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
+    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
+    write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
+    gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
+    gen_unpack_pointer(V,1),
+    gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
+    N1 is N+1,
+    gen_pack_pointer(V,1),
+    write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
+    write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
+
 
 % cut operator
 gen_nondet_body1((!,Y),A,M,N,B,H,P,V,T) :-
