@@ -687,7 +687,7 @@ static inline void Spop_next(int th)
     #endif
 
     if (np[th] <= 0)
-	Jerrorcomp(RESOURCE_ERR, makestr("Spop_next SCBM3 stack size"), NIL);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spop_next SCBM3 stack size"), NIL);
 
     np[th]--;
 }
@@ -701,7 +701,7 @@ static inline void Spush_back(void *cont, int arglist, int th)
    
 
     if (rp[th] + 1 >= RECURSIZE)
-	Jerrorcomp(RESOURCE_ERR, makestr("Spush_back SCBM3 stack size"), arglist);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spush_back SCBM3 stack size"), arglist);
 
     rp[th]++;
     back_stack[rp[th]][SP_SCBM][th] = Jget_sp(th);
@@ -734,13 +734,6 @@ static inline void Sset_back(void *cont, int th)
     
     back_goto[rp[th]][th] = cont;
 }
-
-/*
-static inline int Sarity_count(int arglist)
-{
-	return(Jlength(arglist));
-}
-*/
 
 
 static inline void Sinc_choice(int th)

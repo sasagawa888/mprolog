@@ -325,7 +325,7 @@ gen_var_assign(S,E) :-
 
 gen_jump_switch(P,A):-
     n_clause_count_with_arity(P,A,M),
-    write('clause = Jget_choice(th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
     write('switch(clause){'),nl,
     gen_jump_switch1(A,0,M),
     write('}'),nl.
@@ -589,12 +589,12 @@ gen_SCBM_function3.
 
 gen_SCBM_function31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
-    write('Jreset_back(th);'),nl,
+    write('Sreset_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
 gen_SCBM_function31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
     gen_var_assign(1,A),!,
-    write('Jrelease(th);'),nl,
+    write('Srelease(th);'),nl,
     n_variable_convert(C,X),
     n_generate_variable(X,V),
     gen_var(V),!,
@@ -607,26 +607,26 @@ gen_SCBM_function4 :-
     ifthenelse(option(debug,on),write('printf("success");'),true),
     write('if(np[th] == 0){'),nl,
     write('if(Jprove_all(rest,Jget_sp(th),th) == YES) return(YES);'),nl,
-    write('next = back_goto[Jget_scp(RECUR,th)][th];'),nl,
-    write('clause = Jget_choice(th);'),nl,
-    write('arglist = Jget_arg(th);'),nl,
+    write('next = back_goto[rp[th]][th];'),nl,
+    write('clause = Sget_choice(th);'),nl,
+    write('arglist = Sget_arg(th);'),nl,
     write('Spush_next(&&success,Jget_ac(th),th);'),nl,
     write('goto *next;'),nl,
     write('}else{'),nl,
     write('next = next_goto[np[th]][th];'),nl,
     write('Jpop_next(th);'),nl,
-    write('clause = Jget_choice(th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
     write('goto *next;}'),nl.
 
 
 gen_SCBM_function5 :-
     write('allfail:'),nl,
     ifthenelse(option(debug,on),write('printf("allfail");'),true),
-    write('if(Jget_scp(RECUR,th)==0) {return(NO);}'),nl,
-    write('next = back_goto[Jget_scp(RECUR,th)][th];'),nl,
-    write('np[th] = Jget_np(th);'),nl,
+    write('if(rp[th]==0) {return(NO);}'),nl,
+    write('next = back_goto[rp[th]][th];'),nl,
+    write('np[th] = Sget_np(th);'),nl,
     write('Jpop_recur(th);'),nl,
-    write('arglist = Jget_arg(th);'),nl,
+    write('arglist = Sget_arg(th);'),nl,
     write('goto *next;'),nl.
    
 
@@ -654,7 +654,7 @@ gen_nondet_pred(P) :-
     write('(int arglist, int rest, int th){'),nl,
     write('int n;'),nl,
     write('n = Jlength(arglist);'),nl,
-    write('Jsave_arg(arglist,th);'),nl,
+    write('Ssave_arg(arglist,th);'),nl,
     write('return(user_scbm('),write(N),write(',n,0,arglist,rest,th));'),nl,
     write('}'),nl,nl.
 
@@ -662,10 +662,10 @@ gen_nondet_pred(P) :-
 % N is arity , M is Mth clause from 0.
 % clause
 gen_a_nondet_clause((Head :- Body),A,M,P,V) :-
-    write('Jinc_choice(th);'),nl,
+    write('Sinc_choice(th);'),nl,
     P =.. [P1|_],
     M1 is M+1,
-    write('Jset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
+    write('Sset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
     gen_nondet_body(Body,A,M,Head,P,V,nil),
     write('}'),nl,!.
@@ -673,10 +673,10 @@ gen_a_nondet_clause((Head :- Body),A,M,P,V) :-
 % nondet predicate
 gen_a_nondet_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
-    write('Jinc_choice(th);'),nl,
+    write('Sinc_choice(th);'),nl,
     P =.. [P1|_],
     M1 is M+1,
-    write('Jset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
+    write('Sset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(P),
     write('{'),nl,
     write('goto success;'),nl,
@@ -742,7 +742,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_pack_pointer(V),
     %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
-    write('clause = Jget_choice(th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_nondet_body_label([P,A,M,N1]),write(':'),nl,
     write('goto success;'),nl.
@@ -750,7 +750,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
 % last cut operator
 gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
-    write('Jset_back(&&allfail,th);'),
+    write('Sset_back(&&allfail,th);'),
     write('goto success;'),nl.
 
 
@@ -822,7 +822,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
-          B==cut -> (write('Spush_back(&&allfail,arglist,np[th],th);'),nl),
+          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
@@ -836,7 +836,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     gen_pack_pointer(V),
     %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
-    write('clause = Jget_choice(th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
     gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
 
