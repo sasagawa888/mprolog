@@ -607,7 +607,7 @@ int set_ac(int x, int th)
 int inc_proof(int th)
 {
     proof[th]++;
-    return (proof[th]);
+    return (YES);
 }
 
 int listcons(int x, int y)
