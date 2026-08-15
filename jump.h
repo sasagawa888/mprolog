@@ -665,7 +665,7 @@ static int np[THREADSIZE]; // next pointer
 static int rp[THREADSIZE]; // recur pointer
 
 //----------------SCBM3-------------------------------
-static inline void Spush_next(void *cont,int pointer, int th)
+static inline void Spush_next(void *cont,int th)
 {
     #ifdef DBG
     printf(" Spush_next (%d) np=%d\n",rp[th], np[th]);
@@ -676,7 +676,6 @@ static inline void Spush_next(void *cont,int pointer, int th)
 
     np[th]++;
     next_goto[np[th]][th] = cont;
-    next_stack[np[th]][255][th] = pointer;
 }
 
 
