@@ -671,8 +671,8 @@ static inline void Spush_next(void *cont,int pointer, int th)
     printf(" Spush_next (%d) np=%d\n",rp[th], np[th]);
     #endif
 
-    if (np[th] + 1 >= RECURSIZE)
-	Jerrorcomp(RESOURCE_ERR, makestr("Spush_next SCBM3 stack size"), NIL);
+    //if (np[th] + 1 >= RECURSIZE)
+	//Jerrorcomp(RESOURCE_ERR, Jmakestr("Spush_next SCBM3 stack size"), NIL);
     np[th]++;
     next_goto[np[th]][th] = cont;
     next_stack[np[th]][th] = pointer;
