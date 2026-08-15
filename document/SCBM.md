@@ -1,468 +1,634 @@
 # SCBM API Specification
 
-## Overview
+## 1. Overview
 
-SCBM (Success Continuation and Backtracking Mechanism) is the execution mechanism used by the M-Prolog compiler to implement Prolog control flow directly in C.
+SCBM (Success Continuation and Backtracking Mechine) is the runtime control mechanism used by the M-Prolog compiler.
 
-SCBM3 does not use the WAM instruction model. Instead, compiled Prolog predicates are translated into C code using direct control transfers, including computed `goto`, together with two lightweight runtime stacks:
+SCBM manages two independent control structures:
 
-* the **next stack**, which manages success continuations;
-* the **back stack**, which manages backtracking points and their execution environments.
+1. **Success continuations**
+2. **Backtracking environments**
 
-The design deliberately keeps these two mechanisms independent.
+Success continuations are managed by `np`, while backtracking environments are managed by `rp`.
 
-## Basic Data Structures
+These structures are intentionally kept separate.
 
 ```c
 static void *next_goto[RECURSIZE][THREADSIZE];
 static void *back_goto[RECURSIZE][THREADSIZE];
 static void *back_goto1[RECURSIZE][THREADSIZE];
 
-static int next_stack[RECURSIZE][THREADSIZE];
+static int next_stack[RECURSIZE][256][THREADSIZE];
 static int back_stack[RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 
-static int np[THREADSIZE]; /* next pointer */
-static int rp[THREADSIZE]; /* back/recur pointer */
+static int np[THREADSIZE];   /* success-continuation pointer */
+static int rp[THREADSIZE];   /* backtracking-environment pointer */
 ```
 
-`np` points to the current success continuation.
-
-`rp` points to the current backtracking frame.
-
-Conceptually:
-
-```text
-             Success                     Failure
-            Continuation                Continuation
-                 |                           |
-                 v                           v
-          +--------------+            +--------------+
- np ----> |  next_goto   |     rp --->|  back_goto   |
-          |  next_stack  |            |  back_stack  |
-          +--------------+            +--------------+
-```
-
-The next stack describes what should happen after a goal succeeds.
-
-The back stack describes what should happen when execution must backtrack.
+Each Prolog execution thread has its own `np` and `rp`.
 
 ---
 
-## Backtracking Frame
+# 2. Success Continuation Stack
 
-Each backtracking frame contains the execution state required by a choice point.
+The success continuation stack represents where execution should continue after a goal succeeds.
 
-The following values are currently stored:
-
-```text
-SP_SCBM       stack pointer
-WP_SCBM       working pointer
-AC_SCBM       argument/variable allocation state
-ARGLIST_SCBM  argument list
-NP_SCBM       next-stack pointer
-CHOICE_SCBM   current alternative number
-```
-
-`back_goto` contains the currently active failure continuation.
-
-`back_goto1` contains the original failure continuation installed when the frame was created. This makes it possible to temporarily replace a failure continuation and later restore it.
-
----
-
-# API
-
-## Spush_next
+The current stack position is held in:
 
 ```c
-void Spush_next(void *cont, int pointer, int th);
+np[th]
 ```
 
-Pushes a success continuation onto the next stack.
+The continuation address is stored in:
 
-`cont` is the address to which execution continues after successful completion of the current goal.
+```c
+next_goto[np][th]
+```
 
-`pointer` is auxiliary information associated with the continuation.
+## 2.1 `Spush_next`
 
-The operation increments `np` and stores both values:
+```c
+static inline void Spush_next(void *cont, int th)
+```
+
+Pushes a success continuation.
+
+Operation:
 
 ```c
 np[th]++;
 next_goto[np[th]][th] = cont;
-next_stack[np[th]][th] = pointer;
 ```
 
-A stack overflow raises a resource error.
+Before pushing, the function checks for stack overflow.
+
+### Parameters
+
+* `cont` — GCC computed-goto label address used as the success continuation.
+* `th` — thread number.
+
+### Effect
+
+After the operation:
+
+```text
+np := np + 1
+next_goto[np] := cont
+```
+
+The function does not modify `rp`.
 
 ---
 
-## Spop_next
+## 2.2 `Spop_next`
 
 ```c
-void Spop_next(int th);
+static inline void Spop_next(int th)
 ```
 
-Removes the current success continuation from the next stack.
+Removes the current success continuation.
 
-Conceptually:
+Operation:
 
 ```c
 np[th]--;
 ```
 
-A stack underflow raises a resource error.
+The function checks for stack underflow.
+
+### Effect
+
+```text
+np := np - 1
+```
+
+No continuation address needs to be erased. The value above the current `np` is regarded as invalid.
 
 ---
 
-## Spush_back
+# 3. Backtracking Environment Stack
+
+The backtracking stack stores the execution environment required when Prolog must retry another alternative.
+
+Its current position is:
 
 ```c
-void Spush_back(void *cont, int arglist, int th);
+rp[th]
 ```
 
-Creates a new backtracking frame.
+Each entry contains:
 
-The operation increments `rp` and saves the execution state associated with the new choice point.
+```text
+SP_SCBM       saved stack pointer
+CHOICE_SCBM   current alternative number
+WP_SCBM       saved WP value
+AC_SCBM       saved AC value
+ARGLIST_SCBM  argument list
+NP_SCBM       saved success-continuation pointer
+```
 
-The current implementation stores:
+A backtracking continuation is stored separately in:
 
 ```c
-SP
-WP
-AC
-arglist
-np
+back_goto[rp][th]
+```
+
+The original continuation is preserved in:
+
+```c
+back_goto1[rp][th]
+```
+
+---
+
+# 4. Creating a Backtracking Environment
+
+## 4.1 `Spush_back`
+
+```c
+static inline void Spush_back(void *cont, int arglist, int th)
+```
+
+Creates a new backtracking environment.
+
+The function first increments `rp`:
+
+```c
+rp[th]++;
+```
+
+It then saves the current execution state:
+
+```c
+back_stack[rp[th]][SP_SCBM][th]      = Jget_sp(th);
+back_stack[rp[th]][CHOICE_SCBM][th]  = 0;
+back_stack[rp[th]][WP_SCBM][th]      = Jget_wp(th);
+back_stack[rp[th]][AC_SCBM][th]      = Jget_ac(th);
+back_stack[rp[th]][ARGLIST_SCBM][th] = arglist;
+back_stack[rp[th]][NP_SCBM][th]      = np[th];
+```
+
+The backtracking continuation is stored twice:
+
+```c
+back_goto[rp[th]][th]  = cont;
+back_goto1[rp[th]][th] = cont;
+```
+
+### Purpose of `back_goto1`
+
+`back_goto1` preserves the original backtracking destination.
+
+`back_goto` may later be temporarily changed by `Sset_back()`.
+
+The original value can therefore be recovered using `Sreset_back()`.
+
+### Initial choice value
+
+A newly created environment always begins with:
+
+```text
 choice = 0
 ```
 
-The failure continuation is stored in both:
-
-```c
-back_goto[rp[th]][th]
-back_goto1[rp[th]][th]
-```
-
-`back_goto` may subsequently be changed.
-
-`back_goto1` preserves the original continuation so that it can be restored later.
-
 ---
 
-## Spop_back
+# 5. Backtracking Continuation Control
+
+## 5.1 `Sset_back`
 
 ```c
-void Spop_back(int th);
+static inline void Sset_back(void *cont, int th)
 ```
 
-Removes the current backtracking frame.
-
-Conceptually:
-
-```c
-rp[th]--;
-```
-
-No execution environment is restored by this operation. Environment restoration is handled separately by `Srelease()`.
-
-A stack underflow raises a resource error.
-
-This separation is intentional: `Spop_back()` manages the lifetime of a backtracking frame, while `Srelease()` restores execution state.
-
----
-
-## Sset_back
-
-```c
-void Sset_back(void *cont, int th);
-```
-
-Changes the active failure continuation of the current backtracking frame.
-
-Conceptually:
+Changes the active backtracking continuation of the current environment.
 
 ```c
 back_goto[rp[th]][th] = cont;
 ```
 
-The original continuation stored in `back_goto1` is not modified.
-
-This operation is useful when compiled code temporarily requires a different failure destination.
+It does not modify the original continuation stored in `back_goto1`.
 
 ---
 
-## Sreset_back
+## 5.2 `Sreset_back`
 
 ```c
-void Sreset_back(int th);
+static inline void Sreset_back(int th)
 ```
 
-Restores the original failure continuation of the current backtracking frame.
-
-Conceptually:
+Restores the active backtracking continuation to the continuation originally installed by `Spush_back()`.
 
 ```c
 back_goto[rp[th]][th] =
     back_goto1[rp[th]][th];
 ```
 
-Thus the following sequence is possible:
+Conceptually:
 
 ```text
-Spush_back(A)
-      |
-      v
- active = A
- original = A
-
-Sset_back(B)
-      |
-      v
- active = B
- original = A
-
-Sreset_back()
-      |
-      v
- active = A
- original = A
+active_back_continuation :=
+    original_back_continuation
 ```
+
+This permits temporary redirection of failure without destroying the original backtracking destination.
 
 ---
 
-## Sinc_choice
+# 6. Choice Management
+
+## 6.1 `Sinc_choice`
 
 ```c
-void Sinc_choice(int th);
+static inline void Sinc_choice(int th)
 ```
 
-Increments the alternative number of the current choice point.
-
-Conceptually:
+Advances the alternative number associated with the current backtracking environment.
 
 ```c
 back_stack[rp[th]][CHOICE_SCBM][th]++;
 ```
 
-This value is used by compiled nondeterministic predicates to select the next alternative during backtracking.
+The compiler may use this value to select the appropriate clause or alternative after backtracking.
 
 ---
 
-## Sget_choice
+## 6.2 `Sget_choice`
 
 ```c
-int Sget_choice(int th);
+static inline int Sget_choice(int th)
 ```
 
-Returns the current alternative number stored in the current backtracking frame.
-
-This function has no side effects.
-
-Proof-counting or other execution statistics are intentionally kept outside this function.
-
-A typical generated-code pattern is therefore:
+Returns the current alternative number.
 
 ```c
-Jinc_proof(th);
+return back_stack[rp[th]][CHOICE_SCBM][th];
+```
 
-switch (Sget_choice(th)) {
-case 0:
-    ...
-case 1:
-    ...
+A newly pushed backtracking environment has:
+
+```text
+choice = 0
+```
+
+Repeated calls to `Sinc_choice()` produce:
+
+```text
+0 -> 1 -> 2 -> 3 -> ...
+```
+
+---
+
+# 7. Environment Restoration
+
+## 7.1 `Srelease`
+
+```c
+static inline void Srelease(int th)
+{
+    Junbind(back_stack[rp[th]][SP_SCBM][th], th);
+    Jset_ac(back_stack[rp[th]][AC_SCBM][th], th);
 }
 ```
 
----
+`Srelease()` restores the parts of the execution environment that must be rewound when retrying an alternative.
 
-## Srelease
+It performs two operations.
 
-```c
-void Srelease(int th);
-```
-
-Restores the execution environment saved in the current backtracking frame.
-
-The current implementation restores the binding state and AC:
+### 1. Undo variable bindings
 
 ```c
-Junbind(back_stack[rp[th]][SP_SCBM][th], th);
-Jset_ac(back_stack[rp[th]][AC_SCBM][th], th);
+Junbind(saved_sp, th);
 ```
 
-WP is also stored in the backtracking frame and is intended to be restored in the final implementation.
-
-`Srelease()` does **not** decrement `rp`.
-
-This distinction is important:
-
-```text
-Srelease()
-    restores the state of the current frame
-
-Spop_back()
-    removes the current frame
-```
-
----
-
-## Sget_arg
-
-```c
-int Sget_arg(int th);
-```
-
-Returns the argument list saved in the current backtracking frame.
+All bindings made after the saved `SP` are undone.
 
 Conceptually:
+
+```text
+bindings := state at backtracking-point creation
+```
+
+### 2. Restore AC
+
+```c
+Jset_ac(saved_ac, th);
+```
+
+`AC` is restored to the value recorded by `Spush_back()`.
+
+This is required because local variables generated by compiled predicates depend on the AC-based environment.
+
+---
+
+# 8. Important Rule: WP Is Not Restored by `Srelease`
+
+Although `Spush_back()` records:
+
+```c
+back_stack[rp[th]][WP_SCBM][th] = Jget_wp(th);
+```
+
+`Srelease()` deliberately does **not** execute:
+
+```c
+Jset_wp(back_stack[rp[th]][WP_SCBM][th], th);
+```
+
+and does not otherwise clear or restore WP.
+
+This behavior is intentional.
+
+Restoring WP during `Srelease()` causes the current SCBM execution model to malfunction.
+
+Therefore the SCBM rule is:
+
+```text
+Srelease restores SP-related bindings and AC.
+Srelease does NOT restore or clear WP.
+```
+
+The saved `WP_SCBM` field remains part of the backtracking environment, but it is not currently used by `Srelease()`.
+
+This distinction must be preserved when modifying the SCBM implementation.
+
+---
+
+# 9. Argument List Management
+
+## 9.1 `Sget_arg`
+
+```c
+static inline int Sget_arg(int th)
+```
+
+Returns the argument list stored in the current backtracking environment.
 
 ```c
 return back_stack[rp[th]][ARGLIST_SCBM][th];
 ```
 
-The saved argument list can be used when execution re-enters compiled code through a backtracking continuation.
+This allows the compiled predicate to reconstruct its arguments when execution re-enters through a backtracking path.
 
 ---
 
-## Ssave_arg
+## 9.2 `Ssave_arg`
 
 ```c
-void Ssave_arg(int x, int th);
+static inline void Ssave_arg(int x, int th)
 ```
 
-Replaces the argument list stored in the current backtracking frame.
-
-Conceptually:
+Replaces the argument list stored in the current backtracking environment.
 
 ```c
 back_stack[rp[th]][ARGLIST_SCBM][th] = x;
 ```
 
+This does not create a new backtracking environment.
+
+It modifies the `ARGLIST_SCBM` field of the environment identified by the current `rp`.
+
 ---
 
-## Sget_np
+# 10. Saved Success-Continuation Position
+
+## 10.1 `Sget_np`
 
 ```c
-int Sget_np(int th);
+static inline int Sget_np(int th)
 ```
 
-Returns the value of `np` that was saved when the current backtracking frame was created.
-
-Conceptually:
+Returns the `np` value that was active when the current backtracking environment was created.
 
 ```c
 return back_stack[rp[th]][NP_SCBM][th];
 ```
 
-This is not necessarily the same as the current value of `np[th]`.
+`Spush_back()` saves:
 
-It represents the success-continuation state associated with the current choice point.
-
----
-
-# Design Principle
-
-The central idea of SCBM3 is the separation of success and failure control flow.
-
-The **next stack** answers:
-
-> Where should execution continue if this goal succeeds?
-
-The **back stack** answers:
-
-> Where should execution continue, and what state is required, if this computation must backtrack?
-
-Thus:
-
-```text
-Success direction
-
-    Spush_next
-        |
-        v
-     execute
-        |
-     success
-        |
-        v
-    next_goto
-
-
-Failure direction
-
-    Spush_back
-        |
-        v
-     execute
-        |
-     failure
-        |
-        v
-    back_goto
+```c
+back_stack[rp[th]][NP_SCBM][th] = np[th];
 ```
 
-The two stacks interact when necessary—for example, a backtracking frame records the value of `np` existing when the choice point was created—but their responsibilities remain separate.
+Thus a backtracking environment records the success-continuation depth associated with its creation.
+
+`Sget_np()` only retrieves this saved value. It does not modify `np`.
 
 ---
 
-# Design Goals
+# 11. Removing a Backtracking Environment
 
-SCBM3 follows several design principles.
+## 11.1 `Spop_back`
 
-### Simplicity
+```c
+static inline void Spop_back(int th)
+```
 
-The runtime API is intentionally small. Operations that do not directly belong to success continuation or backtracking management are kept outside SCBM.
+Removes the current backtracking environment.
 
-### Explicit Control Flow
+```c
+rp[th]--;
+```
 
-Compiled Prolog control flow is represented directly by C labels and continuation addresses rather than by an intermediate virtual-machine instruction set.
+The function checks for stack underflow.
 
-### Minimal Hidden State
+The contents of the removed entry do not need to be cleared. They become inaccessible after `rp` is decremented.
 
-Getter functions should retrieve values without unrelated side effects. Operations such as proof counting are performed explicitly by generated code.
+---
 
-### Separation of Responsibilities
+# 12. SCBM State Model
 
-Success continuation management, backtracking-frame management, environment restoration, and alternative selection are separate operations.
-
-For example:
+SCBM contains two principally independent stack pointers:
 
 ```text
-Spush_next / Spop_next
-    success continuation management
+np : success-continuation depth
+rp : backtracking-environment depth
+```
 
-Spush_back / Spop_back
-    backtracking-frame management
+Their responsibilities are different.
 
-Sset_back / Sreset_back
-    failure-continuation management
+### Success direction
 
+```text
+Spush_next
+    |
+    v
+next_goto[np]
+    |
+ goal succeeds
+    |
+    v
+goto success continuation
+```
+
+### Failure direction
+
+```text
+Spush_back
+    |
+    v
+back_goto[rp]
+    |
+ goal fails
+    |
+    v
 Srelease
-    execution-state restoration
-
-Sinc_choice / Sget_choice
-    alternative management
-
-Ssave_arg / Sget_arg
-    argument-list management
-
-Sget_np
-    saved success-continuation state
+    |
+    +-- undo bindings to saved SP
+    |
+    +-- restore saved AC
+    |
+    +-- WP remains unchanged
+    |
+    v
+goto backtracking continuation
 ```
 
-This separation keeps the runtime mechanism small and makes the generated C code easier to inspect and debug.
+The two mechanisms cooperate but must not be treated as a single stack.
 
 ---
 
-## Summary
+# 13. Backtracking Environment Layout
 
-SCBM3 implements Prolog execution using two simple concepts:
+Conceptually, one `rp` entry has the following form:
 
 ```text
-np = success continuation state
-rp = backtracking state
+Backtracking Environment
++-------------------------+
+| SP                      |
+| choice                  |
+| WP                      |
+| AC                      |
+| arglist                 |
+| saved np                |
++-------------------------+
+| active back goto        |
+| original back goto      |
++-------------------------+
 ```
 
-A success continuation records where execution proceeds after success.
+where:
 
-A backtracking frame records where execution proceeds after failure together with the state required to resume the search.
+```text
+SP       = trail/binding restoration boundary
+choice   = current alternative number
+WP       = saved WP value
+AC       = local-variable/environment base state
+arglist  = predicate argument list
+saved np = success-continuation depth
+```
 
-The resulting runtime interface is deliberately small. Most of the Prolog control structure is expressed directly in the C code generated by the M-Prolog compiler rather than being hidden inside a large virtual-machine runtime.
+The saved WP value is currently metadata only as far as `Srelease()` is concerned.
+
+---
+
+# 14. Basic API Semantics
+
+| API                             | Main effect                             |
+| ------------------------------- | --------------------------------------- |
+| `Spush_next(cont, th)`          | Push success continuation               |
+| `Spop_next(th)`                 | Pop success continuation                |
+| `Spush_back(cont, arglist, th)` | Create backtracking environment         |
+| `Spop_back(th)`                 | Remove backtracking environment         |
+| `Sset_back(cont, th)`           | Temporarily change failure continuation |
+| `Sreset_back(th)`               | Restore original failure continuation   |
+| `Sinc_choice(th)`               | Advance alternative number              |
+| `Sget_choice(th)`               | Read alternative number                 |
+| `Srelease(th)`                  | Undo bindings and restore AC            |
+| `Sget_arg(th)`                  | Retrieve saved argument list            |
+| `Ssave_arg(x, th)`              | Replace saved argument list             |
+| `Sget_np(th)`                   | Retrieve `np` saved at `Spush_back()`   |
+
+---
+
+# 15. Invariants
+
+The following invariants are fundamental to the current SCBM implementation.
+
+### Invariant 1
+
+`np` and `rp` represent different concepts and must be maintained independently.
+
+### Invariant 2
+
+Every active backtracking environment has an original backtracking continuation:
+
+```c
+back_goto1[rp][th]
+```
+
+even when its active continuation in `back_goto` has been changed.
+
+### Invariant 3
+
+`Spush_back()` initializes:
+
+```text
+choice = 0
+```
+
+### Invariant 4
+
+`Srelease()` returns AC to the value associated with the current backtracking environment.
+
+### Invariant 5
+
+`Srelease()` undoes bindings using the SP stored in the current backtracking environment.
+
+### Invariant 6
+
+`Srelease()` must not restore or clear WP.
+
+In particular, the following must not be added to `Srelease()`:
+
+```c
+Jset_wp(back_stack[rp[th]][WP_SCBM][th], th);
+```
+
+unless the execution model itself is redesigned.
+
+### Invariant 7
+
+`Sget_np()` retrieves the saved success-continuation position but does not itself restore `np`.
+
+### Invariant 8
+
+`Sset_back()` changes only the active failure continuation.
+
+`Sreset_back()` must always be able to recover the continuation originally supplied to `Spush_back()`.
+
+---
+
+# 16. Design Principle
+
+SCBM does not attempt to save and restore the entire state of the Prolog machine.
+
+Instead, it stores only the information required by the compiled control-flow model.
+
+This is an important design rule.
+
+A backtracking operation is therefore not:
+
+```text
+restore every machine register
+```
+
+but rather:
+
+```text
+restore only the state whose logical lifetime belongs
+to the current backtracking environment
+```
+
+In the current implementation this means, in particular:
+
+```text
+bindings -> restored using saved SP
+AC       -> restored
+WP       -> preserved
+choice   -> maintained by SCBM
+arglist  -> available for reconstruction
+np       -> saved and explicitly accessible
+```
+
+This selective restoration is part of the SCBM execution semantics, not merely an implementation optimization.

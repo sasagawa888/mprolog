@@ -614,7 +614,6 @@ static int back_stack[RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 static int np[THREADSIZE]; // next pointer
 static int rp[THREADSIZE]; // recur pointer
 
-//----------------SCBM-------------------------------
 static inline void Spush_next(void *cont,int th)
 {
     #ifdef DBG
