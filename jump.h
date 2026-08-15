@@ -668,7 +668,7 @@ static int rp[THREADSIZE]; // recur pointer
 static inline void Spush_next(void *cont,int pointer, int th)
 {
     #ifdef DBG
-    printf(" Spush_next (%d)\n",rp[th]);
+    printf(" Spush_next (%d) np=%d\n",rp[th], np[th]);
     #endif
 
     if (np[th] + 1 >= RECURSIZE)
@@ -692,10 +692,10 @@ static inline void Spop_next(int th)
 }
 
 
-static inline void Spush_back(void *cont, int arglist, int np, int th)
+static inline void Spush_back(void *cont, int arglist, int th)
 {
     #ifdef DBG
-    printf(" Spush_back (%d) cont=%d\n",rp[th],cont);
+    printf(" Spush_back (%d) cont=%p\n", rp[th], (void *)cont);
     #endif
    
 
@@ -708,9 +708,9 @@ static inline void Spush_back(void *cont, int arglist, int np, int th)
     back_stack[rp[th]][WP_SCBM][th] = Jget_wp(th);
     back_stack[rp[th]][AC_SCBM][th] = Jget_ac(th);
     back_stack[rp[th]][ARGLIST_SCBM][th] = arglist;
-    back_stack[rp[th]][NP_SCBM][th] = np;
-    back_goto[Jget_scp(RECUR,th)][th] = cont;
-    back_goto1[Jget_scp(RECUR,th)][th] = cont;
+    back_stack[rp[th]][NP_SCBM][th] = np[th];
+    back_goto[rp[th]][th] = cont;
+    back_goto1[rp[th]][th] = cont;
 }
 
 
@@ -732,14 +732,14 @@ static inline void Sset_back(void *cont, int th)
     #endif
     
     back_goto[rp[th]][th] = cont;
-    return(NIL);
 }
 
-
+/*
 static inline int Sarity_count(int arglist)
 {
 	return(Jlength(arglist));
 }
+*/
 
 
 static inline void Sinc_choice(int th)
@@ -755,10 +755,12 @@ static inline void Srelease(int th)
 {
     Junbind(back_stack[rp[th]][SP_SCBM][th], th);
     Jset_ac(back_stack[rp[th]][AC_SCBM][th] ,th);
+    /* WP will be restored here in the final version. */
+    // Jset_wp(back_stack[rp[th]][WP_SCBM][th], th);
+
     #ifdef DBG
     printf(" Srelease (%d) \n",rp[th]);
     #endif
-    return (NIL);
 }
 
 static inline int Sget_choice(int th)
@@ -767,7 +769,6 @@ static inline int Sget_choice(int th)
     printf(" Sget_choice (%d) ch=%d\n", rp[th], back_stack[rp[th]][CHOICE_SCBM][th]);
     #endif
 
-    Jinc_proof(th);
 	return(back_stack[rp[th]][CHOICE_SCBM][th]);
 }
 
@@ -778,7 +779,7 @@ static inline int Sget_arg(int th)
     printf(" Sget_arg (%d) \n", rp[th]);
     #endif
 
-    return(back_stack[sp[th]][ARGLIST_SCBM][th]);
+    return(back_stack[rp[th]][ARGLIST_SCBM][th]);
 }
 
 
@@ -798,9 +799,8 @@ static inline void Spop_back(int th)
     #endif
 
     if (rp[th] <= 0)
-	Jerrorcomp(RESOURCE_ERR, makestr("Spop_recur SCBM3 stack size"), NIL);
+	Jerrorcomp(RESOURCE_ERR, makestr("Spop_back SCBM3 stack size"), NIL);
     rp[th] --;
-    Jset_ac(back_stack[rp[th]][AC_SCBM][th],th);
 }
 
 
