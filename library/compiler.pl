@@ -726,7 +726,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
@@ -735,12 +734,10 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    %write('printf("back"); Jprint_next(th);'),
     gen_unpack_pointer(V,1),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
     N1 is N+1,
     gen_pack_pointer(V,1),
-    %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
@@ -771,7 +768,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
@@ -780,7 +776,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     gen_pack_pointer(V,1),
-    %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
@@ -795,7 +790,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
@@ -804,7 +798,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     gen_pack_pointer(V,1),
-    %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
@@ -819,7 +812,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
@@ -829,11 +821,9 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_unpack_pointer(V,1),
-    %write('printf("back"); Jprint_next(th);'),gen_debug_pointer(V),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
     N1 is N+1,
     gen_pack_pointer(V,1),
-    %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
@@ -849,7 +839,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
@@ -871,7 +860,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
-    %write('printf("entry");'),gen_debug_pointer(V),
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
@@ -922,18 +910,6 @@ nth_var(X,[X|_],1).
 nth_var(X,[_|Xs],N) :-
     nth_var(X,Xs,N1),
     N is N1+1.
-
-gen_back_debug(B,P) :-
-    case([B==[] -> (write('printf("Spush_back next clause'),write(P),write('");'),nl),
-          B==cut -> (write('printf("Spush_back allfail");'),nl),
-          B==nil -> true
-          | (write('printf("Spush_back before'),write(P),write('");'),nl)]).
-
-gen_debug_pointer([]).
-gen_debug_pointer([V|Vs]) :-
-    write('printf("np = %d ",np[th]);'),
-    write('printf("'),write(V),write(' = %d ",'),write(V),write(');'),nl,
-    gen_debug_pointer(Vs).
 
 
 %---------------det determinant predicate-------------------
