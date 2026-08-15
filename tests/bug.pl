@@ -1,6 +1,10 @@
 
 
+mappend([],X,X).
+mappend([A|X],Y,[A|Z]) :-
+    mappend(X,Y,Z).
 
+/*
 plus(0, Y, Y).
 plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
 
@@ -15,9 +19,6 @@ color(green).
 color(blue).
 
 
-mappend([],X,X).
-mappend([A|X],Y,[A|Z]) :-
-    mappend(X,Y,Z).
 
 reverse([],[]).
 reverse([X|Xs],Y) :-
@@ -94,10 +95,5 @@ likes(X,X).
 
 
 
-nodiag([], _, _).
-nodiag([N|L], B, D) :-
-    D =\= N - B,
-    D =\= B - N,
-    D1 is D + 1,
-    nodiag(L, B, D1).
 
+*/
