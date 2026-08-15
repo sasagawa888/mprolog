@@ -1,5 +1,6 @@
+test(X,Y,Z) :- append(X,Y,Z).
 
-
+/*
 mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
@@ -96,3 +97,4 @@ likes(X,X).
 
 
 
+*/

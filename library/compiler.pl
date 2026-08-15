@@ -545,7 +545,6 @@ gen_SCBM_function1.
 gen_pred_switch :-
     write('switch(pred){'),nl,
     ctr_set(0,0),
-    write('case 20000 : goto append;'),nl,
     gen_pred_switch1,
     write('}'),nl.
 
