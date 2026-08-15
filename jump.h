@@ -676,7 +676,7 @@ static inline void Spush_next(void *cont,int pointer, int th)
 
     np[th]++;
     next_goto[np[th]][th] = cont;
-    next_stack[np[th]][0][th] = pointer;
+    next_stack[np[th]][255][th] = pointer;
 }
 
 
@@ -819,7 +819,7 @@ static inline void Jpush_next(void *cont,int ac, int th)
     #endif
     np[th]++;
     next_goto[np[th]][th] = cont;
-    next_stack[np[th]][0][th] = ac;
+    next_stack[np[th]][255][th] = ac;
     return(NIL);
 }
 

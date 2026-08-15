@@ -734,12 +734,11 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('pointer = next_stack[np[th]+1][0][th];'),nl,
     %write('printf("back"); Jprint_next(th);'),
     gen_unpack_pointer(V,1),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
     N1 is N+1,
-    gen_pack_pointer(V),
+    gen_pack_pointer(V,1),
     %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
     write('clause = Sget_choice(th);'),nl,
@@ -779,7 +778,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    gen_pack_pointer(V),
+    gen_pack_pointer(V,1),
     %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),
     n_findatom(Pred,builtin,Num),
@@ -803,7 +802,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    gen_pack_pointer(V),
+    gen_pack_pointer(V,1),
     %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
@@ -828,12 +827,11 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
-    write('pointer = next_stack[np[th]+1][0][th];'),nl,
     gen_unpack_pointer(V,1),
     %write('printf("back"); Jprint_next(th);'),gen_debug_pointer(V),
     gen_nondet_body_label([P,A,M,N]),write('join:'),nl,
     N1 is N+1,
-    gen_pack_pointer(V),
+    gen_pack_pointer(V,1),
     %write('printf("push");'),gen_debug_pointer(V),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
     write('clause = Sget_choice(th);'),nl,
@@ -858,7 +856,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    gen_pack_pointer(V),
+    gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
@@ -880,7 +878,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
-    gen_pack_pointer(V),
+    gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',pointer,th);'),nl,
     n_findatom(Pred,builtin,Num),
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
@@ -901,25 +899,21 @@ gen_nondet_body_argument(Args,Vars,0) :-
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 gen_nondet_body_argument(Args,Vars,_) :-
-    write('pointer = next_stack[np[th]+1][0][th];'),nl,
     gen_unpack_pointer(Vars,1),
     write('arglist = '),gen_a_argument(Args),write(';'),nl.
 
 
 
-gen_pack_pointer(V) :-
-    write('pointer = '),gen_pack_pointer1(V),write(';'),nl.
-
-gen_pack_pointer1([]) :-
-    write('NIL').
-gen_pack_pointer1([L|Ls]) :-
-    write('Jcons('),write(L),write(','),
-    gen_pack_pointer1(Ls),
-    write(')').
+gen_pack_pointer([],_).
+gen_pack_pointer([L|Ls],N) :-
+    write('next_stack[np[th]+1]['),write(N),write('][th] = '),write(L),write(';'),nl,
+    N1 is N+1,
+    gen_pack_pointer(Ls,N1).
+   
 
 gen_unpack_pointer([],_).
 gen_unpack_pointer([L|Ls],N) :-
-    write(L),write(' = '),write('Jnth(pointer,'),write(N),write(');'),nl,
+    write(L),write('= next_stack[np[th]+1]['),write(N),write('][th];'),nl,
     N1 is N+1,
     gen_unpack_pointer(Ls,N1).
 
