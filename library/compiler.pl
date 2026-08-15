@@ -614,7 +614,7 @@ gen_SCBM_function4 :-
     write('goto *next;'),nl,
     write('}else{'),nl,
     write('next = next_goto[np[th]][th];'),nl,
-    write('Jpop_next(th);'),nl,
+    write('Spop_next(th);'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('goto *next;}'),nl.
 
@@ -625,7 +625,7 @@ gen_SCBM_function5 :-
     write('if(rp[th]==0) {return(NO);}'),nl,
     write('next = back_goto[rp[th]][th];'),nl,
     write('np[th] = Sget_np(th);'),nl,
-    write('Jpop_recur(th);'),nl,
+    write('Spop_back(th);'),nl,
     write('arglist = Sget_arg(th);'),nl,
     write('goto *next;'),nl.
    

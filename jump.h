@@ -793,7 +793,7 @@ static inline void Spop_back(int th)
     #endif
 
     if (rp[th] <= 0)
-	Jerrorcomp(RESOURCE_ERR, makestr("Spop_back SCBM3 stack size"), NIL);
+	Jerrorcomp(RESOURCE_ERR, Jmakestr("Spop_back SCBM3 stack size"), NIL);
     rp[th] --;
 }
 
