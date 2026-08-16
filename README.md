@@ -82,8 +82,8 @@ other option
 ```
 $ mpl -h
 List of options:
+-a          -- string is ARITY/PROLOG e.g. $abc$.
 -c filename -- NPL starts after reading the file.
--d          -- string is double quote.
 -f          -- NPL treats undefined errors as fail.
 -h          -- display help.
 -l          -- display Lisp like S.
@@ -102,7 +102,7 @@ M-Prolog aims to enjoy the experience of DEC10-Prolog from the 1980s.
 
 ## example
 ```prolog
-M-Prolog Ver 0.10
+M-Prolog Ver 0.91
 ?- length([1,2,3],X).
 X = 3
 yes
