@@ -3,7 +3,6 @@
 test(X,Y,Z) :- append(X,Y,Z).
 
 
-/*
 n(1).
 n(2).
 n(3).
@@ -53,7 +52,7 @@ iota(S,S,[S]).
 iota(S,E,[S|L]) :-
     S1 is S+1,
     iota(S1,E,L).
-
+/*
 mappend([],X,X).
 mappend([A|X],Y,[A|Z]) :-
     mappend(X,Y,Z).
