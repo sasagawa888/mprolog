@@ -1,5 +1,3 @@
-
-
-mmember(X_, [X_|_]).
-mmember(X_, [_|Y_]) :-
-    mmember(X_, Y_).
+mappend([],X,X).
+mappend([A|X],Y,[A|Z]) :-
+    mappend(X,Y,Z).
