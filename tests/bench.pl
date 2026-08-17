@@ -39,7 +39,7 @@ qsort1([X|Xs], Ys) :-
 
 partition1([], _, [], []).
 partition1([X|Xs], P, [X|Ls], Rs) :-
-    X < P, !,
+    X < P, 
     partition1(Xs, P, Ls, Rs).
 partition1([X|Xs], P, Ls, [X|Rs]) :-
     partition1(Xs, P, Ls, Rs).

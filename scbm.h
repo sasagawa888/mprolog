@@ -180,12 +180,12 @@ arg1 = Jcar(arglist);
 arg2 = Jnth(arglist,2);
 Srelease(th);
 varZ_ = Jmakevariant(th);
-ano_1 = Jmakevariant(th);
+varA_ = Jmakevariant(th);
 varX_ = Jmakevariant(th);
 varY_ = Jmakevariant(th);
 Sinc_choice(th);
 Sset_back(&&length_2_2,th);
-if(Junify_pair(arg1,Jwlistcons(ano_1,varX_,th),th) == YES && Junify_var(arg2,varY_,th) == YES)
+if(Junify_pair(arg1,Jwlistcons(varA_,varX_,th),th) == YES && Junify_var(arg2,varY_,th) == YES)
 {
 length_2_1_0:
 arglist = Jwlistcons(varX_,Jwlistcons(varZ_,NIL,th),th);
@@ -193,12 +193,12 @@ Spush_back(&&length_2_2,arglist,th);
 goto length_2_1_0join;
 length_2_1_0back:
 varZ_= next_stack[np[th]+1][1][th];
-ano_1= next_stack[np[th]+1][2][th];
+varA_= next_stack[np[th]+1][2][th];
 varX_= next_stack[np[th]+1][3][th];
 varY_= next_stack[np[th]+1][4][th];
 length_2_1_0join:
 next_stack[np[th]+1][1][th] = varZ_;
-next_stack[np[th]+1][2][th] = ano_1;
+next_stack[np[th]+1][2][th] = varA_;
 next_stack[np[th]+1][3][th] = varX_;
 next_stack[np[th]+1][4][th] = varY_;
 Spush_next(&&length_2_1_1,th);
@@ -206,13 +206,13 @@ clause = Sget_choice(th);
 goto length_2;
 length_2_1_1:
 varZ_= next_stack[np[th]+1][1][th];
-ano_1= next_stack[np[th]+1][2][th];
+varA_= next_stack[np[th]+1][2][th];
 varX_= next_stack[np[th]+1][3][th];
 varY_= next_stack[np[th]+1][4][th];
 arglist = Jwlistcons(varY_,Jwlistcons(Jwcons(2179,Jwcons(varZ_,Jwcons(Jmakeint(1),NIL,th),th),th),NIL,th),th);
 Spush_back(&&length_2_1_0back,arglist,th);
 next_stack[np[th]+1][1][th] = varZ_;
-next_stack[np[th]+1][2][th] = ano_1;
+next_stack[np[th]+1][2][th] = varA_;
 next_stack[np[th]+1][3][th] = varX_;
 next_stack[np[th]+1][4][th] = varY_;
 Spush_next(&&length_2_1_2,th);subr_number = 187;
@@ -239,10 +239,10 @@ arg1 = Jcar(arglist);
 arg2 = Jnth(arglist,2);
 Srelease(th);
 varX_ = Jmakevariant(th);
-ano_1 = Jmakevariant(th);
+varA_ = Jmakevariant(th);
 Sinc_choice(th);
 Sset_back(&&member_2_1,th);
-if(Junify_var(arg1,varX_,th) == YES && Junify_pair(arg2,Jwlistcons(varX_,ano_1,th),th) == YES)
+if(Junify_var(arg1,varX_,th) == YES && Junify_pair(arg2,Jwlistcons(varX_,varA_,th),th) == YES)
 {
 goto success;
 }
@@ -251,11 +251,11 @@ arg1 = Jcar(arglist);
 arg2 = Jnth(arglist,2);
 Srelease(th);
 varX_ = Jmakevariant(th);
-ano_1 = Jmakevariant(th);
+varA_ = Jmakevariant(th);
 varY_ = Jmakevariant(th);
 Sinc_choice(th);
 Sset_back(&&member_2_2,th);
-if(Junify_var(arg1,varX_,th) == YES && Junify_pair(arg2,Jwlistcons(ano_1,varY_,th),th) == YES)
+if(Junify_var(arg1,varX_,th) == YES && Junify_pair(arg2,Jwlistcons(varA_,varY_,th),th) == YES)
 {
 member_2_1_0:
 arglist = Jwlistcons(varX_,Jwlistcons(varY_,NIL,th),th);
@@ -263,11 +263,11 @@ Spush_back(&&member_2_2,arglist,th);
 goto member_2_1_0join;
 member_2_1_0back:
 varX_= next_stack[np[th]+1][1][th];
-ano_1= next_stack[np[th]+1][2][th];
+varA_= next_stack[np[th]+1][2][th];
 varY_= next_stack[np[th]+1][3][th];
 member_2_1_0join:
 next_stack[np[th]+1][1][th] = varX_;
-next_stack[np[th]+1][2][th] = ano_1;
+next_stack[np[th]+1][2][th] = varA_;
 next_stack[np[th]+1][3][th] = varY_;
 Spush_next(&&member_2_1_1,th);
 clause = Sget_choice(th);
