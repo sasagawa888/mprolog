@@ -634,7 +634,7 @@ gen_SCBM_function5 :-
 
 gen_SCBM_function6 :-
     write('builtin_call:'),nl,
-    write('if(Jcallsubr(subr_number,arglist,NIL,th) == YES)'),nl,
+    write('if(Jcallsubr(subr_number,Jderef(arglist,th),NIL,th) == YES)'),nl,
     write('goto success;'),nl,
     write('else goto allfail;'),nl.
    
