@@ -732,7 +732,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           | (write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_unpack_pointer(V,1),
@@ -758,7 +757,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           | (write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_unpack_pointer(V,1),
@@ -801,7 +799,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),
@@ -823,7 +820,6 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
@@ -845,7 +841,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_unpack_pointer(V,1),
@@ -872,7 +867,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,P),true),
     write('goto '),gen_nondet_body_label([P,A,M,N]),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N]),write('back:'),nl,
     gen_unpack_pointer(V,1),
@@ -900,7 +894,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
@@ -921,7 +914,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
-    ifthenelse(option(debug,on),gen_back_debug(B,0),true),
     N1 is N+1,
     gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
