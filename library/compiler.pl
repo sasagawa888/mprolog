@@ -893,7 +893,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
-          B==nil -> true
+          T==det -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     N1 is N+1,
     gen_pack_pointer(V,1),
@@ -901,7 +901,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,nil,H,P,V,det).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,det).
 
 % det tail
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
@@ -913,7 +913,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
-          B==nil -> true
+          T==det -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B]),write('back,arglist,th);'),nl)]),
     N1 is N+1,
     gen_pack_pointer(V,1),
@@ -921,7 +921,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,nil,H,P,V,det).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,det).
 
 
 gen_nondet_body1(X,A,M,N,B,H,P,V,T) :-
