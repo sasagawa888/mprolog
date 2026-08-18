@@ -715,6 +715,7 @@ recursive_body(X,H) :-
     functor(H,P,A).
 
 % X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
+% T(nil/ det=bultin,tail,det/  nondet=nondet)
 gen_nondet_body(X,A,M,H,P,V,T) :-
     gen_nondet_body1(X,A,M,0,[],H,P,V,T).
 
@@ -876,7 +877,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,det).
 
 
 % cut operator
@@ -920,7 +921,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,nil,H,P,V,nil).
+    gen_nondet_body1(Y,A,M,N1,nil,H,P,V,det).
 
 
 gen_nondet_body1(X,A,M,N,B,H,P,V,T) :-
