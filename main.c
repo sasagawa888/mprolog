@@ -26,7 +26,6 @@ int cell_hash_table[HASHTBSIZE];
 int variant[VARIANTSIZE][THREADSIZE];
 int bigcell[BIGSIZE];
 int localstack[STACKSIZE][THREADSIZE];
-int scbmstack[CONJSIZE][RECURSIZE][SCBM_ELT_SIZE][THREADSIZE];
 int record_hash_table[HASHTBSIZE][RECORDMAX];	// for hash record database 
 int record_pt = 1;		// current index of record database
 int counter[31];		// counter str_set,str_dec ... 
@@ -98,7 +97,6 @@ int wp_min[THREADSIZE];		// start wp point in each thread
 int wp_max[THREADSIZE];		// end wp point in each thread
 int cp[THREADSIZE];		// catch pointer
 int unique_num = 0;		// for copy_term/2    
-int scp[2][THREADSIZE];		// SCBM pointer
 
 
 // bignum pointer
@@ -460,7 +458,7 @@ void reset(int i)
 
 void init_repl(void)
 {
-    int i, j, k, l;
+    int i, j;
 
     stok.flag = GO;
     nest = 0;
@@ -469,12 +467,6 @@ void init_repl(void)
 	proof[i] = 0;
 	ac[i] = cell_size + 1;
 	cp[i] = 0;
-	scp[CONJ][i] = 0;
-	scp[RECUR][i] = 0;
-	for (j = 0; j < CONJSIZE; j++)
-	    for (k = 0; k < RECURSIZE; k++)
-		for (l = 0; l < SCBM_ELT_SIZE; l++)
-		    scbmstack[j][k][l][i] = 0;
     }
     for (i = 0; i <= thread_num; i++) {
 	wp[i] = wp_min[i];

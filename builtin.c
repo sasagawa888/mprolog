@@ -613,6 +613,22 @@ int b_n_ask(int arglist, int rest, int th)
 
 	fflush(stdout);
 
+	/*
+	//--------debug----------
+	int i;
+
+    for(i=0;i<sp[th];i++){
+        printf("\n%d ",i);
+        print(localstack[i][th]);
+    }
+    for(i=0;i<ac[th]-cell_size;i++){
+        printf("\nvar_%d ",i);
+        print(variant[i][th]);
+    }
+	*/
+
+	//-----------------------
+
       loop:
 	c = n_getch();
 
