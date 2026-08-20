@@ -612,6 +612,7 @@ gen_SCBM_function4 :-
     write('next = back_goto[rp[th]][th];'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('arglist = Sget_arg(th);'),nl,
+    write('Jset_ac(Sget_ac(th),th);'),nl,
     write('Spush_next(&&success,th);'),nl,
     write('goto *next;'),nl,
     write('}else{'),nl,
@@ -629,6 +630,7 @@ gen_SCBM_function5 :-
     write('np[th] = Sget_np(th);'),nl,
     write('Spop_back(th);'),nl,
     write('arglist = Sget_arg(th);'),nl,
+    write('Jset_ac(Sget_ac(th),th);'),nl,
     write('goto *next;'),nl.
    
 

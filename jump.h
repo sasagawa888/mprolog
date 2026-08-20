@@ -732,6 +732,16 @@ static inline int Sget_np(int th)
     return(back_stack[rp[th]][NP_SCBM][th]);
 }
 
+
+static inline int Sget_ac(int th)
+{
+    #ifdef DBG
+    printf(" Sget_np (%d) \n", rp[th]);
+    #endif
+
+    return(back_stack[rp[th]][AC_SCBM][th]);
+}
+
 static inline void Spop_back(int th)
 {
     #ifdef DBG
