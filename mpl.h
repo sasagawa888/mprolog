@@ -220,6 +220,7 @@ enum {
 };
 
 enum {
+    DATA_SIZE = 256, 
     SP_SCBM, CHOICE_SCBM, WP_SCBM, AC_SCBM,
     ARGLIST_SCBM, NP_SCBM,
     SCBM_ELT_SIZE,
