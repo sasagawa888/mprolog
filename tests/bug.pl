@@ -1,6 +1,12 @@
 
-partition([X|L], Y, [X|L1], L2) :-
-    X < Y, !, partition(L, Y, L1, L2).
-partition([X|L], Y, L1, [X|L2]) :-
-    !,partition(L, Y, L1, L2).
-partition([], _ , [], []) :- !.
+
+
+select1(X,[X|Xs],Xs).
+select1(X,[Y|Ys],[Y|Zs]) :-
+    select1(X,Ys,Zs).
+
+
+perm1([],[]).
+perm1(Xs,[X|Ys]) :-
+    select1(X,Xs,Zs),
+    perm1(Zs,Ys).
