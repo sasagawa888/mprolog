@@ -508,7 +508,6 @@ gen_SCBM_function :-
     gen_SCBM_function4,
     gen_SCBM_function5,
     gen_SCBM_function6,
-    write('#include "scbm.h"'),nl,
     write('}'),nl.
 
 gen_all_variable :-
