@@ -956,6 +956,20 @@ gen_unpack_pointer([L|Ls],N) :-
     N1 is N+1,
     gen_unpack_pointer(Ls,N1).
 
+
+gen_pack_back([],_).
+gen_pack_back([L|Ls],N) :-
+    write('back_stack[rp[th]+1]['),write(N),write('][th] = '),write(L),write(';'),nl,
+    N1 is N+1,
+    gen_pack_back(Ls,N1).
+   
+
+gen_unpack_back([],_).
+gen_unpack_back([L|Ls],N) :-
+    write(L),write('= back_stack[rp[th]]['),write(N),write('][th];'),nl,
+    N1 is N+1,
+    gen_unpack_back(Ls,N1).
+
 nth_var(X,[X|_],1).
 nth_var(X,[_|Xs],N) :-
     nth_var(X,Xs,N1),
