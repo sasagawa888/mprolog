@@ -839,6 +839,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     type(Pred,Arity,nondet),
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     gen_nondet_body_argument(Args,V,N),
+    ifthenelse(T\=det,gen_pack_back(V,1),true),
     M1 is M+1,
     case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
