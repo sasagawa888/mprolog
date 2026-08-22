@@ -716,7 +716,7 @@ recursive_body(X,H) :-
 
 % X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
 gen_nondet_body(X,A,M,H,P,V) :-
-    gen_nondet_body1(X,A,M,0,[],H,P,V,T).
+    gen_nondet_body1(X,A,M,0,[],H,P,V,nil).
 
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
