@@ -1,6 +1,6 @@
 
 test :-
-    write(1);write(2).
+    fail;write(2).
 
 
 select1(X,[X|Xs],Xs).
