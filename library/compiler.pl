@@ -668,7 +668,7 @@ gen_a_nondet_clause((Head :- Body),A,M,P,V) :-
     M1 is M+1,
     write('Sset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
-    gen_nondet_body(Body,A,M,Head,P,V,nil),
+    gen_nondet_body(Body,A,M,Head,P,V),
     write('}'),nl,!.
 
 % nondet predicate
@@ -715,8 +715,8 @@ recursive_body(X,H) :-
 
 % X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
 % T(nil/ det=bultin,tail,det/  nondet=nondet)
-gen_nondet_body(X,A,M,H,P,V,T) :-
-    gen_nondet_body1(X,A,M,0,[],H,P,V,T).
+gen_nondet_body(X,A,M,H,P,V) :-
+    gen_nondet_body1(X,A,M,0,[],H,P,V,nil).
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
 %last recur body
