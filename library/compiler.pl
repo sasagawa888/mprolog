@@ -816,10 +816,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_argument(Args,V,N),
     ifthenelse(T\=det,gen_pack_back(V,1),true),
     M1 is M+1,
-    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
-          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
-          B==nil -> true
-          |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]),
+    gen_push_back([P,A,M1,N],B,D),
     N1 is N+1,
     gen_pack_pointer(V,1),
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1],D),write(',th);'),
@@ -1013,6 +1010,12 @@ gen_succ_cont([P,A,M,N1],D) :-
     X == 0, %right disjunction goto exit 
     write('goto '),gen_nondet_body_label([P,A,M,N1],0),write(';'),nl.
 
+gen_push_back([P,A,M1,_],B,0) :-
+    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
+          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
+          B==nil -> true
+          |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]).
+
 gen_push_back([P,A,M1,N],B,D) :-
     X is D mod 2,
     X == 1, % left disjunction
@@ -1021,12 +1024,15 @@ gen_push_back([P,A,M1,N],B,D) :-
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]).
+
+
 gen_push_back([P,A,M1,_],B,D) :-
+    X is D mod 2,
+    X == 0, % right disjunction
     case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           B==nil -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]).
-
 
 
 %---------------det determinant predicate-------------------
