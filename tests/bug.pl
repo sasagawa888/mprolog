@@ -1,6 +1,6 @@
 
-%test :-
-%    write(1);write(2).
+test :-
+    write(1);write(2).
 
 
 mbetween(Low, High, Low) :-
