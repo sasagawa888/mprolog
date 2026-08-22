@@ -726,8 +726,12 @@ gen_nondet_body(X,A,M,H,P,V) :-
 gen_nondet_body1(((X;Y),end_of_body),A,M,N,B,H,P,V,T,D) :- 
     D1 is D+1,
     D2 is D+2,
+    N1 is N+1,
     gen_nondet_body1((X,end_of_body),A,M,N,[],H,P,V,T,D1),
-    gen_nondet_body1((Y,end_of_body),A,M,N,[],H,P,V,T,D2).
+    gen_nondet_body1((Y,end_of_body),A,M,N,[],H,P,V,T,D2),
+    gen_nondet_body_label([P,A,M,N1],D),write(':'),nl,
+    write('goto success;'),nl.
+
 
 
 %last recur body
@@ -820,7 +824,21 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
     gen_nondet_body_label([P,A,M,N1],D),write(':'),nl,
+    gen_succ_cont([P,A,M,N1],D).
+
+
+gen_succ_cont([P,A,M,N1],0) :-
     write('goto success;'),nl.
+gen_succ_cont([P,A,M,N1],D) :-
+    X is D mod 2,
+    X == 1, %left disjunction goto right 
+    D1 is D+1,
+    write('goto '),gen_nondet_body_label([P,A,M,N1],D1),write(';'),nl.
+gen_succ_cont([P,A,M,N1],D) :-
+    X is D mod 2,
+    X == 0, %right disjunction goto exit 
+    write('goto '),gen_nondet_body_label([P,A,M,N1],0),write(';'),nl.
+
 
 % last det or tail body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
