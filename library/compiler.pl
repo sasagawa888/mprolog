@@ -725,7 +725,6 @@ gen_nondet_body(X,A,M,H,P,V) :-
 
 
 %disjunction
-/*
 gen_nondet_body1(((X;Y),end_of_body),A,M,N,B,H,P,V,T,D) :- 
     D1 is D+1,
     D2 is D+2,
@@ -734,7 +733,7 @@ gen_nondet_body1(((X;Y),end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body1((Y,end_of_body),A,M,N,[],H,P,V,T,D2),
     gen_nondet_body_label([P,A,M,N1],D),write(':'),nl,
     write('goto success;'),nl.
-*/
+
 
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
