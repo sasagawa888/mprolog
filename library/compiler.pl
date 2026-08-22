@@ -1013,6 +1013,21 @@ gen_succ_cont([P,A,M,N1],D) :-
     X == 0, %right disjunction goto exit 
     write('goto '),gen_nondet_body_label([P,A,M,N1],0),write(';'),nl.
 
+gen_push_back([P,A,M1,N],B,D) :-
+    X is D mod 2,
+    X == 1, % left disjunction
+    D1 is D+1, % right disjunction
+    case([B==[] -> (write('Spush_back(&&'),gen_nondet_body_label([P,A,M1,N],D1),write(',arglist,th);'),nl),
+          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
+          B==nil -> true
+          |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]).
+gen_push_back([P,A,M1,_],B,D) :-
+    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
+          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
+          B==nil -> true
+          |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]).
+
+
 
 %---------------det determinant predicate-------------------
 gen_det_pred(P) :-
