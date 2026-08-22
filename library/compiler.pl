@@ -716,7 +716,7 @@ recursive_body(X,H) :-
 
 % X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
 gen_nondet_body(X,A,M,H,P,V) :-
-    gen_nondet_body1(X,A,M,0,[],H,P,V,nil).
+    gen_nondet_body1(X,A,M,0,[],H,P,V,nil,0).
 
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
@@ -739,7 +739,7 @@ gen_nondet_body1(((X;Y),end_of_body),A,M,N,B,H,P,V,T,D) :-
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
 %last recur body
-gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
@@ -765,7 +765,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl.
 
 % append,between,length ...
-gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     functor(X,_,Arity),
@@ -792,14 +792,14 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
 
 
 % last cut operator
-gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     write('Sset_back(&&allfail,th);'),
     write('goto success;'),nl.
 
 
 % last fail body
-gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
     M1 is M+1,
     case([B==[] -> true,
@@ -810,7 +810,7 @@ gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T) :-
 
 
 % last builtin body
-gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
@@ -831,7 +831,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl.
 
 % last det or tail body
-gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     functor(X,Pred,Arity),
     (type(Pred,Arity,det);type(Pred,Arity,tail)),
     X =.. [Pred|Args],
@@ -852,7 +852,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
     write('goto success;'),nl.
 
 % recur predicate
-gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     n_property(X,predicate),
     X =.. [Pred|Args],
     functor(X,_,Arity),
@@ -874,12 +874,12 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet).
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet,D).
 
 % append between length
 
 % recur predicate
-gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     functor(X,_,Arity),
@@ -900,15 +900,15 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     write('Spush_next(&&'),gen_nondet_body_label([P,A,M,N1]),write(',th);'),nl,
     write('clause = Sget_choice(th);'),nl,
     write('goto '),write(Pred),write('_'),write(Arity),write(';'),nl,
-    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,det).
+    gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,det,D).
 
 
 % cut operator
-gen_nondet_body1((!,Y),A,M,N,B,H,P,V,T) :-
-    gen_nondet_body1(Y,A,M,N,cut,H,P,V,nil).
+gen_nondet_body1((!,Y),A,M,N,B,H,P,V,T,D) :-
+    gen_nondet_body1(Y,A,M,N,cut,H,P,V,nil,D).
 
 % builtin
-gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     n_property(X,builtin),
     X =.. [Pred|Args],
     gen_nondet_body_label([P,A,M,N]),write(':'),nl,
@@ -925,10 +925,10 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,B,H,P,V,det).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,det,D).
 
 % det tail
-gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
+gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     functor(X,Pred,Arity),
     (type(Pred,Arity,det);type(Pred,Arity,tail)),
     X =.. [Pred|Args],
@@ -946,11 +946,11 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T) :-
     n_findatom(Pred,builtin,Num),
     write('subr_number = Jmakecomp("'),write(Pred),write('");'),nl,
     write('goto builtin_call;'),nl,
-    gen_nondet_body1(Y,A,M,N1,B,H,P,V,det).
+    gen_nondet_body1(Y,A,M,N1,B,H,P,V,det,D).
 
 
-gen_nondet_body1(X,A,M,N,B,H,P,V,T) :-
-    gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T).
+gen_nondet_body1(X,A,M,N,B,H,P,V,T,D) :-
+    gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D).
 
 gen_nondet_clause_label([P,A,M]) :-
     write(P),write('_'),write(A),write('_'),write(M).
