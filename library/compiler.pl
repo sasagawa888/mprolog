@@ -827,7 +827,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     write('subr_number = '),write(Num),write(';'),nl,
     write('goto builtin_call;'),nl,
     gen_nondet_body_label([P,A,M,N1],D),write(':'),nl,
-    write('goto success;'),nl.
+    gen_succ_cont([P,A,M,N1],D).
 
 % last det or tail body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
