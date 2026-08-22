@@ -719,6 +719,25 @@ recursive_body(X,H) :-
 gen_nondet_body(X,A,M,H,P,V,T) :-
     gen_nondet_body1(X,A,M,0,[],H,P,V,T).
 
+
+% A is arith Mth clause, Nth body B-retry[A,M,N] Head
+% T is Type of before T(nil/ det=bultin,tail,det/  nondet=nondet)
+% D is Disjuction nest level 1,2,3...
+
+
+%disjunction
+/*
+gen_nondet_body1(((X;Y),end_of_body),A,M,N,B,H,P,V,T,D) :- 
+    D1 is D+1,
+    D2 is D+2,
+    N1 is N+1,
+    gen_nondet_body1((X,end_of_body),A,M,N,[],H,P,V,T,D1),
+    gen_nondet_body1((Y,end_of_body),A,M,N,[],H,P,V,T,D2),
+    gen_nondet_body_label([P,A,M,N1],D),write(':'),nl,
+    write('goto success;'),nl.
+*/
+
+
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
 %last recur body
 gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T) :-
@@ -980,6 +999,19 @@ nth_var(X,[X|_],1).
 nth_var(X,[_|Xs],N) :-
     nth_var(X,Xs,N1),
     N is N1+1.
+
+
+gen_succ_cont([P,A,M,N1],0) :-
+    write('goto success;'),nl.
+gen_succ_cont([P,A,M,N1],D) :-
+    X is D mod 2,
+    X == 1, %left disjunction goto right 
+    D1 is D+1,
+    write('goto '),gen_nondet_body_label([P,A,M,N1],D1),write(';'),nl.
+gen_succ_cont([P,A,M,N1],D) :-
+    X is D mod 2,
+    X == 0, %right disjunction goto exit 
+    write('goto '),gen_nondet_body_label([P,A,M,N1],0),write(';'),nl.
 
 
 %---------------det determinant predicate-------------------
