@@ -2,11 +2,10 @@
 test :-
     fail;write(2).
 
+between1(L, H, L) :-
+    L =< H.
 
-mbetween(Low, High, Low) :-
-    Low =< High.
-
-mbetween(Low, High, X) :-
-    Low < High,
-    Low1 is Low + 1,
-    mbetween(Low1, High, X).
+between1(L, H, X) :-
+    L < H,
+    L1 is L + 1,
+    between1(L1, H, X).
