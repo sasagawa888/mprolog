@@ -627,6 +627,7 @@ gen_SCBM_function5 :-
     write('if(rp[th]==0) {return(NO);}'),nl,
     write('next = back_goto[rp[th]][th];'),nl,
     write('np[th] = Sget_np(th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
     write('Spop_back(th);'),nl,
     write('arglist = Sget_arg(th);'),nl,
     write('goto *next;'),nl.
@@ -873,7 +874,6 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body1(Y,A,M,N1,[A,M,N],H,P,V,nondet,D).
 
 % append between length
-
 % recur predicate
 gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     n_property(X,builtin),
