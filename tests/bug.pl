@@ -3,7 +3,7 @@ test :-
     fail;write(2).
 
 test1 :-
-    between1(1,2,X),
+    between1(1,10,X),
     write(X),
     fail.
 

@@ -803,7 +803,7 @@ gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T,D) :-
     M1 is M+1,
     case([B==[] -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
-          B==nil -> true
+          T==det -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]),
     write('goto allfail;'),nl.
 

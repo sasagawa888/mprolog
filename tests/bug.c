@@ -153,7 +153,7 @@ Sinc_choice(th);
 Sset_back(&&test1_0_1,th);
 {
 test1_0_0_0:
-arglist = Jwlistcons(Jmakeint(1),Jwlistcons(Jmakeint(2),Jwlistcons(varX,NIL,th),th),th);
+arglist = Jwlistcons(Jmakeint(1),Jwlistcons(Jmakeint(10),Jwlistcons(varX,NIL,th),th),th);
 back_stack[rp[th]+1][1][th] = varX;
 Spush_back(&&test1_0_1,arglist,th);
 goto test1_0_0_0join;
@@ -174,7 +174,6 @@ Spush_next(&&test1_0_0_2,th);
 subr_number = 1204;
 goto builtin_call;
 test1_0_0_2:
-Spush_back(&&test1_0_0_0back,arglist,th);
 goto allfail;
 }
 test1_0_1:
