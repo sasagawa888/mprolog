@@ -2,6 +2,18 @@
 test :-
     fail;write(2).
 
+test1 :-
+    between1(1,2,X),
+    write(X),
+    fail.
+
+between1(L, H, L) :-
+    L =< H.
+
+between1(L, H, X) :-
+    L < H,
+    L1 is L + 1,
+    between1(L1, H, X).
 
 select1(X,[X|Xs],Xs).
 select1(X,[Y|Ys],[Y|Zs]) :-
