@@ -748,10 +748,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_argument(Args,V,N),
     ifthenelse(T\=det,gen_pack_back(V,1),true),
     M1 is M+1,
-    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
-          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
-          T==det -> true
-          | (write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]),
+    gen_push_back([P,A,M1,N],B,D,T),
     write('goto '),gen_nondet_body_label([P,A,M,N],D),write('join;'),nl,
     gen_nondet_body_label([P,A,M,N],D),write('back:'),nl,
     gen_unpack_back(V,1),
@@ -799,10 +796,7 @@ gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T,D) :-
 gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_label([P,A,M,N],D),write(':'),nl,
     M1 is M+1,
-    case([T==fisrt -> true,
-          B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
-          T==det -> true
-          |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]),
+    gen_push_back([P,A,M1,N],B,D,T),
     write('goto allfail;'),nl.
 
 
