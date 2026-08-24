@@ -802,7 +802,7 @@ gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T,D) :-
 gen_nondet_body1((fail,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_label([P,A,M,N],D),write(':'),nl,
     M1 is M+1,
-    case([B==[] -> true,
+    case([T==fisrt -> true,
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           T==det -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]),

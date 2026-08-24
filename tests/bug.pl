@@ -1,6 +1,6 @@
 
-test :-
-    fail;write(2).
+%test :-
+%    fail;write(2).
 
 test1 :-
     between1(1,10,X),
