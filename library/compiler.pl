@@ -717,11 +717,11 @@ recursive_body(X,H) :-
 
 % X=body A=arity Mth clause H=Head P=predname V=variant T=Type of before
 gen_nondet_body(X,A,M,H,P,V) :-
-    gen_nondet_body1(X,A,M,0,[],H,P,V,nil,0).
+    gen_nondet_body1(X,A,M,0,[],H,P,V,first,0).
 
 
 % A is arith Mth clause, Nth body B-retry[A,M,N] Head
-% T is Type of before T(nil/ det=bultin,tail,det/  nondet=nondet)
+% T is Type of before T(first=first pred in body/ det=bultin,tail,det/  nondet=nondet)
 % D is Disjuction nest level 1,2,3...
 
 
@@ -858,7 +858,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_argument(Args,V,N),
     ifthenelse(T\=det,gen_pack_back(V,1),true),
     M1 is M+1,
-    case([B==[] -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
+    case([T==first -> (write('Spush_back(&&'),gen_nondet_clause_label([P,A,M1]),write(',arglist,th);'),nl),
           B==cut -> (write('Spush_back(&&allfail,arglist,th);'),nl),
           T==det -> true
           |(write('Spush_back(&&'),gen_nondet_body_label([P|B],D),write('back,arglist,th);'),nl)]),
