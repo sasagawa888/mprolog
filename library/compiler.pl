@@ -630,6 +630,14 @@ gen_SCBM_function5 :-
     write('clause = Sget_choice(th);'),nl,
     write('Spop_back(th);'),nl,
     write('arglist = Sget_arg(th);'),nl,
+    write('goto *next;'),nl,
+    write('false:'),nl,
+    ifthenelse(option(debug,on),write('printf("false");'),true),
+    write('if(rp[th]==0) {return(NO);}'),nl,
+    write('next = back_goto[rp[th]][th];'),nl,
+    write('np[th] = Sget_np(th);'),nl,
+    write('clause = Sget_choice(th);'),nl,
+    write('arglist = Sget_arg(th);'),nl,
     write('goto *next;'),nl.
    
 
@@ -637,7 +645,7 @@ gen_SCBM_function6 :-
     write('builtin_call:'),nl,
     write('if(Jcallsubr(subr_number,Jderef(arglist,th),NIL,th) == YES)'),nl,
     write('goto success;'),nl,
-    write('else goto allfail;'),nl.
+    write('else goto false;'),nl.
    
 
 
