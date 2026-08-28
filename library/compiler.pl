@@ -594,7 +594,6 @@ gen_SCBM_function3.
 
 gen_SCBM_function31(P,A,[],N) :- 
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
-    %write('Sreset_back(th);'),nl,
     write('goto allfail;'),nl,nl,!.
 gen_SCBM_function31(P,A,[C|Cs],N) :-
     write(P),write('_'),write(A),write('_'),write(N),write(':'),nl,
@@ -678,9 +677,6 @@ gen_nondet_pred(P) :-
 % clause
 gen_a_nondet_clause((Head :- Body),A,M,P,V) :-
     write('Sinc_choice(th);'),nl,
-    P =.. [P1|_],
-    M1 is M+1,
-    %write('Sset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(Head),write('{'),nl,
     gen_nondet_body(Body,A,M,Head,P,V),
     write('}'),nl,!.
@@ -689,9 +685,6 @@ gen_a_nondet_clause((Head :- Body),A,M,P,V) :-
 gen_a_nondet_clause(P,A,M,_,_) :-
 	n_property(P,predicate),
     write('Sinc_choice(th);'),nl,
-    P =.. [P1|_],
-    M1 is M+1,
-    %write('Sset_back(&&'),gen_nondet_clause_label([P1,A,M1]),write(',th);'),nl,
 	gen_head(P),
     write('{'),nl,
     write('goto success;'),nl,
