@@ -562,11 +562,13 @@ gen_arity_switch(P,[L|Ls]) :-
 
 gen_SCBM_function2 :-
     type(P,A,nondet),
+    write('int '),write(P),write('_'),write(A),write('rp;'),nl,
     write(P),write('_'),write(A),write('entry:'),nl,
     write('Spush_back(&&'),write(P),write('_'),write(A),write(',arglist,th);'),nl,
     write(P),write('_'),write(A),write(':'),nl,
     ifthenelse(option(debug,on),gen_debug(P),true),
     write('Jinc_proof(th);'),nl,
+    write(P),write('_'),write(A),write('rp = rp[th];'),nl,
     write('switch(clause){'),nl,
     n_clause_count_with_arity(P,A,M),
     M1 is M+1,
@@ -798,7 +800,7 @@ gen_nondet_body1((X,end_of_body),A,M,N,B,H,P,V,T,D) :-
 % last cut operator
 gen_nondet_body1((!,end_of_body),A,M,N,B,H,P,V,T,D) :-
     gen_nondet_body_label([P,A,M,N],D),write(':'),nl,
-    write('Sset_back(&&allfail,th);'),
+    write('rp[th]= '),write(P),write('_'),write(A),write('rp;'),nl,
     write('goto success;'),nl.
 
 
@@ -893,6 +895,7 @@ gen_nondet_body1((X,Y),A,M,N,B,H,P,V,T,D) :-
 
 % cut operator
 gen_nondet_body1((!,Y),A,M,N,B,H,P,V,T,D) :-
+    write('rp[th]= '),write(P),write('_'),write(A),write('rp;'),nl,
     gen_nondet_body1(Y,A,M,N,cut,H,P,V,nil,D).
 
 % builtin
