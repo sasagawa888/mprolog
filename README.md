@@ -9,7 +9,7 @@ It is being developed as an experimental project to dramatically improve executi
 Its goal is to achieve practical high-speed execution using approaches different from the traditional WAM architecture.
 
 license is modified BSD.
-Note: We later became aware that another system with the same name, N-Prolog, already existed. This project is unrelated.
+Note: We later became aware that another system with the same name, MProlog, already existed. This project is unrelated.
 
 ![mpl](mpl.png)
 
