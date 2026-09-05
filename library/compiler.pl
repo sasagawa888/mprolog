@@ -497,9 +497,10 @@ gen_head1([X|Xs],N) :-
 gen_SCBM_function :-
     write('static int user_scbm(int pred, int arity, int clause, int arglist, int rest, int th){'),nl,
     write('void *next;'),nl,
-    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number,varX_,varY_,varZ_,varA_'),
+    write('int arg1,arg2,arg3,arg4,arg5,aeg6,arg7,arg8,arg9,arg10,subr_number'),
     gen_all_variable,write(';'),nl,
-    write('np[th] = 0; rp[th] = 0; back_stack[0][AC_SCBM][th] = Jget_ac(th);'),nl,
+    write('np[th] = 0; rp[th] = 0;'),nl,
+    write('Spush_back(&&allfail,arglist,th);'),nl,
     write('Spush_next(&&success,th);'),nl,
     gen_pred_switch,
     gen_SCBM_function1,
